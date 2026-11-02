@@ -110,13 +110,19 @@ def cmd_ping(args) -> int:
             [{"role": "user", "content": "Reply with exactly: pong"}],
             provider=args.provider,
             model=args.model,
-            max_tokens=16,
+            max_tokens=256,
             use_cache=False,
         )
     except (client.ProviderError, quota.QuotaExceeded) as e:
         print(f"{args.provider}: {e}", file=sys.stderr)
         return 1
-    print(f"{res.provider}/{res.model}: {res.text.strip()!r}")
+    usage = res.raw.get("usage") or {}
+    print(f"{res.provider}/{res.model}: {res.text.strip()!r}"
+          f"  (finish={res.finish_reason}, tokens={usage.get('total_tokens', '?')})")
+    if not res.text.strip():
+        print("warning: empty reply. The model probably spent its budget on hidden reasoning;"
+              " try --model with a non-reasoning id or report this output.", file=sys.stderr)
+        return 1
     return 0
 
 

@@ -28,18 +28,27 @@ PROVIDERS = {
         "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
         "key_env": "GEMINI_API_KEY",
         "default_model": "gemini-3.8-flash",
+        "reasoning_style": "flat",      # {"reasoning_effort": "low"}
     },
     "groq": {
         "base_url": "https://api.groq.com/openai/v1",
         "key_env": "GROQ_API_KEY",
         "default_model": "openai/gpt-oss-120b",
+        "reasoning_style": "flat",
     },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
         "key_env": "OPENROUTER_API_KEY",
         "default_model": "openai/gpt-oss-120b:free",
+        "reasoning_style": "nested",    # {"reasoning": {"effort": "low"}}
     },
 }
+
+# Today's free models are mostly reasoning models (gpt-oss, Gemini 3.x). They spend output
+# tokens on hidden thinking first, so small max_tokens budgets return empty content.
+# Judges want short, deterministic answers: keep effort low and budgets generous.
+DEFAULT_REASONING_EFFORT = "low"
+MIN_MAX_TOKENS = 256
 
 
 def default_model(provider: str) -> str:
@@ -57,6 +66,11 @@ class ChatResult:
     text: str
     cached: bool
     raw: dict
+    finish_reason: str | None = None
+
+    @property
+    def truncated(self) -> bool:
+        return self.finish_reason == "length"
 
 
 def configured_providers() -> list[str]:
@@ -76,8 +90,9 @@ def chat(
     model: str | None = None,
     temperature: float = 0.0,
     max_tokens: int = 1024,
+    reasoning_effort: str | None = DEFAULT_REASONING_EFFORT,
     use_cache: bool = True,
-    timeout: float = 60.0,
+    timeout: float = 120.0,
     _transport=None,
 ) -> ChatResult:
     """Send a chat completion. `_transport` lets tests inject a fake HTTP function."""
@@ -85,14 +100,19 @@ def chat(
         raise ProviderError(f"unknown provider '{provider}'")
     cfg = PROVIDERS[provider]
     model = model or default_model(provider)
-    params = {"temperature": temperature, "max_tokens": max_tokens}
+    params = {"temperature": temperature, "max_tokens": max(max_tokens, MIN_MAX_TOKENS)}
+    if reasoning_effort:
+        if cfg["reasoning_style"] == "nested":
+            params["reasoning"] = {"effort": reasoning_effort}
+        else:
+            params["reasoning_effort"] = reasoning_effort
     key = cache_key(provider, model, messages, params)
 
     if use_cache:
         row = conn.execute("SELECT response_json FROM llm_cache WHERE key = ?", (key,)).fetchone()
         if row:
             raw = json.loads(row["response_json"])
-            return ChatResult(provider, model, _extract_text(raw), True, raw)
+            return ChatResult(provider, model, _extract_text(raw), True, raw, _finish_reason(raw))
 
     api_key = os.environ.get(cfg["key_env"])
     if not api_key:
@@ -115,7 +135,7 @@ def chat(
         (key, provider, model, json.dumps(raw, ensure_ascii=False)),
     )
     conn.commit()
-    return ChatResult(provider, model, _extract_text(raw), False, raw)
+    return ChatResult(provider, model, _extract_text(raw), False, raw, _finish_reason(raw))
 
 
 def list_models(provider: str, *, timeout: float = 30.0, _transport=None) -> list[str]:
@@ -175,3 +195,10 @@ def _extract_text(raw: dict) -> str:
         return raw["choices"][0]["message"]["content"] or ""
     except (KeyError, IndexError, TypeError):
         return ""
+
+
+def _finish_reason(raw: dict) -> str | None:
+    try:
+        return raw["choices"][0].get("finish_reason")
+    except (KeyError, IndexError, TypeError, AttributeError):
+        return None
