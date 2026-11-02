@@ -6,7 +6,19 @@ import sqlite3
 from pathlib import Path
 
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+
+# Stepwise upgrades for existing databases. Fresh databases get schema.sql directly.
+# v1 -> v2: missions/tasks/traces were redesigned around the recorder format before
+# any real data existed, so they are rebuilt (agents, versions, quota, cache are kept).
+MIGRATIONS: dict[int, str] = {
+    2: """
+        DROP TABLE IF EXISTS traces;
+        DROP TABLE IF EXISTS scores;
+        DROP TABLE IF EXISTS tasks;
+        DROP TABLE IF EXISTS missions;
+    """,
+}
 
 
 def evolvra_home() -> Path:
@@ -33,9 +45,14 @@ def connect(path: str | os.PathLike | None = None) -> sqlite3.Connection:
 
 def migrate(conn: sqlite3.Connection) -> None:
     current = conn.execute("PRAGMA user_version").fetchone()[0]
-    if current < SCHEMA_VERSION:
-        conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
-        conn.commit()
+    if current >= SCHEMA_VERSION:
+        return
+    for version in range(current + 1, SCHEMA_VERSION + 1):
+        if version in MIGRATIONS and current > 0:
+            conn.executescript(MIGRATIONS[version])
+    # schema.sql is idempotent (IF NOT EXISTS) and stamps the current version.
+    conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
+    conn.commit()
 
 
 def schema_version(conn: sqlite3.Connection) -> int:

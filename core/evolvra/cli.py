@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from .missions import ingest
 from .registry import personas
 from .router import client, quota
 from .store import db
@@ -101,6 +102,64 @@ def cmd_ping(args) -> int:
     return 0
 
 
+def cmd_ingest(args) -> int:
+    conn = db.connect(args.db)
+    report = ingest.ingest_all(conn)
+    print(report.summary())
+    for path, why in report.missions_invalid:
+        print(f"  invalid: {path}\n    {why}", file=sys.stderr)
+    return 1 if report.missions_invalid else 0
+
+
+def cmd_missions(args) -> int:
+    conn = db.connect(args.db)
+    rows = ingest.list_missions(conn, last=args.last)
+    if args.json:
+        print(json.dumps([dict(r) for r in rows], ensure_ascii=False, indent=2))
+        return 0
+    if not rows:
+        print("no missions yet. run a /evolvra:mission in Claude Code, then: evolvra ingest")
+        return 0
+    for r in rows:
+        done = r["tasks_done"] or 0
+        print(f"{r['status']:<9} {r['external_id']}  tasks {done}/{r['tasks']}  attempts {r['attempts'] or 0}")
+        print(f"          {r['brief'][:90]}")
+    return 0
+
+
+def cmd_mission_show(args) -> int:
+    conn = db.connect(args.db)
+    m, tasks = ingest.mission_detail(conn, args.id)
+    if not m:
+        print(f"unknown mission: {args.id}", file=sys.stderr)
+        return 2
+    print(f"{m['external_id']}  [{m['mode']}] {m['status']}")
+    print(f"brief:   {m['brief']}")
+    print(f"started: {m['started_at']}  finished: {m['finished_at'] or '-'}")
+    if m["summary"]:
+        print(f"summary: {m['summary']}")
+    for t in tasks:
+        print(f"  #{t['task_no']} {t['agent_slug']:<20} {t['status']:<9} verdict={t['verdict'] or '-':<10}"
+              f" attempts={t['attempts']} traces={t['trace_count']}")
+        print(f"      {t['task']}")
+        for a in json.loads(t["attempts_json"]):
+            fb = f"  feedback: {a['feedback']}" if a.get("feedback") else ""
+            print(f"      attempt {a['n']}: {a.get('verdict') or 'running'}{fb}")
+    return 0
+
+
+def cmd_stats(args) -> int:
+    conn = db.connect(args.db)
+    rows = ingest.agent_stats(conn)
+    if not rows:
+        print("no scored tasks yet")
+        return 0
+    print(f"{'agent':<22}{'tasks':>6}{'pass':>6}{'fail':>6}{'avg att':>9}")
+    for r in rows:
+        print(f"{r['agent_slug']:<22}{r['tasks']:>6}{r['passed'] or 0:>6}{r['failed'] or 0:>6}{r['avg_attempts']:>9}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="evolvra", description="Evolvra core. Survival of the promptest.")
     p.add_argument("--db", help="SQLite path (default: $EVOLVRA_HOME/evolvra.db)")
@@ -127,6 +186,22 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(fn=cmd_lineage)
 
     sub.add_parser("providers", help="free-tier quota headroom").set_defaults(fn=cmd_providers)
+
+    sub.add_parser("ingest", help="load recorder output (missions + traces) into the database").set_defaults(
+        fn=cmd_ingest)
+
+    s = sub.add_parser("missions", help="list recent missions")
+    s.add_argument("--last", type=int, default=10)
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(fn=cmd_missions)
+
+    s = sub.add_parser("mission", help="inspect one mission")
+    ms = s.add_subparsers(dest="mission_cmd", required=True)
+    s2 = ms.add_parser("show")
+    s2.add_argument("id")
+    s2.set_defaults(fn=cmd_mission_show)
+
+    sub.add_parser("stats", help="per-agent pass/fail counts from ingested missions").set_defaults(fn=cmd_stats)
 
     s = sub.add_parser("ping", help="send one tiny request to a provider")
     s.add_argument("provider", choices=sorted(client.PROVIDERS))

@@ -29,28 +29,40 @@ CREATE TABLE IF NOT EXISTS agent_versions (
 
 CREATE TABLE IF NOT EXISTS missions (
   id          INTEGER PRIMARY KEY,
-  external_id TEXT UNIQUE,                     -- mission dir name from the plugin
+  external_id TEXT NOT NULL UNIQUE,            -- mission dir name written by plugin/scripts/mission.py
   brief       TEXT NOT NULL,
   mode        TEXT NOT NULL CHECK (mode IN ('micro','sprint','full')),
-  status      TEXT NOT NULL DEFAULT 'running',
+  status      TEXT NOT NULL,                   -- running | done | failed | escalated
+  summary     TEXT,
   started_at  TEXT NOT NULL,
-  finished_at TEXT
+  finished_at TEXT,
+  source_path TEXT,
+  ingested_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
 CREATE TABLE IF NOT EXISTS tasks (
   id               INTEGER PRIMARY KEY,
   mission_id       INTEGER NOT NULL REFERENCES missions(id) ON DELETE CASCADE,
-  agent_version_id INTEGER NOT NULL REFERENCES agent_versions(id),
-  input            TEXT NOT NULL,
-  output           TEXT,
-  attempt          INTEGER NOT NULL DEFAULT 1,
-  verdict          TEXT,                       -- PASS | FAIL | NEEDS_WORK | NULL
+  task_no          INTEGER NOT NULL,
+  agent_slug       TEXT NOT NULL,
+  agent_version_id INTEGER REFERENCES agent_versions(id),  -- NULL if the slug is not in the registry
+  task             TEXT NOT NULL,
+  acceptance_json  TEXT NOT NULL DEFAULT '[]',
+  depends_json     TEXT NOT NULL DEFAULT '[]',
+  status           TEXT NOT NULL,              -- pending | running | done | escalated
+  attempts         INTEGER NOT NULL DEFAULT 0,
+  verdict          TEXT,                       -- verdict of the last attempt
+  attempts_json    TEXT NOT NULL DEFAULT '[]',
   output_dir       TEXT,
-  created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  started_at       TEXT,
+  finished_at      TEXT,
+  UNIQUE (mission_id, task_no)
 );
 
 CREATE TABLE IF NOT EXISTS traces (
   id          INTEGER PRIMARY KEY,
+  line_no     INTEGER NOT NULL UNIQUE,         -- position in traces.jsonl, makes ingest idempotent
+  mission_id  INTEGER REFERENCES missions(id) ON DELETE SET NULL,
   task_id     INTEGER REFERENCES tasks(id) ON DELETE SET NULL,
   session_id  TEXT,
   event       TEXT NOT NULL,
@@ -60,7 +72,14 @@ CREATE TABLE IF NOT EXISTS traces (
   agent       TEXT,
   ts          TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_traces_session ON traces(session_id);
+CREATE INDEX IF NOT EXISTS idx_traces_task ON traces(task_id);
+CREATE INDEX IF NOT EXISTS idx_traces_mission ON traces(mission_id);
+
+-- Small key/value state for ingestion (file offsets etc.)
+CREATE TABLE IF NOT EXISTS ingest_state (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS scores (
   id            INTEGER PRIMARY KEY,
@@ -100,4 +119,4 @@ CREATE TABLE IF NOT EXISTS llm_cache (
   created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
-PRAGMA user_version = 1;
+PRAGMA user_version = 2;

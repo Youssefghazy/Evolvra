@@ -44,13 +44,25 @@ uv run evolvra agents
 Expected: the last command prints 10 agents, each at `v1`.
 `uv run` runs a command inside the project's own virtual environment, so you never need to "activate" anything.
 
+**No uv?** Plain Python works the same. Replace `uv sync --extra dev` with the first two lines below, and
+`uv run X` with `.venv\Scripts\X` (Mac: `.venv/bin/X`):
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python -m pip install -e ".[dev]"
+.venv\Scripts\evolvra init
+.venv\Scripts\evolvra import ../plugin/agents
+.venv\Scripts\evolvra agents
+.venv\Scripts\pytest -q
+```
+
 Run the tests too, because perfectionists do:
 
 ```powershell
 uv run pytest -q
 ```
 
-Expected: `11 passed`.
+Expected: `17 passed`.
 
 ---
 
@@ -58,8 +70,10 @@ Expected: `11 passed`.
 
 ### C1. Google AI Studio (Gemini)
 1. Go to https://aistudio.google.com/apikey and sign in with a Google account.
-2. Click **Create API key**. If it asks for a project, choose "Create API key in new project".
-3. Copy the key (starts with `AIza`). Keep this tab open.
+2. Click **Create API key**. If it asks you to choose a project, pick **Create new project** and name it
+   `evolvra`. Reusing an old project is only safe if that project has **no billing account** linked;
+   a billed project turns Gemini calls into paid calls.
+3. Copy the key (starts with `AIza`). After creating, the key list has a **Plan** column: it must say **Free**.
 4. Do **not** click anything about billing. The free tier works without it.
 
 ### C2. Groq
@@ -130,6 +144,14 @@ provider's limit; wait a minute. With `network error`, check your internet or VP
    Get-Content ~/.evolvra/traces.jsonl -Tail 3     # Mac: tail -n 3 ~/.evolvra/traces.jsonl
    ```
    You should see a `missions/<timestamp>-...` folder with `mission.json` and a `traces.jsonl` with JSON lines.
+
+5. Load it into the database and look at it:
+   ```powershell
+   cd ~/Evolvra/core
+   uv run evolvra ingest
+   uv run evolvra missions
+   uv run evolvra stats
+   ```
 
 ---
 

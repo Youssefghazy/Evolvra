@@ -23,13 +23,25 @@ def _trim(value):
     return value
 
 
+def _read_current(home):
+    try:
+        with open(os.path.join(home, "current.json"), encoding="utf-8") as fh:
+            data = json.load(fh)
+        return data if isinstance(data, dict) else {}
+    except Exception:  # noqa: BLE001
+        return {}
+
+
 def main() -> int:
     try:
         raw = sys.stdin.read()
         payload = json.loads(raw) if raw.strip() else {}
         home = os.environ.get("EVOLVRA_HOME") or os.path.join(os.path.expanduser("~"), ".evolvra")
         os.makedirs(home, exist_ok=True)
+        current = _read_current(home)  # set by scripts/mission.py while a mission runs
         event = {
+            "mission": current.get("mission"),
+            "task_no": current.get("task_no"),
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
             "event": payload.get("hook_event_name"),
             "session_id": payload.get("session_id"),

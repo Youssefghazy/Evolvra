@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="status" src="https://img.shields.io/badge/status-phase%200%20%C2%B7%20skeleton-blue">
+  <img alt="status" src="https://img.shields.io/badge/status-phase%201%20%C2%B7%20missions-blue">
   <img alt="cost" src="https://img.shields.io/badge/total%20cost-%240.00-brightgreen">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow">
   <img alt="runtime" src="https://img.shields.io/badge/runtime-Claude%20Code%20plugin-8A2BE2">
@@ -72,12 +72,19 @@ evolvra init                 # creates ~/.evolvra/evolvra.db
 evolvra import ../plugin/agents
 evolvra agents               # lists the roster with versions
 evolvra providers            # shows quota headroom per provider
+
+# 3. After running /evolvra:mission in Claude Code
+evolvra ingest               # load missions + traces into the DB
+evolvra missions             # recent missions, tasks done, attempts
+evolvra mission show <id>    # replay one mission: tasks, attempts, verdicts, trace counts
+evolvra stats                # per-agent pass/fail, the raw material for evolution
 ```
+Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 
 ## Roadmap
 
 - [x] **Phase 0 — Skeleton.** Plugin scaffold, 10 starter agents, SQLite schema, provider router with quota guard, CI.
-- [ ] **Phase 1 — Missions.** NEXUS-Micro and NEXUS-Sprint runner with handoffs, retries, gates. Replayable logs.
+- [x] **Phase 1 — Missions.** Recorder-driven NEXUS runner with handoffs, 3-attempt Dev↔QA loop, gates; traces tagged per task; `evolvra ingest / missions / mission show / stats`.
 - [ ] **Phase 2 — Scoring.** Deterministic checks, free-tier judge ensemble, evidence-carrying scores, cache.
 - [ ] **Phase 3 — Evolution.** Reflect → mutate → tournament → promote. First promoted v2 with a real diff.
 - [ ] **Phase 4 — Dashboard.** Roster, fitness curves, genealogy tree, diff viewer. Nightly export via Actions.
