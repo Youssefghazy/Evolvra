@@ -87,9 +87,10 @@ CREATE TABLE IF NOT EXISTS scores (
   metric        TEXT NOT NULL,                 -- 'lint' | 'tests' | 'rubric:clarity' | 'reviewer'
   value         REAL NOT NULL,                 -- normalized 0..1
   evidence_json TEXT,
-  judge_model   TEXT,                          -- NULL for deterministic checks
+  judge_model   TEXT NOT NULL DEFAULT 'deterministic',  -- 'deterministic' | 'ensemble' | provider/model
   created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
+CREATE UNIQUE INDEX IF NOT EXISTS idx_scores_unique ON scores(task_id, metric, judge_model);
 
 CREATE TABLE IF NOT EXISTS evolutions (
   id                      INTEGER PRIMARY KEY,
@@ -119,4 +120,4 @@ CREATE TABLE IF NOT EXISTS llm_cache (
   created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
-PRAGMA user_version = 2;
+PRAGMA user_version = 3;

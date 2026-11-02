@@ -63,7 +63,7 @@ def test_invalid_mission_file_is_reported_not_crashed(evolvra_home):
     assert any("bad mode" in why for _, why in report.missions_invalid)
 
 
-def test_v1_database_upgrades_to_v2(tmp_path):
+def test_v1_database_upgrades_to_current(tmp_path):
     path = tmp_path / "old.db"
     import sqlite3
 
@@ -71,6 +71,8 @@ def test_v1_database_upgrades_to_v2(tmp_path):
     raw.executescript("CREATE TABLE agents (id INTEGER PRIMARY KEY, slug TEXT); PRAGMA user_version = 1;")
     raw.commit(); raw.close()
     conn = db.connect(path)
-    assert db.schema_version(conn) == 2
+    assert db.schema_version(conn) == db.SCHEMA_VERSION
     cols = {r[1] for r in conn.execute("PRAGMA table_info(tasks)")}
     assert {"task_no", "agent_slug", "attempts_json"} <= cols
+    indexes = {r[1] for r in conn.execute("PRAGMA index_list(scores)")}
+    assert "idx_scores_unique" in indexes

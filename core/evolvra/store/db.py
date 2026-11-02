@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 # Stepwise upgrades for existing databases. Fresh databases get schema.sql directly.
 # v1 -> v2: missions/tasks/traces were redesigned around the recorder format before
@@ -17,6 +17,10 @@ MIGRATIONS: dict[int, str] = {
         DROP TABLE IF EXISTS scores;
         DROP TABLE IF EXISTS tasks;
         DROP TABLE IF EXISTS missions;
+    """,
+    # v2 -> v3: scores become idempotent per (task, metric, judge). No scores existed before v3.
+    3: """
+        DROP TABLE IF EXISTS scores;
     """,
 }
 

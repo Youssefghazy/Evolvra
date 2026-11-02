@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from .evals import fitness, judge, runner
 from .missions import ingest
 from .registry import personas
 from .router import client, quota
@@ -184,6 +185,44 @@ def cmd_stats(args) -> int:
     return 0
 
 
+def cmd_score(args) -> int:
+    conn = db.connect(args.db)
+    tasks = runner.pending_tasks(conn, args.mission, rescore=args.rescore)
+    if not tasks:
+        print("nothing to score. run `evolvra ingest` first, or use --rescore")
+        return 0
+    judges = judge.judges_from_env()
+    if args.judges:
+        judges = [(p.strip(), m.strip()) for p, _, m in (x.partition(":") for x in args.judges.split(","))]
+    print(f"scoring {len(tasks)} task(s) with judges: {', '.join(f'{p}/{m}' for p, m in judges)}"
+          + ("  [deterministic only]" if args.no_judges else ""))
+    if args.dry_run:
+        for t in tasks:
+            print(f"  would score {t['external_id']} #{t['task_no']} {t['agent_slug']}")
+        return 0
+    report = runner.score_tasks(conn, tasks, judges, skip_judges=args.no_judges)
+    print(report.summary())
+    for slug, no, f in report.fitness:
+        print(f"  #{no} {slug:<22} fitness={f if f is not None else '-'}")
+    return 0
+
+
+def cmd_fitness(args) -> int:
+    conn = db.connect(args.db)
+    rows = fitness.agent_fitness(conn)
+    if args.json:
+        print(json.dumps(rows, ensure_ascii=False, indent=2))
+        return 0
+    if not rows:
+        print("no fitness yet. run: evolvra score")
+        return 0
+    print(f"{'agent':<22}{'ver':>4}{'tasks':>6}{'fitness':>9}{'min':>7}{'max':>7}  top failure")
+    for r in rows:
+        print(f"{r['agent']:<22}{r['version']:>4}{r['tasks']:>6}{r['fitness']:>9.3f}{r['min']:>7.2f}"
+              f"{r['max']:>7.2f}  {r['top_failure'] or '-'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="evolvra", description="Evolvra core. Survival of the promptest.")
     p.add_argument("--db", help="SQLite path (default: $EVOLVRA_HOME/evolvra.db)")
@@ -226,6 +265,18 @@ def build_parser() -> argparse.ArgumentParser:
     s2.set_defaults(fn=cmd_mission_show)
 
     sub.add_parser("stats", help="per-agent pass/fail counts from ingested missions").set_defaults(fn=cmd_stats)
+
+    s = sub.add_parser("score", help="score ingested tasks: deterministic checks + free-tier judge ensemble")
+    s.add_argument("--mission", help="only this mission id")
+    s.add_argument("--judges", help="override judges, e.g. groq:openai/gpt-oss-120b,gemini:gemma-4-31b-it")
+    s.add_argument("--no-judges", action="store_true", help="deterministic checks only (no network)")
+    s.add_argument("--rescore", action="store_true", help="re-score tasks that already have ensemble scores")
+    s.add_argument("--dry-run", action="store_true")
+    s.set_defaults(fn=cmd_score)
+
+    s = sub.add_parser("fitness", help="fitness per agent version (what evolution optimizes)")
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(fn=cmd_fitness)
 
     s = sub.add_parser("ping", help="send one tiny request to a provider")
     s.add_argument("provider", choices=sorted(client.PROVIDERS))

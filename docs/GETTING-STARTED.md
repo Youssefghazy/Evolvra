@@ -62,7 +62,7 @@ Run the tests too, because perfectionists do:
 uv run pytest -q
 ```
 
-Expected: `22 passed`.
+Expected: `26 passed`.
 
 ---
 
@@ -156,8 +156,11 @@ With `network error`, check your internet or VPN.
    cd ~/Evolvra/core
    uv run evolvra ingest
    uv run evolvra missions
-   uv run evolvra stats
+   uv run evolvra score
+   uv run evolvra fitness
    ```
+   `score` asks the three free judges to grade each finished task (a few requests per task, all cached).
+   `fitness` shows which agents are weakest. That list is what evolution works on.
 
 ---
 
