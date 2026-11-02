@@ -62,7 +62,7 @@ Run the tests too, because perfectionists do:
 uv run pytest -q
 ```
 
-Expected: `17 passed`.
+Expected: `19 passed`.
 
 ---
 
@@ -101,17 +101,23 @@ GROQ_API_KEY=gsk_...your key...
 ### C4. Prove the router works
 ```powershell
 cd ~/Evolvra/core
-uv run evolvra providers
+uv run evolvra models groq        # lists model ids your key can use
+uv run evolvra models gemini
+uv run evolvra providers          # shows the default model per provider
 uv run evolvra ping groq
 uv run evolvra ping gemini
 ```
+
+Provider catalogs change often. If `ping` answers `HTTP 404 ... model does not exist`, pick an id from the
+`models` output and set it in `.env`, for example `EVOLVRA_MODEL_GROQ=openai/gpt-oss-120b`.
 
 Expected: `providers` shows `key yes` for gemini and groq. Each `ping` prints something like
 `groq/llama-3.3-70b-versatile: 'pong'`. Run `providers` again: `used` is now `1` for each. That counter is the
 zero-cost safety net.
 
-If `ping` fails with `HTTP 401`, the key is wrong or has a stray space. With `HTTP 429`, you hit the
-provider's limit; wait a minute. With `network error`, check your internet or VPN.
+If `ping` fails with `HTTP 401`, the key is wrong or has a stray space. With `HTTP 404`, the model id is
+stale (see above). With `HTTP 429`, you hit the provider's free limit; wait a minute or use the other provider.
+With `network error`, check your internet or VPN.
 
 ---
 

@@ -78,10 +78,27 @@ def cmd_lineage(args) -> int:
 def cmd_providers(args) -> int:
     conn = db.connect(args.db)
     configured = set(client.configured_providers())
-    print(f"{'provider':<11}{'key':<6}{'used':>6}{'cap':>6}{'left':>6}")
+    print(f"{'provider':<11}{'key':<6}{'used':>6}{'cap':>6}{'left':>6}  model")
     for s in quota.status(conn):
         key = "yes" if s["provider"] in configured else "no"
-        print(f"{s['provider']:<11}{key:<6}{s['used']:>6}{s['cap']:>6}{s['remaining']:>6}")
+        print(f"{s['provider']:<11}{key:<6}{s['used']:>6}{s['cap']:>6}{s['remaining']:>6}"
+              f"  {client.default_model(s['provider'])}")
+    return 0
+
+
+def cmd_models(args) -> int:
+    try:
+        ids = client.list_models(args.provider)
+    except client.ProviderError as e:
+        print(f"{args.provider}: {e}", file=sys.stderr)
+        return 1
+    current = client.default_model(args.provider)
+    for mid in ids:
+        mark = "  <- current default" if mid == current else ""
+        print(f"{mid}{mark}")
+    if current not in ids:
+        print(f"\nwarning: default '{current}' is not in this list."
+              f" Set EVOLVRA_MODEL_{args.provider.upper()}=<id> in .env", file=sys.stderr)
     return 0
 
 
@@ -92,7 +109,8 @@ def cmd_ping(args) -> int:
             conn,
             [{"role": "user", "content": "Reply with exactly: pong"}],
             provider=args.provider,
-            max_tokens=8,
+            model=args.model,
+            max_tokens=16,
             use_cache=False,
         )
     except (client.ProviderError, quota.QuotaExceeded) as e:
@@ -205,7 +223,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("ping", help="send one tiny request to a provider")
     s.add_argument("provider", choices=sorted(client.PROVIDERS))
+    s.add_argument("--model", help="override the model id for this call")
     s.set_defaults(fn=cmd_ping)
+
+    s = sub.add_parser("models", help="list model ids your key can use at a provider")
+    s.add_argument("provider", choices=sorted(client.PROVIDERS))
+    s.set_defaults(fn=cmd_models)
     return p
 
 

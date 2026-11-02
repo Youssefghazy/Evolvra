@@ -58,3 +58,23 @@ def test_quota_blocks_before_network(monkeypatch):
     with pytest.raises(quota.QuotaExceeded):
         client.chat(conn, [{"role": "user", "content": "x"}], provider="openrouter", _transport=transport)
     assert transport.calls == []
+
+
+def test_default_model_env_override(monkeypatch):
+    monkeypatch.delenv("EVOLVRA_MODEL_GROQ", raising=False)
+    assert client.default_model("groq") == client.PROVIDERS["groq"]["default_model"]
+    monkeypatch.setenv("EVOLVRA_MODEL_GROQ", "some/new-model")
+    assert client.default_model("groq") == "some/new-model"
+
+
+def test_list_models_parses_openai_and_gemini_shapes(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    calls = []
+
+    def transport(url, api_key, timeout):
+        calls.append(url)
+        return {"data": [{"id": "models/gemini-3.8-flash"}, {"id": "b-model"}, {"name": "models/a"}]}
+
+    ids = client.list_models("gemini", _transport=transport)
+    assert ids == ["a", "b-model", "gemini-3.8-flash"]
+    assert calls[0].endswith("/models")
