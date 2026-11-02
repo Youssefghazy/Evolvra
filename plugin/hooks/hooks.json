@@ -1,0 +1,21 @@
+{
+  "description": "Evolvra trace logger: appends every tool call and subagent completion to ~/.evolvra/traces.jsonl so the core can score and evolve agents later. Stdlib only, never blocks.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/log_event.py\"", "timeout": 5 }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/log_event.py\"", "timeout": 5 }
+        ]
+      }
+    ]
+  }
+}

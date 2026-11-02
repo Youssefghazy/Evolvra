@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "agents": [
+    {
+      "slug": "ux-researcher",
+      "name": "UX Researcher",
+      "division": "design",
+      "file": "design-ux-researcher.md",
+      "emoji": "🔬",
+      "color": "green",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "design/design-ux-researcher.md"
+      }
+    },
+    {
+      "slug": "backend-architect",
+      "name": "Backend Architect",
+      "division": "engineering",
+      "file": "engineering-backend-architect.md",
+      "emoji": "🏗️",
+      "color": "blue",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "engineering/engineering-backend-architect.md"
+      }
+    },
+    {
+      "slug": "devops-automator",
+      "name": "DevOps Automator",
+      "division": "engineering",
+      "file": "engineering-devops-automator.md",
+      "emoji": "⚙️",
+      "color": "orange",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "engineering/engineering-devops-automator.md"
+      }
+    },
+    {
+      "slug": "frontend-developer",
+      "name": "Frontend Developer",
+      "division": "engineering",
+      "file": "engineering-frontend-developer.md",
+      "emoji": "🖥️",
+      "color": "cyan",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "engineering/engineering-frontend-developer.md"
+      }
+    },
+    {
+      "slug": "rapid-prototyper",
+      "name": "Rapid Prototyper",
+      "division": "engineering",
+      "file": "engineering-rapid-prototyper.md",
+      "emoji": "⚡",
+      "color": "green",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "engineering/engineering-rapid-prototyper.md"
+      }
+    },
+    {
+      "slug": "content-creator",
+      "name": "Content Creator",
+      "division": "marketing",
+      "file": "marketing-content-creator.md",
+      "emoji": "✍️",
+      "color": "teal",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "marketing/marketing-content-creator.md"
+      }
+    },
+    {
+      "slug": "growth-hacker",
+      "name": "Growth Hacker",
+      "division": "marketing",
+      "file": "marketing-growth-hacker.md",
+      "emoji": "🚀",
+      "color": "green",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "marketing/marketing-growth-hacker.md"
+      }
+    },
+    {
+      "slug": "sprint-prioritizer",
+      "name": "Sprint Prioritizer",
+      "division": "product",
+      "file": "product-sprint-prioritizer.md",
+      "emoji": "🎯",
+      "color": "green",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "product/product-sprint-prioritizer.md"
+      }
+    },
+    {
+      "slug": "evidence-collector",
+      "name": "Evidence Collector",
+      "division": "testing",
+      "file": "testing-evidence-collector.md",
+      "emoji": "📸",
+      "color": "orange",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "testing/testing-evidence-collector.md"
+      }
+    },
+    {
+      "slug": "reality-checker",
+      "name": "Reality Checker",
+      "division": "testing",
+      "file": "testing-reality-checker.md",
+      "emoji": "🧐",
+      "color": "red",
+      "version": 1,
+      "parent": null,
+      "source": {
+        "repo": "msitarzewski/agency-agents",
+        "commit": "b37b5bb",
+        "path": "testing/testing-reality-checker.md"
+      }
+    }
+  ]
+}

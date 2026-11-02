@@ -1,0 +1,140 @@
+"""One tiny OpenAI-compatible chat client for every free provider. Standard library only.
+
+Providers (all expose an OpenAI-compatible /chat/completions endpoint):
+  gemini     https://generativelanguage.googleapis.com/v1beta/openai   key: GEMINI_API_KEY
+  groq       https://api.groq.com/openai/v1                           key: GROQ_API_KEY
+  openrouter https://openrouter.ai/api/v1                              key: OPENROUTER_API_KEY
+
+Every call goes through the quota guard first and the response cache second, so a
+rerun of the same evaluation costs zero requests.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import sqlite3
+import urllib.error
+import urllib.request
+from dataclasses import dataclass
+
+from . import quota
+
+PROVIDERS = {
+    "gemini": {
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+        "key_env": "GEMINI_API_KEY",
+        "default_model": "gemini-2.5-flash",
+    },
+    "groq": {
+        "base_url": "https://api.groq.com/openai/v1",
+        "key_env": "GROQ_API_KEY",
+        "default_model": "llama-3.3-70b-versatile",
+    },
+    "openrouter": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "key_env": "OPENROUTER_API_KEY",
+        "default_model": "meta-llama/llama-3.3-70b-instruct:free",
+    },
+}
+
+
+class ProviderError(RuntimeError):
+    pass
+
+
+@dataclass
+class ChatResult:
+    provider: str
+    model: str
+    text: str
+    cached: bool
+    raw: dict
+
+
+def configured_providers() -> list[str]:
+    return [p for p, cfg in PROVIDERS.items() if os.environ.get(cfg["key_env"])]
+
+
+def cache_key(provider: str, model: str, messages: list[dict], params: dict) -> str:
+    blob = json.dumps([provider, model, messages, params], sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def chat(
+    conn: sqlite3.Connection,
+    messages: list[dict],
+    *,
+    provider: str,
+    model: str | None = None,
+    temperature: float = 0.0,
+    max_tokens: int = 1024,
+    use_cache: bool = True,
+    timeout: float = 60.0,
+    _transport=None,
+) -> ChatResult:
+    """Send a chat completion. `_transport` lets tests inject a fake HTTP function."""
+    if provider not in PROVIDERS:
+        raise ProviderError(f"unknown provider '{provider}'")
+    cfg = PROVIDERS[provider]
+    model = model or cfg["default_model"]
+    params = {"temperature": temperature, "max_tokens": max_tokens}
+    key = cache_key(provider, model, messages, params)
+
+    if use_cache:
+        row = conn.execute("SELECT response_json FROM llm_cache WHERE key = ?", (key,)).fetchone()
+        if row:
+            raw = json.loads(row["response_json"])
+            return ChatResult(provider, model, _extract_text(raw), True, raw)
+
+    api_key = os.environ.get(cfg["key_env"])
+    if not api_key:
+        raise ProviderError(f"{cfg['key_env']} is not set")
+
+    quota.reserve(conn, provider)  # hard stop before any network call
+    body = {"model": model, "messages": messages, **params}
+    transport = _transport or _http_post
+    raw = transport(f"{cfg['base_url']}/chat/completions", body, api_key, timeout)
+
+    usage = raw.get("usage") or {}
+    total = int(usage.get("total_tokens") or 0)
+    if total:
+        conn.execute(
+            "UPDATE provider_usage SET tokens = tokens + ? WHERE provider = ? AND day = ?",
+            (total, provider, quota.today()),
+        )
+    conn.execute(
+        "INSERT OR REPLACE INTO llm_cache (key, provider, model, response_json) VALUES (?,?,?,?)",
+        (key, provider, model, json.dumps(raw, ensure_ascii=False)),
+    )
+    conn.commit()
+    return ChatResult(provider, model, _extract_text(raw), False, raw)
+
+
+def _http_post(url: str, body: dict, api_key: str, timeout: float) -> dict:
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "evolvra/0.1 (+https://github.com/Youssefghazy/Evolvra)",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:  # keys never appear in error text
+        detail = e.read().decode("utf-8", errors="replace")[:500]
+        raise ProviderError(f"HTTP {e.code} from provider: {detail}") from None
+    except urllib.error.URLError as e:
+        raise ProviderError(f"network error: {e.reason}") from None
+
+
+def _extract_text(raw: dict) -> str:
+    try:
+        return raw["choices"][0]["message"]["content"] or ""
+    except (KeyError, IndexError, TypeError):
+        return ""

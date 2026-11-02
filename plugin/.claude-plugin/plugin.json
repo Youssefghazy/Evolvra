@@ -1,0 +1,10 @@
+{
+  "name": "evolvra",
+  "version": "0.1.0",
+  "description": "A self-evolving AI agency. Runs specialist agents on missions, scores their work with evidence, and evolves the weakest personas. Survival of the promptest.",
+  "author": { "name": "Youssef Ghazy", "url": "https://github.com/Youssefghazy" },
+  "homepage": "https://github.com/Youssefghazy/Evolvra",
+  "repository": "https://github.com/Youssefghazy/Evolvra",
+  "license": "MIT",
+  "keywords": ["agents", "evolution", "orchestration", "nexus", "self-improving"]
+}
