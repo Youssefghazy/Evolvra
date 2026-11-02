@@ -62,7 +62,7 @@ Run the tests too, because perfectionists do:
 uv run pytest -q
 ```
 
-Expected: `19 passed`.
+Expected: `22 passed`.
 
 ---
 

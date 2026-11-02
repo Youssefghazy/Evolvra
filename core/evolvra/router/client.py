@@ -27,7 +27,7 @@ PROVIDERS = {
     "gemini": {
         "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
         "key_env": "GEMINI_API_KEY",
-        "default_model": "gemini-3.8-flash",
+        "default_model": "gemini-3.5-flash-lite",   # 3.8-flash timed out on the free tier (Nov 2026)
         "reasoning_style": "flat",      # {"reasoning_effort": "low"}
     },
     "groq": {
@@ -101,7 +101,7 @@ def chat(
     cfg = PROVIDERS[provider]
     model = model or default_model(provider)
     params = {"temperature": temperature, "max_tokens": max(max_tokens, MIN_MAX_TOKENS)}
-    if reasoning_effort:
+    if reasoning_effort and not _flag(conn, provider, model, "no_reasoning"):
         if cfg["reasoning_style"] == "nested":
             params["reasoning"] = {"effort": reasoning_effort}
         else:
@@ -121,7 +121,23 @@ def chat(
     quota.reserve(conn, provider)  # hard stop before any network call
     body = {"model": model, "messages": messages, **params}
     transport = _transport or _http_post
-    raw = transport(f"{cfg['base_url']}/chat/completions", body, api_key, timeout)
+    url = f"{cfg['base_url']}/chat/completions"
+    try:
+        raw = transport(url, body, api_key, timeout)
+    except ProviderError as e:
+        # Non-reasoning models (e.g. Gemma) reject reasoning params with HTTP 400.
+        # Remember that for this model and retry once without them.
+        if _is_reasoning_rejection(e) and ("reasoning_effort" in body or "reasoning" in body):
+            _set_flag(conn, provider, model, "no_reasoning")
+            body.pop("reasoning_effort", None)
+            body.pop("reasoning", None)
+            params.pop("reasoning_effort", None)
+            params.pop("reasoning", None)
+            key = cache_key(provider, model, messages, params)
+            quota.reserve(conn, provider)
+            raw = transport(url, body, api_key, timeout)
+        else:
+            raise
 
     usage = raw.get("usage") or {}
     total = int(usage.get("total_tokens") or 0)
@@ -136,6 +152,23 @@ def chat(
     )
     conn.commit()
     return ChatResult(provider, model, _extract_text(raw), False, raw, _finish_reason(raw))
+
+
+def _is_reasoning_rejection(err: ProviderError) -> bool:
+    text = str(err).lower()
+    return text.startswith("http 400") and ("thinking" in text or "reasoning" in text)
+
+
+def _flag(conn: sqlite3.Connection, provider: str, model: str, flag: str) -> bool:
+    row = conn.execute("SELECT value FROM ingest_state WHERE key = ?",
+                       (f"model.{flag}.{provider}/{model}",)).fetchone()
+    return bool(row and row["value"] == "1")
+
+
+def _set_flag(conn: sqlite3.Connection, provider: str, model: str, flag: str) -> None:
+    conn.execute("INSERT OR REPLACE INTO ingest_state (key, value) VALUES (?, '1')",
+                 (f"model.{flag}.{provider}/{model}",))
+    conn.commit()
 
 
 def list_models(provider: str, *, timeout: float = 30.0, _transport=None) -> list[str]:
@@ -182,6 +215,11 @@ def _send(req: urllib.request.Request, timeout: float) -> dict:
         raise ProviderError(f"HTTP {e.code} from provider: {detail}{hint}") from None
     except urllib.error.URLError as e:
         raise ProviderError(f"network error: {e.reason}") from None
+    except TimeoutError:
+        raise ProviderError(f"timed out after {timeout:.0f}s waiting for the provider"
+                            " | hint: the model may be overloaded on the free tier; try another model") from None
+    except OSError as e:
+        raise ProviderError(f"connection error: {e}") from None
 
 
 def _http_post(url: str, body: dict, api_key: str, timeout: float) -> dict:

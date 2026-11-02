@@ -95,3 +95,33 @@ def test_reasoning_effort_and_token_floor_per_provider(monkeypatch):
     assert t.calls[1][1]["reasoning"] == {"effort": "low"} and "reasoning_effort" not in t.calls[1][1]
     client.chat(conn, msgs, provider="groq", reasoning_effort=None, _transport=t, use_cache=False)
     assert "reasoning_effort" not in t.calls[2][1]
+
+
+def test_reasoning_rejection_retries_without_and_remembers(monkeypatch):
+    conn = db.connect(":memory:")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    calls = []
+
+    def transport(url, body, api_key, timeout):
+        calls.append(dict(body))
+        if "reasoning_effort" in body:
+            raise client.ProviderError('HTTP 400 from provider: {"message": "Thinking level is not supported"}')
+        return {"choices": [{"message": {"content": "pong"}, "finish_reason": "stop"}], "usage": {}}
+
+    r = client.chat(conn, [{"role": "user", "content": "x"}], provider="gemini",
+                    model="gemma-4-31b-it", _transport=transport, use_cache=False)
+    assert r.text == "pong" and len(calls) == 2 and "reasoning_effort" not in calls[1]
+    assert quota.used_today(conn, "gemini") == 2  # both attempts counted honestly
+
+    client.chat(conn, [{"role": "user", "content": "y"}], provider="gemini",
+                model="gemma-4-31b-it", _transport=transport, use_cache=False)
+    assert len(calls) == 3 and "reasoning_effort" not in calls[2]  # flag remembered, no wasted call
+
+
+def test_timeout_becomes_provider_error(monkeypatch):
+    def boom(req, timeout):
+        raise TimeoutError("read timed out")
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", boom)
+    with pytest.raises(client.ProviderError, match="timed out"):
+        client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
