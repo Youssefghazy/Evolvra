@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -133,7 +134,31 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def load_dotenv() -> Path | None:
+    """Load the first `.env` found in the current directory or its parents.
+
+    Existing environment variables always win. Lines are KEY=VALUE; quotes and
+    `#` comments are allowed. Stdlib only, so beginners never need python-dotenv.
+    """
+    for directory in [Path.cwd(), *Path.cwd().parents]:
+        candidate = directory / ".env"
+        if candidate.is_file():
+            for line in candidate.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key, value = key.strip(), value.strip()
+                if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                    value = value[1:-1]
+                if key and value and key not in os.environ:
+                    os.environ[key] = value
+            return candidate
+    return None
+
+
 def main(argv: list[str] | None = None) -> int:
+    load_dotenv()
     args = build_parser().parse_args(argv)
     return args.fn(args)
 
