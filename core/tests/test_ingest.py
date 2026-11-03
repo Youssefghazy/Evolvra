@@ -91,3 +91,20 @@ def test_v3_database_gains_evolution_columns(tmp_path):
     conn = db.connect(path)
     cols = {r[1] for r in conn.execute("PRAGMA table_info(evolutions)")}
     assert {"parent_fitness", "bank_json"} <= cols and db.schema_version(conn) == db.SCHEMA_VERSION
+
+
+def test_task_is_credited_to_the_version_current_when_it_started(evolvra_home, recorder, hook, tmp_path):
+    # Two missions ran under evidence-collector v1, evolution promoted v2, and the missions were only
+    # ingested afterwards. They must count for v1, the persona that actually did the work.
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    mid = _record_mission(evolvra_home, recorder, hook)
+    evolved = tmp_path / "marketing-content-creator.md"
+    evolved.write_text((AGENTS_DIR / evolved.name).read_text(encoding="utf-8") + "\nEvolved.\n", encoding="utf-8")
+    assert personas.upsert_persona(conn, personas.load_persona(evolved), created_by="evolve") == "updated"
+    conn.execute("UPDATE agent_versions SET created_at = '2099-01-01T00:00:00.000Z' WHERE version = 2")
+    ingest.ingest_all(conn, evolvra_home)
+    row = conn.execute("SELECT v.version FROM tasks t JOIN agent_versions v ON v.id = t.agent_version_id"
+                       " JOIN missions m ON m.id = t.mission_id WHERE m.external_id = ? AND t.task_no = 1",
+                       (mid,)).fetchone()
+    assert row["version"] == 1

@@ -103,7 +103,7 @@ def _upsert_mission(conn: sqlite3.Connection, m: dict, path: Path, report: Inges
     for t in m["tasks"]:
         attempts = t.get("attempts", [])
         last = attempts[-1] if attempts else {}
-        version_id = _current_version_id(conn, t["agent"])
+        version_id = _version_id_at(conn, t["agent"], attempts[0].get("started_at") if attempts else None)
         conn.execute(
             "INSERT INTO tasks (mission_id, task_no, agent_slug, agent_version_id, task, acceptance_json,"
             " depends_json, status, attempts, verdict, attempts_json, output_dir, started_at, finished_at)"
@@ -120,6 +120,19 @@ def _upsert_mission(conn: sqlite3.Connection, m: dict, path: Path, report: Inges
              t.get("output_dir"), attempts[0].get("started_at") if attempts else None,
              last.get("finished_at")),
         )
+
+
+def _version_id_at(conn: sqlite3.Connection, slug: str, started_at: str | None) -> int | None:
+    """The persona version that was current when the task started, not when it was ingested:
+    a promotion between the run and the next cycle must not take credit for the old version's work."""
+    if started_at:
+        row = conn.execute(
+            "SELECT v.id FROM agent_versions v JOIN agents a ON a.id = v.agent_id"
+            " WHERE a.slug = ? AND substr(v.created_at, 1, 19) <= substr(?, 1, 19)"
+            " ORDER BY v.version DESC LIMIT 1", (slug, started_at)).fetchone()
+        if row:
+            return row["id"]
+    return _current_version_id(conn, slug)
 
 
 def _current_version_id(conn: sqlite3.Connection, slug: str) -> int | None:
