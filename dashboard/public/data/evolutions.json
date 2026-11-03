@@ -6,6 +6,8 @@
   "winner_version": null,
   "delta": null,
   "created_at": "2026-11-03T06:48:37.333Z",
+  "parent_fitness": null,
+  "bank": [],
   "candidates": [
    {
     "index": 1,
@@ -88,6 +90,151 @@
     "sha": "",
     "fitness": null,
     "per_task": []
+   }
+  ],
+  "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 1. Mean fitness: 0.77.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_feature_status_labels` x1\n\n## Worst tasks\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.77)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_feature_status_labels`\n- Critique: Missing PASS/NEEDS_WORK labels for each listed feature\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: Listed the features found but failed to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n"
+ },
+ {
+  "id": 2,
+  "agent": "evidence-collector",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": -0.1162,
+  "created_at": "2026-11-03T07:34:10.939Z",
+  "parent_fitness": 0.9912,
+  "bank": [
+   {
+    "task": "Verify description.md against the content task's acceptance criteria",
+    "source": "20261102-130146-write-a-one-paragraph",
+    "parent_fitness": 1.0
+   },
+   {
+    "task": "Write the verification checklist and the evidence you would require",
+    "source": "seed",
+    "parent_fitness": 0.985
+   },
+   {
+    "task": "Specify what measurements would make that claim acceptable",
+    "source": "seed",
+    "parent_fitness": 1.0
+   },
+   {
+    "task": "Produce the evidence report template for a visual review",
+    "source": "seed",
+    "parent_fitness": 0.98
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "missing_feature_status_labels",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-072007-evidence-collector\\candidate-1-missing-feature-status-labels.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "1e6022f375eeb94d5d8bed6932cc7e7635fe54d13290fa60a25ee90211f476b1",
+    "fitness": 0.8662,
+    "paired_delta": -0.125,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify description.md against the content task's acceptance criteria",
+      "fitness": 0.52,
+      "failure": "unverifiable_evidence",
+      "critique": "The report provides no verifiable evidence that the paragraph and word counts or feature list correspond to the actual file."
+     },
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 0.945,
+      "failure": "none",
+      "critique": "none"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "weak_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-072007-evidence-collector\\candidate-2-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "1196d8039193a9c3782fbcd40f5e6e64e522c558a28f16be23b40b1416c23911",
+    "fitness": 0.875,
+    "paired_delta": -0.1162,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify description.md against the content task's acceptance criteria",
+      "fitness": 0.52,
+      "failure": "unverifiable_evidence",
+      "critique": "The report provides no verifiable evidence of the file contents or command outputs."
+     },
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 0.98,
+      "failure": "none",
+      "critique": "none"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "missing_acceptance_criteria_check",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-072007-evidence-collector\\candidate-3-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "b4a85f6778ee9b4ce1164348e6a0d9fee2521ca7dbda4f3bf710e98f2c8d3763",
+    "fitness": 0.875,
+    "paired_delta": -0.1162,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify description.md against the content task's acceptance criteria",
+      "fitness": 0.52,
+      "failure": "unverifiable_evidence",
+      "critique": "The report relies on unverifiable evidence and does not include the actual file content for validation"
+     },
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 0.98,
+      "failure": "none",
+      "critique": "none"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "None"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none"
+     }
+    ]
    }
   ],
   "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 1. Mean fitness: 0.77.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_feature_status_labels` x1\n\n## Worst tasks\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.77)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_feature_status_labels`\n- Critique: Missing PASS/NEEDS_WORK labels for each listed feature\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: Listed the features found but failed to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n"
