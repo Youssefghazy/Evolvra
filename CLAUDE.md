@@ -27,6 +27,11 @@ cd core; uv run evolvra missions; uv run evolvra fitness; uv run evolvra lineage
 Run missions with `/evolvra:mission <brief>` in Claude Code. Three missions per day across different agents
 is a good pace. Vary the agents so fitness data covers the roster.
 
+**After every `git pull` that touched `plugin/`, refresh the installed copy** (Claude Code caches plugins at
+install time): inside Claude Code run `/plugin marketplace update evolvra` then `/plugin update evolvra@evolvra`,
+and restart Claude Code. When you change `plugin/` yourself, bump `version` in `plugin/.claude-plugin/plugin.json`
+and `.claude-plugin/marketplace.json` so the update is picked up.
+
 ## Handoff with the cloud reviewer (git is the channel)
 - **You write `docs/STATUS.md`** at the end of every working session: what you ran, what happened (numbers),
   what broke, what you changed (commit SHAs), open questions. Overwrite it each time; history is in git.

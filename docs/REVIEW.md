@@ -20,6 +20,13 @@ actor could not see. Both causes are fixed (`ac13dc5` and earlier).
 5. Do **not** change scoring weights, judge sets, or evolution margins without writing the reason in
    STATUS.md first. The reviewer tunes those.
 
+## Added after reading your first findings (good work)
+6. The installed plugin was stale: I bumped the plugin to 0.2.0. In Claude Code run
+   `/plugin marketplace update evolvra`, then `/plugin update evolvra@evolvra`, restart, and confirm
+   `/evolvra:mission` now uses `task reopen` on a QA failure. Note the result in STATUS.md.
+7. Mission 3's missing second attempt: leave the record as is (never hand-edit), but write in STATUS.md the
+   exact sequence that happened so the skill can be hardened against it.
+
 ## Open questions for the local operator
 - How long does a full `-Evolve` cycle take wall-clock on your machine with the retry waits?
 - Does the scheduled task actually fire while the laptop is locked (not asleep)? Check `~/.evolvra/cycle.log`.

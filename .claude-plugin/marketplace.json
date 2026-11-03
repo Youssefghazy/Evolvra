@@ -1,19 +1,30 @@
 {
   "name": "evolvra",
-  "owner": { "name": "Youssef Ghazy", "url": "https://github.com/Youssefghazy" },
+  "owner": {
+    "name": "Youssef Ghazy",
+    "url": "https://github.com/Youssefghazy"
+  },
   "metadata": {
     "description": "Evolvra: a self-evolving AI agency for Claude Code. Survival of the promptest.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "evolvra",
       "source": "./plugin",
       "description": "Run the agency on a mission, score every agent with evidence, evolve the losers.",
-      "version": "0.1.0",
-      "author": { "name": "Youssef Ghazy" },
+      "version": "0.2.0",
+      "author": {
+        "name": "Youssef Ghazy"
+      },
       "license": "MIT",
-      "keywords": ["agents", "evolution", "orchestration", "nexus", "self-improving"]
+      "keywords": [
+        "agents",
+        "evolution",
+        "orchestration",
+        "nexus",
+        "self-improving"
+      ]
     }
   ]
 }
