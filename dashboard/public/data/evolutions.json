@@ -1,0 +1,25 @@
+[
+ {
+  "id": 1,
+  "agent": "content-creator",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": null,
+  "created_at": "2026-11-03T06:13:18.705Z",
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "path": null,
+    "lint_ok": false,
+    "problems": [
+     "mutator error: GROQ_API_KEY is not set"
+    ],
+    "sha": "",
+    "fitness": null,
+    "per_task": []
+   }
+  ],
+  "diagnosis": "# Diagnosis: content-creator v1\n\nTasks scored: 1. Mean fitness: 0.6.\n\n## Worst tasks\n### 20261102-120755-write-a-one-paragraph #1 (fitness 0.6)\n- Task: Write the paragraph\n- Acceptance: Under 120 words; Mentions sync\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `none`\n- Critique: \n- QA feedback on failed attempts: too long\n"
+ }
+]

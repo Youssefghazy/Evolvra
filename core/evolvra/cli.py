@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from . import export as export_mod
 from .evals import fitness, judge, runner
 from .evolve import bank as bank_mod
 from .evolve import engine
@@ -287,6 +288,18 @@ def cmd_evolve(args) -> int:
     return 0
 
 
+def cmd_export(args) -> int:
+    conn = db.connect(args.db)
+    if args.out:
+        out = Path(args.out)
+    else:
+        out = _plugin_agents_dir(args).parents[1] / "dashboard" / "public" / "data"
+    counts = export_mod.export_all(conn, out)
+    print(f"exported to {out}: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
+    print("commit and push dashboard/public/data to update the live dashboard")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="evolvra", description="Evolvra core. Survival of the promptest.")
     p.add_argument("--db", help="SQLite path (default: $EVOLVRA_HOME/evolvra.db)")
@@ -341,6 +354,11 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("fitness", help="fitness per agent version (what evolution optimizes)")
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_fitness)
+
+    s = sub.add_parser("export", help="write JSON snapshots for the dashboard (dashboard/public/data)")
+    s.add_argument("--out", help="output directory (default: <repo>/dashboard/public/data)")
+    s.add_argument("--plugin-dir")
+    s.set_defaults(fn=cmd_export)
 
     s = sub.add_parser("bank", help="show an agent's held-out task bank")
     s.add_argument("slug")

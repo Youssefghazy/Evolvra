@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="status" src="https://img.shields.io/badge/status-phase%203%20%C2%B7%20evolution-blue">
+  <img alt="status" src="https://img.shields.io/badge/status-phase%204%20%C2%B7%20dashboard-blue">
   <img alt="cost" src="https://img.shields.io/badge/total%20cost-%240.00-brightgreen">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow">
   <img alt="runtime" src="https://img.shields.io/badge/runtime-Claude%20Code%20plugin-8A2BE2">
@@ -82,7 +82,10 @@ evolvra score                # deterministic checks + free-tier judge ensemble
 evolvra fitness              # per agent version, weakest first: the evolution queue
 evolvra evolve <slug>        # one generation: variants, tournament, promote only if it wins
 evolvra lineage <slug>       # version history with rationales
+evolvra export               # JSON snapshots for the dashboard (then commit + push to publish)
 ```
+
+**Live dashboard:** https://youssefghazy.github.io/Evolvra/ (after enabling Pages once: Settings → Pages → Source: GitHub Actions)
 Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 
 ## Roadmap
@@ -91,7 +94,7 @@ Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 - [x] **Phase 1 — Missions.** Recorder-driven NEXUS runner with handoffs, 3-attempt Dev↔QA loop, gates; traces tagged per task; `evolvra ingest / missions / mission show / stats`.
 - [x] **Phase 2 — Scoring.** Deterministic checks, 3-judge free-tier ensemble (Groq gpt-oss-120b, Gemini Flash-Lite, Gemma 4), per-task fitness, `evolvra score / fitness`. See [docs/SCORING.md](docs/SCORING.md).
 - [x] **Phase 3 — Evolution.** Diagnose → mutate (K variants) → lint → proxy tournament on held-out banks → promote only if it beats the parent. `evolvra evolve`. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
-- [ ] **Phase 4 — Dashboard.** Roster, fitness curves, genealogy tree, diff viewer. Nightly export via Actions.
+- [x] **Phase 4 — Dashboard.** Static Vite + React site on GitHub Pages: overview, roster, genealogy, fitness by version, version diffs, missions with per-judge scores, evolutions. `evolvra export`. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 - [ ] **Phase 5 — Polish.** Inspect AI tasks, demo video, upstream PRs to agency-agents.
 
 ## Credits

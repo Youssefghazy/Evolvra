@@ -172,6 +172,20 @@ With `network error`, check your internet or VPN.
 
 ---
 
+## Part F — Publish the dashboard (free, GitHub Pages)
+
+One-time: on GitHub open your repo → **Settings → Pages → Source: GitHub Actions**. Then whenever you want
+the public page to update:
+
+```powershell
+cd ~/Evolvra/core
+uv run evolvra export
+cd ~/Evolvra
+git add dashboard/public/data; git commit -m "data: refresh dashboard"; git push
+```
+
+A minute later the site is live at https://youssefghazy.github.io/Evolvra/
+
 ## Part E — Hand the results back for Phase 1
 
 Phase 1 designs trace ingestion against real data. Share these two things in chat (they contain no secrets):
