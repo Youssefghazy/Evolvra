@@ -186,6 +186,19 @@ git add dashboard/public/data; git commit -m "data: refresh dashboard"; git push
 
 A minute later the site is live at https://youssefghazy.github.io/Evolvra/
 
+## Part G — Stop pasting: automate the loop
+
+Run once (from PowerShell, in the repo):
+
+```powershell
+cd ~/Evolvra
+.\scripts\cycle.ps1              # try it by hand first: ingest, score, export, commit, push
+.\scripts\schedule.ps1 -Hours 6  # then let Windows run it every 6 hours while you're logged in
+```
+
+Add `-Evolve` to either command to also run one evolution generation on the weakest agent each time.
+From now on your only manual step is running missions in Claude Code. Everything else flows to GitHub.
+
 ## Part E — Hand the results back for Phase 1
 
 Phase 1 designs trace ingestion against real data. Share these two things in chat (they contain no secrets):

@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -300,6 +301,67 @@ def cmd_export(args) -> int:
     return 0
 
 
+def _git(repo: Path, *args: str) -> tuple[int, str]:
+    proc = subprocess.run(["git", "-C", str(repo), *args], check=False, capture_output=True, text=True)
+    return proc.returncode, (proc.stdout + proc.stderr).strip()
+
+
+def cmd_cycle(args) -> int:
+    """ingest -> score -> (evolve weakest) -> export -> commit -> push. The no-hands loop."""
+    conn = db.connect(args.db)
+    plugin_dir = _plugin_agents_dir(args)
+    repo = plugin_dir.parents[1]
+    log = []
+
+    rep = ingest.ingest_all(conn)
+    log.append(f"ingest: {rep.summary()}")
+
+    tasks = runner.pending_tasks(conn)
+    if tasks:
+        srep = runner.score_tasks(conn, tasks, judge.judges_from_env(), skip_judges=args.no_judges)
+        log.append(f"score: {srep.summary()}")
+    else:
+        log.append("score: nothing new")
+
+    evolved = None
+    if args.evolve:
+        rows = [r for r in fitness.agent_fitness(conn) if r["tasks"] >= args.min_tasks]
+        target = args.evolve if args.evolve != "weakest" else (rows[0]["agent"] if rows else None)
+        if target:
+            try:
+                res = engine.evolve(conn, target, plugin_dir, engine.EvolveOptions(
+                    candidates=args.candidates, bank_size=args.bank_size, margin=args.margin))
+                log.append(f"evolve: {res.summary()}")
+                evolved = res if res.new_version else None
+            except ValueError as e:
+                log.append(f"evolve: skipped ({e})")
+        else:
+            log.append(f"evolve: no agent with >= {args.min_tasks} scored task(s) yet")
+
+    out = repo / "dashboard" / "public" / "data"
+    counts = export_mod.export_all(conn, out)
+    log.append("export: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
+
+    if not args.no_push:
+        paths = ["dashboard/public/data"]
+        if evolved:
+            paths.append("plugin/agents")
+        _git(repo, "add", *paths)
+        code, status = _git(repo, "status", "--porcelain", *paths)
+        if status:
+            msg = f"cycle: refresh data ({counts['missions.json']} missions)"
+            if evolved:
+                msg = f"evolve({evolved.slug}): v{evolved.new_version} +{evolved.delta} | {msg}"
+            _git(repo, "commit", "-q", "-m", msg)
+            code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
+            log.append("push: ok" if code == 0 else f"push failed: {pushed}")
+        else:
+            log.append("push: nothing changed")
+    for line in log:
+        print(line)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="evolvra", description="Evolvra core. Survival of the promptest.")
     p.add_argument("--db", help="SQLite path (default: $EVOLVRA_HOME/evolvra.db)")
@@ -354,6 +416,18 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("fitness", help="fitness per agent version (what evolution optimizes)")
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_fitness)
+
+    s = sub.add_parser("cycle", help="ingest -> score -> [evolve] -> export -> commit -> push, in one go")
+    s.add_argument("--evolve", nargs="?", const="weakest", metavar="SLUG",
+                   help="also run one evolution generation (default target: weakest agent)")
+    s.add_argument("--min-tasks", type=int, default=1, help="min scored tasks before an agent may evolve")
+    s.add_argument("--candidates", type=int, default=3)
+    s.add_argument("--bank-size", type=int, default=4)
+    s.add_argument("--margin", type=float, default=0.03)
+    s.add_argument("--no-judges", action="store_true")
+    s.add_argument("--no-push", action="store_true", help="do everything except git commit/push")
+    s.add_argument("--plugin-dir")
+    s.set_defaults(fn=cmd_cycle)
 
     s = sub.add_parser("export", help="write JSON snapshots for the dashboard (dashboard/public/data)")
     s.add_argument("--out", help="output directory (default: <repo>/dashboard/public/data)")

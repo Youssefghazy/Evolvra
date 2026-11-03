@@ -83,7 +83,10 @@ evolvra fitness              # per agent version, weakest first: the evolution q
 evolvra evolve <slug>        # one generation: variants, tournament, promote only if it wins
 evolvra lineage <slug>       # version history with rationales
 evolvra export               # JSON snapshots for the dashboard (then commit + push to publish)
+evolvra cycle [--evolve]     # ingest -> score -> [evolve weakest] -> export -> commit -> push, in one go
 ```
+Windows users: `scripts\schedule.ps1` runs the cycle on a timer, so missions you run get scored, evolved
+and published without touching a terminal.
 
 **Live dashboard:** https://youssefghazy.github.io/Evolvra/ (after enabling Pages once: Settings → Pages → Source: GitHub Actions)
 Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
