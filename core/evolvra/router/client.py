@@ -148,12 +148,16 @@ def chat(
             "UPDATE provider_usage SET tokens = tokens + ? WHERE provider = ? AND day = ?",
             (total, provider, quota.today()),
         )
-    conn.execute(
-        "INSERT OR REPLACE INTO llm_cache (key, provider, model, response_json) VALUES (?,?,?,?)",
-        (key, provider, model, json.dumps(raw, ensure_ascii=False)),
-    )
+    result = ChatResult(provider, model, _extract_text(raw), False, raw, _finish_reason(raw))
+    # An empty reply cut off by the budget (all hidden reasoning) is a failure, not an answer:
+    # caching it would replay the failure on every re-score.
+    if not (result.truncated and not result.text.strip()):
+        conn.execute(
+            "INSERT OR REPLACE INTO llm_cache (key, provider, model, response_json) VALUES (?,?,?,?)",
+            (key, provider, model, json.dumps(raw, ensure_ascii=False)),
+        )
     conn.commit()
-    return ChatResult(provider, model, _extract_text(raw), False, raw, _finish_reason(raw))
+    return result
 
 
 def _is_reasoning_rejection(err: ProviderError) -> bool:

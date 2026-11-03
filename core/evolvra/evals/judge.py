@@ -25,6 +25,9 @@ DEFAULT_JUDGES: tuple[tuple[str, str], ...] = (
     ("gemini", "gemini-3.5-flash-lite"),
 )
 RUBRIC = ("correctness", "completeness", "quality", "evidence")
+MAX_TOKENS = 900
+# Qwen on Groq can spend all 900 tokens on hidden reasoning and return empty content.
+RETRY_MAX_TOKENS = 2400
 
 SYSTEM = (
     "You are a strict, fair QA reviewer for an AI agency. You grade one agent's work on one task. "
@@ -161,8 +164,11 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
     for provider, model in judges or judges_from_env():
         name = f"{provider}/{model}"
         try:
-            res = client.chat(conn, messages, provider=provider, model=model, max_tokens=900,
+            res = client.chat(conn, messages, provider=provider, model=model, max_tokens=MAX_TOKENS,
                               _transport=_transport)
+            if res.truncated and not parse_judge_json(res.text):
+                res = client.chat(conn, messages, provider=provider, model=model,
+                                  max_tokens=RETRY_MAX_TOKENS, _transport=_transport)
         except (client.ProviderError, quota.QuotaExceeded) as e:
             results.append(JudgeResult(name, {}, [], f"judge error: {e}", "judge_error", False, ""))
             continue
@@ -171,7 +177,8 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
             retry = messages + [{"role": "assistant", "content": res.text[:2000]},
                                 {"role": "user", "content": "That was not valid JSON. Reply with ONLY the JSON object, no prose, no code fences."}]
             try:
-                res = client.chat(conn, retry, provider=provider, model=model, max_tokens=900, _transport=_transport)
+                res = client.chat(conn, retry, provider=provider, model=model, max_tokens=MAX_TOKENS,
+                                  _transport=_transport)
                 data = parse_judge_json(res.text) or {}
             except (client.ProviderError, quota.QuotaExceeded):
                 data = {}

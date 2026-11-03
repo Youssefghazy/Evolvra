@@ -171,3 +171,21 @@ def test_429_waits_the_time_the_provider_asks_for(monkeypatch):
     raw = client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
     assert raw["choices"][0]["message"]["content"] == "ok"
     assert len(attempts) == 3 and all(abs(w - 3.5) < 1e-9 for w in sleeps)
+
+
+def test_empty_truncated_reply_is_not_cached(monkeypatch):
+    # Qwen on Groq spent its whole budget on hidden reasoning (finish_reason=length, content="").
+    # Caching that made every re-score replay the failure without asking the model again.
+    conn = db.connect(":memory:")
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    calls = []
+
+    def transport(url, body, api_key, timeout):
+        calls.append(body)
+        return {"choices": [{"message": {"content": "", "reasoning": "thinking..."}, "finish_reason": "length"}],
+                "usage": {"total_tokens": 900}}
+
+    msgs = [{"role": "user", "content": "grade"}]
+    first = client.chat(conn, msgs, provider="groq", _transport=transport)
+    second = client.chat(conn, msgs, provider="groq", _transport=transport)
+    assert first.truncated and first.text == "" and not second.cached and len(calls) == 2
