@@ -24,6 +24,9 @@ DEFAULT_JUDGES: tuple[tuple[str, str], ...] = (
     ("groq", "qwen/qwen3.8-27b"),
     ("gemini", "gemini-3.5-flash-lite"),
 )
+# Qwen on Groq is capped at 1,000 output tokens/minute and spends 1-2k on hidden reasoning per verdict.
+# Ask it not to reason; if the provider rejects the value, the router remembers and retries without it.
+JUDGE_REASONING: dict[str, str | None] = {"qwen/qwen3.8-27b": "none"}
 RUBRIC = ("correctness", "completeness", "quality", "evidence")
 MAX_TOKENS = 900
 # Qwen on Groq can spend all 900 tokens on hidden reasoning and return empty content.
@@ -171,11 +174,12 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
     for provider, model in judges or judges_from_env():
         name = f"{provider}/{model}"
         try:
+            effort = JUDGE_REASONING.get(model, client.DEFAULT_REASONING_EFFORT)
             res = client.chat(conn, messages, provider=provider, model=model, max_tokens=MAX_TOKENS,
-                              _transport=_transport)
+                              reasoning_effort=effort, _transport=_transport)
             if res.truncated and not parse_verdict(res.text):
                 res = client.chat(conn, messages, provider=provider, model=model,
-                                  max_tokens=RETRY_MAX_TOKENS, _transport=_transport)
+                                  max_tokens=RETRY_MAX_TOKENS, reasoning_effort=effort, _transport=_transport)
         except (client.ProviderError, quota.QuotaExceeded) as e:
             results.append(JudgeResult(name, {}, [], f"judge error: {e}", "judge_error", False, ""))
             continue
@@ -185,7 +189,7 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
                                 {"role": "user", "content": "That was not valid JSON. Reply with ONLY the JSON object, no prose, no code fences."}]
             try:
                 res = client.chat(conn, retry, provider=provider, model=model, max_tokens=MAX_TOKENS,
-                                  _transport=_transport)
+                                  reasoning_effort=effort, _transport=_transport)
                 data = parse_verdict(res.text) or {}
             except (client.ProviderError, quota.QuotaExceeded):
                 data = {}

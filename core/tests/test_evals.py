@@ -235,3 +235,35 @@ def test_truncated_judge_json_is_not_read_as_zero_scores(evolvra_home, recorder,
 
     results = judge.judge_prompt(conn, "grade this", [("gemini", "gemini-3.5-flash-lite")], _transport=transport)
     assert results[0].scores["correctness"] == 0.7
+
+
+def test_read_output_prefers_main_deliverable_and_shows_tail(tmp_path):
+    out = tmp_path / "out"
+    out.mkdir()
+    guide = "# Guide\n" + ("intro line\n" * 600) + "## Main questions\n1. Why did you stop?\n"
+    (out / "GUIDE.md").write_text(guide, encoding="utf-8")
+    (out / "notes.md").write_text("short notes", encoding="utf-8")
+    (out / "GUIDE.attempt1.md").write_text("STALE DRAFT " * 500, encoding="utf-8")
+    text = checks.read_output(str(out), per_file=500, total=9000, primary_chars=6000)
+    assert text.index("GUIDE.md") < text.index("notes.md")          # largest text file first
+    assert "## Main questions" in text and "characters omitted" in text  # tail survives the cut
+    assert "STALE DRAFT" not in text                                   # backups skipped
+    assert checks.excerpt("abc", 10) == "abc"
+
+
+def test_thin_ensemble_is_rescored_next_cycle(evolvra_home, recorder, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    _recorded_mission(evolvra_home, recorder)
+    ingest.ingest_all(conn, evolvra_home)
+    one_judge = [("groq", "openai/gpt-oss-120b")]
+    transport = judge_transport({"openai/gpt-oss-120b": _reply(0.7, 0.7)})
+    runner.score_tasks(conn, runner.pending_tasks(conn), one_judge, _transport=transport)
+    assert len(runner.pending_tasks(conn)) == 1          # only one judge answered: still pending
+    three = [("groq", "openai/gpt-oss-120b"), ("groq", "qwen/qwen3.8-27b")]
+    transport2 = judge_transport({"openai/gpt-oss-120b": _reply(0.7, 0.7), "qwen/qwen3.8-27b": _reply(0.6, 0.6)})
+    rep = runner.score_tasks(conn, runner.pending_tasks(conn), three, _transport=transport2)
+    assert rep.judge_cached == 1 and runner.pending_tasks(conn) == []   # cached first judge, now complete
+    body = transport2.calls[0]
+    assert body["model"] == "qwen/qwen3.8-27b" and body["reasoning_effort"] == "none"

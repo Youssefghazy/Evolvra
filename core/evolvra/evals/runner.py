@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 
 from . import checks, fitness, judge
 
+MIN_JUDGES = 2  # below this an ensemble is provisional and the task is re-scored on the next cycle
+
 
 @dataclass
 class ScoreReport:
@@ -31,7 +33,11 @@ def pending_tasks(conn: sqlite3.Connection, mission_external_id: str | None = No
         sql += " AND m.external_id = ?"
         args.append(mission_external_id)
     if not rescore:
-        sql += " AND NOT EXISTS (SELECT 1 FROM scores s WHERE s.task_id = t.id AND s.judge_model = 'ensemble')"
+        # fully scored = an ensemble row backed by at least MIN_JUDGES answering judges; anything thinner
+        # (rate-limited day, dead judge) is picked up again next cycle, and cached verdicts cost nothing
+        sql += (" AND NOT EXISTS (SELECT 1 FROM scores s WHERE s.task_id = t.id AND s.judge_model = 'ensemble'"
+                " AND s.metric = 'rubric:correctness'"
+                f" AND json_array_length(json_extract(s.evidence_json, '$.judges')) >= {MIN_JUDGES})")
     sql += " ORDER BY m.started_at, t.task_no"
     _ensure_agent_meta(conn)
     return conn.execute(sql, args).fetchall()

@@ -224,3 +224,12 @@ def test_low_coverage_candidate_is_not_promoted(tmp_path, evolvra_home, monkeypa
     res = engine.evolve(conn, "growth-hacker", plugin, opts, home=evolvra_home, _transport=flaky)
     assert res.winner_index is None and res.candidates[0]["shared_tasks"] == 1
     assert "MARKER:c1" not in (plugin / "marketing-growth-hacker.md").read_text(encoding="utf-8")
+
+
+def test_bank_drops_tasks_that_require_execution():
+    assert bank.requires_execution("Write a CI workflow", ["actionlint reports 0 errors", "pytest passes"]) is True
+    assert bank.requires_execution("Write an interview guide", ["5 open questions", "under 45 minutes"]) is False
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    devops = bank.load_bank(conn, AGENTS_DIR, "devops-automator")
+    assert all(not bank.requires_execution(t.task, list(t.acceptance)) for t in devops)

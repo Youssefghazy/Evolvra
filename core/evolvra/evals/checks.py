@@ -30,24 +30,55 @@ def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
     return sorted(files)[:max_files]
 
 
-def read_output(output_dir: str | None, *, per_file: int = 4000, total: int = 12000) -> str:
-    """Concatenate text files under output_dir, truncated, for the judge prompt."""
-    chunks, used = [], 0
-    for path in output_files(output_dir):
+BACKUP_MARKERS = (".attempt", ".bak", ".orig", ".old", "~")
+PRIMARY_CHARS = 14000   # the main deliverable gets most of the budget
+HEAD_SHARE = 0.65       # head + tail excerpt, so section headings late in a document still show
+
+
+def is_backup(path: Path) -> bool:
+    name = path.name.lower()
+    return any(m in name for m in BACKUP_MARKERS)
+
+
+def excerpt(text: str, limit: int) -> str:
+    """Head + tail excerpt with an explicit marker. Judges previously saw only the head, which cut the
+    'Main questions' section out of a 15 KB interview guide and scored it as missing content."""
+    if len(text) <= limit:
+        return text
+    head = int(limit * HEAD_SHARE)
+    tail = limit - head
+    omitted = len(text) - head - tail
+    return text[:head] + f"\n\n[... {omitted} characters omitted from the middle of this file ...]\n\n" + text[-tail:]
+
+
+def read_output(output_dir: str | None, *, per_file: int = 4000, total: int = 24000,
+                primary_chars: int = PRIMARY_CHARS) -> str:
+    """Concatenate text files under output_dir for the judge prompt.
+
+    Order: largest text file first (it is almost always the deliverable), then the rest by size.
+    The first file may use `primary_chars`; the others `per_file`; backups (*.attempt*, *.bak) are skipped.
+    """
+    files = [p for p in output_files(output_dir) if not is_backup(p)]
+    texts, binaries = [], []
+    for path in files:
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
-            chunks.append(f"--- {path.name} (binary, {path.stat().st_size} bytes) ---")
+            binaries.append(f"--- {path.name} (binary, {path.stat().st_size} bytes) ---")
             continue
         try:
-            text = path.read_text(encoding="utf-8", errors="replace")
+            texts.append((path, path.read_text(encoding="utf-8", errors="replace")))
         except OSError:
             continue
-        text = text[:per_file] + ("\n...[truncated]" if len(text) > per_file else "")
-        if used + len(text) > total:
+    texts.sort(key=lambda pt: -len(pt[1]))
+    chunks, used = [], 0
+    for i, (path, text) in enumerate(texts):
+        limit = primary_chars if i == 0 else per_file
+        body = excerpt(text, min(limit, max(0, total - used)))
+        if used + len(body) >= total and i > 0:
             chunks.append("--- [more files omitted] ---")
             break
-        chunks.append(f"--- {path.name} ---\n{text}")
-        used += len(text)
-    return "\n".join(chunks)
+        chunks.append(f"--- {path.name} ({len(text)} chars) ---\n{body}")
+        used += len(body)
+    return "\n".join(chunks + binaries)
 
 
 def run_checks(task: sqlite3.Row) -> list[tuple[str, float, dict]]:

@@ -25,13 +25,23 @@ def seed_tasks(plugin_agents_dir: Path, slug: str) -> list[BankTask]:
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8"))
-    return [BankTask(t["brief"], t["task"], tuple(t.get("acceptance", [])), "seed") for t in data.get("tasks", [])]
+    return [BankTask(t["brief"], t["task"], tuple(t.get("acceptance", [])), "seed") for t in data.get("tasks", [])
+            if not requires_execution(t["task"], t.get("acceptance", []))]
 
 
 _FILE_REF = re.compile(r"\b[\w.-]+\.(md|txt|json|py|js|ts|tsx|html|css|csv|yaml|yml|sql|sh|ps1)\b", re.IGNORECASE)
 
 
 MATERIALS_CHARS = 6000
+# Criteria that can only be met by running something. The arena actor has no tools, so such tasks reward
+# "honest hypothetical evidence" at best and fabrication at worst; they are left out of the bank.
+_EXECUTION_RE = re.compile(
+    r"\b(run|runs|ran|execute[sd]?|exit\s*(code|0|1)|passes?\s+(the\s+)?tests?|pytest|actionlint|npm\s+test|"
+    r"lint(er)?\s+(output|passes)|command\s+output|byte-identical|sha-?256|valid\s+yaml)\b", re.IGNORECASE)
+
+
+def requires_execution(task: str, acceptance: list[str]) -> bool:
+    return bool(_EXECUTION_RE.search(" ".join([task, *acceptance])))
 
 
 def is_self_contained(task: str, acceptance: list[str], depends_on: list[int]) -> bool:
@@ -72,6 +82,8 @@ def mission_tasks(conn: sqlite3.Connection, slug: str) -> list[BankTask]:
     for r in rows:
         acceptance = json.loads(r["acceptance_json"] or "[]")
         depends = json.loads(r["depends_json"] or "[]")
+        if requires_execution(r["task"], acceptance):
+            continue
         if is_self_contained(r["task"], acceptance, depends):
             out.append(BankTask(r["brief"], r["task"], tuple(acceptance), r["external_id"]))
             continue

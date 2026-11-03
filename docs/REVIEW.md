@@ -1,6 +1,6 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-03 ~12:30Z, after the first promotion (`5356431`) and the 8-mission data refresh._
+_Updated 2026-11-03 ~12:45Z, after STATUS `e26bff6` (pm session). Supersedes the 12:30Z draft._
 
 ## Verdict on your last session
 Outstanding. In one session you: refreshed the plugin, re-scored everything with the new ensemble (scores
@@ -11,6 +11,21 @@ promoted persona (`7c25923`) and ran two more missions. I verified every commit 
 
 I added `1d0c768`: a promotion now bumps the plugin version itself, so `7c25923` never has to be done by hand again.
 
+## Answers to your pm-session open questions (all implemented on `main`, tests 57)
+1. **Judge-input truncation** (your biggest finding): `checks.read_output` now shows the largest text file
+   first with up to 14k chars as a head+tail excerpt (so late sections like "Main questions" survive), other
+   files 4k each, 24k total, and skips `*.attempt*`, `*.bak`, `*.orig`, `*.old`, `*~`. Bank materials use the
+   same reader, so the EXPERIMENTS arena task no longer mixes attempt 1 with the final.
+   → **Re-score all 16 tasks** (`uv run evolvra score --rescore`); I expect ux-researcher and growth-hacker to rise.
+2. **Qwen**: it is now asked for `reasoning_effort: none` (per-judge setting in `evals/judge.py`). If Groq rejects
+   the value, the router remembers and retries without it. Also, **an ensemble with fewer than 2 answering
+   judges is provisional**: `evolvra score` picks those tasks up again next cycle (cached verdicts cost nothing).
+3. **Execution-bound bank tasks are excluded** (`bank.requires_execution`: run/exit code/pytest/actionlint/
+   valid YAML/byte-identical...). The arena only plays tasks a tool-less actor can honestly do.
+4. **16:17 run at the Groq daily cap**: leave it; a generation with no candidates is harmless and the data-only
+   part still works. Tomorrow's cap reset fixes it.
+5. **Restart**: the next operator session is a fresh start by construction; nothing else needed.
+
 ## Decisions on things I own
 - **Judges stay as they are for one more cycle**: gpt-oss-120b (Groq), qwen3.8-27b (Groq), flash-lite (Gemini).
   Your retry fixes lifted Qwen from 0/14 to 10/16 verdicts. If it stays under ~70% in the next cycle, we swap it
@@ -19,8 +34,9 @@ I added `1d0c768`: a promotion now bumps the plugin version itself, so `7c25923`
   fitness over ≥3 QA tasks is below v1's 0.86, I will roll it back by promoting v1's content as v3 with a rationale.
 
 ## Requested now (priority order)
-1. `git pull`; the plugin version was bumped by my commit's test fixture only, so no refresh is needed unless
-   `plugin/.claude-plugin/plugin.json` changed on `main` since your last update. Check and refresh if so.
+1. `git pull`, then `cd core; uv run evolvra score --rescore` and `uv run evolvra fitness`. Report the fitness
+   table before/after the truncation fix (the "after" column of your pm table is the "before" here).
+   Groq's daily token cap resets at midnight UTC; if the re-score hits TPD 429s, stop and finish it tomorrow.
 2. **Validate the promotion in the real world.** Run three missions whose QA step uses `evidence-collector`
    (any builders; vary them: `content-creator`, `backend-architect`, `devops-automator`). Then report:
    - v2's real-mission fitness (`evolvra fitness`, row `evidence-collector v2`) against v1's 0.86;
