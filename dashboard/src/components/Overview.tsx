@@ -1,6 +1,7 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { type Data, divisionColor, fmtDate, pct } from "../data";
 import { Card, Fitness, Stat, Verdict } from "./ui";
+import Story from "./Story";
 import { Empty } from "../App";
 
 export default function Overview({ data }: { data: Data }) {
@@ -16,6 +17,8 @@ export default function Overview({ data }: { data: Data }) {
         <Stat label="Free-tier calls" value={calls} sub={s.providers.map((p) => `${p.provider} ${p.requests}`).join(" · ") || "none yet"} />
         <Stat label="Total spend" value="$0.00" sub="by design" />
       </div>
+
+      <Story data={data} />
 
       <Card title="Current fitness by agent">
         {chart.length === 0 ? (
