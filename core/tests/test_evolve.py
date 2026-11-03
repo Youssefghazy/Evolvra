@@ -62,6 +62,24 @@ def test_bank_merges_missions_and_seeds(evolvra_home, recorder):
     assert bank.load_bank(conn, AGENTS_DIR, "content-creator", size=2)[0].acceptance
 
 
+def test_bank_excludes_dependent_and_file_bound_mission_tasks(evolvra_home, recorder):
+    from evolvra.missions import ingest
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    recorder("start", "--brief", "Bank hygiene", "--mode", "micro")
+    mid = max((evolvra_home / "missions").iterdir()).name
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Define the QA evidence standard")
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Verify description.md", "--depends", "1")
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Check the report.json output")
+    for no in (1, 2, 3):
+        recorder("task", "start", mid, str(no))
+        recorder("task", "done", mid, str(no), "--verdict", "PASS", "--evidence", "ok")
+    ingest.ingest_all(conn, evolvra_home)
+    mission_only = [t for t in bank.load_bank(conn, AGENTS_DIR, "evidence-collector") if t.source != "seed"]
+    assert [t.task for t in mission_only] == ["Define the QA evidence standard"]
+    assert bank.is_self_contained("Write a checklist", ["3 items"], []) is True
+
+
 def test_pick_targets_fills_with_generic():
     d = diagnose.Diagnosis("x", 1, 2, 0.5, [("generic_copy", 2)], [])
     assert mutate.pick_targets(d, 3) == ["generic_copy", "weak_evidence", "missing_acceptance_criteria_check"]
@@ -100,6 +118,9 @@ def test_evolve_promotes_only_a_winner(tmp_path, evolvra_home, monkeypatch):
     evo = conn.execute("SELECT winner_version, bank_delta FROM evolutions").fetchone()
     assert evo["winner_version"] == 2 and abs(evo["bank_delta"] - 0.3) < 1e-6
     assert (res.evolution_dir / "report.md").exists() and (res.evolution_dir / "diagnosis.md").exists()
+    assert (res.evolution_dir / "arena" / "parent" / "task-1.md").exists()
+    assert (res.evolution_dir / "arena" / "candidate-2" / "task-2.md").read_text(encoding="utf-8").count("MARKER:c2") == 1
+    assert res.candidates[1]["per_task"][0]["output_excerpt"].startswith("Deliverable by c2")
     # calls: 3 mutations + (parent + 2 valid candidates) * 2 tasks * (1 actor + 2 judges)
     assert len(transport.calls) == 3 + 3 * 2 * 3
 

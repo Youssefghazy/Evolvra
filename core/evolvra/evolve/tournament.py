@@ -29,8 +29,22 @@ ACTOR_PROMPT = """# Mission brief
 # Acceptance criteria
 {criteria}
 
-Produce the deliverable now, in Markdown. Be concrete and complete. End with a section titled
-"## Evidence" that states, for each acceptance criterion, how your deliverable satisfies it."""
+Produce the deliverable now, in Markdown. Be concrete and complete.
+
+Important: in this exercise you have NO file access and NO tool execution. Do not invent measurements,
+command output, or file contents. Where verification would require running something, state exactly
+what you would run and what result would count as PASS. Invented numbers are a failure.
+
+End with a section titled "## Evidence" that states, for each acceptance criterion, how your deliverable
+satisfies it, or what is needed to verify it."""
+
+PROXY_JUDGE_NOTE = """
+
+# Arena note
+This deliverable was produced in a sandbox with NO file access and NO tool execution. Any specific
+measurement, command output, or file content it claims to have observed is fabricated and must be scored
+low on evidence and correctness. A deliverable that honestly states what it would run and what would count
+as PASS is the correct behaviour here and must not be penalised for the missing numbers."""
 
 
 @dataclass
@@ -113,7 +127,7 @@ def play(conn: sqlite3.Connection, persona_text: str, label: str, bank: list[Ban
         body, evidence = split_evidence(output)
         prompt = judge.render_prompt(brief=t.brief, agent=agent_slug, agent_description=agent_description,
                                      task=t.task, criteria=list(t.acceptance), attempts=1, verdict="PASS",
-                                     evidence=evidence, output=body)
+                                     evidence=evidence, output=body) + PROXY_JUDGE_NOTE
         jr = judge.judge_prompt(conn, prompt, judges, _transport=_transport)
         scores, failure, critique = judge.aggregate(jr)
         pr.results.append(TaskResult(t, output, scores, proxy_fitness(scores), failure, critique,

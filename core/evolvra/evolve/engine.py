@@ -98,6 +98,7 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
     parent_res = tournament.play(conn, persona.content, "parent", held_out, agent_slug=slug, agent_description=desc,
                                  actor=opts.actor, judges=opts.judges, _transport=_transport)
     result.parent_fitness = parent_res.fitness
+    _save_outputs(evo_dir, parent_res)
 
     best_i, best_delta, best_cov = None, None, 0
     need = max(1, round(opts.min_coverage * len(held_out)))
@@ -108,10 +109,12 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
         if c.lint_ok and c.content:
             res = tournament.play(conn, c.content, f"candidate-{c.index}", held_out, agent_slug=slug,
                                   agent_description=desc, actor=opts.actor, judges=opts.judges, _transport=_transport)
+            _save_outputs(evo_dir, res)
             delta, shared = tournament.paired_delta(res, parent_res)
             entry.update({"fitness": res.fitness, "paired_delta": delta, "shared_tasks": shared})
             entry["per_task"] = [{"task": r.task.task, "fitness": r.proxy_fitness, "failure": r.failure_class,
-                                  "critique": r.critique} for r in res.results]
+                                  "critique": r.critique, "scores": r.scores, "output_excerpt": r.output[:700]}
+                                 for r in res.results]
             if delta is not None and shared >= need and (best_delta is None or delta > best_delta):
                 best_i, best_delta, best_cov = c.index, delta, shared
         result.candidates.append(entry)
@@ -135,8 +138,10 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
         " diagnosis_md, parent_fitness, bank_json) VALUES (?,?,?,?,?,?,?,?)",
         (agent_id, diag.version, json.dumps(result.candidates, ensure_ascii=False),
          result.new_version, result.delta, diag.to_markdown(), result.parent_fitness,
-         json.dumps([{"task": t.task, "source": t.source, "parent_fitness": parent_res.scored_tasks.get(t.key)}
-                     for t in held_out], ensure_ascii=False)))
+         json.dumps([{"task": t.task, "source": t.source, "parent_fitness": parent_res.scored_tasks.get(t.key),
+                      "parent_failure": r.failure_class, "parent_critique": r.critique,
+                      "parent_output_excerpt": r.output[:700]}
+                     for t, r in zip(held_out, parent_res.results, strict=True)], ensure_ascii=False)))
     conn.commit()
     (evo_dir / "report.md").write_text(_report(result, parent_res, held_out), encoding="utf-8")
     (evo_dir / "result.json").write_text(json.dumps({
@@ -145,6 +150,16 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
         "delta": result.delta, "margin": opts.margin, "bank": [t.task for t in held_out]}, indent=2, ensure_ascii=False),
         encoding="utf-8")
     return result
+
+
+def _save_outputs(evo_dir: Path, res: tournament.PersonaResult) -> None:
+    """Keep every actor output and its judge verdict on disk, so a surprising score can be audited."""
+    folder = evo_dir / "arena" / res.label
+    folder.mkdir(parents=True, exist_ok=True)
+    for i, r in enumerate(res.results, start=1):
+        head = (f"# {res.label} / task {i}\n\n**Task:** {r.task.task}\n\n**Proxy fitness:** {r.proxy_fitness}"
+                f"  **Failure:** {r.failure_class}\n\n**Critique:** {r.critique}\n\n**Scores:** {r.scores}\n\n---\n\n")
+        (folder / f"task-{i}.md").write_text(head + (r.output or "(no output)"), encoding="utf-8")
 
 
 def _bump_manifest(plugin_agents_dir: Path, slug: str, version: int, parent: int, rationale: str) -> None:
