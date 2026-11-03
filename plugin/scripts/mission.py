@@ -10,6 +10,7 @@ Usage (see `python mission.py -h`):
   task add   ID --agent SLUG --task TEXT [--acceptance TEXT ...] [--depends N,N]
   task start ID NO
   task done  ID NO --verdict PASS|FAIL|NEEDS_WORK [--feedback TEXT] [--evidence TEXT] [--output-dir PATH]
+  task reopen ID NO --feedback TEXT      (QA failed a builder's finished task: flip its last attempt to FAIL)
   finish  ID --status done|failed|escalated [--summary TEXT]
   show    ID
   current
@@ -156,6 +157,29 @@ def cmd_task_done(a) -> int:
     return 0
 
 
+def cmd_task_reopen(a) -> int:
+    """QA rejected work the orchestrator had already recorded as PASS. Make the record honest:
+    the builder's last attempt becomes FAIL with QA's feedback, and the task goes back to pending
+    (or escalated if the attempt budget is spent)."""
+    m = load(a.id)
+    t = get_task(m, a.no)
+    if t["status"] != "done" or not t["attempts"]:
+        sys.exit(f"error: task {a.no} is not done; use `task done --verdict FAIL` while it is running")
+    att = t["attempts"][-1]
+    att["verdict"] = "FAIL"
+    att["feedback"] = a.feedback
+    att["reopened_by_qa"] = True
+    t["status"] = "escalated" if len(t["attempts"]) >= MAX_ATTEMPTS else "pending"
+    # dependants that already ran against the rejected output are no longer done either
+    for other in m["tasks"]:
+        if t["no"] in other.get("depends_on", []) and other["status"] == "done":
+            other["status"] = "pending"
+    save(m)
+    print(json.dumps({"id": m["id"], "task_no": t["no"], "status": t["status"],
+                      "attempts_used": len(t["attempts"]), "attempts_left": MAX_ATTEMPTS - len(t["attempts"])}))
+    return 0
+
+
 def cmd_finish(a) -> int:
     m = load(a.id)
     m["status"] = a.status
@@ -194,6 +218,9 @@ def build_parser() -> argparse.ArgumentParser:
     s = task.add_parser("done"); s.add_argument("id"); s.add_argument("no", type=int)
     s.add_argument("--verdict", required=True, choices=VERDICTS); s.add_argument("--feedback"); s.add_argument("--evidence")
     s.add_argument("--output-dir"); s.set_defaults(fn=cmd_task_done)
+
+    s = task.add_parser("reopen"); s.add_argument("id"); s.add_argument("no", type=int)
+    s.add_argument("--feedback", required=True); s.set_defaults(fn=cmd_task_reopen)
 
     s = sub.add_parser("finish"); s.add_argument("id"); s.add_argument("--status", required=True, choices=FINAL)
     s.add_argument("--summary"); s.set_defaults(fn=cmd_finish)

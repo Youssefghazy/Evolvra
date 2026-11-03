@@ -60,9 +60,15 @@ mission.py task done <id> <no> --verdict <PASS|FAIL|NEEDS_WORK> --evidence "<1-3
 ```
 
 ## 4. Dev↔QA loop
-If a task's status comes back `pending`, run `task start` again and include the feedback in the handoff.
-The recorder allows **3 attempts**. If it reports `escalated`, stop that chain, tell the user what failed
-and why, and finish the mission with `--status escalated`.
+When a QA task (`evidence-collector` / `reality-checker`) returns FAIL or NEEDS_WORK on a builder's output:
+1. Record the QA task: `mission.py task done <id> <qa_no> --verdict NEEDS_WORK --evidence "<what QA found>"`.
+2. Reopen the builder's task so the retry counts: `mission.py task reopen <id> <builder_no> --feedback "<QA feedback verbatim>"`.
+   This flips the builder's last attempt to FAIL and sets it back to `pending` (QA tasks that depended on it
+   go back to pending too). Never fix the work yourself and never resume the builder without this step:
+   unrecorded retries make the agent look better than it is, and evolution learns from the record.
+3. `task start` the builder again with the feedback in the handoff, then re-run QA as a new attempt.
+The recorder allows **3 attempts** per task. If it reports `escalated`, stop that chain, tell the user what
+failed and why, and finish the mission with `--status escalated`.
 
 ## 5. Finish
 ```

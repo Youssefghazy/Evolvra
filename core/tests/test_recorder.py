@@ -66,3 +66,24 @@ def test_hook_tags_events_with_current_mission(evolvra_home, recorder, hook):
     assert lines[0]["mission"] == mid and lines[0]["task_no"] == 1
     assert "truncated" in lines[0]["tool_response"]
     assert lines[1]["mission"] is None  # mission finished, pointer cleared
+
+
+def test_reopen_flips_builder_attempt_and_resets_dependants(evolvra_home, recorder):
+    recorder("start", "--brief", "Reopen me")
+    mid = mission_id(evolvra_home)
+    recorder("task", "add", mid, "--agent", "growth-hacker", "--task", "Plan")
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Verify", "--depends", "1")
+    recorder("task", "start", mid, "1")
+    recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "written")
+    recorder("task", "start", mid, "2")
+    recorder("task", "done", mid, "2", "--verdict", "PASS", "--evidence", "looked fine")   # premature
+    recorder("task", "reopen", mid, "1", "--feedback", "sample sizes wrong")
+    m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
+    t1, t2 = m["tasks"]
+    assert t1["status"] == "pending" and t1["attempts"][-1]["verdict"] == "FAIL"
+    assert t1["attempts"][-1]["feedback"] == "sample sizes wrong" and t1["attempts"][-1]["reopened_by_qa"]
+    assert t2["status"] == "pending"  # QA must run again against the fixed work
+    recorder("task", "start", mid, "1")
+    recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "fixed")
+    m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
+    assert len(m["tasks"][0]["attempts"]) == 2 and m["tasks"][0]["status"] == "done"
