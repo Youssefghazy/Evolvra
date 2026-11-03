@@ -173,6 +173,31 @@ def test_429_waits_the_time_the_provider_asks_for(monkeypatch):
     assert len(attempts) == 3 and all(abs(w - 3.5) < 1e-9 for w in sleeps)
 
 
+def test_429_with_a_long_wait_fails_fast(monkeypatch):
+    # Groq's daily cap (TPD) says "try again in 26m48.768s". Sleeping 90 s twice per judge cannot help;
+    # the 2026-11-03 re-score lost ~6 minutes per task that way.
+    attempts, sleeps = [], []
+
+    class DailyCap(client.urllib.error.HTTPError):
+        def __init__(self):
+            super().__init__("u", 429, "limited", {}, None)
+        def read(self):
+            return (b'{"error":{"message":"Rate limit reached for model `qwen/qwen3.8-27b` on tokens per day (TPD): '
+                    b'Limit 200000, Used 198036, Requested 5688. Please try again in 26m48.768s."}}')
+
+    def urlopen(req, timeout):
+        attempts.append(1)
+        raise DailyCap()
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(client.time, "sleep", lambda s: sleeps.append(s))
+    with pytest.raises(client.ProviderError, match="HTTP 429"):
+        client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
+    assert len(attempts) == 1 and sleeps == []
+    assert abs(client._retry_after_seconds({}, "try again in 26m48.768s") - 1608.768) < 1e-6
+    assert abs(client._retry_after_seconds({}, "try again in 1h2m3s") - 3723.0) < 1e-6
+
+
 def test_empty_truncated_reply_is_not_cached(monkeypatch):
     # Qwen on Groq spent its whole budget on hidden reasoning (finish_reason=length, content="").
     # Caching that made every re-score replay the failure without asking the model again.

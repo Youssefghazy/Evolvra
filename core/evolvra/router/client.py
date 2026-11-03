@@ -221,10 +221,12 @@ def _retry_after_seconds(headers, detail: str) -> float:
             return float(ra)
     except (TypeError, ValueError):
         pass
-    m = re.search(r"try again in\s*([\d.]+)\s*(ms|s)", detail, re.IGNORECASE)
+    # "2.5s", "250ms", and Groq's daily cap "26m48.768s" / "1h2m3s"
+    m = re.search(r"try again in\s*((?:[\d.]+\s*(?:ms|h|m|s)\s*)+)", detail, re.IGNORECASE)
     if m:
-        value = float(m.group(1))
-        return value / 1000.0 if m.group(2).lower() == "ms" else value
+        units = {"ms": 0.001, "h": 3600.0, "m": 60.0, "s": 1.0}
+        return sum(float(v) * units[u.lower()]
+                   for v, u in re.findall(r"([\d.]+)\s*(ms|h|m|s)", m.group(1), re.IGNORECASE))
     return 20.0
 
 
@@ -235,9 +237,11 @@ def _send(req: urllib.request.Request, timeout: float, _attempt: int = 1) -> dic
     except urllib.error.HTTPError as e:  # keys never appear in error text
         detail = e.read().decode("utf-8", errors="replace")[:500]
         if e.code == 429 and _attempt < MAX_429_ATTEMPTS:
-            wait = min(MAX_429_WAIT_S, _retry_after_seconds(e.headers, detail) + 1.0)
-            time.sleep(wait)  # free tiers are per-minute buckets; waiting is free, failing is not
-            return _send(req, timeout, _attempt=_attempt + 1)
+            wait = _retry_after_seconds(e.headers, detail) + 1.0
+            # per-minute buckets refill while we wait; a daily cap ("try again in 26m48s") does not, so fail fast
+            if wait <= MAX_429_WAIT_S:
+                time.sleep(wait)
+                return _send(req, timeout, _attempt=_attempt + 1)
         if e.code in RETRY_STATUSES and _attempt == 1:
             time.sleep(RETRY_PAUSE_S)  # free tiers hiccup; one retry fixes most 503s
             return _send(req, timeout, _attempt=2)
