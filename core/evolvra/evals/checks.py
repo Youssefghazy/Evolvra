@@ -8,6 +8,8 @@ from pathlib import Path
 MAX_ATTEMPTS = 3
 TEXT_SUFFIXES = {".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".py", ".js", ".ts", ".tsx", ".jsx",
                  ".html", ".css", ".sql", ".sh", ".ps1", ".csv", ".xml", ".ini", ".cfg", ".env"}
+# tool environments agents create while working; never part of the deliverable
+JUNK_DIRS = {"venv", "env", "node_modules", "__pycache__", "site-packages"}
 
 
 def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
@@ -16,7 +18,8 @@ def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
     root = Path(output_dir)
     if not root.is_dir():
         return []
-    files = [p for p in sorted(root.rglob("*")) if p.is_file() and not p.name.startswith(".")]
+    files = [p for p in sorted(root.rglob("*")) if p.is_file()
+             and not any(part.startswith(".") or part in JUNK_DIRS for part in p.relative_to(root).parts)]
     return files[:max_files]
 
 

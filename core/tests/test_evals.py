@@ -59,6 +59,19 @@ def test_deterministic_checks(evolvra_home, recorder):
     assert task["agent_description"].startswith("Expert")  # pulled from persona frontmatter
 
 
+def test_output_files_skip_virtualenvs_and_hidden_dirs(tmp_path):
+    # A QA agent once made a .venv inside its output dir; 11k library files filled the judge
+    # prompt and the real report was never shown.
+    (tmp_path / "QA-REPORT.md").write_text("verdict: PASS", encoding="utf-8")
+    for d in (".venv/Lib/site-packages/dateutil", "node_modules/x", "sub/__pycache__", "venv/Lib"):
+        (tmp_path / d).mkdir(parents=True)
+        for i in range(25):
+            (tmp_path / d / f"m{i}.py").write_text("import sys", encoding="utf-8")
+    (tmp_path / "sub" / "notes.md").write_text("kept", encoding="utf-8")
+    assert [p.name for p in checks.output_files(str(tmp_path))] == ["QA-REPORT.md", "notes.md"]
+    assert "verdict: PASS" in checks.read_output(str(tmp_path))
+
+
 def test_parse_judge_json_tolerates_fences_and_chatter():
     assert judge.parse_judge_json(_reply(0.5, 0.5, fence=True))["correctness"] == 0.5
     assert judge.parse_judge_json("no json here") is None
