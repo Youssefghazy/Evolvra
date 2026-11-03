@@ -128,13 +128,21 @@
       "file": "testing-evidence-collector.md",
       "emoji": "📸",
       "color": "orange",
-      "version": 1,
-      "parent": null,
+      "version": 2,
+      "parent": 1,
       "source": {
         "repo": "msitarzewski/agency-agents",
         "commit": "b37b5bb",
         "path": "testing/testing-evidence-collector.md"
-      }
+      },
+      "history": [
+        {
+          "version": 2,
+          "parent": 1,
+          "rationale": "evolved from v1: targeted 'unverifiable_claims'; paired delta +0.1662 on 4 shared held-out task(s) (parent 0.6288)",
+          "at": "2026-11-03T11:37:23Z"
+        }
+      ]
     },
     {
       "slug": "reality-checker",

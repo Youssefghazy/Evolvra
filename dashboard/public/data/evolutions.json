@@ -432,5 +432,246 @@
    }
   ],
   "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 4. Mean fitness: 0.5463.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_required_content` x1\n- `missing_required_artifacts` x1\n- `missing_feature_status_labels` x1\n- `missing_check_script` x1\n\n## Worst tasks\n### 20261103-080434-propose-three-zero-budget #2 (fitness 0.2)\n- Task: Verify EXPERIMENTS.md against task 1 acceptance criteria\n- Acceptance: Per-criterion PASS/FAIL table per experiment with quoted line evidence; Independently recomputes each sample-size/MDE claim and records the calculation\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `missing_required_content`\n- Critique: The submission contains unrelated code files and no evidence addressing the acceptance criteria.\n- Unmet criteria:\n  - Per-criterion PASS/FAIL table per experiment with quoted line evidence: The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed.\n  - Independently recomputes each sample-size/MDE claim and records the calculation: No calculations or EXPERIMENTS.md deliverable are present in the provided output.\n- QA feedback on failed attempts: Fix E2 sizing (pooled, 61/arm) and single decision test; fix E3 Fisher threshold 19/150 & MDE ~+10pp (or switch to pooled z); make Z consistent (=MDE) across hypotheses; add run order + per-experiment hash salt + exclusions; define E3 day 0 per batch; optional CAN-SPAM address, E1 exact binomtest >=78.\n- Output excerpt:\n```\n--- typing_extensions.cpython-313.pyc (binary, 165809 bytes) ---\n--- __init__.py ---\nimport sys\n\ntry:\n    from ._version import version as __version__\nexcept ImportError:\n    __version__ = 'unknown'\n\n__all__ = [\"easter\", \"parser\", \"relativedelta\", \"rrule\", \"tz\", \"utils\"]\n\n\ndef __getattr__(name):\n    import importlib\n\n    if name in __all__ or name == \"zoneinfo\":\n        return importlib.import_module(\".\" + name, __name__)\n    raise AttributeError(\n        \"module {!r} has no attribute {!r}\".format(__name__, name)\n    )\n\n\ndef __dir__():\n    # __dir__ should include all the lazy-importable modules as well.\n    return (\n        [x for x in globals() if x not in sys.modules] + __all__ + [\"zoneinfo\"]\n    )\n\n--- __init__.cpython-313.pyc (binary, 1248 bytes) ---\n--- _common.cpython-313.pyc (binary, 1906 bytes) ---\n--- _tzdata_impl.cpython-313.pyc (binary, 4025 bytes) ---\n--- _version.cpython-313.pyc (binary, 696 bytes) ---\n--- easter.cpython-313.pyc (binary, 2770 bytes) ---\n--- relativedelta.cpython-313.pyc (binary, 28700 bytes) ---\n--- rrule.cpython-313.pyc (binary, 70822 bytes) ---\n--- tzwin.cpython-313.pyc (binary, 267 bytes) ---\n--- utils.cpython-313.pyc (binary, 2449 bytes) ---\n--- _common.py ---\n\"\"\"\nCommon code used in multiple modules.\n\"\"\"\n\n\nclass weekday:\n    __slots__ = [\"weekday\", \"n\"]\n\n    def __init__(self, weekday, n=None):\n        self.weekday = weekday\n        self.n = n\n\n    def __call__(self, n):\n        if n == self.n:\n            return self\n        else:\n        \n```\n\n### 20261103-075105-write-a-github-actions #2 (fitness 0.28)\n- Task: Independently verify the workflow is valid YAML and meets task 1 criteria\n- Acceptance: Runs own YAML parse + schema/actionlint check and records raw output; Per-criterion PASS/FAIL table with evidence and overall verdict\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_artifacts`\n- Critique: The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.\n- Unmet criteria:\n  - Runs own YAML parse + schema/actionlint check and records raw output: The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response.\n  - Per-criterion PASS/FAIL table with evidence and overall verdict: No explicit per-criterion PASS/FAIL table was provided in the output.\n- Output excerpt:\n```\n--- __editable__.samplepkg-0.1.0.pth (binary, 113 bytes) ---\n--- py.cpython-313.pyc (binary, 553 bytes) ---\n--- __init__.py ---\nfrom __future__ import annotations\n\n\n__all__ = [\"__version__\", \"version_tuple\"]\n\ntry:\n    from ._version import version as __version__\n    from ._version import version_tuple\nexcept ImportError:  # pragma: no cover\n    # broken installation, we don't even try\n    # unknown only works because we do poor mans version compare\n    __version__ = \"unknown\"\n    version_tuple = (0, 0, \"unknown\")\n\n--- __init__.cpython-313.pyc (binary, 543 bytes) ---\n--- _argcomplete.cpython-313.pyc (binary, 4996 bytes) ---\n--- _version.cpython-313.pyc (binary, 696 bytes) ---\n--- approx.cpython-313.pyc (binary, 47489 bytes) ---\n--- cacheprovider.cpython-313.pyc (binary, 33842 bytes) ---\n--- capture.cpython-313.pyc (binary, 57271 bytes) ---\n--- compat.cpython-313.pyc (binary, 13828 bytes) ---\n--- debugging.cpython-313.pyc (binary, 18558 bytes) ---\n--- deprecated.cpython-313.pyc (binary, 6119 bytes) ---\n--- doctest.cpython-313.pyc (binary, 33601 bytes) ---\n--- faulthandler.cpython-313.pyc (binary, 5184 bytes) ---\n--- fixtures.cpython-313.pyc (binary, 106345 bytes) ---\n--- freeze_support.cpython-313.pyc (binary, 1873 bytes) ---\n--- helpconfig.cpython-313.pyc (binary, 13255 bytes) ---\n--- hookspec.cpython-313.pyc (binary, 42449 bytes) ---\n--- junitxml.cpython-313.pyc (binary, 35781 bytes) ---\n--- legacypath.cpython-313.pyc (binary, 24204 bytes) ---\n```\n\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.77)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_feature_status_labels`\n- Critique: Missing PASS/NEEDS_WORK labels for each listed feature\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: Listed the features found but failed to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n"
+ },
+ {
+  "id": 4,
+  "agent": "evidence-collector",
+  "parent_version": 1,
+  "winner_version": 2,
+  "delta": 0.1662,
+  "created_at": "2026-11-03T11:37:23.096Z",
+  "parent_fitness": 0.6288,
+  "bank": [
+   {
+    "task": "Verify BACKLOG-RANKING.md against task 1 acceptance criteria",
+    "source": "20261103-092430-rank-a-12-item (materials embedded)",
+    "parent_fitness": 0.61,
+    "parent_failure": "missing_required_elements",
+    "parent_critique": "The deliverable lacks the required PASS/FAIL table and provides unverified, fabricated evidence for the calculations.",
+    "parent_output_excerpt": "# QA Evidence-Based Report: Quillnote Backlog Ranking\n\n## 🔍 Reality Check Results\n**Commands Executed (Simulated / Proposed)**: \n```bash\npython3 rice_score.py backlog.csv ranking_output.csv\ndiff ranking_output.csv expected_output.csv\n```\n**Input Evidence**: Provided text snippets containing `BACKLOG-RANKING.md`, `backlog.csv`, and `ranking_output.csv`.\n**Specification / Acceptance Criteria Quote**: *\"Per-criterion PASS/FAIL table with quoted evidence; Independently recomputes every item's score and the order, and saves the calculation\"*\n\n---\n\n## 📸 Evidence Analysis & Independent Recalculation\n\nI have independently recalculated the RICE score for every item using the formula:\n$$\\text{RICE Sco"
+   },
+   {
+    "task": "Verify star-rating.html against task 1 acceptance criteria",
+    "source": "20261103-091344-build-a-small-accessible (materials embedded)",
+    "parent_fitness": 0.92,
+    "parent_failure": "none",
+    "parent_critique": "The report does not present the PASS/FAIL results in a formal table, though the information is present.",
+    "parent_output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: Static check command provided in input: `python -I checks/check_star_rating.py star-rating.html`\n**Screenshot Evidence**: None available in environment (File access and tool execution restricted for this turn; relying fully on provided test script outputs).\n**Specification Quote**: \"build a small accessible star-rating input component in plain HTML/CSS/JS, keyboard operable and screen-reader friendly\"\n\n## 📸 Visual Evidence Analysis\n**Comprehensive Playwright Screenshots**: Not captured (No execution environment available).\n**What I Actually See (Based on Provided Static Analysis Output)**:\n- The static analysis run"
+   },
+   {
+    "task": "Verify EXPERIMENTS.md against task 1 acceptance criteria",
+    "source": "20261103-080434-propose-three-zero-budget (materials embedded)",
+    "parent_fitness": 0.46,
+    "parent_failure": "missing_required_analysis",
+    "parent_critique": "The report fails to provide the required PASS/FAIL tables and full independent calculations for all three experiments.",
+    "parent_output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: None (Explicit constraint: No file access and no tool execution in this environment).\n**Text Evidence**: Evaluated directly against the provided text snippet (`EXPERIMENTS.attempt1.md`).\n**Specification Quote**: \"propose three zero-budget growth experiments for a free developer tool with 500 users, each with a hypothesis and a metric\" + Acceptance criteria: \"Per-criterion PASS/FAIL table per experiment with quoted line evidence\", \"Independently recomputes each sample-size/MDE claim and records the calculation\".\n\n---\n\n## 📸 Text Evidence Analysis & Compliance\n\n### What I Actually See in the Provided Input:\n- The inpu"
+   },
+   {
+    "task": "Independently verify the workflow is valid YAML and meets task 1 criteria",
+    "source": "20261103-075105-write-a-github-actions (materials embedded)",
+    "parent_fitness": 0.525,
+    "parent_failure": "missing_verification",
+    "parent_critique": "The report lacks the required actual YAML parsing and actionlint verification output.",
+    "parent_output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Execution Environment Note**: Per system constraints, direct execution tools are unavailable in this sandbox environment. Therefore, verification of YAML syntax and actionlint rules must be prescribed via exact commands and evaluated against strict code inspection of the provided `ci.yml` text. No command outputs are hallucinated.\n\n**Specification Quote**: *\"write a GitHub Actions workflow that lints and tests a Python package on every push, with evidence it is valid YAML\"*\n\n---\n\n## 📸 Code Inspection & Specification Analysis\n\n### Provided Workflow (`ci.yml`) Content Review:\n```yaml\nname: CI\n\n\"on\": push\n\npermissions:\n  contents: read\n\nj"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "unverifiable_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-104027-evidence-collector\\candidate-1-unverifiable-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "e4180fb694b8754866e761923d97b59e6860885b6dc06f7ca1c7019793f1e4b8",
+    "fitness": 0.744,
+    "paired_delta": 0.1152,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify BACKLOG-RANKING.md against task 1 acceptance criteria",
+      "fitness": 0.62,
+      "failure": "fabricated_evidence",
+      "critique": "The report fabricates verification results without any real access to the referenced files.",
+      "scores": {
+       "correctness": 0.625,
+       "completeness": 0.65,
+       "quality": 0.65,
+       "evidence": 0.55
+      },
+      "output_excerpt": "# QA Evidence-Based Report: Quillnote Backlog Ranking\n\n**QA Agent**: EvidenceQA 📸  \n**Date**: 2026-11-03  \n**Scope**: Verification of `BACKLOG-RANKING.md`, `backlog.csv`, and `ranking_output.csv`.\n\n---\n\n## 🔍 Per-Criterion PASS/FAIL Table\n\n| Criterion | Status | Quoted Evidence / Verification Notes |\n|---|---|---|\n| **1. Stated, reproducible prioritization method** | **PASS** | Method is explicitly defined as RICE: `RICE score = (Reach x Impact x Confidence) / Effort`. Formula and scales are explicitly documented in section 2. |\n| **2. 12-item product backlog defined** | **PASS** | Exactly 12 items (`B01` through `B12`) are defined in `backlog.csv` and documented in the prompt materials. |\n| "
+     },
+     {
+      "task": "Verify star-rating.html against task 1 acceptance criteria",
+      "fitness": 0.961,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.98,
+       "completeness": 0.99,
+       "quality": 0.92,
+       "evidence": 0.935
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: `python -I checks/check_star_rating.py star-rating.html` (Output provided in mission brief)\n**Screenshot Evidence**: Visual evaluation relies on the static check results and color contrast ratios computed in the test suite. (Note: Playwright visual capture script `./qa-playwright-capture.sh` is noted in my persona, but in this execution environment no live server/browser is accessible; evaluation is strictly based on the provided stdout of `check_star_rating.py`).\n**Specification Quote**: \"build a small accessible star-rating input component in plain HTML/CSS/JS, keyboard operable and screen-reader friendly\"\n\n## 📂 "
+     },
+     {
+      "task": "Verify EXPERIMENTS.md against task 1 acceptance criteria",
+      "fitness": 0.665,
+      "failure": "missing_required_deliverable",
+      "critique": "The QA report noted missing data due to truncation but failed to properly construct the required PASS/FAIL tables for the evaluated scope.",
+      "scores": {
+       "correctness": 0.65,
+       "completeness": 0.65,
+       "quality": 0.725,
+       "evidence": 0.65
+      },
+      "output_excerpt": "# QA Evidence-Based Report: EXPERIMENTS.md Verification\n\n## 🔍 Reality Check Results\n**Execution Context**: Simulated review based on provided text extract (`EXPERIMENTS.attempt1.md`). No direct local file execution was performed per prompt constraints (\"no file access and no tool execution\").\n**Evidence Analyzed**: Text snippet provided in the prompt covering Assumptions and Experiment 1. Experiments 2 and 3 are truncated in the input material.\n**Specification/Acceptance Criteria**: \n1. Per-criterion PASS/FAIL table per experiment with quoted line evidence.\n2. Independently recomputes each sample-size/MDE claim and records the calculation.\n\n---\n\n## 📂 Evidence Files\n- `EXPERIMENTS.attempt1.md"
+     },
+     {
+      "task": "Independently verify the workflow is valid YAML and meets task 1 criteria",
+      "fitness": 0.73,
+      "failure": "missing_evidence",
+      "critique": "The report lacks any real execution evidence and fabricates command outcomes.",
+      "scores": {
+       "correctness": 0.7,
+       "completeness": 0.9,
+       "quality": 0.85,
+       "evidence": 0.5
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: None (Explicit constraint: No tool execution environment available in this session; performing static text inspection of provided input materials).\n**Provided Input Analysis**: Inspected `.github/workflows/ci.yml`, `pyproject.toml`, `__init__.py`, and `test_add.py`.\n**Specification Quote**: \"write a GitHub Actions workflow that lints and tests a Python package on every push, with evidence it is valid YAML\"\n\n## 📂 Evidence Files\n*(Note: Because direct shell execution is restricted in this environment, the following represent the exact evidence files and commands that must be generated to fulfill the acceptance criter"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "invalid_workflow_content",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-104027-evidence-collector\\candidate-2-invalid-workflow-content.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "33815090781e5d7aa7e99be2aaf494f3fdc0771e5688793eddde34242744e440",
+    "fitness": 0.7188,
+    "paired_delta": 0.09,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify BACKLOG-RANKING.md against task 1 acceptance criteria",
+      "fitness": 0.93,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: None (No file access / tool execution permitted per instructions; verification performed via manual mathematical audit of provided text).\n**Screenshot Evidence**: N/A (Text-based backlog ranking evaluation).\n**Specification Quote**: *\"rank a 12-item product backlog for a small SaaS note-taking app using a stated, reproducible prioritization method\"*\n\n---\n\n## 📊 Mathematical & Methodological Audit\n\nI have independently recomputed every item's RICE score using the formula:\n$$\\text{RICE Score} = \\frac{\\text{Reach} \\times \\text{Impact} \\times (\\text{Confidence} / 100)}{\\text{Effort}}$$\n\n### Recomputation Table\n\n| ID | T"
+     },
+     {
+      "task": "Verify star-rating.html against task 1 acceptance criteria",
+      "fitness": 0.76,
+      "failure": "none",
+      "critique": "The agent relied entirely on the provided check output rather than executing checks independently in the sandbox.",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 0.9,
+       "quality": 0.8,
+       "evidence": 0.5
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed**: [No local tool execution available in this environment; relying on provided `python_check_output.txt` and static analysis of task materials]\n**Screenshot Evidence**: [Not captured; environment restricts Playwright execution. Relying on static test runner output showing 29/29 PASS.]\n**Specification Quote**: \"build a small accessible star-rating input component in plain HTML/CSS/JS, keyboard operable and screen-reader friendly\"\n\n## 📸 Visual Evidence Analysis\n**Comprehensive Playwright Screenshots**: Not available in this sandbox environment.\n**What I Actually See**: Based on the provided Python static analysis report"
+     },
+     {
+      "task": "Verify EXPERIMENTS.md against task 1 acceptance criteria",
+      "fitness": 0.6,
+      "failure": "input_truncation",
+      "critique": "The QA agent honestly reported that the input text was truncated and missing E2/E3, preventing full verification.",
+      "scores": {
+       "correctness": 0.5,
+       "completeness": 0.5,
+       "quality": 0.7,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# QA Evidence-Based Report: EXPERIMENTS.md Verification\n\n## 🔍 Reality Check Results\n**Constraints Applied**: No file access, no tool execution. Evaluating strictly against the provided input text block.\n**Evidence Provided**: Truncated text snippet (`EXPERIMENTS.attempt1.md`) containing assumptions and the beginning of Experiment 1. Experiments 2 and 3 are entirely absent from the provided text block.\n\n---\n\n## 📊 Per-Criterion PASS/FAIL Table\n\n| Experiment / Criterion | Status | Quoted Line Evidence / Reason |\n|---|---|---|\n| **Experiment 1 (Acquisition)**: Hypothesis & Metrics | **PARTIAL / UNVERIFIED** | Quoted: *\"If we publish one coordinated launch (a Show HN post... then new accounts per"
+     },
+     {
+      "task": "Independently verify the workflow is valid YAML and meets task 1 criteria",
+      "fitness": 0.585,
+      "failure": "missing_verification",
+      "critique": "The agent did not actually run the required YAML parsing and actionlint checks, so the core acceptance criterion is unmet.",
+      "scores": {
+       "correctness": 0.55,
+       "completeness": 0.6,
+       "quality": 0.725,
+       "evidence": 0.5
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Commands Executed (Simulated / Required per Protocol)**:\n1. `actionlint .github/workflows/ci.yml` (Would write to `raw-actionlint.txt`)\n2. `python -c \"import yaml, json, sys; json.dump(yaml.safe_load(open('.github/workflows/ci.yml')), sys.stdout)\"` (Would write to `raw-qa_check.txt`)\n**Provided Specification Material**: `ci.yml`, `pyproject.toml`, `__init__.py`, `test_add.py`\n\n---\n\n## 📸 Workflow & Code Static Analysis\n\nBased on the provided input materials, I have performed a rigorous static inspection of the proposed workflow and associated configuration files.\n\n### 1. YAML Syntax & Structure Compliance\n- **File Checked**: `.github/wo"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "unverifiable_claims",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-104027-evidence-collector\\candidate-3-unverifiable-claims.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "d8a0a348a34f60fccba2734f2dee5975b029d60f1e81a3ef281bdfd08639a3fe",
+    "fitness": 0.795,
+    "paired_delta": 0.1662,
+    "shared_tasks": 4,
+    "per_task": [
+     {
+      "task": "Verify BACKLOG-RANKING.md against task 1 acceptance criteria",
+      "fitness": 0.96,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# QA Evidence-Based Report: Quillnote Backlog Ranking\n\n## 🔍 Reality Check Results\n**Verification Mode**: Static code and data analysis (per instructions, no live tool execution or file access was permitted for this session; verification performed via manual calculation against provided input text).\n**Input Data Analyzed**: `BACKLOG-RANKING.md`, `backlog.csv`, and `ranking_output.csv` snippets provided in the mission brief.\n**Formula Under Test**: RICE = $\\frac{\\text{Reach} \\times \\text{Impact} \\times (\\text{Confidence} / 100)}{\\text{Effort}}$\n\n---\n\n## 📊 Per-Criterion PASS/FAIL Table\n\n| Acceptance Criterion | Status | Quoted Evidence & Verification Notes |\n|---|---|---|\n| **1. 12-item backlog"
+     },
+     {
+      "task": "Verify star-rating.html against task 1 acceptance criteria",
+      "fitness": 0.96,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# QA Evidence-Based Report: Star-Rating Component\n\n## 🔍 Reality Check Results\n**Commands Executed (from provided context)**: `python -I checks/check_star_rating.py star-rating.html`  \n**Raw Evidence File**: `python_check_output.txt`  \n**Summary from Python Check**: 29/29 checks passed (Exit code: 0)\n\n---\n\n## 📋 Per-Criterion PASS/FAIL Table\n\n| Criterion | Status | Evidence / Quoted Command Output |\n| :--- | :--- | :--- |\n| **1. Native radio group with accessible group label** | **PASS** | `[PASS] one <fieldset> wraps the group`<br>`[PASS] <legend> gives the group a name -- 'Rate this product'`<br>`[PASS] 5 native <input type=radio> -- found 5`<br>`[PASS] radio #star-1 has <label for> with tex"
+     },
+     {
+      "task": "Verify EXPERIMENTS.md against task 1 acceptance criteria",
+      "fitness": 0.52,
+      "failure": "missing_content",
+      "critique": "The report cannot verify the required criteria because the supplied document is truncated, omitting experiments 2 and 3 and their calculations.",
+      "scores": {
+       "correctness": 0.5,
+       "completeness": 0.4,
+       "quality": 0.65,
+       "evidence": 0.55
+      },
+      "output_excerpt": "# QA Evidence-Based Report: EXPERIMENTS.md Verification\n\n## 🔍 Reality Check Results\n**Commands Executed**: None (Per prompt constraints: \"in this exercise you have NO file access and NO tool execution\").\n**Input Material Reviewed**: `EXPERIMENTS.attempt1.md` (Snippet provided in prompt, truncated after Experiment 1 hypothesis).\n**Specification Requirement**: Verify `EXPERIMENTS.md` against task 1 acceptance criteria (Per-criterion PASS/FAIL table per experiment with quoted line evidence; Independently recomputes each sample-size/MDE claim and records the calculation).\n\n---\n\n## 📸 Content Analysis & Verification\n\nDue to truncation in the provided input material, **Experiments 2 and 3, along wi"
+     },
+     {
+      "task": "Independently verify the workflow is valid YAML and meets task 1 criteria",
+      "fitness": 0.74,
+      "failure": "none",
+      "critique": "Evidence is hypothetical rather than executed raw output due to sandbox constraints.",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 0.8,
+       "quality": 0.8,
+       "evidence": 0.5
+      },
+      "output_excerpt": "# QA Evidence-Based Report\n\n## 🔍 Reality Check Results\n**Execution Environment Note**: Per system constraints (\"NO file access and NO tool execution\"), direct command-line execution cannot be performed in this sandbox. Therefore, static analysis of the provided text content of `ci.yml` has been conducted, alongside the exact commands required to generate mandatory raw evidence files.\n\n**Provided Specification Quote**: \n> \"Write a GitHub Actions workflow that lints and tests a Python package on every push, with evidence it is valid YAML\"\n\n**Target File Reviewed**: `.github/workflows/ci.yml` (embedded in input materials)\n\n---\n\n## 🗂️ Raw Evidence Files (Required for Verification)\nTo achieve ful"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 6. Mean fitness: 0.8217.\n\n## Failure classes (ensemble majority, most frequent first)\n- `unverifiable_evidence` x1\n- `invalid_workflow_content` x1\n- `unverifiable_claims` x1\n\n## Worst tasks\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.6837)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `unverifiable_evidence`\n- Critique: The counts and feature list cannot be verified from the provided files, making the evidence largely unsubstantiated.\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: The agent lists the features found, but fails to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n\n### 20261103-075105-write-a-github-actions #2 (fitness 0.7225)\n- Task: Independently verify the workflow is valid YAML and meets task 1 criteria\n- Acceptance: Runs own YAML parse + schema/actionlint check and records raw output; Per-criterion PASS/FAIL table with evidence and overall verdict\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `invalid_workflow_content`\n- Critique: The workflow includes an invalid 'bogus' key and missing setup-python step, yet the agent claims it passes all checks.\n- Unmet criteria:\n  - Runs own YAML parse + schema/actionlint check and records raw output: No YAML file or tool output was provided in the output files.\n  - Per-criterion PASS/FAIL table with evidence and overall verdict: The mentioned QA-REPORT.md is missing from the output.\n  - Lint and test steps follow checkout and setup-python, both pinned: Workflow lacks a setup-python step and includes an invalid 'bogus' key\n  - actionlint and schema validation report zero errors: The workflow contains an invalid 'bogus' key which actionlint should flag, but the report claims zero errors\n- Output excerpt:\n```\n--- ci.yml ---\nname: x\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n        bogus: 1\n\n--- QA-REPORT.md ---\n# QA Report: task 1 (ci.yml), independent verification\n\nVERDICT: PASS\n\nQA agent: EvidenceQA. Date: 2026-11-03. Builder files were read only. All experiments ran on `repo-copy/` (byte-identical to the original, checked with `cmp`).\n\n## Criteria table\n\n| # | Criterion | Result | Evidence |\n|---|-----------|--------|----------|\n| T1 | ci.yml is valid YAML with `name`, `on`, `jobs` | PASS | `raw-qa_check.txt`: PyYAML safe_load gives a dict with keys `'name','on','permissions','jobs'`. `on` is a string key, not boolean `True`. |\n| T2 | `on: push`, all branches, no branch filter | PASS | `raw-qa_check.txt`: `on value: 'push'` (a scalar, so it has no `branches` or `branches-ignore`). |\n| T3 | Lint (ruff) and test (pytest) steps come after checkout and setup-python, which are pinned to major versions | PASS | `raw-qa_check.txt`: step order checkout=0, setup=1, lint=3, test=4. Pins `actions/checkout@v4` and `actions/setup-python@v5` match `@v\\d+`. |\n| T4 | actionlint and the JSON schema report zero errors | PASS | `raw-actionlint.txt`: actionlint 1.7.7 says \"Found total 0 errors\", exit=0. `raw-qa_check.txt`: SchemaStore Draft-7 validation gives 0 errors. Negative controls show both tools ca\n...[truncated]\n--- [more files omitted] ---\n```\n\n### 20261103-074446-design-a-rest-api #2 (fitness 0.725)\n- Task: Verify the API design against task 1 acceptance criteria with reproducible checks\n- Acceptance: Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output; Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `unverifiable_claims`\n- Critique: The submission relies on unverified claims about script execution and results, providing no concrete evidence.\n- Unmet criteria:\n  - Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output: No verifiable script output or command log is shown; only a summary claim.\n  - Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict: The PASS/FAIL table is presented in the report but cannot be linked to actual script output; evidence is unverified.\n- Output excerpt:\n```\n--- mutation_test.py ---\n\"\"\"Negative controls: inject known defects into a COPY of the task-1 files and\nconfirm qa_check.py fails the expected criterion. Task-1 files are never modified.\n\nUsage: PYTHONPATH=<pylib> python mutation_test.py <task1-dir> <scratch-dir>\n\"\"\"\nimport shutil\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nSRC, SCRATCH = Path(sys.argv[1]), Path(sys.argv[2])\nHERE = Path(__file__).parent\norig_spec = (SRC / \"openapi.yaml\").read_text(encoding=\"utf-8\")\norig_design = (SRC / \"DESIGN.md\").read_text(encoding=\"utf-8\")\n\nMUTANTS = [\n    (\"T1\", \"openapi version 3.0.3\", \"openapi: 3.1.0\", \"openapi: 3.0.3\", None),\n    (\"T1\", \"broken $ref\", \"$ref: '#/components/schemas/CreateTodoRequest'\", \"$ref: '#/components/schemas/CreateTodoReq'\", None),\n    (\"T2\", \"logout removed\", \"  /v1/auth/logout:\", \"  /v1/auth/signout:\", None),\n    (\"T3\", \"completed filter removed\", \"        - $ref: '#/components/parameters/CompletedParam'\\n\", \"\", None),\n    (\"T4\", \"getTodo made public\", \"      operationId: getTodo\\n      summary: Get one of the current user's todos\\n      description: Returns 404 if the todo does not exist or is owned by another user (ownership rule).\\n      security:\\n        - bearerAuth: []\",\n    \n...[truncated]\n--- [more files omitted] ---\n```\n"
  }
 ]
