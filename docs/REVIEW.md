@@ -1,45 +1,45 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-03, after STATUS session 11:42–12:40 AST._
+_Updated 2026-11-03 ~12:30Z, after the first promotion (`5356431`) and the 8-mission data refresh._
 
 ## Verdict on your last session
-Excellent. Every REVIEW item done, two real engine bugs found and fixed with tests first, and the arena audit
-was the most valuable finding of the project so far: **the ensemble could not reward improvement** (two lenient
-judges at 1.0, median aggregation, easy seed-only bank). I have acted on all of it (commit on `main` after
-`6e5a44c`):
+Outstanding. In one session you: refreshed the plugin, re-scored everything with the new ensemble (scores
+came off the 1.0 ceiling: real-mission fitness now 0.61–0.98), ran the first **real promotion**
+(evidence-collector v1 → v2, paired +0.166 on 4/4 shared tasks, candidate targeting `unverifiable_claims`),
+fixed four engine problems with tests first (`852c6f5`, `5152a81`, `1802d2e`, `919d1b3`), shipped the
+promoted persona (`7c25923`) and ran two more missions. I verified every commit here: 54 tests, CI green.
 
-- judges: Gemma dropped; `qwen/qwen3.8-27b` (Groq) added; three lineages
-- aggregation: median → trimmed-low mean (drop the single most lenient score per metric); critique and
-  failure class now come from the strictest judge that found a problem; calibration anchors in the prompt
-- bank: dependent QA tasks now enter the bank with the builder's output embedded inline ("Input materials")
-- recorder: `task done <qa> --verdict FAIL|NEEDS_WORK` auto-reopens the builder dependencies; QA re-runs
-  caused by a builder fix carry `caused_by_builder` and do not reduce QA's `det:efficiency`; `note` command
-- hook: `off_record: true` on SubagentStop while a mission is active but no task is running
-- skill: never resume an agent after a QA failure, relaunch via `task start`; no "run a command" criteria
-  for agents without a shell tool (that goes to QA)
-- plugin bumped to **0.3.0**
+I added `1d0c768`: a promotion now bumps the plugin version itself, so `7c25923` never has to be done by hand again.
 
-Answers to your open questions: (1) done as above; (2) done; (3) no longer counts against QA; (4) keep shell
-off those personas, route execution criteria to QA (skill updated); (5) `note` exists now, use it to annotate
-mission 3 without editing attempts.
+## Decisions on things I own
+- **Judges stay as they are for one more cycle**: gpt-oss-120b (Groq), qwen3.8-27b (Groq), flash-lite (Gemini).
+  Your retry fixes lifted Qwen from 0/14 to 10/16 verdicts. If it stays under ~70% in the next cycle, we swap it
+  (see item 3). Weights, margin (0.03), aggregation (trimmed-low mean) unchanged.
+- **Evidence Collector v2 is provisional until it proves itself on real missions** (item 2). If v2's real-mission
+  fitness over ≥3 QA tasks is below v1's 0.86, I will roll it back by promoting v1's content as v3 with a rationale.
 
 ## Requested now (priority order)
-1. `git pull`, then refresh the plugin to 0.3.0 (`claude plugin marketplace update evolvra`,
-   `claude plugin update evolvra@evolvra`), and ask Youssef to restart Claude Code. Confirm in STATUS.md.
-2. **Re-score everything with the new ensemble**: `cd core; uv run evolvra score --rescore` (cached calls for
-   the two kept judges; Qwen is new, expect ~1 call per task). Then `uv run evolvra fitness`. Report the
-   before/after fitness per agent: the point is to see scores come off the 1.0 ceiling.
-3. Check `uv run evolvra bank evidence-collector` now shows mission-derived tasks "(materials embedded)".
-4. Run **one** evolution: `.\scripts\cycle.ps1 -Evolve`. Report parent fitness, paired deltas, coverage,
-   whether a promotion happened, wall-clock, and provider counts. If the parent still sits at 1.0 on every
-   bank task, say so plainly: that means the actor (Flash-Lite) saturates and we must move the actor to a
-   weaker or stricter setting, which I will decide.
-5. Annotate mission 3: `python plugin/scripts/mission.py note <id> --task 1 --text "<the sequence you wrote>"`.
-6. Run two missions on untouched agents: pick `rapid-prototyper` (single-file HTML mock with 3 measurable
-   criteria) and `ux-researcher` (interview guide, 5 open questions, recruiting criterion). If a QA failure
-   happens naturally, let the new reopen flow run; do not force one.
-7. Do not change weights, judge sets, margins or the actor without writing the reason in STATUS.md first.
+1. `git pull`; the plugin version was bumped by my commit's test fixture only, so no refresh is needed unless
+   `plugin/.claude-plugin/plugin.json` changed on `main` since your last update. Check and refresh if so.
+2. **Validate the promotion in the real world.** Run three missions whose QA step uses `evidence-collector`
+   (any builders; vary them: `content-creator`, `backend-architect`, `devops-automator`). Then report:
+   - v2's real-mission fitness (`evolvra fitness`, row `evidence-collector v2`) against v1's 0.86;
+   - whether v2's QA reports actually contain a "Raw Evidence Files" section with real files under `evidence/`;
+   - whether v2 is slower or produces more off-record work (check `traces.jsonl` `off_record` and durations).
+3. **Judge reliability measurement.** After the cycle, count per judge: verdicts produced vs `rubric:error`
+   rows, over tasks scored today. If Qwen < 70%, ping two replacement candidates and report latency and whether
+   they return `pong`: `uv run evolvra ping gemini --model gemini-3.6-flash` and `--model gemini-3.7-flash`.
+   Do not change the judge set yourself; report and I decide.
+4. **Audit the UX Researcher discrepancy.** Mission `20261103-104658-write-a-user-interview`: QA passed the guide
+   (QA fitness 0.975), yet the ensemble scored the builder 0.45 correctness with `missing_required_content`.
+   Read the deliverable, the QA report and the three judges' critiques. Who is right? One paragraph in STATUS.md.
+   If QA was lenient, that is evidence for the *QA agent's* next evolution target, not the builder's.
+5. Confirm the **16:17 scheduled run fired while the laptop was locked** (cycle.log entry with the new UTF-8
+   logging). If it did not, record the Task Scheduler "Last Run Result" code.
+6. Let the scheduler pick the next evolution target on its own (weakest = ux-researcher at 0.605). Do not
+   trigger extra `-Evolve` runs by hand; one generation per 6 hours keeps the free-tier budget comfortable.
+7. Same rules: no weight/judge/margin/actor changes without the reason in STATUS.md first; tests first.
 
 ## Open questions for the local operator
-- Does Qwen on Groq hit the 8k TPM cap together with gpt-oss? Watch for 429 waits in the score output.
-- After the restart, does `/evolvra:mission` print `"reopened": [..]` on a QA failure? (needs a real one)
+- Groq daily requests are at 185 with Qwen added. Is there any sign of the per-day cap (800) being approached?
+- How long did the data-only cycle for 2 new missions take with three judges?
