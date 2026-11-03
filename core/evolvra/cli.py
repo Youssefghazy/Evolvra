@@ -354,6 +354,9 @@ def cmd_cycle(args) -> int:
                 msg = f"evolve({evolved.slug}): v{evolved.new_version} +{evolved.delta} | {msg}"
             _git(repo, "commit", "-q", "-m", msg)
             code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
+            if code != 0:  # remote moved on (e.g. new code pushed meanwhile): rebase our commit and retry once
+                _git(repo, "pull", "-q", "--rebase", "origin", "main")
+                code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
             log.append("push: ok" if code == 0 else f"push failed: {pushed}")
         else:
             log.append("push: nothing changed")
