@@ -15,9 +15,12 @@ ACTOR = ("groq", "openai/gpt-oss-120b")
 
 
 def _plugin_copy(tmp_path) -> Path:
-    dst = tmp_path / "plugin-agents"
-    shutil.copytree(AGENTS_DIR, dst)
-    return dst
+    """A throwaway repo layout: <root>/.claude-plugin/marketplace.json, <root>/plugin/{.claude-plugin,agents}."""
+    root = tmp_path / "repo"
+    shutil.copytree(AGENTS_DIR, root / "plugin" / "agents")
+    shutil.copytree(REPO / "plugin" / ".claude-plugin", root / "plugin" / ".claude-plugin")
+    shutil.copytree(REPO / ".claude-plugin", root / ".claude-plugin")
+    return root / "plugin" / "agents"
 
 
 def _judge_reply(c):
@@ -138,6 +141,12 @@ def test_evolve_promotes_only_a_winner(tmp_path, evolvra_home, monkeypatch):
     assert [r["version"] for r in lineage] == [1, 2] and lineage[1]["created_by"] == "evolve"
     evo = conn.execute("SELECT winner_version, bank_delta FROM evolutions").fetchone()
     assert evo["winner_version"] == 2 and abs(evo["bank_delta"] - 0.3) < 1e-6
+    # the promotion ships itself: plugin + marketplace versions are patch-bumped
+    before = json.loads((REPO / "plugin" / ".claude-plugin" / "plugin.json").read_text())["version"]
+    after = json.loads((plugin.parent / ".claude-plugin" / "plugin.json").read_text())["version"]
+    market = json.loads((plugin.parents[1] / ".claude-plugin" / "marketplace.json").read_text())
+    assert after != before and after.split(".")[:2] == before.split(".")[:2]
+    assert market["plugins"][0]["version"] == after and market["metadata"]["version"] == after
     assert (res.evolution_dir / "report.md").exists() and (res.evolution_dir / "diagnosis.md").exists()
     assert (res.evolution_dir / "arena" / "parent" / "task-1.md").exists()
     assert (res.evolution_dir / "arena" / "candidate-2" / "task-2.md").read_text(encoding="utf-8").count("MARKER:c2") == 1

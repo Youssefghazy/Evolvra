@@ -171,6 +171,38 @@ def _bump_manifest(plugin_agents_dir: Path, slug: str, version: int, parent: int
             a.setdefault("history", []).append({"version": version, "parent": parent, "rationale": rationale,
                                                 "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    bump_plugin_version(plugin_agents_dir.parent)
+
+
+def bump_plugin_version(plugin_dir: Path) -> str | None:
+    """Patch-bump the plugin (and marketplace) version so `/plugin update` ships the promoted persona.
+
+    Claude Code installs a cached copy; without a version change the installed roster keeps running the
+    old persona while new tasks are credited to the new one (operator finding, 7c25923)."""
+    manifest = plugin_dir / ".claude-plugin" / "plugin.json"
+    if not manifest.exists():
+        return None
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    parts = str(data.get("version", "0.0.0")).split(".")
+    while len(parts) < 3:
+        parts.append("0")
+    try:
+        parts[-1] = str(int(parts[-1]) + 1)
+    except ValueError:
+        return None
+    new = ".".join(parts)
+    old = data.get("version")
+    data["version"] = new
+    manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    market = plugin_dir.parent / ".claude-plugin" / "marketplace.json"
+    if market.exists():
+        m = json.loads(market.read_text(encoding="utf-8"))
+        for entry in m.get("plugins", []):
+            if entry.get("name") == data.get("name") and entry.get("version") == old:
+                entry["version"] = new
+        m.setdefault("metadata", {})["version"] = new
+        market.write_text(json.dumps(m, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return new
 
 
 def _report(result: EvolveResult, parent_res: tournament.PersonaResult, held_out) -> str:
