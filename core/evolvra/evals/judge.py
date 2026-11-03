@@ -145,6 +145,13 @@ def parse_judge_json(text: str) -> dict | None:
     return None
 
 
+def parse_verdict(text: str) -> dict | None:
+    """A judge verdict must carry the rubric scores. A reply cut off mid-JSON still holds a complete
+    inner object (one acceptance item); reading that as the verdict scored every metric 0.0."""
+    data = parse_judge_json(text)
+    return data if data and all(k in data for k in RUBRIC) else None
+
+
 def _clamp(value) -> float:
     try:
         return max(0.0, min(1.0, float(value)))
@@ -166,20 +173,20 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
         try:
             res = client.chat(conn, messages, provider=provider, model=model, max_tokens=MAX_TOKENS,
                               _transport=_transport)
-            if res.truncated and not parse_judge_json(res.text):
+            if res.truncated and not parse_verdict(res.text):
                 res = client.chat(conn, messages, provider=provider, model=model,
                                   max_tokens=RETRY_MAX_TOKENS, _transport=_transport)
         except (client.ProviderError, quota.QuotaExceeded) as e:
             results.append(JudgeResult(name, {}, [], f"judge error: {e}", "judge_error", False, ""))
             continue
-        data = parse_judge_json(res.text) or {}
+        data = parse_verdict(res.text) or {}
         if not data:
             retry = messages + [{"role": "assistant", "content": res.text[:2000]},
                                 {"role": "user", "content": "That was not valid JSON. Reply with ONLY the JSON object, no prose, no code fences."}]
             try:
                 res = client.chat(conn, retry, provider=provider, model=model, max_tokens=MAX_TOKENS,
                                   _transport=_transport)
-                data = parse_judge_json(res.text) or {}
+                data = parse_verdict(res.text) or {}
             except (client.ProviderError, quota.QuotaExceeded):
                 data = {}
         scores = {k: _clamp(data.get(k)) for k in RUBRIC} if data else {}

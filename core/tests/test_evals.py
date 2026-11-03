@@ -215,3 +215,23 @@ def test_judge_that_runs_out_of_budget_gets_a_bigger_one(evolvra_home, recorder,
     report = runner.score_tasks(conn, runner.pending_tasks(conn), [("groq", "qwen/qwen3.8-27b")], _transport=transport)
     assert report.judge_errors == 0
     assert [c["max_tokens"] for c in calls[:2]] == [900, judge.RETRY_MAX_TOKENS]
+
+
+def test_truncated_judge_json_is_not_read_as_zero_scores(evolvra_home, recorder, monkeypatch):
+    # A reply cut off mid-JSON still contains a complete inner object (one acceptance item). Reading
+    # that as the verdict gave 0.0 on every metric, and the trimmed mean averaged the zeros in.
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    _recorded_mission(evolvra_home, recorder)
+    ingest.ingest_all(conn, evolvra_home)
+    cut = _reply(0.7, 0.7)[:80]
+    assert judge.parse_judge_json(cut) and "correctness" not in judge.parse_judge_json(cut)
+
+    def transport(url, body, api_key, timeout):
+        if body["max_tokens"] <= 900:
+            return {"choices": [{"message": {"content": cut}, "finish_reason": "length"}], "usage": {}}
+        return {"choices": [{"message": {"content": _reply(0.7, 0.7)}, "finish_reason": "stop"}], "usage": {}}
+
+    results = judge.judge_prompt(conn, "grade this", [("gemini", "gemini-3.5-flash-lite")], _transport=transport)
+    assert results[0].scores["correctness"] == 0.7
