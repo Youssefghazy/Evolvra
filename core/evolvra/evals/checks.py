@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -9,7 +10,8 @@ MAX_ATTEMPTS = 3
 TEXT_SUFFIXES = {".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".py", ".js", ".ts", ".tsx", ".jsx",
                  ".html", ".css", ".sql", ".sh", ".ps1", ".csv", ".xml", ".ini", ".cfg", ".env"}
 # tool environments agents create while working; never part of the deliverable
-JUNK_DIRS = {"venv", "env", "node_modules", "__pycache__", "site-packages"}
+JUNK_DIRS = {"venv", "env", "node_modules", "__pycache__", "site-packages", ".venv", ".git", ".tox", ".nox",
+             ".cache", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".ipynb_checkpoints"}
 
 
 def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
@@ -18,9 +20,14 @@ def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
     root = Path(output_dir)
     if not root.is_dir():
         return []
-    files = [p for p in sorted(root.rglob("*")) if p.is_file()
-             and not any(part.startswith(".") or part in JUNK_DIRS for part in p.relative_to(root).parts)]
-    return files[:max_files]
+    # Prune while walking: junk dirs and venvs of any name (pyvenv.cfg). Other dot-dirs such as .github
+    # hold real deliverables; hidden files themselves are still skipped.
+    files = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        here = Path(dirpath)
+        dirnames[:] = [d for d in dirnames if d not in JUNK_DIRS and not (here / d / "pyvenv.cfg").is_file()]
+        files += [here / f for f in filenames if not f.startswith(".")]
+    return sorted(files)[:max_files]
 
 
 def read_output(output_dir: str | None, *, per_file: int = 4000, total: int = 12000) -> str:

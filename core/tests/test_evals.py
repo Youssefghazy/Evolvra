@@ -72,6 +72,19 @@ def test_output_files_skip_virtualenvs_and_hidden_dirs(tmp_path):
     assert "verdict: PASS" in checks.read_output(str(tmp_path))
 
 
+def test_output_files_keep_deliverables_in_dot_dirs(tmp_path):
+    # A GitHub Actions workflow lives in .github/; skipping every dot-directory hid the deliverable.
+    # Venvs are recognised by pyvenv.cfg whatever their name (a QA agent made one called cleanvenv).
+    (tmp_path / ".github" / "workflows").mkdir(parents=True)
+    (tmp_path / ".github" / "workflows" / "ci.yml").write_text("on: push", encoding="utf-8")
+    for d in (".git/objects", ".pytest_cache/v", "cleanvenv/Scripts"):
+        (tmp_path / d).mkdir(parents=True)
+        (tmp_path / d / "x.py").write_text("junk", encoding="utf-8")
+    (tmp_path / "cleanvenv" / "pyvenv.cfg").write_text("home = C:\\Python", encoding="utf-8")
+    assert [p.name for p in checks.output_files(str(tmp_path))] == ["ci.yml"]
+    assert "on: push" in checks.read_output(str(tmp_path))
+
+
 def test_parse_judge_json_tolerates_fences_and_chatter():
     assert judge.parse_judge_json(_reply(0.5, 0.5, fence=True))["correctness"] == 0.5
     assert judge.parse_judge_json("no json here") is None
