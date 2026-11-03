@@ -1,5 +1,1484 @@
 [
  {
+  "id": "20261103-092430-rank-a-12-item",
+  "brief": "rank a 12-item product backlog for a small SaaS note-taking app using a stated, reproducible prioritization method",
+  "mode": "micro",
+  "status": "done",
+  "summary": "12-item RICE backlog ranking with stated scales, tie-break and per-item assumptions; independently QA-verified (92/92, byte-identical rerun). The builder could not run its own script (no shell tool), so the orchestrator and QA ran it.",
+  "started_at": "2026-11-03T09:24:30Z",
+  "finished_at": "2026-11-03T09:30:36Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "sprint-prioritizer",
+    "task": "Write BACKLOG-RANKING.md: define a 12-item backlog for a small SaaS note-taking app and rank it with one stated method (e.g. RICE or WSJF)",
+    "acceptance": [
+     "Exactly 12 backlog items, each with a one-line description",
+     "The method is named and its formula and scales are defined before the ranking",
+     "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+     "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+     "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T09:24:32Z",
+      "finished_at": "2026-11-03T09:27:51Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "BACKLOG-RANKING.md: 12 items ranked by RICE (formula+scales+tie-break defined first, per-item assumptions). Builder persona has no shell tool, so it wrote ranking_output.csv by hand; orchestrator then ran 'python rice_score.py --check' read-only: CHECK OK, exit 0."
+     }
+    ],
+    "traces": 10,
+    "fitness": 0.9875,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 264
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "BACKLOG-RANKING.md",
+        "backlog.csv",
+        "ranking_output.csv",
+        "rice_score.py"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-092430-rank-a-12-item\\01-sprint-prioritizer"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "12 items defined with descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE formula, scales, and tie-break rules are clearly laid out."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "Inputs, computed scores, and rankings are fully presented."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Product-level assumptions and input values are provided."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "Provided python script and CSV files fully support reproducibility."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "12 items defined with descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE formula, scales, and tie-break rules are clearly laid out."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "Inputs, computed scores, and rankings are fully presented."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Product-level assumptions and input values are provided."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "Provided python script and CSV files fully support reproducibility."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "12 items defined with descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE formula, scales, and tie-break rules are clearly laid out."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "Inputs, computed scores, and rankings are fully presented."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Product-level assumptions and input values are provided."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "Provided python script and CSV files fully support reproducibility."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "12 items defined with descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE formula, scales, and tie-break rules are clearly laid out."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "Inputs, computed scores, and rankings are fully presented."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Product-level assumptions and input values are provided."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "Provided python script and CSV files fully support reproducibility."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "judge error: HTTP 500 from provider: [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "The markdown table lists 12 IDs with concise one‑line descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE is named, formula and input scales are explicitly documented."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "backlog.csv provides inputs, ranking_output.csv shows computed scores and ordering matches the script’s tie‑break rules."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Assumptions are described in the markdown (product size, MAU, confidence levels, etc.)."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "rice_score.py, backlog.csv, and ranking_output.csv are provided and the script validates the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "The markdown table lists 12 IDs with concise one‑line descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE is named, formula and input scales are explicitly documented."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "backlog.csv provides inputs, ranking_output.csv shows computed scores and ordering matches the script’s tie‑break rules."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Assumptions are described in the markdown (product size, MAU, confidence levels, etc.)."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "rice_score.py, backlog.csv, and ranking_output.csv are provided and the script validates the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "The markdown table lists 12 IDs with concise one‑line descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE is named, formula and input scales are explicitly documented."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "backlog.csv provides inputs, ranking_output.csv shows computed scores and ordering matches the script’s tie‑break rules."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Assumptions are described in the markdown (product size, MAU, confidence levels, etc.)."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "rice_score.py, backlog.csv, and ranking_output.csv are provided and the script validates the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly 12 backlog items, each with a one-line description",
+         "met": true,
+         "reason": "The markdown table lists 12 IDs with concise one‑line descriptions."
+        },
+        {
+         "criterion": "The method is named and its formula and scales are defined before the ranking",
+         "met": true,
+         "reason": "RICE is named, formula and input scales are explicitly documented."
+        },
+        {
+         "criterion": "Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule)",
+         "met": true,
+         "reason": "backlog.csv provides inputs, ranking_output.csv shows computed scores and ordering matches the script’s tie‑break rules."
+        },
+        {
+         "criterion": "Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table",
+         "met": true,
+         "reason": "Assumptions are described in the markdown (product size, MAU, confidence levels, etc.)."
+        },
+        {
+         "criterion": "The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside",
+         "met": true,
+         "reason": "rice_score.py, backlog.csv, and ranking_output.csv are provided and the script validates the output."
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify BACKLOG-RANKING.md against task 1 acceptance criteria",
+    "acceptance": [
+     "Per-criterion PASS/FAIL table with quoted evidence",
+     "Independently recomputes every item's score and the order, and saves the calculation"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T09:27:52Z",
+      "finished_at": "2026-11-03T09:30:36Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Independent recompute from the markdown, cross-checked against backlog.csv: 92/92. Script full run in sandbox is byte-identical to the hand-written output (SHA256 match). Negative controls fail as expected. Builder files hashed unchanged. Low: section 6 still says 'not executed'."
+     }
+    ],
+    "traces": 12,
+    "fitness": 0.99,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 280
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "builder_hashes_after.txt",
+        "builder_hashes_before.txt",
+        "controls.ps1",
+        "controls_output.txt",
+        "independent_checks.txt",
+        "independent_ranking.csv",
+        "independent_recompute.py",
+        "backlog.csv",
+        "rice_score.py",
+        "BACKLOG-RANKING.md"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-092430-rank-a-12-item\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Provided thorough independent checks and test suites covering all criteria with evidence."
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "Script and independent recomputations verify all 12 items, scores, ties, and ranking order completely."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Provided thorough independent checks and test suites covering all criteria with evidence."
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "Script and independent recomputations verify all 12 items, scores, ties, and ranking order completely."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Provided thorough independent checks and test suites covering all criteria with evidence."
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "Script and independent recomputations verify all 12 items, scores, ties, and ranking order completely."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Provided thorough independent checks and test suites covering all criteria with evidence."
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "Script and independent recomputations verify all 12 items, scores, ties, and ranking order completely."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "judge error: HTTP 500 from provider: [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Table present in independent_checks.txt with PASS/FAIL entries and quoted values"
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "controls.ps1 runs recompute, hashes match, and independent_checks confirms order"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Table present in independent_checks.txt with PASS/FAIL entries and quoted values"
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "controls.ps1 runs recompute, hashes match, and independent_checks confirms order"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Table present in independent_checks.txt with PASS/FAIL entries and quoted values"
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "controls.ps1 runs recompute, hashes match, and independent_checks confirms order"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted evidence",
+         "met": true,
+         "reason": "Table present in independent_checks.txt with PASS/FAIL entries and quoted values"
+        },
+        {
+         "criterion": "Independently recomputes every item's score and the order, and saves the calculation",
+         "met": true,
+         "reason": "controls.ps1 runs recompute, hashes match, and independent_checks confirms order"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261103-091344-build-a-small-accessible",
+  "brief": "build a small accessible star-rating input component in plain HTML/CSS/JS, keyboard operable and screen-reader friendly",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Accessible 1-5 star rating (native radios, arrow keys, live region, FormData) built first try and independently QA-verified in headless Edge (25/25, axe 0 violations); real screen-reader speech untested.",
+  "started_at": "2026-11-03T09:13:44Z",
+  "finished_at": "2026-11-03T09:24:21Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "frontend-developer",
+    "task": "Build star-rating.html: a 1-5 star rating input in plain HTML/CSS/JS (no frameworks, no CDN)",
+    "acceptance": [
+     "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+     "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+     "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+     "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated",
+     "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T09:13:55Z",
+      "finished_at": "2026-11-03T09:20:22Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "star-rating.html (fieldset+legend, 5 native radios, arrow/Home/End keys, live region 'N of 5 stars', FormData rating). Python check 29/29 (rerun by orchestrator, exit 0); jsdom+axe+headless Edge 30/30, 0 axe violations; contrast table 4.83-15.80:1."
+     }
+    ],
+    "traces": 13,
+    "fitness": 0.9948,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 248
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "check_star_rating.py",
+        "python_check_output.txt",
+        "runtime_check.js",
+        "runtime_check_output.txt",
+        "star-rating.html"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-091344-build-a-small-accessible\\01-frontend-developer"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.985,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "Verified by static and dynamic checks using a fieldset and legend."
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "Arrow keys, Home/End keys handled correctly; focus outline contrast verified > 3:1."
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "Live region present and updated; wrapped in a standard HTML form with FormData integration."
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated",
+         "met": true,
+         "reason": "All contrast ratios explicitly stated and verified to exceed WCAG requirements."
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Both Python static check and Playwright/jsdom checks successfully run and documented."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "Verified by static and dynamic checks using a fieldset and legend."
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "Arrow keys, Home/End keys handled correctly; focus outline contrast verified > 3:1."
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "Live region present and updated; wrapped in a standard HTML form with FormData integration."
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated",
+         "met": true,
+         "reason": "All contrast ratios explicitly stated and verified to exceed WCAG requirements."
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Both Python static check and Playwright/jsdom checks successfully run and documented."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "Verified by static and dynamic checks using a fieldset and legend."
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "Arrow keys, Home/End keys handled correctly; focus outline contrast verified > 3:1."
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "Live region present and updated; wrapped in a standard HTML form with FormData integration."
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated",
+         "met": true,
+         "reason": "All contrast ratios explicitly stated and verified to exceed WCAG requirements."
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Both Python static check and Playwright/jsdom checks successfully run and documented."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "Verified by static and dynamic checks using a fieldset and legend."
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "Arrow keys, Home/End keys handled correctly; focus outline contrast verified > 3:1."
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "Live region present and updated; wrapped in a standard HTML form with FormData integration."
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated",
+         "met": true,
+         "reason": "All contrast ratios explicitly stated and verified to exceed WCAG requirements."
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Both Python static check and Playwright/jsdom checks successfully run and documented."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "judge error: HTTP 500 from provider: [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "fieldset with legend and 5 radios with labels"
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "keydown handler covers arrows, focus-visible style present, runtime checks passed"
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "polite live region updates and FormData contains rating"
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non‑text), with the ratios stated",
+         "met": true,
+         "reason": "contrast ratios reported and all meet thresholds"
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Python and jsdom/axe checks included and all passed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "fieldset with legend and 5 radios with labels"
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "keydown handler covers arrows, focus-visible style present, runtime checks passed"
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "polite live region updates and FormData contains rating"
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non‑text), with the ratios stated",
+         "met": true,
+         "reason": "contrast ratios reported and all meet thresholds"
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Python and jsdom/axe checks included and all passed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.97,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "fieldset with legend and 5 radios with labels"
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "keydown handler covers arrows, focus-visible style present, runtime checks passed"
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "polite live region updates and FormData contains rating"
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non‑text), with the ratios stated",
+         "met": true,
+         "reason": "contrast ratios reported and all meet thresholds"
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Python and jsdom/axe checks included and all passed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label",
+         "met": true,
+         "reason": "fieldset with legend and 5 radios with labels"
+        },
+        {
+         "criterion": "Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1)",
+         "met": true,
+         "reason": "keydown handler covers arrows, focus-visible style present, runtime checks passed"
+        },
+        {
+         "criterion": "Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form",
+         "met": true,
+         "reason": "polite live region updates and FormData contains rating"
+        },
+        {
+         "criterion": "Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non‑text), with the ratios stated",
+         "met": true,
+         "reason": "contrast ratios reported and all meet thresholds"
+        },
+        {
+         "criterion": "An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside",
+         "met": true,
+         "reason": "Python and jsdom/axe checks included and all passed"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify star-rating.html against task 1 acceptance criteria",
+    "acceptance": [
+     "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+     "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T09:20:23Z",
+      "finished_at": "2026-11-03T09:24:20Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Independent QA: own contrast script 8/8 thresholds met; own headless-Edge runtime check 25 PASS 0 FAIL (keys, a11y tree, FormData, outline 6.70:1), axe-core 0 violations. Screen-reader speech NOT TESTED; possible double announcement noted (low)."
+     }
+    ],
+    "traces": 11,
+    "fitness": 0.955,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 245
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "qa_contrast.py",
+        "qa_contrast_output.txt",
+        "qa_runtime.js",
+        "qa_runtime_output.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-091344-build-a-small-accessible\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_pass_fail_table",
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_pass_fail_table",
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_pass_fail_table",
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_pass_fail_table",
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": true,
+         "reason": "The agent's submission and logs provide comprehensive evidence output, though the criteria breakdown is distributed across standalone script output logs rather than a single explicit markdown table. However, all claims are backed by rigorous tool output."
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Ran independent Python contrast scripts and a Playwright/Edge runtime script with axe-core integration, saving detailed outputs."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": true,
+         "reason": "The agent's submission and logs provide comprehensive evidence output, though the criteria breakdown is distributed across standalone script output logs rather than a single explicit markdown table. However, all claims are backed by rigorous tool output."
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Ran independent Python contrast scripts and a Playwright/Edge runtime script with axe-core integration, saving detailed outputs."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": true,
+         "reason": "The agent's submission and logs provide comprehensive evidence output, though the criteria breakdown is distributed across standalone script output logs rather than a single explicit markdown table. However, all claims are backed by rigorous tool output."
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Ran independent Python contrast scripts and a Playwright/Edge runtime script with axe-core integration, saving detailed outputs."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": true,
+         "reason": "The agent's submission and logs provide comprehensive evidence output, though the criteria breakdown is distributed across standalone script output logs rather than a single explicit markdown table. However, all claims are backed by rigorous tool output."
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Ran independent Python contrast scripts and a Playwright/Edge runtime script with axe-core integration, saving detailed outputs."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "unparseable judge output"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "failure_class": "missing_pass_fail_table",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": false,
+         "reason": "The agent supplied raw script outputs but did not present a formatted PASS/FAIL table in the response"
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Provided contrast script output and runtime check output with pass/fail details"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "failure_class": "missing_pass_fail_table",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": false,
+         "reason": "The agent supplied raw script outputs but did not present a formatted PASS/FAIL table in the response"
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Provided contrast script output and runtime check output with pass/fail details"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "failure_class": "missing_pass_fail_table",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": false,
+         "reason": "The agent supplied raw script outputs but did not present a formatted PASS/FAIL table in the response"
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Provided contrast script output and runtime check output with pass/fail details"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing the required explicit PASS/FAIL table for each acceptance criterion.",
+       "failure_class": "missing_pass_fail_table",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table with quoted code or command-output evidence",
+         "met": false,
+         "reason": "The agent supplied raw script outputs but did not present a formatted PASS/FAIL table in the response"
+        },
+        {
+         "criterion": "Independently runs at least one check (accessibility audit, keyboard simulation or contrast computation) and saves its output",
+         "met": true,
+         "reason": "Provided contrast script output and runtime check output with pass/fail details"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261103-080434-propose-three-zero-budget",
   "brief": "propose three zero-budget growth experiments for a free developer tool with 500 users, each with a hypothesis and a metric",
   "mode": "micro",
@@ -158,7 +1637,7 @@
          "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -195,7 +1674,7 @@
          "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -232,7 +1711,7 @@
          "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -269,7 +1748,7 @@
          "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -314,7 +1793,7 @@
          "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -351,7 +1830,7 @@
          "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -388,7 +1867,7 @@
          "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -425,7 +1904,7 @@
          "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
         }
        ],
-       "cached": false
+       "cached": true
       }
      }
     ]
@@ -460,7 +1939,7 @@
      }
     ],
     "traces": 23,
-    "fitness": 0.2,
+    "fitness": 0.575,
     "scores": [
      {
       "metric": "det:efficiency",
@@ -485,16 +1964,12 @@
       "judge": "deterministic",
       "evidence": {
        "files": [
-        "typing_extensions.cpython-313.pyc",
-        "__init__.py",
-        "__init__.cpython-313.pyc",
-        "_common.cpython-313.pyc",
-        "_tzdata_impl.cpython-313.pyc",
-        "_version.cpython-313.pyc",
-        "easter.cpython-313.pyc",
-        "relativedelta.cpython-313.pyc",
-        "rrule.cpython-313.pyc",
-        "tzwin.cpython-313.pyc"
+        "QA-REPORT-attempt2.md",
+        "QA-REPORT.md",
+        "recompute.py",
+        "recompute_attempt2.py",
+        "recompute_attempt2_output.txt",
+        "recompute_output.txt"
        ],
        "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-080434-propose-three-zero-budget\\02-evidence-collector"
       }
@@ -509,77 +1984,73 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_content",
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
-        "gemini/gemini-3.5-flash-lite",
-        "gemini/gemma-4-31b-it"
+        "gemini/gemini-3.5-flash-lite"
        ]
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_content",
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
-        "gemini/gemini-3.5-flash-lite",
-        "gemini/gemma-4-31b-it"
+        "gemini/gemini-3.5-flash-lite"
        ]
       }
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_content",
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
-        "gemini/gemini-3.5-flash-lite",
-        "gemini/gemma-4-31b-it"
+        "gemini/gemini-3.5-flash-lite"
        ]
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_content",
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
-        "gemini/gemini-3.5-flash-lite",
-        "gemini/gemma-4-31b-it"
+        "gemini/gemini-3.5-flash-lite"
        ]
       }
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.0,
+      "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+         "met": true,
+         "reason": "The QA report includes a complete criteria table with results, quoted line evidence, and notes for all 3 experiments."
         },
         {
          "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+         "met": true,
+         "reason": "The QA report documents independent recomputations for all sample sizes, powers, and MDE claims using statsmodels and scipy."
         }
        ],
        "cached": false
@@ -587,21 +2058,21 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.0,
+      "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+         "met": true,
+         "reason": "The QA report includes a complete criteria table with results, quoted line evidence, and notes for all 3 experiments."
         },
         {
          "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+         "met": true,
+         "reason": "The QA report documents independent recomputations for all sample sizes, powers, and MDE claims using statsmodels and scipy."
         }
        ],
        "cached": false
@@ -609,21 +2080,21 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.0,
+      "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+         "met": true,
+         "reason": "The QA report includes a complete criteria table with results, quoted line evidence, and notes for all 3 experiments."
         },
         {
          "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+         "met": true,
+         "reason": "The QA report documents independent recomputations for all sample sizes, powers, and MDE claims using statsmodels and scipy."
         }
        ],
        "cached": false
@@ -631,21 +2102,21 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.0,
+      "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+         "met": true,
+         "reason": "The QA report includes a complete criteria table with results, quoted line evidence, and notes for all 3 experiments."
         },
         {
          "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+         "met": true,
+         "reason": "The QA report documents independent recomputations for all sample sizes, powers, and MDE claims using statsmodels and scipy."
         }
        ],
        "cached": false
@@ -674,6 +2145,14 @@
       }
      },
      {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "judge error: HTTP 500 from provider: [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+      }
+     },
+     {
       "metric": "rubric:evidence",
       "value": 0.0,
       "judge": "gemini/gemma-4-31b-it",
@@ -700,20 +2179,9 @@
       "value": 0.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
-       "failure_class": "missing_required_content",
-       "acceptance": [
-        {
-         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
-        },
-        {
-         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or recomputations are present in the submission"
-        }
-       ],
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
        "cached": false
       }
      },
@@ -722,20 +2190,9 @@
       "value": 0.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
-       "failure_class": "missing_required_content",
-       "acceptance": [
-        {
-         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
-        },
-        {
-         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or recomputations are present in the submission"
-        }
-       ],
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
        "cached": false
       }
      },
@@ -744,20 +2201,9 @@
       "value": 0.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
-       "failure_class": "missing_required_content",
-       "acceptance": [
-        {
-         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
-        },
-        {
-         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or recomputations are present in the submission"
-        }
-       ],
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
        "cached": false
       }
      },
@@ -766,20 +2212,9 @@
       "value": 0.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
-       "failure_class": "missing_required_content",
-       "acceptance": [
-        {
-         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
-         "met": false,
-         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
-        },
-        {
-         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
-         "met": false,
-         "reason": "No calculations or recomputations are present in the submission"
-        }
-       ],
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
        "cached": false
       }
      }
