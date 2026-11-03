@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "backend-architect",
+  "tasks": [
+    {
+      "brief": "A todo app needs an API",
+      "task": "Design a REST API for todos with auth, as an OpenAPI-style outline plus one example request/response",
+      "acceptance": [
+        "Endpoints cover create, list, update, delete, complete",
+        "Auth mechanism named and applied to every endpoint",
+        "Error responses defined with status codes"
+      ]
+    },
+    {
+      "brief": "Orders table grew to 50M rows and reports time out",
+      "task": "Propose a schema and indexing plan to make monthly revenue reports fast",
+      "acceptance": [
+        "Identifies the slow query pattern",
+        "Proposes specific indexes or partitioning with rationale",
+        "Mentions the trade-off on write cost"
+      ]
+    },
+    {
+      "brief": "Two services need to talk without tight coupling",
+      "task": "Choose between sync HTTP and an event queue for order-created notifications and justify it",
+      "acceptance": [
+        "States the decision clearly",
+        "Lists at least two failure modes and how each is handled",
+        "Includes an idempotency strategy"
+      ]
+    }
+  ]
+}

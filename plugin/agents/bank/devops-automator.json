@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "devops-automator",
+  "tasks": [
+    {
+      "brief": "A Python package needs CI",
+      "task": "Write a GitHub Actions workflow that lints and tests on push and pull request",
+      "acceptance": [
+        "Runs on both push and pull_request",
+        "Caches dependencies",
+        "Fails the build on lint errors"
+      ]
+    },
+    {
+      "brief": "A static site must deploy on every merge to main",
+      "task": "Write a GitHub Pages deploy workflow for a Vite site",
+      "acceptance": [
+        "Builds only on main",
+        "Uses the official pages deploy actions",
+        "Sets minimal permissions"
+      ]
+    },
+    {
+      "brief": "Production container restarts every few hours",
+      "task": "Write a runbook to diagnose a crash-looping container",
+      "acceptance": [
+        "Ordered steps from logs to resource limits",
+        "Commands included for each step",
+        "Defines when to roll back"
+      ]
+    }
+  ]
+}

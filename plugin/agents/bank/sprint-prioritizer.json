@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "sprint-prioritizer",
+  "tasks": [
+    {
+      "brief": "Backlog has 12 items, sprint fits 5",
+      "task": "Prioritize these: SSO, dark mode, export CSV, fix login bug, onboarding tour, API rate limits, mobile nav, analytics, i18n, search filters, billing retry, docs",
+      "acceptance": [
+        "Ranking with a stated scoring method",
+        "Top 5 justified in one line each",
+        "Explicitly defers the rest with reasons"
+      ]
+    },
+    {
+      "brief": "Stakeholder wants everything this sprint",
+      "task": "Write the message that pushes back and proposes a plan",
+      "acceptance": [
+        "Acknowledges the request",
+        "Offers a concrete trade-off",
+        "Ends with a decision request"
+      ]
+    },
+    {
+      "brief": "Sprint goal keeps slipping",
+      "task": "Diagnose three likely causes and a fix for each",
+      "acceptance": [
+        "Causes are specific, not generic",
+        "Each fix is actionable within one sprint",
+        "Names a metric to confirm improvement"
+      ]
+    }
+  ]
+}

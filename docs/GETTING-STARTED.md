@@ -62,7 +62,7 @@ Run the tests too, because perfectionists do:
 uv run pytest -q
 ```
 
-Expected: `26 passed`.
+Expected: `33 passed`.
 
 ---
 
@@ -161,6 +161,14 @@ With `network error`, check your internet or VPN.
    ```
    `score` asks the three free judges to grade each finished task (a few requests per task, all cached).
    `fitness` shows which agents are weakest. That list is what evolution works on.
+
+6. Evolve the weakest agent (about 70 free-tier calls, a few minutes):
+   ```powershell
+   uv run evolvra evolve <slug> --dry-run
+   uv run evolvra evolve <slug>
+   git -C ~/Evolvra diff plugin/agents
+   ```
+   If a candidate beat its parent, the persona file changed and the diff shows exactly what evolved.
 
 ---
 

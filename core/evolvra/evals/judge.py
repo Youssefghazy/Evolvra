@@ -89,20 +89,28 @@ def judges_from_env() -> list[tuple[str, str]]:
     return out
 
 
+def render_prompt(*, brief: str, agent: str, agent_description: str, task: str, criteria: list[str],
+                  attempts: int, verdict: str | None, evidence: str | None, output: str | None) -> str:
+    return PROMPT.format(
+        brief=brief,
+        agent=agent,
+        agent_description=agent_description or "(unknown)",
+        task=task,
+        criteria="\n".join(f"- {c}" for c in criteria) or "- (none given)",
+        attempts=attempts,
+        verdict=verdict or "none",
+        evidence=(evidence or "(no evidence statement)").strip(),
+        output=output or "(no output files found)",
+    )
+
+
 def build_prompt(task: sqlite3.Row, brief: str, agent_description: str) -> str:
     attempts = json.loads(task["attempts_json"] or "[]")
     last = attempts[-1] if attempts else {}
-    criteria = json.loads(task["acceptance_json"] or "[]")
-    return PROMPT.format(
-        brief=brief,
-        agent=task["agent_slug"],
-        agent_description=agent_description or "(unknown)",
-        task=task["task"],
-        criteria="\n".join(f"- {c}" for c in criteria) or "- (none given)",
-        attempts=task["attempts"],
-        verdict=task["verdict"] or "none",
-        evidence=(last.get("evidence") or "(no evidence statement)").strip(),
-        output=checks.read_output(task["output_dir"]) or "(no output files found)",
+    return render_prompt(
+        brief=brief, agent=task["agent_slug"], agent_description=agent_description, task=task["task"],
+        criteria=json.loads(task["acceptance_json"] or "[]"), attempts=task["attempts"],
+        verdict=task["verdict"], evidence=last.get("evidence"), output=checks.read_output(task["output_dir"]),
     )
 
 
@@ -135,7 +143,11 @@ def _clamp(value) -> float:
 
 def judge_task(conn: sqlite3.Connection, task: sqlite3.Row, brief: str, agent_description: str,
                judges: list[tuple[str, str]] | None = None, *, _transport=None) -> list[JudgeResult]:
-    prompt = build_prompt(task, brief, agent_description)
+    return judge_prompt(conn, build_prompt(task, brief, agent_description), judges, _transport=_transport)
+
+
+def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, str]] | None = None, *,
+                 _transport=None) -> list[JudgeResult]:
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}]
     results: list[JudgeResult] = []
     for provider, model in judges or judges_from_env():

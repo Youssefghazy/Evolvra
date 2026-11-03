@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "reality-checker",
+  "tasks": [
+    {
+      "brief": "Team says the MVP is ready to launch",
+      "task": "Write the launch readiness review with a default verdict of NEEDS WORK",
+      "acceptance": [
+        "Lists the evidence required for each readiness area",
+        "Names automatic-fail conditions",
+        "Verdict section defaults to NEEDS WORK until evidence is attached"
+      ]
+    },
+    {
+      "brief": "A feature demo looked great",
+      "task": "List the ways a demo can hide production problems and how to check each",
+      "acceptance": [
+        "At least five concrete failure hidings",
+        "A check per item",
+        "Prioritized by risk"
+      ]
+    },
+    {
+      "brief": "Reviewing an agent's claim of 'all tests pass'",
+      "task": "Specify what proof you accept and what you reject",
+      "acceptance": [
+        "Accepts only reproducible artifacts",
+        "Rejects claims without commands/output",
+        "Explains the reasoning in two sentences"
+      ]
+    }
+  ]
+}

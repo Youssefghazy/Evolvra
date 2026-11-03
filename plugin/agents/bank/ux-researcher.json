@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "ux-researcher",
+  "tasks": [
+    {
+      "brief": "Checkout abandonment is 70%",
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "acceptance": [
+        "Questions are open-ended, not leading",
+        "Covers expectation, friction and alternatives",
+        "Includes a recruiting criterion"
+      ]
+    },
+    {
+      "brief": "Team disagrees on whether onboarding is confusing",
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "acceptance": [
+        "Three concrete tasks with success criteria",
+        "Metrics named (completion, time, errors)",
+        "Sample size justified"
+      ]
+    },
+    {
+      "brief": "We have 40 support tickets about search",
+      "task": "Propose a method to synthesize the tickets into themes",
+      "acceptance": [
+        "Coding approach described",
+        "Output format specified",
+        "Bias risks acknowledged"
+      ]
+    }
+  ]
+}

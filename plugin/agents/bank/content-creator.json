@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "content-creator",
+  "tasks": [
+    {
+      "brief": "Launch a note-taking app with offline sync",
+      "task": "Write a one-paragraph product description for the website",
+      "acceptance": [
+        "Under 120 words",
+        "Mentions offline sync as the differentiator",
+        "No clichés like 'revolutionary' or 'seamless'"
+      ]
+    },
+    {
+      "brief": "Weekly newsletter for indie developers",
+      "task": "Write the subject line and 150-word intro for an issue about shipping faster",
+      "acceptance": [
+        "Subject under 50 characters",
+        "Intro has one concrete example",
+        "Ends with a clear link-worthy hook"
+      ]
+    },
+    {
+      "brief": "Announce a pricing change honestly",
+      "task": "Write the customer email for a 10% price increase",
+      "acceptance": [
+        "States the change and date in the first two sentences",
+        "Gives the reason without blaming customers",
+        "Offers one accommodation"
+      ]
+    }
+  ]
+}

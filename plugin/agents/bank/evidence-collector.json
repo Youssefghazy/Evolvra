@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "evidence-collector",
+  "tasks": [
+    {
+      "brief": "A developer claims the login bug is fixed",
+      "task": "Write the verification checklist and the evidence you would require",
+      "acceptance": [
+        "Reproduction steps before and after",
+        "Evidence types named (logs, screenshots, tests)",
+        "Pass/fail criteria explicit"
+      ]
+    },
+    {
+      "brief": "A PR says 'improved performance'",
+      "task": "Specify what measurements would make that claim acceptable",
+      "acceptance": [
+        "Baseline and after numbers required",
+        "Environment and sample size stated",
+        "Rejects anecdotal evidence explicitly"
+      ]
+    },
+    {
+      "brief": "QA for a landing page",
+      "task": "Produce the evidence report template for a visual review",
+      "acceptance": [
+        "Covers desktop and mobile widths",
+        "Lists accessibility checks",
+        "Has a clear verdict section"
+      ]
+    }
+  ]
+}

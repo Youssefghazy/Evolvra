@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "rapid-prototyper",
+  "tasks": [
+    {
+      "brief": "Validate whether people want a habit tracker for teams",
+      "task": "Build the smallest clickable prototype plan plus a single-file HTML mock of the main screen",
+      "acceptance": [
+        "Scope limited to one core loop",
+        "HTML mock runs without a build step",
+        "Names what will be measured in the test"
+      ]
+    },
+    {
+      "brief": "Hackathon: a CLI that summarizes a folder of markdown notes",
+      "task": "Write a Python script that prints the top 5 most frequent headings across all .md files",
+      "acceptance": [
+        "Standard library only",
+        "Handles an empty folder without crashing",
+        "Includes a usage example"
+      ]
+    },
+    {
+      "brief": "Founder wants a landing page by tonight",
+      "task": "Produce a one-file landing page with headline, three benefits, email capture (no backend)",
+      "acceptance": [
+        "Single HTML file",
+        "Email form validates format client-side",
+        "Copy avoids placeholder lorem ipsum"
+      ]
+    }
+  ]
+}

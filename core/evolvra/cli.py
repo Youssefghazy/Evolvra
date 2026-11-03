@@ -9,6 +9,8 @@ from pathlib import Path
 
 from . import __version__
 from .evals import fitness, judge, runner
+from .evolve import bank as bank_mod
+from .evolve import engine
 from .missions import ingest
 from .registry import personas
 from .router import client, quota
@@ -223,6 +225,68 @@ def cmd_fitness(args) -> int:
     return 0
 
 
+def _plugin_agents_dir(args) -> Path:
+    if args.plugin_dir:
+        return Path(args.plugin_dir)
+    here = Path(__file__).resolve()
+    for parent in [Path.cwd(), *Path.cwd().parents, here.parents[2]]:
+        cand = parent / "plugin" / "agents"
+        if (cand / "MANIFEST.json").exists():
+            return cand
+    print("cannot find plugin/agents (run from the repo, or pass --plugin-dir)", file=sys.stderr)
+    raise SystemExit(2)
+
+
+def _pairs(spec: str | None):
+    if not spec:
+        return None
+    return [(p.strip(), m.strip()) for p, _, m in (x.partition(":") for x in spec.split(",") if x.strip())]
+
+
+def cmd_bank(args) -> int:
+    conn = db.connect(args.db)
+    tasks = bank_mod.load_bank(conn, _plugin_agents_dir(args), args.slug)
+    if not tasks:
+        print(f"no bank tasks for {args.slug}")
+        return 1
+    for i, t in enumerate(tasks, 1):
+        print(f"{i}. [{t.source}] {t.task}")
+        for c in t.acceptance:
+            print(f"     - {c}")
+    return 0
+
+
+def cmd_evolve(args) -> int:
+    conn = db.connect(args.db)
+    opts = engine.EvolveOptions(candidates=args.candidates, bank_size=args.bank_size, margin=args.margin,
+                                dry_run=args.dry_run, mutator=(_pairs(args.mutator) or [None])[0],
+                                actor=(_pairs(args.actor) or [None])[0], judges=_pairs(args.judges))
+    try:
+        res = engine.evolve(conn, args.slug, _plugin_agents_dir(args), opts)
+    except ValueError as e:
+        print(f"evolve: {e}", file=sys.stderr)
+        return 2
+    print(res.summary())
+    print(f"diagnosis: {res.evolution_dir / 'diagnosis.md'}")
+    if res.dry_run:
+        print(f"bank tasks: {res.bank_size}; targets: " + ", ".join(c["target"] for c in res.candidates))
+        print("estimated calls: ~" + str((1 + len(res.candidates)) * res.bank_size * (1 + len(judge.judges_from_env()))
+                                       + len(res.candidates)))
+        return 0
+    print(f"report:    {res.evolution_dir / 'report.md'}")
+    for c in res.candidates:
+        if c["lint_ok"]:
+            status = f"fitness={c['fitness']}"
+        elif any(str(x).startswith("mutator error") for x in c["problems"]):
+            status = c["problems"][0]
+        else:
+            status = "lint failed: " + "; ".join(c["problems"])
+        print(f"  candidate {c['index']} [{c['target']}]: {status}")
+    if res.new_version:
+        print("\nnew persona written to plugin/agents. Review with: git diff plugin/agents")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="evolvra", description="Evolvra core. Survival of the promptest.")
     p.add_argument("--db", help="SQLite path (default: $EVOLVRA_HOME/evolvra.db)")
@@ -277,6 +341,23 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("fitness", help="fitness per agent version (what evolution optimizes)")
     s.add_argument("--json", action="store_true")
     s.set_defaults(fn=cmd_fitness)
+
+    s = sub.add_parser("bank", help="show an agent's held-out task bank")
+    s.add_argument("slug")
+    s.add_argument("--plugin-dir")
+    s.set_defaults(fn=cmd_bank)
+
+    s = sub.add_parser("evolve", help="diagnose, propose variants, proxy tournament, promote if it beats the parent")
+    s.add_argument("slug")
+    s.add_argument("--candidates", type=int, default=3)
+    s.add_argument("--bank-size", type=int, default=4)
+    s.add_argument("--margin", type=float, default=0.03, help="minimum fitness gain to promote")
+    s.add_argument("--mutator", help="provider:model that writes variants (default groq:openai/gpt-oss-120b)")
+    s.add_argument("--actor", help="provider:model that plays personas on bank tasks (default groq:openai/gpt-oss-120b)")
+    s.add_argument("--judges", help="override judge ensemble, provider:model,...")
+    s.add_argument("--plugin-dir", help="path to plugin/agents (auto-detected from the repo)")
+    s.add_argument("--dry-run", action="store_true")
+    s.set_defaults(fn=cmd_evolve)
 
     s = sub.add_parser("ping", help="send one tiny request to a provider")
     s.add_argument("provider", choices=sorted(client.PROVIDERS))

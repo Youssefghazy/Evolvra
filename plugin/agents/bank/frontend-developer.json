@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "frontend-developer",
+  "tasks": [
+    {
+      "brief": "A small SaaS needs a pricing page",
+      "task": "Write the React component for a 3-tier pricing table with a monthly/yearly toggle",
+      "acceptance": [
+        "Three plans rendered from a data array, not hard-coded JSX",
+        "Toggle switches prices without page reload",
+        "Keyboard accessible: toggle and buttons reachable by Tab, visible focus"
+      ]
+    },
+    {
+      "brief": "Marketing wants a hero section that loads fast on mobile",
+      "task": "Write the HTML and CSS for a responsive hero with headline, subtext, CTA and an image",
+      "acceptance": [
+        "No layout shift: image has explicit width/height",
+        "Readable at 360px wide without horizontal scroll",
+        "CTA has at least 4.5:1 contrast"
+      ]
+    },
+    {
+      "brief": "Internal dashboard shows a list of 10k rows and feels slow",
+      "task": "Explain and implement a fix for rendering a 10k-row table in React",
+      "acceptance": [
+        "Names the root cause (rendering every row)",
+        "Uses virtualization or pagination with code",
+        "States how to measure the improvement"
+      ]
+    }
+  ]
+}

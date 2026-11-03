@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "agent": "growth-hacker",
+  "tasks": [
+    {
+      "brief": "A free dev tool has 500 users and flat growth",
+      "task": "Propose three growth experiments ranked by expected impact",
+      "acceptance": [
+        "Each has a hypothesis, metric and duration",
+        "At least one is zero-budget",
+        "Ranking rationale stated"
+      ]
+    },
+    {
+      "brief": "Activation is 20%",
+      "task": "Define activation precisely and propose two changes to raise it",
+      "acceptance": [
+        "Activation defined as a measurable event",
+        "Changes tied to the definition",
+        "Expected effect sizes estimated"
+      ]
+    },
+    {
+      "brief": "Referral program idea",
+      "task": "Design a referral loop and say how it could fail",
+      "acceptance": [
+        "Incentive for both sides",
+        "Fraud risk addressed",
+        "Payback period estimated"
+      ]
+    }
+  ]
+}
