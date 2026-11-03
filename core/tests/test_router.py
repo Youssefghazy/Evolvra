@@ -145,3 +145,29 @@ def test_503_is_retried_once(monkeypatch):
     with pytest.raises(client.ProviderError, match="HTTP 503"):
         client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
     assert len(attempts) == 2
+
+
+def test_429_waits_the_time_the_provider_asks_for(monkeypatch):
+    attempts, sleeps = [], []
+
+    class Limited(client.urllib.error.HTTPError):
+        def __init__(self):
+            super().__init__("u", 429, "limited", {}, None)
+        def read(self):
+            return b'{"error":{"message":"Rate limit reached ... Please try again in 2.5s."}}'
+
+    def urlopen(req, timeout):
+        attempts.append(1)
+        if len(attempts) < 3:
+            raise Limited()
+        class R:
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+            def read(self): return b'{"choices":[{"message":{"content":"ok"}}]}'
+        return R()
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(client.time, "sleep", lambda s: sleeps.append(s))
+    raw = client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
+    assert raw["choices"][0]["message"]["content"] == "ok"
+    assert len(attempts) == 3 and all(abs(w - 3.5) < 1e-9 for w in sleeps)

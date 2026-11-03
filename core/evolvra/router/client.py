@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import time
 import urllib.error
@@ -202,8 +203,25 @@ def _headers(api_key: str) -> dict:
     }
 
 
-RETRY_STATUSES = (429, 500, 502, 503, 504)
+RETRY_STATUSES = (500, 502, 503, 504)
 RETRY_PAUSE_S = 4.0
+MAX_429_ATTEMPTS = 3
+MAX_429_WAIT_S = 90.0
+
+
+def _retry_after_seconds(headers, detail: str) -> float:
+    """Groq/Gemini say how long to wait: a Retry-After header or 'try again in 32.28s' in the body."""
+    try:
+        ra = headers.get("Retry-After") if headers else None
+        if ra:
+            return float(ra)
+    except (TypeError, ValueError):
+        pass
+    m = re.search(r"try again in\s*([\d.]+)\s*(ms|s)", detail, re.IGNORECASE)
+    if m:
+        value = float(m.group(1))
+        return value / 1000.0 if m.group(2).lower() == "ms" else value
+    return 20.0
 
 
 def _send(req: urllib.request.Request, timeout: float, _attempt: int = 1) -> dict:
@@ -212,6 +230,10 @@ def _send(req: urllib.request.Request, timeout: float, _attempt: int = 1) -> dic
             return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:  # keys never appear in error text
         detail = e.read().decode("utf-8", errors="replace")[:500]
+        if e.code == 429 and _attempt < MAX_429_ATTEMPTS:
+            wait = min(MAX_429_WAIT_S, _retry_after_seconds(e.headers, detail) + 1.0)
+            time.sleep(wait)  # free tiers are per-minute buckets; waiting is free, failing is not
+            return _send(req, timeout, _attempt=_attempt + 1)
         if e.code in RETRY_STATUSES and _attempt == 1:
             time.sleep(RETRY_PAUSE_S)  # free tiers hiccup; one retry fixes most 503s
             return _send(req, timeout, _attempt=2)

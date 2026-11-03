@@ -76,3 +76,18 @@ def test_v1_database_upgrades_to_current(tmp_path):
     assert {"task_no", "agent_slug", "attempts_json"} <= cols
     indexes = {r[1] for r in conn.execute("PRAGMA index_list(scores)")}
     assert "idx_scores_unique" in indexes
+
+
+def test_v3_database_gains_evolution_columns(tmp_path):
+    import sqlite3
+
+    path = tmp_path / "v3.db"
+    raw = sqlite3.connect(path)
+    raw.executescript("""
+        CREATE TABLE evolutions (id INTEGER PRIMARY KEY, agent_id INTEGER, parent_version INTEGER,
+          candidate_versions_json TEXT, winner_version INTEGER, bank_delta REAL, diagnosis_md TEXT, created_at TEXT);
+        PRAGMA user_version = 3;""")
+    raw.commit(); raw.close()
+    conn = db.connect(path)
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(evolutions)")}
+    assert {"parent_fitness", "bank_json"} <= cols and db.schema_version(conn) == db.SCHEMA_VERSION

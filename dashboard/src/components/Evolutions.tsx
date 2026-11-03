@@ -11,17 +11,22 @@ export default function Evolutions({ data }: { data: Data }) {
       {[...data.evolutions].reverse().map((e) => (
         <Card key={e.id} title={<span><a href={`#/agent/${e.agent}`} style={{ color: "var(--text)" }}>{e.agent}</a> · generation from v{e.parent_version}</span>}
               right={<span className="chip" style={{ color: e.winner_version ? "var(--good)" : "var(--muted)" }}>{e.winner_version ? `promoted v${e.winner_version} (+${pct(e.delta)})` : `no winner (${e.delta == null ? "–" : pct(e.delta)})`}</span>}>
-          <div className="text-xs muted mb-3">{fmtDate(e.created_at)}</div>
+          <div className="text-xs muted mb-3">{fmtDate(e.created_at)} · parent fitness {pct(e.parent_fitness)} · bank {e.bank?.length ?? "–"} tasks</div>
           <table className="w-full text-sm">
-            <thead><tr><th>candidate</th><th>target</th><th>lint</th><th>fitness</th><th>notes</th></tr></thead>
+            <thead><tr><th>candidate</th><th>target</th><th>status</th><th>fitness</th><th>paired Δ</th><th>shared</th><th>notes</th></tr></thead>
             <tbody>
-              {e.candidates.map((c) => (
-                <tr key={c.index} style={c.index === (e.winner_version ? e.candidates.find((x) => x.fitness != null && x.fitness === Math.max(...e.candidates.map((y) => y.fitness ?? -1)))?.index : -1) ? { color: "var(--good)" } : undefined}>
-                  <td className="mono">#{c.index}</td><td className="mono text-xs">{c.target}</td>
-                  <td>{c.lint_ok ? "ok" : "failed"}</td><td className="mono">{pct(c.fitness)}</td>
-                  <td className="text-xs muted">{c.lint_ok ? c.per_task.map((p) => p.critique).filter((x) => x && x !== "none").slice(0, 2).join(" · ") : c.problems.join("; ")}</td>
-                </tr>
-              ))}
+              {e.candidates.map((c) => {
+                const best = e.winner_version != null && c.paired_delta != null && c.paired_delta === Math.max(...e.candidates.map((y) => y.paired_delta ?? -9));
+                return (
+                  <tr key={c.index} style={best ? { color: "var(--good)" } : undefined}>
+                    <td className="mono">#{c.index}</td><td className="mono text-xs">{c.target}</td>
+                    <td>{c.lint_ok ? "played" : "dropped"}</td><td className="mono">{pct(c.fitness)}</td>
+                    <td className="mono">{c.paired_delta == null ? "–" : `${c.paired_delta >= 0 ? "+" : ""}${pct(c.paired_delta)}`}</td>
+                    <td className="mono">{c.shared_tasks ?? "–"}</td>
+                    <td className="text-xs muted">{c.lint_ok ? c.per_task.map((p) => p.critique).filter((x) => x && x !== "none").slice(0, 2).join(" · ") : c.problems.join("; ").slice(0, 160)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           {e.diagnosis && (

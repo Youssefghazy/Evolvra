@@ -98,8 +98,10 @@ CREATE TABLE IF NOT EXISTS evolutions (
   parent_version          INTEGER NOT NULL,
   candidate_versions_json TEXT NOT NULL,
   winner_version          INTEGER,             -- NULL when no candidate beat the parent
-  bank_delta              REAL,                -- winner fitness minus parent fitness on held-out bank
+  bank_delta              REAL,                -- best paired delta (candidate - parent) on shared bank tasks
   diagnosis_md            TEXT,
+  parent_fitness          REAL,
+  bank_json               TEXT,                -- held-out tasks used, with the parent's per-task fitness
   created_at              TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
@@ -120,4 +122,4 @@ CREATE TABLE IF NOT EXISTS llm_cache (
   created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
-PRAGMA user_version = 3;
+PRAGMA user_version = 4;

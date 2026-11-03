@@ -19,6 +19,7 @@ class EvolveOptions:
     candidates: int = 3
     bank_size: int = 4
     margin: float = 0.03
+    min_coverage: float = 0.75   # candidate and parent must both finish this share of the bank
     dry_run: bool = False
     mutator: tuple[str, str] | None = None
     actor: tuple[str, str] | None = None
@@ -37,6 +38,7 @@ class EvolveResult:
     winner_index: int | None = None
     new_version: int | None = None
     delta: float | None = None
+    coverage: int = 0
     dry_run: bool = False
 
     def summary(self) -> str:
@@ -44,11 +46,12 @@ class EvolveResult:
             return (f"dry run: would evolve {self.slug} v{self.parent_version} with {len(self.candidates)} candidate(s)"
                     f" on {self.bank_size} bank task(s)")
         if self.winner_index is None:
-            return (f"no promotion: parent {self.slug} v{self.parent_version} fitness={self.parent_fitness};"
-                    f" best candidate did not beat it by {self.delta if self.delta is not None else 'n/a'}")
+            why = "no candidate completed enough shared tasks" if self.coverage == 0 else (
+                f"best paired delta {self.delta:+} on {self.coverage} shared task(s) is below the margin")
+            return f"no promotion: parent {self.slug} v{self.parent_version} fitness={self.parent_fitness}; {why}"
         return (f"PROMOTED {self.slug} v{self.parent_version} -> v{self.new_version}"
-                f" (candidate {self.winner_index}, fitness {self.parent_fitness} -> "
-                f"{self.candidates[self.winner_index - 1]['fitness']}, +{self.delta})")
+                f" (candidate {self.winner_index}, paired delta {self.delta:+} on {self.coverage} shared task(s),"
+                f" fitness {self.parent_fitness} -> {self.candidates[self.winner_index - 1]['fitness']})")
 
 
 def _manifest(plugin_agents_dir: Path) -> dict:
@@ -96,29 +99,31 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
                                  actor=opts.actor, judges=opts.judges, _transport=_transport)
     result.parent_fitness = parent_res.fitness
 
-    best_i, best_fit = None, None
+    best_i, best_delta, best_cov = None, None, 0
+    need = max(1, round(opts.min_coverage * len(held_out)))
     for c in cands:
         entry = {"index": c.index, "target": c.target, "path": str(c.path) if c.path else None,
-                 "lint_ok": c.lint_ok, "problems": c.problems or [], "sha": c.sha, "fitness": None, "per_task": []}
+                 "lint_ok": c.lint_ok, "problems": c.problems or [], "sha": c.sha, "fitness": None,
+                 "paired_delta": None, "shared_tasks": 0, "per_task": []}
         if c.lint_ok and c.content:
             res = tournament.play(conn, c.content, f"candidate-{c.index}", held_out, agent_slug=slug,
                                   agent_description=desc, actor=opts.actor, judges=opts.judges, _transport=_transport)
-            entry["fitness"] = res.fitness
+            delta, shared = tournament.paired_delta(res, parent_res)
+            entry.update({"fitness": res.fitness, "paired_delta": delta, "shared_tasks": shared})
             entry["per_task"] = [{"task": r.task.task, "fitness": r.proxy_fitness, "failure": r.failure_class,
                                   "critique": r.critique} for r in res.results]
-            if res.fitness is not None and (best_fit is None or res.fitness > best_fit):
-                best_i, best_fit = c.index, res.fitness
+            if delta is not None and shared >= need and (best_delta is None or delta > best_delta):
+                best_i, best_delta, best_cov = c.index, delta, shared
         result.candidates.append(entry)
 
-    promoted = (best_i is not None and result.parent_fitness is not None
-                and best_fit >= result.parent_fitness + opts.margin)
-    result.delta = round(best_fit - result.parent_fitness, 4) if (best_fit is not None and result.parent_fitness is not None) else None
+    promoted = best_i is not None and best_delta >= opts.margin
+    result.delta, result.coverage = best_delta, best_cov
 
     agent_id = conn.execute("SELECT id FROM agents WHERE slug = ?", (slug,)).fetchone()["id"]
     if promoted:
         winner = next(c for c in cands if c.index == best_i)
-        rationale = (f"evolved from v{diag.version}: targeted '{winner.target}'; proxy fitness"
-                     f" {result.parent_fitness} -> {best_fit} on {len(held_out)} held-out task(s)")
+        rationale = (f"evolved from v{diag.version}: targeted '{winner.target}'; paired delta {best_delta:+}"
+                     f" on {best_cov} shared held-out task(s) (parent {result.parent_fitness})")
         persona_path.write_text(winner.content, encoding="utf-8")
         new_persona = personas.load_persona(persona_path)
         personas.upsert_persona(conn, new_persona, created_by="evolve", rationale=rationale)
@@ -127,9 +132,11 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
         result.winner_index, result.new_version = best_i, new_version
     conn.execute(
         "INSERT INTO evolutions (agent_id, parent_version, candidate_versions_json, winner_version, bank_delta,"
-        " diagnosis_md) VALUES (?,?,?,?,?,?)",
+        " diagnosis_md, parent_fitness, bank_json) VALUES (?,?,?,?,?,?,?,?)",
         (agent_id, diag.version, json.dumps(result.candidates, ensure_ascii=False),
-         result.new_version, result.delta, diag.to_markdown()))
+         result.new_version, result.delta, diag.to_markdown(), result.parent_fitness,
+         json.dumps([{"task": t.task, "source": t.source, "parent_fitness": parent_res.scored_tasks.get(t.key)}
+                     for t in held_out], ensure_ascii=False)))
     conn.commit()
     (evo_dir / "report.md").write_text(_report(result, parent_res, held_out), encoding="utf-8")
     (evo_dir / "result.json").write_text(json.dumps({
@@ -155,12 +162,12 @@ def _report(result: EvolveResult, parent_res: tournament.PersonaResult, held_out
     lines = [f"# Evolution report: {result.slug} v{result.parent_version}", "", result.summary(), "",
              f"Held-out bank ({len(held_out)} tasks):"]
     lines += [f"{i + 1}. {t.task}  _(source: {t.source})_" for i, t in enumerate(held_out)]
-    lines += ["", "## Fitness", "", "| persona | target | fitness |", "|---|---|---|",
-              f"| parent v{result.parent_version} | - | {result.parent_fitness} |"]
+    lines += ["", "## Fitness", "", "| persona | target | fitness | paired delta | shared tasks |", "|---|---|---|---|---|",
+              f"| parent v{result.parent_version} | - | {result.parent_fitness} | - | - |"]
     for c in result.candidates:
         mark = " **winner**" if c["index"] == result.winner_index else ""
-        note = c["fitness"] if c["lint_ok"] else f"lint failed: {'; '.join(c['problems'])}"
-        lines.append(f"| candidate {c['index']}{mark} | {c['target']} | {note} |")
+        note = c["fitness"] if c["lint_ok"] else f"failed: {'; '.join(c['problems'])[:120]}"
+        lines.append(f"| candidate {c['index']}{mark} | {c['target']} | {note} | {c['paired_delta']} | {c['shared_tasks']} |")
     lines += ["", "## Parent per task", ""]
     lines += [f"- {r.task.task[:70]}: {r.proxy_fitness} `{r.failure_class}` {r.critique}" for r in parent_res.results]
     for c in result.candidates:

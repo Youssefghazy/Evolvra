@@ -16,10 +16,11 @@ export type Mission = {
   id: string; brief: string; mode: string; status: string; summary: string | null; started_at: string;
   finished_at: string | null; tasks: Task[];
 };
-export type Candidate = { index: number; target: string; lint_ok: boolean; problems: string[]; fitness: number | null; per_task: { task: string; fitness: number | null; failure: string; critique: string }[] };
+export type Candidate = { index: number; target: string; lint_ok: boolean; problems: string[]; fitness: number | null; paired_delta?: number | null; shared_tasks?: number; per_task: { task: string; fitness: number | null; failure: string; critique: string }[] };
 export type Evolution = {
   id: number; agent: string; parent_version: number; winner_version: number | null; delta: number | null;
-  created_at: string; candidates: Candidate[]; diagnosis: string | null;
+  created_at: string; parent_fitness?: number | null; bank?: { task: string; source: string; parent_fitness: number | null }[];
+  candidates: Candidate[]; diagnosis: string | null;
 };
 export type Summary = {
   generated_at: string; evolvra_version: string; agents: number; versions: number; missions: number; tasks: number;

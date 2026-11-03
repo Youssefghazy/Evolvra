@@ -6,7 +6,7 @@ import sqlite3
 from pathlib import Path
 
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 # Stepwise upgrades for existing databases. Fresh databases get schema.sql directly.
 # v1 -> v2: missions/tasks/traces were redesigned around the recorder format before
@@ -23,6 +23,24 @@ MIGRATIONS: dict[int, str] = {
         DROP TABLE IF EXISTS scores;
     """,
 }
+
+
+def _add_column(conn: sqlite3.Connection, table: str, column: str, decl: str) -> None:
+    """ALTER TABLE ... ADD COLUMN, only if the table exists and the column does not."""
+    exists = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()
+    if not exists:
+        return  # schema.sql will create the table with the column already present
+    cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+    if column not in cols:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
+
+
+def _migrate_v4(conn: sqlite3.Connection) -> None:
+    _add_column(conn, "evolutions", "parent_fitness", "REAL")
+    _add_column(conn, "evolutions", "bank_json", "TEXT")
+
+
+MIGRATION_FUNCS = {4: _migrate_v4}
 
 
 def evolvra_home() -> Path:
@@ -52,8 +70,12 @@ def migrate(conn: sqlite3.Connection) -> None:
     if current >= SCHEMA_VERSION:
         return
     for version in range(current + 1, SCHEMA_VERSION + 1):
-        if version in MIGRATIONS and current > 0:
+        if current == 0:
+            continue  # fresh database: schema.sql below creates everything at the current version
+        if version in MIGRATIONS:
             conn.executescript(MIGRATIONS[version])
+        if version in MIGRATION_FUNCS:
+            MIGRATION_FUNCS[version](conn)
     # schema.sql is idempotent (IF NOT EXISTS) and stamps the current version.
     conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
     conn.commit()

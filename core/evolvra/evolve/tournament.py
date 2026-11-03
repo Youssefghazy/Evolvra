@@ -15,7 +15,9 @@ from ..evals import judge
 from ..router import client, quota
 from .bank import BankTask
 
-DEFAULT_ACTOR = ("groq", "openai/gpt-oss-120b")
+# Flash-Lite answers fast and its free tier has a large per-minute token budget. Groq gpt-oss-120b is
+# stronger but capped at 8k tokens/minute on the free tier, which persona-sized prompts exhaust.
+DEFAULT_ACTOR = ("gemini", "gemini-3.5-flash-lite")
 PROXY_WEIGHTS = {"correctness": 0.4, "completeness": 0.2, "quality": 0.2, "evidence": 0.2}
 
 ACTOR_PROMPT = """# Mission brief
@@ -53,8 +55,21 @@ class PersonaResult:
         return round(statistics.mean(vals), 4) if vals else None
 
     @property
-    def calls(self) -> int:
-        return sum(1 + len(r.scores and judge.RUBRIC) for r in self.results)
+    def scored_tasks(self) -> dict[str, float]:
+        return {r.task.key: r.proxy_fitness for r in self.results if r.proxy_fitness is not None}
+
+
+def paired_delta(candidate: PersonaResult, parent: PersonaResult) -> tuple[float | None, int]:
+    """Mean (candidate - parent) over tasks BOTH completed, and how many tasks that is.
+
+    Comparing on different task subsets would reward whichever persona happened to hit fewer
+    rate limits, so only shared tasks count.
+    """
+    a, b = candidate.scored_tasks, parent.scored_tasks
+    shared = [k for k in a if k in b]
+    if not shared:
+        return None, 0
+    return round(statistics.mean(a[k] - b[k] for k in shared), 4), len(shared)
 
 
 def actor_from_env() -> tuple[str, str]:

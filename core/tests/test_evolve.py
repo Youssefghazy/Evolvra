@@ -5,6 +5,7 @@ from pathlib import Path
 from evolvra.evals import judge
 from evolvra.evolve import bank, diagnose, engine, mutate, tournament
 from evolvra.registry import personas
+from evolvra.router import client
 from evolvra.store import db
 
 REPO = Path(__file__).resolve().parents[2]
@@ -88,6 +89,7 @@ def test_evolve_promotes_only_a_winner(tmp_path, evolvra_home, monkeypatch):
     res = engine.evolve(conn, "content-creator", plugin, opts, home=evolvra_home, _transport=transport)
 
     assert res.parent_fitness == 0.6 and res.winner_index == 2 and res.new_version == 2
+    assert abs(res.delta - 0.3) < 1e-6 and res.coverage == 2
     assert res.candidates[2]["lint_ok"] is False  # broken candidate filtered, never played
     assert "MARKER:c2" in (plugin / "marketing-content-creator.md").read_text(encoding="utf-8")
     manifest = json.loads((plugin / "MANIFEST.json").read_text(encoding="utf-8"))
@@ -133,3 +135,41 @@ def test_judge_prompt_render_is_used_by_tournament():
     text = judge.render_prompt(brief="b", agent="a", agent_description="d", task="t", criteria=["c1"],
                                attempts=1, verdict="PASS", evidence="e", output="o")
     assert "- c1" in text and "# Output files\no" in text
+
+
+def test_paired_delta_only_counts_shared_tasks():
+    from evolvra.evolve.bank import BankTask
+    t1, t2, t3 = (BankTask("b", f"task {i}", (), "seed") for i in range(3))
+    parent = tournament.PersonaResult("parent", [tournament.TaskResult(t1, "", {}, 0.5, "none", "", 0),
+                                                 tournament.TaskResult(t2, "", {}, 0.6, "none", "", 0),
+                                                 tournament.TaskResult(t3, "", {}, None, "actor_error", "", 0)])
+    cand = tournament.PersonaResult("c", [tournament.TaskResult(t1, "", {}, 0.9, "none", "", 0),
+                                          tournament.TaskResult(t2, "", {}, None, "actor_error", "", 0),
+                                          tournament.TaskResult(t3, "", {}, 1.0, "none", "", 0)])
+    delta, shared = tournament.paired_delta(cand, parent)
+    assert shared == 1 and abs(delta - 0.4) < 1e-9   # only task 1 is shared; task 3's 1.0 does not count
+
+
+def test_low_coverage_candidate_is_not_promoted(tmp_path, evolvra_home, monkeypatch):
+    """A candidate that scores 1.0 on the few tasks it finished must not win on coverage luck."""
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    plugin = _plugin_copy(tmp_path)
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, plugin)
+    base = (plugin / "marketing-growth-hacker.md").read_text(encoding="utf-8")
+    inner = make_transport({"parent": 0.6, "c1": 1.0}, {1: _variant(base, "c1")})
+    seen = {"c1_actor": 0}
+
+    def flaky(url, body, api_key, timeout):
+        system = body["messages"][0]["content"]
+        if "MARKER:c1" in system and "QA reviewer" not in system:   # candidate's actor calls
+            seen["c1_actor"] += 1
+            if seen["c1_actor"] <= 2:                                 # first two tasks: rate limited
+                raise client.ProviderError("HTTP 429 from provider: rate limit")
+        return inner(url, body, api_key, timeout)
+
+    opts = engine.EvolveOptions(candidates=1, bank_size=3, margin=0.03, actor=ACTOR, judges=JUDGES, mutator=ACTOR)
+    res = engine.evolve(conn, "growth-hacker", plugin, opts, home=evolvra_home, _transport=flaky)
+    assert res.winner_index is None and res.candidates[0]["shared_tasks"] == 1
+    assert "MARKER:c1" not in (plugin / "marketing-growth-hacker.md").read_text(encoding="utf-8")

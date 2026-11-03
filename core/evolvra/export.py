@@ -86,6 +86,7 @@ def _evolutions(conn: sqlite3.Connection) -> list[dict]:
     return [{
         "id": e["id"], "agent": e["slug"], "parent_version": e["parent_version"],
         "winner_version": e["winner_version"], "delta": e["bank_delta"], "created_at": e["created_at"],
+        "parent_fitness": e["parent_fitness"], "bank": json.loads(e["bank_json"] or "[]"),
         "candidates": json.loads(e["candidate_versions_json"] or "[]"), "diagnosis": e["diagnosis_md"],
     } for e in conn.execute("SELECT e.*, a.slug FROM evolutions e JOIN agents a ON a.id = e.agent_id"
                             " ORDER BY e.created_at")]
