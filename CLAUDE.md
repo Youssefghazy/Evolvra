@@ -55,3 +55,7 @@ and `.claude-plugin/marketplace.json` so the update is picked up.
 - Gemma rejects reasoning params (router remembers per model). Gemini 3.8 Flash times out on the free tier.
 - Bank tasks must be self-contained; tasks that reference another task's files cannot be judged fairly.
 - `git pull` without rebase opens an editor; `pull.rebase true` is set.
+- Agents create `.venv`/`node_modules` inside output dirs; the scorer skips them (operator fix `20814d5`).
+- Median judging let two lenient judges hide fabricated evidence; the ensemble is now a trimmed-low mean.
+- Never "resume" an agent after a QA failure. `task done <qa> --verdict NEEDS_WORK` reopens the builder;
+  relaunch it via `task start`. Work outside `task start` is off the record and the hook flags it.

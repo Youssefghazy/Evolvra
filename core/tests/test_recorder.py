@@ -87,3 +87,38 @@ def test_reopen_flips_builder_attempt_and_resets_dependants(evolvra_home, record
     recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "fixed")
     m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
     assert len(m["tasks"][0]["attempts"]) == 2 and m["tasks"][0]["status"] == "done"
+
+
+def test_qa_failure_auto_reopens_builder_and_marks_caused_retry(evolvra_home, recorder, capsys):
+    recorder("start", "--brief", "Auto reopen")
+    mid = mission_id(evolvra_home)
+    recorder("task", "add", mid, "--agent", "growth-hacker", "--task", "Plan")
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Verify", "--depends", "1")
+    recorder("task", "start", mid, "1"); recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "x")
+    recorder("task", "start", mid, "2")
+    capsys.readouterr()
+    recorder("task", "done", mid, "2", "--verdict", "NEEDS_WORK", "--feedback", "stats wrong")
+    out = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert out["reopened"] == [1] and out["status"] == "pending"
+    m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
+    t1, t2 = m["tasks"]
+    assert t1["status"] == "pending" and t1["attempts"][-1]["verdict"] == "FAIL"
+    assert t1["attempts"][-1]["feedback"] == "stats wrong" and t1["attempts"][-1]["reopened_by_qa"]
+    assert t2["attempts"][-1]["verdict"] == "NEEDS_WORK"
+    with pytest.raises(SystemExit):           # QA cannot restart before the builder redoes the work
+        recorder("task", "start", mid, "2")
+    recorder("task", "start", mid, "1"); recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "y")
+    recorder("task", "start", mid, "2")
+    m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
+    assert m["tasks"][1]["attempts"][-1]["caused_by_builder"] is True
+    recorder("note", mid, "--text", "builder resumed off-record in an old tab", "--task", "1")
+    m = json.loads((evolvra_home / "missions" / mid / "mission.json").read_text())
+    assert m["notes"][0]["task_no"] == 1 and m["tasks"][0]["attempts"][-1]["verdict"] == "PASS"
+
+
+def test_hook_flags_off_record_subagent_work(evolvra_home, recorder, hook):
+    recorder("start", "--brief", "Off record")
+    hook({"hook_event_name": "SubagentStop", "session_id": "s"})          # mission active, no task running
+    hook({"hook_event_name": "PostToolUse", "session_id": "s", "tool_name": "Read"})
+    lines = [json.loads(x) for x in (evolvra_home / "traces.jsonl").read_text().splitlines()]
+    assert lines[0]["off_record"] is True and lines[1]["off_record"] is False

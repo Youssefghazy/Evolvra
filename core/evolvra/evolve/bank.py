@@ -31,27 +31,55 @@ def seed_tasks(plugin_agents_dir: Path, slug: str) -> list[BankTask]:
 _FILE_REF = re.compile(r"\b[\w.-]+\.(md|txt|json|py|js|ts|tsx|html|css|csv|yaml|yml|sql|sh|ps1)\b", re.IGNORECASE)
 
 
+MATERIALS_CHARS = 6000
+
+
 def is_self_contained(task: str, acceptance: list[str], depends_on: list[int]) -> bool:
     """A bank task must be playable from its text alone. Tasks that consumed another task's output
-    (dependencies, or references to produced files) cannot be judged fairly in the proxy arena:
-    the actor has no files, so honest personas lose to ones that invent measurements."""
+    (dependencies, or references to produced files) cannot be judged fairly in the proxy arena
+    unless that output is embedded in the task (see `materials_for`)."""
     if depends_on:
         return False
     text = " ".join([task, *acceptance])
     return not _FILE_REF.search(text)
 
 
+def materials_for(conn: sqlite3.Connection, mission_id: int, depends_on: list[int]) -> str:
+    """The text the builder produced for the tasks a QA task depended on, truncated.
+
+    Embedding it turns a file-bound QA task into a self-contained one: the arena actor sees exactly
+    what the real QA agent saw, and must verify *this* artefact rather than invent one."""
+    from ..evals import checks  # local import: evals already imports from evolve-free modules only
+
+    parts = []
+    for no in depends_on:
+        row = conn.execute("SELECT agent_slug, task, output_dir FROM tasks WHERE mission_id = ? AND task_no = ?",
+                           (mission_id, no)).fetchone()
+        if not row:
+            continue
+        body = checks.read_output(row["output_dir"], per_file=MATERIALS_CHARS // 2, total=MATERIALS_CHARS)
+        if body.strip():
+            parts.append(f"### Output of task {no} ({row['agent_slug']}: {row['task']})\n{body}")
+    return "\n\n".join(parts)
+
+
 def mission_tasks(conn: sqlite3.Connection, slug: str) -> list[BankTask]:
     rows = conn.execute(
-        "SELECT m.brief, m.external_id, t.task, t.acceptance_json, t.depends_json FROM tasks t"
+        "SELECT m.id AS mission_id, m.brief, m.external_id, t.task, t.acceptance_json, t.depends_json FROM tasks t"
         " JOIN missions m ON m.id = t.mission_id WHERE t.agent_slug = ? AND t.verdict IS NOT NULL"
         " ORDER BY m.started_at DESC", (slug,)).fetchall()
     out = []
     for r in rows:
         acceptance = json.loads(r["acceptance_json"] or "[]")
-        if not is_self_contained(r["task"], acceptance, json.loads(r["depends_json"] or "[]")):
+        depends = json.loads(r["depends_json"] or "[]")
+        if is_self_contained(r["task"], acceptance, depends):
+            out.append(BankTask(r["brief"], r["task"], tuple(acceptance), r["external_id"]))
             continue
-        out.append(BankTask(r["brief"], r["task"], tuple(acceptance), r["external_id"]))
+        materials = materials_for(conn, r["mission_id"], depends) if depends else ""
+        if not materials:
+            continue  # file-bound with nothing to embed: unplayable, skip
+        brief = f"{r['brief']}\n\n## Input materials (produced earlier in this mission)\n{materials}"
+        out.append(BankTask(brief, r["task"], tuple(acceptance), f"{r['external_id']} (materials embedded)"))
     return out
 
 

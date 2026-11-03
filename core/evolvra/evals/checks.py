@@ -47,6 +47,8 @@ def run_checks(task: sqlite3.Row) -> list[tuple[str, float, dict]]:
     """Return (metric, value 0..1, evidence) tuples for one task row."""
     attempts = json.loads(task["attempts_json"] or "[]")
     last = attempts[-1] if attempts else {}
+    # a QA attempt that only exists because the builder had to redo its work is not QA's inefficiency
+    builder_retries = sum(1 for a in attempts if a.get("caused_by_builder"))
     files = output_files(task["output_dir"])
     evidence_text = (last.get("evidence") or "").strip()
     results = [
@@ -54,8 +56,8 @@ def run_checks(task: sqlite3.Row) -> list[tuple[str, float, dict]]:
          {"files": [p.name for p in files[:10]], "output_dir": task["output_dir"]}),
         ("det:evidence_present", 1.0 if len(evidence_text) >= 10 else 0.0,
          {"evidence_chars": len(evidence_text)}),
-        ("det:efficiency", round(1.0 / max(1, task["attempts"]), 3),
-         {"attempts": task["attempts"], "max": MAX_ATTEMPTS}),
+        ("det:efficiency", round(1.0 / max(1, task["attempts"] - builder_retries), 3),
+         {"attempts": task["attempts"], "builder_retries": builder_retries, "max": MAX_ATTEMPTS}),
         ("det:verdict", 1.0 if task["verdict"] == "PASS" else 0.0,
          {"verdict": task["verdict"]}),
     ]

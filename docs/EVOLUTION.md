@@ -24,6 +24,12 @@ Borrowed from GEPA/OpenEvolve: an **actor** model (default the same Groq model, 
 persona as its system prompt on the agent's **held-out bank** (`plugin/agents/bank/<slug>.json` seeds plus
 real mission tasks, deduplicated, newest missions first). The judge ensemble grades each deliverable.
 
+Bank hygiene: a mission task enters the bank only if it is playable from its text. Tasks that depended on
+another task's output get that output **embedded inline** as "Input materials" (truncated to 6k chars), so a
+QA task becomes "verify *this* artefact" rather than an invitation to invent one. File-bound tasks with
+nothing to embed are skipped. The actor is told it has no file or tool access and must not invent
+measurements; the judges are told the same, so honest verification plans beat fabricated numbers.
+
 Proxy fitness per task = 0.4 correctness + 0.2 completeness + 0.2 quality + 0.2 evidence; persona fitness =
 mean over bank tasks. The actor is not Claude, so absolute numbers are a proxy; the *ranking* between parent
 and variants is the signal.

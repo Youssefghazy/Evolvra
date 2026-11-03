@@ -30,6 +30,8 @@ mission.py task add <id> --agent <slug> --task "<one-line deliverable>" --accept
 Rules: every task has at least one measurable acceptance criterion. A builder task is followed by an
 `evidence-collector` task that depends on it. In sprint mode the last task is `reality-checker`.
 Agent slugs: the `slug` values in `${CLAUDE_PLUGIN_ROOT}/agents/MANIFEST.json`.
+Check the agent's frontmatter `tools:` line. If it has no shell tool, do not write criteria that require it to
+run commands; put "run it and confirm" criteria on the QA task instead.
 
 ## 3. Execute each task in order
 ```
@@ -61,12 +63,13 @@ mission.py task done <id> <no> --verdict <PASS|FAIL|NEEDS_WORK> --evidence "<1-3
 
 ## 4. Dev↔QA loop
 When a QA task (`evidence-collector` / `reality-checker`) returns FAIL or NEEDS_WORK on a builder's output:
-1. Record the QA task: `mission.py task done <id> <qa_no> --verdict NEEDS_WORK --evidence "<what QA found>"`.
-2. Reopen the builder's task so the retry counts: `mission.py task reopen <id> <builder_no> --feedback "<QA feedback verbatim>"`.
-   This flips the builder's last attempt to FAIL and sets it back to `pending` (QA tasks that depended on it
-   go back to pending too). Never fix the work yourself and never resume the builder without this step:
-   unrecorded retries make the agent look better than it is, and evolution learns from the record.
-3. `task start` the builder again with the feedback in the handoff, then re-run QA as a new attempt.
+1. Record it: `mission.py task done <id> <qa_no> --verdict NEEDS_WORK --feedback "<QA feedback verbatim>"`.
+   The recorder **automatically reopens the builder task(s) QA depended on** (their last attempt becomes FAIL)
+   and sets the QA task back to pending. The JSON it prints lists `reopened`.
+2. `mission.py task start <id> <builder_no>` and **launch the builder agent again** with the feedback in a
+   fresh handoff. Never "resume" or message the earlier agent: work done outside `task start` is off the
+   record (the hook flags it), makes the agent look better than it is, and poisons evolution.
+3. When the builder is done, `task done` it, then `task start` the QA task again and launch QA afresh.
 The recorder allows **3 attempts** per task. If it reports `escalated`, stop that chain, tell the user what
 failed and why, and finish the mission with `--status escalated`.
 

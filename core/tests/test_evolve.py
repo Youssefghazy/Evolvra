@@ -76,8 +76,29 @@ def test_bank_excludes_dependent_and_file_bound_mission_tasks(evolvra_home, reco
         recorder("task", "done", mid, str(no), "--verdict", "PASS", "--evidence", "ok")
     ingest.ingest_all(conn, evolvra_home)
     mission_only = [t for t in bank.load_bank(conn, AGENTS_DIR, "evidence-collector") if t.source != "seed"]
-    assert [t.task for t in mission_only] == ["Define the QA evidence standard"]
+    assert [t.task for t in mission_only] == ["Define the QA evidence standard"]   # task 2 had no materials
     assert bank.is_self_contained("Write a checklist", ["3 items"], []) is True
+
+
+def test_dependent_qa_task_enters_bank_with_builder_output_embedded(evolvra_home, recorder):
+    from evolvra.missions import ingest
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    recorder("start", "--brief", "Note app launch", "--mode", "micro")
+    mid = max((evolvra_home / "missions").iterdir()).name
+    recorder("task", "add", mid, "--agent", "content-creator", "--task", "Write description.md")
+    recorder("task", "add", mid, "--agent", "evidence-collector", "--task", "Verify description.md against the criteria",
+             "--acceptance", "Reports word count", "--depends", "1")
+    recorder("task", "start", mid, "1")
+    out = evolvra_home / "missions" / mid / "01-content-creator"
+    (out / "description.md").write_text("Inkwell keeps notes in sync. " * 8, encoding="utf-8")
+    recorder("task", "done", mid, "1", "--verdict", "PASS", "--evidence", "written")
+    recorder("task", "start", mid, "2"); recorder("task", "done", mid, "2", "--verdict", "PASS", "--evidence", "ok")
+    ingest.ingest_all(conn, evolvra_home)
+    tasks = bank.load_bank(conn, AGENTS_DIR, "evidence-collector")
+    embedded = [t for t in tasks if "materials embedded" in t.source]
+    assert len(embedded) == 1 and "Inkwell keeps notes in sync" in embedded[0].brief
+    assert "## Input materials" in embedded[0].brief and embedded[0].task.startswith("Verify description.md")
 
 
 def test_pick_targets_fills_with_generic():

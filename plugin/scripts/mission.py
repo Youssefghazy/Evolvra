@@ -11,6 +11,8 @@ Usage (see `python mission.py -h`):
   task start ID NO
   task done  ID NO --verdict PASS|FAIL|NEEDS_WORK [--feedback TEXT] [--evidence TEXT] [--output-dir PATH]
   task reopen ID NO --feedback TEXT      (QA failed a builder's finished task: flip its last attempt to FAIL)
+  note    ID --text TEXT [--task NO]     (annotate without editing attempts; for audit anomalies)
+Note: `task done <qa> --verdict FAIL|NEEDS_WORK` reopens the QA task's dependencies automatically.
   finish  ID --status done|failed|escalated [--summary TEXT]
   show    ID
   current
@@ -124,8 +126,11 @@ def cmd_task_start(a) -> int:
         if get_task(m, d)["status"] != "done":
             sys.exit(f"error: task {a.no} depends on task {d}, which is not done")
     t["status"] = "running"
-    t["attempts"].append({"n": len(t["attempts"]) + 1, "started_at": now(), "finished_at": None,
-                          "verdict": None, "feedback": None, "evidence": None})
+    attempt = {"n": len(t["attempts"]) + 1, "started_at": now(), "finished_at": None,
+               "verdict": None, "feedback": None, "evidence": None}
+    if t.pop("builder_retry_pending", False):
+        attempt["caused_by_builder"] = True   # QA re-run forced by a builder fix: not QA's inefficiency
+    t["attempts"].append(attempt)
     out = mission_dir(m["id"]) / f"{t['no']:02d}-{t['agent']}"
     out.mkdir(parents=True, exist_ok=True)
     t["output_dir"] = str(out)
@@ -144,17 +149,39 @@ def cmd_task_done(a) -> int:
     att.update({"finished_at": now(), "verdict": a.verdict, "feedback": a.feedback, "evidence": a.evidence})
     if a.output_dir:
         t["output_dir"] = a.output_dir
+    reopened = []
     if a.verdict == "PASS":
         t["status"] = "done"
-    elif len(t["attempts"]) >= MAX_ATTEMPTS:
-        t["status"] = "escalated"
     else:
-        t["status"] = "pending"  # retry with feedback
+        # A QA task that fails is reporting on its *dependencies*: the builder must redo the work.
+        # Reopen them automatically so the retry is on the record even if the orchestrator forgets.
+        for dep_no in t.get("depends_on", []):
+            dep = get_task(m, dep_no)
+            if dep["status"] == "done" and dep["attempts"]:
+                _reopen(dep, a.feedback or a.evidence or "QA rejected the output")
+                reopened.append(dep_no)
+        if reopened:
+            t["status"] = "pending"       # QA will run again after the builder's fix; that is not QA's fault
+            att["verdict"] = a.verdict
+            t["builder_retry_pending"] = True
+        elif len(t["attempts"]) >= MAX_ATTEMPTS:
+            t["status"] = "escalated"
+        else:
+            t["status"] = "pending"  # retry with feedback
     save(m)
     set_current(m["id"], None)
     print(json.dumps({"id": m["id"], "task_no": t["no"], "status": t["status"],
-                      "attempts_used": len(t["attempts"]), "attempts_left": MAX_ATTEMPTS - len(t["attempts"])}))
+                      "attempts_used": len(t["attempts"]), "attempts_left": MAX_ATTEMPTS - len(t["attempts"]),
+                      "reopened": reopened}))
     return 0
+
+
+def _reopen(t: dict, feedback: str) -> None:
+    att = t["attempts"][-1]
+    att["verdict"] = "FAIL"
+    att["feedback"] = feedback
+    att["reopened_by_qa"] = True
+    t["status"] = "escalated" if len(t["attempts"]) >= MAX_ATTEMPTS else "pending"
 
 
 def cmd_task_reopen(a) -> int:
@@ -165,18 +192,24 @@ def cmd_task_reopen(a) -> int:
     t = get_task(m, a.no)
     if t["status"] != "done" or not t["attempts"]:
         sys.exit(f"error: task {a.no} is not done; use `task done --verdict FAIL` while it is running")
-    att = t["attempts"][-1]
-    att["verdict"] = "FAIL"
-    att["feedback"] = a.feedback
-    att["reopened_by_qa"] = True
-    t["status"] = "escalated" if len(t["attempts"]) >= MAX_ATTEMPTS else "pending"
+    _reopen(t, a.feedback)
     # dependants that already ran against the rejected output are no longer done either
     for other in m["tasks"]:
         if t["no"] in other.get("depends_on", []) and other["status"] == "done":
             other["status"] = "pending"
+            other["builder_retry_pending"] = True
     save(m)
     print(json.dumps({"id": m["id"], "task_no": t["no"], "status": t["status"],
                       "attempts_used": len(t["attempts"]), "attempts_left": MAX_ATTEMPTS - len(t["attempts"])}))
+    return 0
+
+
+def cmd_note(a) -> int:
+    """Annotate a mission without touching attempts or verdicts (audit trail for anomalies)."""
+    m = load(a.id)
+    m.setdefault("notes", []).append({"at": now(), "task_no": a.task, "text": a.text})
+    save(m)
+    print(json.dumps({"id": m["id"], "notes": len(m["notes"])}))
     return 0
 
 
@@ -224,6 +257,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("finish"); s.add_argument("id"); s.add_argument("--status", required=True, choices=FINAL)
     s.add_argument("--summary"); s.set_defaults(fn=cmd_finish)
+    s = sub.add_parser("note"); s.add_argument("id"); s.add_argument("--text", required=True)
+    s.add_argument("--task", type=int); s.set_defaults(fn=cmd_note)
     s = sub.add_parser("show"); s.add_argument("id"); s.set_defaults(fn=cmd_show)
     sub.add_parser("current").set_defaults(fn=cmd_current)
     return p

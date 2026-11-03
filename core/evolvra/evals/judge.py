@@ -17,11 +17,12 @@ from dataclasses import dataclass
 from ..router import client, quota
 from . import checks
 
-# Three free models, two companies, one open-weights: no single vendor's taste dominates.
+# Three free models, three training lineages (OpenAI, Alibaba, Google). Gemma was dropped on 2026-11-03:
+# it failed most calls (HTTP 500/503, unparseable) and scored 1.0 on everything it did answer.
 DEFAULT_JUDGES: tuple[tuple[str, str], ...] = (
     ("groq", "openai/gpt-oss-120b"),
+    ("groq", "qwen/qwen3.8-27b"),
     ("gemini", "gemini-3.5-flash-lite"),
-    ("gemini", "gemma-4-31b-it"),
 )
 RUBRIC = ("correctness", "completeness", "quality", "evidence")
 
@@ -49,6 +50,13 @@ PROMPT = """# Mission brief
 
 # Output files
 {output}
+
+# Calibration (apply strictly)
+- 1.0 means flawless AND every claim is verifiable from what is shown. Reserve it.
+- Typical competent work scores 0.6-0.8. Minor gaps: 0.8-0.9.
+- Any invented measurement, command output or file content caps `evidence` at 0.2 and `correctness` at 0.5.
+- A missing required element (an acceptance criterion not addressed) caps `completeness` at 0.5.
+- Honestly stating what could not be verified is NOT a flaw; pretending to have verified it is.
 
 # Grade
 Return JSON with exactly these keys:
@@ -177,14 +185,32 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
     return results
 
 
+def trimmed_low_mean(values: list[float]) -> float:
+    """Drop the single most lenient score when 3+ judges answered, then average.
+
+    The median let two generous judges outvote one that caught fabricated evidence. Trimming the
+    top score means a high ensemble mark needs agreement from the stricter judges."""
+    if not values:
+        return 0.0
+    kept = sorted(values)[:-1] if len(values) >= 3 else values
+    return round(statistics.mean(kept), 3)
+
+
 def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
-    """Median per metric across judges that answered; majority failure class; first critique."""
+    """Trimmed-low mean per metric; failure class and critique from the strictest judge that found a
+    problem (ties broken by majority), because the diagnosis exists to surface problems."""
     valid = [r for r in results if r.scores]
-    scores = {k: round(statistics.median(r.scores[k] for r in valid), 3) for k in RUBRIC} if valid else {}
-    classes = Counter(r.failure_class for r in valid if r.failure_class not in ("none", ""))
-    failure = classes.most_common(1)[0][0] if classes else "none"
-    critique = next((r.critique for r in valid if r.critique and r.critique != "none"), "none")
-    return scores, failure, critique
+    if not valid:
+        return {}, "none", "none"
+    scores = {k: trimmed_low_mean([r.scores[k] for r in valid]) for k in RUBRIC}
+    flagged = [r for r in valid if r.failure_class not in ("none", "")]
+    if flagged:
+        classes = Counter(r.failure_class for r in flagged)
+        top_count = classes.most_common(1)[0][1]
+        contenders = [r for r in flagged if classes[r.failure_class] == top_count]
+        strictest = min(contenders, key=lambda r: (r.scores.get("correctness", 1.0), r.scores.get("evidence", 1.0)))
+        return scores, strictest.failure_class, strictest.critique or "none"
+    return scores, "none", next((r.critique for r in valid if r.critique and r.critique != "none"), "none")
 
 
 def store_judge_results(conn: sqlite3.Connection, task_id: int, results: list[JudgeResult]) -> dict[str, float]:

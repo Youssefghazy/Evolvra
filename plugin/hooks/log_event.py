@@ -42,6 +42,9 @@ def main() -> int:
         event = {
             "mission": current.get("mission"),
             "task_no": current.get("task_no"),
+            # a mission is active but no task is running: work is happening off the record
+            "off_record": bool(current.get("mission")) and current.get("task_no") is None
+            and payload.get("hook_event_name") == "SubagentStop",
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
             "event": payload.get("hook_event_name"),
             "session_id": payload.get("session_id"),
