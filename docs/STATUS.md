@@ -1,146 +1,155 @@
 # Operator status (written by the local Claude Code session at the end of every working session)
 
-## Session 2026-11-03 (12:57–15:15 AST, local operator, Opus 5.5, zero spend)
+## Session 2026-11-03 evening (15:13–16:30 AST, local operator, Opus 5.5, zero spend)
 
-### REVIEW.md items (round 2)
+### REVIEW.md items (round 3, 12:45Z version)
 | # | item | state |
 |---|---|---|
-| 1 | pull + plugin 0.3.0, ask Youssef to restart | **done** via CLI. Later refreshed to **0.3.1** (see below). **Restart still pending** |
-| 2 | re-score everything, before/after fitness | **done**, three passes, because the re-score exposed 3 engine bugs (fixed below) |
-| 3 | bank shows "(materials embedded)" | **done**: 6 mission-derived tasks, all embedded, plus 3 seeds |
-| 4 | one `-Evolve` cycle | **done**, and it produced the **first promotion**: evidence-collector v1 → v2 |
-| 5 | annotate mission 3 with `note` | **done**: 2 notes (task 1, task 2); attempts untouched |
-| 6 | rapid-prototyper + ux-researcher missions | **done**: both PASS on the first attempt, QA-verified. No natural QA failure, so `reopened` was not exercised |
-| 7 | don't touch weights / judges / margins / actor | respected. My fixes are engine bugs (parsing, caching, file collection, attribution, logging). Each reason is below |
+| 1 | pull, `score --rescore`, fitness before/after | **partial.** 7 of 16 tasks re-scored before Groq TPD 429s. I stopped, as instructed. Only 4 tasks have a full 3-judge result. Details below |
+| 2 | three missions with `evidence-collector` QA | **done.** content-creator, backend-architect, devops-automator: all PASS first attempt, QA by **v2**. v2 fitness is provisional (1 judge) |
+| 3 | judge reliability, candidate pings | **done.** Qwen 31% raw (71% without quota errors). After `910be39` every Qwen failure was a quota 429. Both candidates answered **HTTP 503** twice |
+| 4 | UX Researcher discrepancy | **done.** QA was right about the builder. The judges were wrong (truncation). Paragraph below |
+| 5 | 16:17 run fired? | **fired** 16:17:48, `LastTaskResult=0`, UTF-8 lines in cycle.log. Lock state not provable, see below |
+| 6 | let the scheduler pick the target | respected. No manual `-Evolve`. The 16:17 run picked ux-researcher itself |
+| 7 | no weight/judge/margin/actor changes | respected. One router fix (`bc47cd9`), test-first, reason below |
 
-### Ran (all commands, in order)
-- `git pull --rebase` → `cc05264`.
-- Tests: `uv run pytest -q` 49 passed at the start, **54 passed** at the end. `uv run ruff check .` is clean throughout.
-- `claude plugin marketplace update evolvra` + `claude plugin update evolvra@evolvra`: 0.2.0 → 0.3.0, later 0.3.0 → 0.3.1. The cache files `cmp`-identical to the repo: mission.py, log_event.py, SKILL.md, testing-evidence-collector.md.
-- `uv run evolvra score --rescore` ×3 (12 tasks), plus `--mission 20261103-075105-write-a-github-actions --rescore` once.
-- `uv run evolvra bank evidence-collector`.
-- `python plugin/scripts/mission.py note 20261103-080434-propose-three-zero-budget --task 1|2 --text …`.
-- `.\scripts\cycle.ps1 -Evolve`: 13:40:24 → 14:37:35, **3434 s (57 min)**.
-- Missions `20261103-104040-build-a-single-file` (rapid-prototyper) and `20261103-104658-write-a-user-interview` (ux-researcher).
-- `.\scripts\cycle.ps1` (data only): 14:42:19 → 15:04:05, **1308 s (22 min)**, ingesting and scoring the 2 new missions.
+### Ran (in order)
+- `git pull --rebase` → `910be39`. `uv run pytest -q` **57 passed**, `ruff check .` clean.
+- `evolvra fitness` (the "before" table below); `evolvra providers`; `evolvra ping groq` and `--model qwen/qwen3.8-27b` (both `pong`).
+- `evolvra score --rescore` 15:15 → stopped 15:40 (TPD 429s, see item 1).
+- Missions via `/evolvra:mission` (plugin 0.3.1, cache files `cmp`-identical to the repo):
+  `20261103-121621-write-a-launch-blog`, `20261103-122155-build-a-stdlib-only`, `20261103-122908-write-a-backup-rotation`.
+- Router fix, tests **58 passed**, ruff clean, pushed `bc47cd9`.
+- Waited for the scheduled `cycle.ps1 -Evolve` (16:17:48 → 16:19:27, pushed `498ba33`).
+- `evolvra ping gemini --model gemini-3.6-flash` / `gemini-3.7-flash`, twice each (15:58 and 16:22).
 
-### REVIEW 2: fitness before/after the new ensemble
-| agent | old ensemble (median, Gemma) | new ensemble, first pass | new ensemble, after my 3 fixes |
+### Item 1: re-score with whole-deliverable judge input
+The re-score did tasks 1–7 in order, then Groq refused with **TPD 429** on both models:
+- gpt-oss: "Used 199054 of 200000 … try again in 30m43s"
+- qwen: "Used 198036 … 26m48s"
+
+Groq's TPD is a **rolling** window, not a midnight reset: the wait shrinks as old usage ages out. So "finish tomorrow" really means "after ~10:30 AST tomorrow", when this morning's heavy use leaves the window. Run it then.
+
+**Tasks with a full 3-judge result before and after** (these are the real evidence for the truncation fix):
+
+| task | agent | correctness before → after | failure class after |
 |---|---|---|---|
-| evidence-collector (6 tasks) | 0.751 | 0.661 | **0.822** |
-| backend-architect | 0.777 | 0.895 | **0.848** |
-| growth-hacker | 0.988 | 0.575 | **0.882** |
-| sprint-prioritizer | 0.988 | 0.970 | **0.970** |
-| devops-automator | 0.990 | 0.343 | **0.830** |
-| content-creator | 0.993 | 0.985 | **0.968** |
-| frontend-developer | 0.995 | 0.975 | **0.975** |
+| 1 one-paragraph | content-creator | 0.975 → 1.00 | none |
+| 2 its QA | evidence-collector v1 | 0.475 → **0.675** (2 → 3 judges) | missing_acceptance_detail |
+| 3 REST API | backend-architect | 0.815 → 0.84 | (scored again by the 16:17 cycle) |
+| 5 GitHub Actions | devops-automator | 0.815 → **0.59** | `invalid_yaml_syntax`, **which is false**, see below |
 
-- **Scores came off the 1.0 ceiling.** No agent is at 0.99 any more; the range is now 0.83–0.98.
-- **The first pass was mostly artefacts, not judgement:**
-  - devops 0.34 was my own `20814d5` bug (below).
-  - growth-hacker 0.575 and part of evidence-collector came from truncated judge JSON being read as all zeros (below).
-- **Qwen 429s (REVIEW open question).** Groq enforces three different caps on Qwen; details under "Judge-set facts".
+**Fitness per agent.** Before = the table at the start of this session (the "after" column of the pm STATUS). Now = after the partial re-score, the 16:17 cycle and the 3 new missions.
 
-### Bugs found and fixed (commits on `main`, each test-first)
-1. **`852c6f5` Scorer: my `20814d5` hid `.github/`.** The fix skipped *every* dot-directory, so the judges never saw `.github/workflows/ci.yml` and devops-automator scored **0.34 "missing_deliverable"**.
-   - Now only known tool dirs are pruned (`.venv`, `.git`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `.tox`, `.nox`, `.cache`, `.ipynb_checkpoints`), plus any directory holding `pyvenv.cfg` (QA had made a venv called `cleanvenv`).
-   - I checked every task dir: only the 2 GitHub-Actions tasks changed. After re-scoring, devops is **0.83**.
-2. **`5152a81` Judges: Qwen ran out of budget.** Qwen 3.8 on Groq spent all 900 output tokens on hidden reasoning (`finish_reason=length`, empty content) in 10 of 14 calls.
-   - The client also **cached those empty replies**, so every re-score replayed the failure.
-   - Fix: a truncated reply with no verdict is retried once with `max_tokens=2400`, and empty truncated replies are no longer cached. Judge set, prompt and weights are unchanged.
-3. **`1802d2e` Judges: a truncated reply was read as all-zero scores.** A reply cut off mid-JSON still contains a complete inner object (one acceptance item). `parse_judge_json` returned it, every metric clamped to 0.0, and the trimmed-low mean averaged the zeros in.
-   - Example: growth-hacker got 0.41, where the two judges that answered gave 0.82–0.90.
-   - Found in Flash-Lite and Qwen replies.
-   - Fix: `parse_verdict` requires all 4 rubric keys; otherwise the reply goes through the retries above.
-4. **`919d1b3` Ingest: wrong version credited.** Ingest credited a task to the version current *at ingest time*.
-   - My two missions ran under evidence-collector v1 after the cycle's ingest, and the cycle then promoted v2. The next ingest would have credited their QA tasks to v2.
-   - Fix: a task maps to the latest version created at or before its first attempt's start.
-   - **Verified:** both new QA tasks are recorded as v1.
-5. **`7c25923` Plugin 0.3.1.** The promotion rewrote `plugin/agents/` without a version bump, so the installed plugin would keep running v1. You have since made the engine bump the version itself (`1d0c768`, thanks). The installed copy is now 0.3.1 with v2 (`cmp`-identical).
-6. **`02089da` + `33e2148` cycle.ps1 logging was mixed UTF-16/UTF-8.**
-   - `Tee-Object -Append` writes UTF-16 under Windows PowerShell 5.1 (which the scheduled task uses) and UTF-8 under pwsh 7. So `cycle.log` is mixed, and `grep` missed every scheduled run. That is why last session I could not find them.
-   - My first fix (`Add-Content -Encoding UTF8`) failed with "Stream was not readable" on the real log, which starts with a UTF-16 BOM. **The 14:42 data cycle therefore wrote nothing to `cycle.log`.** Its console output is preserved, and the numbers here come from it.
-   - Final fix: `[IO.File]::AppendAllText` with UTF-8. Tested under `powershell.exe -File` on a copy of the real log, stdout and stderr lines both appended.
-   - The old UTF-16 lines are left as they are, because I did not rewrite the log.
+| agent | before | now | why it moved |
+|---|---|---|---|
+| ux-researcher | 0.605 | 0.605 | not re-scored yet; still the truncated 2-judge verdict |
+| devops-automator | 0.830 | 0.832 | GH task fell to 0.663 (Qwen error); new rotation task 1.00 (1 judge) |
+| rapid-prototyper | 0.881 | 0.881 | not re-scored |
+| evidence-collector v1 | 0.860 | 0.910 | 5 of its 8 tasks are now **1-judge** (Flash-Lite) |
+| backend-architect | 0.848 | 0.943 | REST task 3 judges; new limiter task 1 judge |
+| growth-hacker | 0.882 | 0.988 | **1 judge only**, provisional |
+| content-creator | 0.968 | 0.978 | |
+| sprint-prioritizer | 0.970 | 0.970 | not re-scored |
+| frontend-developer | 0.975 | 0.975 | not re-scored |
+| **evidence-collector v2** | — | **0.988** (3 tasks) | all 3 tasks 1-judge, provisional |
 
-### REVIEW 4: evolution generation `20261103-104027-evidence-collector`
-```
-ingest: missions added=0 updated=6 | traces added=73 skipped=218
-score: nothing new
-evolve: PROMOTED evidence-collector v1 -> v2 (candidate 3, paired delta +0.1662 on 4 shared task(s), fitness 0.6288 -> 0.795)
-```
-| persona | target | proxy fitness | paired delta | coverage |
+**Important:**
+- **A 1-judge ensemble counts fully in `fitness`.** `910be39` only makes such tasks pending again; `fitness` and evolution still use them now.
+- **My re-score made 4 tasks *worse* as data.** Tasks 3, 4, 6 and 7 had 3-judge ensembles before. When the Groq judges failed, the re-score replaced them with 1-judge Flash-Lite ensembles. Task 3 is back to 3 judges; tasks 4, 6 and 7 are still 1-judge.
+- **These scores are provisional.** All 1-judge tasks are pending and will be re-scored when Groq has room (the 22:17 run will try).
+- Flash-Lite alone gives 1.0 to almost everything, which is why growth-hacker, evidence-collector and v2 look so high. **Don't read the "now" column as a result yet.**
+- Suggestion (your call): `fitness` should ignore or down-weight ensembles with fewer than `MIN_JUDGES` judges, or `--rescore` should keep the old row when fewer judges answer than before.
+
+**Task 5 audit: Qwen made a factual error, and the trimmed-low mean amplified it.**
+- Qwen said `"on": push` is invalid YAML. It is valid: quoting `on` is the usual guard against YAML 1.1 reading it as a boolean.
+- QA saved `raw-actionlint.txt`: actionlint 1.7.7 "Found total 0 errors", exit 0. A negative control fails as expected.
+- The three verdicts were Flash-Lite 1.0, gpt-oss 0.68, Qwen 0.5. The trimmed-low mean drops the top judge and averages (0.68 + 0.5) / 2 = **0.59**. It also takes Qwen's failure class.
+- So with whole files visible, one wrong low judge now drives the score. That is the mirror image of the old "two lenient judges" problem. Data for your judge decision.
+
+### Item 2: Evidence Collector v2 on real missions
+| mission | builder (attempts, minutes) | QA v2 (attempts, minutes, tool events) | QA's own checks | raw files under `evidence/` |
 |---|---|---|---|---|
-| parent v1 | – | 0.6288 | – | 4/4 |
-| candidate 1 | unverifiable_evidence | 0.744 | +0.1152 | 4/4 |
-| candidate 2 | invalid_workflow_content | 0.7188 | +0.090 | 4/4 |
-| candidate 3 **winner** | unverifiable_claims | 0.795 | +0.1662 | 4/4 |
+| launch blog post (no-shell builder) | content-creator 1, 2.5 | 1, 2.4, 10 | own `verify_post.py`: 5 word-count methods 769–865, 4 closed code blocks, 0 quote marks, 1 CTA; tested itself on planted fake social proof | 2 |
+| stdlib token-bucket limiter | backend-architect 1, 2.1 | 1, 4.8, 18 | 11 builder tests ×20 runs; **23 own adversarial checks**; mutation test 5/7 killed; found 3 low test-quality gaps | 12 |
+| PowerShell backup rotation | devops-automator 1, 3.1 | 1, 6.5, 26 | self-test re-run on 5.1; **38 own edge checks** (ISO week 53, gaps, read-only/locked files); ISO-week function vs reference for 14,976 days, 0 mismatches; 3 mutants all caught | 9 |
 
-- **The actor did not saturate.** The parent scored 0.61 / 0.92 / 0.46 / 0.525 on the four bank tasks; none were at 1.0.
-  - Parent per task: BACKLOG 0.61 "fabricated evidence for the calculations"; star-rating 0.92; EXPERIMENTS 0.46; workflow 0.525 "lacks actual YAML parsing and actionlint output".
-- **The bank used was the 4 newest mission-derived tasks only.** The frontend and sprint QA tasks, GitHub Actions and EXPERIMENTS were used; the seeds were not.
-- **What v2 changes** (19 lines in `plugin/agents/testing-evidence-collector.md`):
-  - a new "STEP 2: Capture All Command Outputs" (save every command's raw output under `evidence/`);
-  - an automatic-fail rule for claims without a referenced raw file;
-  - a "Raw Evidence Files" section in the report template.
-  - It is sensible, and it matches what the best real QA runs already do.
-- **Provider requests in this cycle.** Counted as new `llm_cache` rows, so failed calls are not counted and this is a floor: Gemini Flash-Lite 32, gpt-oss-120b 14, **Qwen 2** = 48. So the arena was judged almost entirely by 2 judges. With fewer than 3 answers, the trimmed-low mean is a plain mean.
-- **Wall clock:** 57 min, versus 15 min of evolution last session. I assume most of it was rate-limit waits on Groq (Qwen OTPM/TPD), but this is not verified per step.
+- **Fitness:** v2 **0.988** on 3 QA tasks vs v1's 0.86. **Not a valid comparison yet**: all three v2 tasks were judged by Flash-Lite alone, because Groq was at its cap. Decide after these 3 tasks have ≥2 judges (pending, re-scored automatically).
+- **"Raw Evidence Files" section:** **0 of 3** reports have a section with that exact title. **3 of 3** saved real raw output under `evidence/` and cite those files in every table row (VERIFICATION.md line 6; a "Raw evidence file(s)" column in criteria_table.md; inline `evidence/0N` refs in verification-table.md). The substance is there; the heading the persona asks for is not.
+- **Slower?** Somewhat. v2 QA took 2.4 / 4.8 / 6.5 min (mean 4.6). v1 first attempts took 0.8–8.7 min (mean 3.8, median 3.4, n=8). v2 also uses more tool events: median 18 vs v1's median 8. Most of the extra time is real extra checking (adversarial tests, mutants), not waste. n=3, so treat this as a hint.
+- **Off-record work:** **0**. All 89 trace events of the 3 missions carry `off_record: false`. 6 SubagentStop events, all inside `task start`. This is the first run with the 0.3.1 hook live.
+- v2 also reported its own mistakes honestly: a superseded mutation run, two harness-bug runs, all kept as raw files. It also corrected a builder's claim ("19 checks"; the self-test prints 16 PASS lines).
+- Builder-side notes from QA (not defects against the criteria):
+  - limiter: `retry_after` under-reports after an injected clock jumps backwards
+  - rotation: read-only backups are deleted via `-Force`, which the README doesn't mention
 
-**Caveats on this promotion (your call, I did not change anything):**
-- (a) n=4 tasks, one actor sample each, ~2 judges.
-- (b) 2 of the 4 bank tasks are partly unwinnable for the arena actor:
-  - "Workflow": its criteria require *running* YAML/actionlint. Flash-Lite cannot execute, so candidates are rewarded for "honest hypothetical evidence" (cand 3 got 0.74, "Evidence is hypothetical rather than executed").
-  - "EXPERIMENTS": the embedded materials are truncated (next point).
-- The delta is +0.166 against a +0.03 margin, so the result is probably robust to noise. But it rewards "save raw outputs" mostly through the 2 tasks the actor can actually do.
+### Item 3: judge reliability (current score rows created today)
+| judge | verdicts | errors | quota 429 | other | raw | without quota |
+|---|---|---|---|---|---|---|
+| gpt-oss-120b (Groq) | 14 | 12 | 12 | 0 | 54% | 100% |
+| qwen3.8-27b (Groq) | 10 | 22 | 18 | 4 | **31%** | 71% |
+| flash-lite (Gemini) | 22 | 0 | 0 | 0 | 100% | 100% |
 
-### Judge input is truncated, and this is now the biggest scoring distortion
-- **Scorer:** `checks.read_output` shows judges only 4,000 characters per file and 12,000 in total.
-- **ux-researcher → 0.605.** The guide is 14.7 KB, and its "Main questions" section starts at line 117, past the cut. Two judges said "deliverables … missing or not visible" / "output file was truncated mid-text". QA (which read the whole file) verified every criterion.
-- **growth-hacker (EXPERIMENTS.md, 26 KB).** Same "truncated in preview" critiques.
-- **Bank materials:** `bank.materials_for` uses the same reader. For EXPERIMENTS, the stale `EXPERIMENTS.attempt1.md` (17 KB, saved by mission 3's orchestrator) **sorts first and uses half the budget**. The arena actor then sees parts of attempt 1 and parts of the final version.
-- Not changed: it is a token-budget and Groq-TPM trade-off, so it's yours. Options:
-  - (a) raise `per_file` for the single main deliverable;
-  - (b) skip `*.attempt*` / backup files;
-  - (c) give judges a head+tail or section-aware excerpt;
-  - (d) exclude long-document tasks from the bank.
+- **Qwen's 4 "other" errors are all unparseable replies from 09:59–10:39Z, before `910be39`.** Since then, every Qwen failure is a quota 429 (14 TPD, 4 OTPM).
+- **`reasoning_effort: "none"` works.** Groq accepted it. Qwen's completion tokens dropped from 1,227–2,200 (pm) to **239–620** per verdict (llm_cache, 12:15–12:27Z).
+- **So Qwen's remaining problem is not reliability but budget.** It shares Groq's 200k TPD per model, and judge prompts are now 5–8k tokens because files are no longer cut.
+- **Candidates:** `gemini-3.6-flash` and `gemini-3.7-flash` both returned **HTTP 503 "model is currently experiencing high demand"**, at 15:58 and 16:22 AST. Each `ping` already retries a 503 once. Wall time was 8–25 s to fail. No `pong`, so no latency figure. I changed nothing.
+- Data for your decision: a third judge on **Gemini** would spread load away from Groq's TPD. gemma-4-31b-it (old judge, Gemini) logged 4 verdicts / 9 errors today (6× HTTP 500/503, 3 unparseable), so it is not a good fallback either.
 
-### Judge-set facts you need (REVIEW open question: Qwen and the 8k TPM)
-Groq caps on Qwen 3.8, seen in the error bodies:
-- **Output tokens per minute: 1,000.** A request with max_tokens 2400 is refused outright ("Request too large … OTPM: Limit 1000"). Its reasoning replies need 1,000–2,200 output tokens, so many retries are refused.
-- **Requests that fit do succeed.** 4 calls at 13:25–13:28 used 1,227–2,200 completion tokens each.
-- **Tokens per day: 200,000**, shared org-wide per model. By 14:42 **both** gpt-oss-120b and Qwen had hit **TPD 200k** (Used ~198k).
-- Consequences:
-  - In the 14:42 data cycle, **6 of 12 judge calls failed with TPD 429**. The 4 new tasks (both new missions) were scored mostly by Flash-Lite, the lenient judge. Re-score them tomorrow: `uv run evolvra score --mission <id> --rescore`.
-  - Qwen answered **7/12** tasks in the final re-score, 4/12 before my fixes.
-- Day totals in `provider_usage`: groq 180 requests / 458k tokens, gemini 176 / 457k.
-- Suggestions, your call:
-  - Qwen with `reasoning_effort: "none"`, if Groq supports it for 3.8. Untested, not changed.
-  - Or a non-reasoning third judge.
-  - A per-task guard: don't use a task in fitness or evolution unless ≥2 judges answered.
+### Item 4: who was right about the UX interview guide?
+**QA was right about the builder; the judges were wrong, and only because of truncation.**
+- The guide (14,768 chars) meets all three criteria. I read it myself:
+  - exactly 5 main questions, opening with Walk / Tell / Think / How / Tell, 2 probes each
+  - inclusion I4 "at least 3 separate days within the first 7 days" (a count plus a time window), 5 exclusions, target 12 with a saturation justification
+  - 8 timed sections summing to 42 ≤ 45
+  - a 5-row "why it is not leading" table
+- QA's own `verify_guide.py` output confirms each of these with line numbers.
+- The judges' critiques show why they disagreed:
+  - gpt-oss: "the provided excerpt does not show the list of main questions"
+  - Flash-Lite: "the output file was truncated mid-text"
+  - Qwen: errored
+  - Both scored criteria they could not see as unmet. `910be39` fixes this.
+- **QA was not lenient on the builder, but it was incomplete on its own task.** Its criterion 1 asked for a per-criterion PASS/FAIL table with quoted lines. That table lives only in its chat reply (mission.json evidence); the files have the script and raw output but no table. The 16:17 cycle re-judged task 16 with whole files, and Flash-Lite flagged exactly that (0.5, `missing_required_element`).
+- That was v1. All three v2 reports saved a table file, so v2 already does this.
+- Builder task 15 still sits at **0.45 / fitness 0.605**: it had 2 judges, so `910be39` does not re-pick it. It needs an explicit `uv run evolvra score --mission 20261103-104658-write-a-user-interview --rescore` once Groq has room.
 
-### New missions (REVIEW 6)
-| mission | builder | builder attempts | QA | QA evidence | fitness |
-|---|---|---|---|---|---|
-| `…104040-build-a-single-file` | rapid-prototyper | 1, PASS | 1, PASS | own static checks; true 375px viewport via CDP `Emulation.setDeviceMetricsOverride` (scrollWidth 360 desktop / 375 mobile, 1 column), 1280px one row; 0 network requests; target SHA unchanged | 0.881 |
-| `…104658-write-a-user-interview` | ux-researcher | 1, PASS | 1, PASS | own `verify_guide.py`: 5 questions, 10 probes, 0 banned openers, minutes 42 ≤ 45; read by hand; 5 low optional issues | 0.605 (truncation, see above) |
+### Item 5: the scheduled runs
+- **16:17 run fired:**
+  - Task Scheduler: `LastRunTime 16:17:45`, `LastTaskResult 0`, next run 22:17:44.
+  - cycle.log (UTF-8, readable): `16:17:48 cycle start (evolve=True)` … `ingest: missions added=3 updated=8 | traces added=163`, `score: tasks scored=12 | judge calls=36 cached=4 errors=22`, `evolve: no promotion: parent ux-researcher v1 fitness=0.9417; no candidate completed enough shared tasks`, `push: ok`, `16:19:27 cycle end`.
+- **Lock state:** I could not prove the laptop was locked. No lock/unlock events (4800/4801) were in the Security log for the last 2 h; lock auditing may simply be off. This session was active at the time. The task's LogonType is `Interactive`, so it runs while Youssef is signed in, locked or not.
+- **Evolution:** ux-researcher was picked as weakest because of the stale 0.605. The mutator is gpt-oss on Groq, which was at its cap, so the generation made no usable candidates. This is harmless, as you predicted for this case.
 
-- Both personas have all tools (no `tools:` line), so execution criteria stayed on the builder too.
-- The builder of mission A found that headless Edge won't size a window below ~492px and measured inside iframes. QA confirmed this with a control run and used a real 375px viewport.
-- Both missions ran in this session. Agent definitions and the hook were loaded at session start (pre-0.3.0), so **the new `off_record` hook flag was not active**. All work went through `task start` and nothing was resumed.
+### What broke, and what I changed
+1. **`bc47cd9` Router: a 429 that asks for more than 90 s fails fast; `26m48s` is parsed.**
+   - The problem:
+     - Groq's TPD 429 says "try again in 26m48.768s". The regex only knew `Ns` and `Nms`.
+     - `_send` slept the 90 s maximum twice per judge anyway.
+     - Re-score tasks 3, 4, 6 and 7 took **~6 min each** doing nothing useful: 12:21, 12:27, 12:33, 12:39Z.
+   - The fix:
+     - Waits in h/m/s/ms are parsed.
+     - A 429 asking for more than `MAX_429_WAIT_S` (90 s) raises immediately.
+     - Per-minute 429s still wait and retry as before.
+   - Test first: `test_429_with_a_long_wait_fails_fast` uses Groq's real message and failed with 3 attempts before the fix. Tests 57 → 58.
+   - Effect: the 16:17 cycle scored 12 tasks with 22 judge errors in **1 min 39 s**, not about an hour.
+   - Why this is not a judge or budget change: same judges, same max_tokens, same retry count for per-minute limits. It only stops sleeping when the wait could not succeed anyway.
+2. **My re-score degraded 4 tasks from 3 judges to 1** (see item 1). Nothing was edited by hand; they re-score automatically.
+
+Commits this session: `bc47cd9` (router fix), `498ba33` (scheduled cycle, data), plus this STATUS commit.
 
 ### Answers to your open questions
-- **Qwen and 8k TPM:** the binding limits are Qwen's **1k OTPM** and the **200k TPD** per model, not the 8k TPM. See above.
-- **`"reopened": [..]` after restart:** not tested. No natural QA failure, and Claude Code has not been restarted yet. The recorder prints `"reopened": []` on PASS, so the field is there.
+- **Groq per-day cap (800 requests):** not close. Today 230 requests, 481k tokens. **The binding cap is TPD: 200k tokens per model.** gpt-oss and Qwen both sat at ~198–199k from ~14:40 AST until at least 16:17. Whole-file judge prompts (5–8k tokens each) reach it faster than the 4k-per-file prompts did.
+- **Duration of the data-only cycle for 2 new missions, 3 judges:** 14:42:19 → 15:04:05, **1308 s (22 min)** (pm session). Much of that was 429 sleeps that `bc47cd9` now skips when the wait is long.
 
 ### Open questions / for you
-1. Judge-input truncation (above): which option?
-2. Qwen: `reasoning_effort: none`, a different third judge, or a min-judges guard?
-3. Bank tasks whose criteria require execution: exclude them from the arena, or rewrite them for a non-executing actor?
-4. The scheduled `-Evolve` run fires at **16:17 today** with Groq at its daily cap. The mutator is gpt-oss on Groq, so I expect it to produce no candidates (harmless). I left the task enabled. Youssef can skip today's run if you prefer.
-5. Youssef: **restart Claude Code** so 0.3.1 (v2 persona, `off_record` hook, new SKILL.md) is live.
+1. Should `fitness` (and the evolution target pick) ignore ensembles with fewer than 2 judges? Right now Flash-Lite-only rows inflate v1, v2, growth-hacker and backend-architect.
+2. Should `--rescore` keep the existing row when fewer judges answer than last time? It replaced 3-judge rows with 1-judge rows today.
+3. Third judge: Qwen is reliable when it has budget, but it shares Groq's TPD with gpt-oss. Both Gemini candidates were 503. Try again tomorrow, or another model?
+4. Trimmed-low mean plus one factually wrong low judge (task 5) gives 0.59 for a workflow that passes actionlint. Is that acceptable?
+5. The v2 persona asks for a section titled "Raw Evidence Files". v2 delivers the substance (real files, cited per row) but not the heading. Do you want the heading enforced, or is per-row citation enough?
 
 ### Still not verified
-- `/evolvra:mission` behaviour after the restart, and `reopened` on a real QA failure.
-- Whether the scheduled task logs correctly with the new logger. The first real test is the 16:17 run; check that `cycle.log` gets UTF-8 lines at ~16:17.
-- Re-scoring the 4 newest tasks with all 3 judges (Groq TPD resets).
+- v2 vs v1 with ≥2 judges (needs Groq budget).
+- The UX builder re-score with whole files (needs an explicit `--rescore` of that mission).
+- `reopened` on a real QA failure: all 6 tasks today passed on the first attempt.
+- Whether a run fires while the screen is actually locked: needs a lock-event log, or Youssef locking the laptop before 22:17.
