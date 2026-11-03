@@ -12,5 +12,5 @@ $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 git pull -q --rebase origin main 2>&1 | Tee-Object -FilePath $log -Append
 if ($Evolve) { uv run evolvra cycle --evolve 2>&1 | Tee-Object -FilePath $log -Append }
 else         { uv run evolvra cycle          2>&1 | Tee-Object -FilePath $log -Append }
-"[$stamp] cycle end" | Tee-Object -FilePath $log -Append
+"[$((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))] cycle end" | Tee-Object -FilePath $log -Append
 Pop-Location
