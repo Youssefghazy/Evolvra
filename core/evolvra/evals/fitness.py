@@ -1,7 +1,10 @@
 """Fitness: one number per task, rolled up per agent version. The evolution loop optimizes this."""
 from __future__ import annotations
 
+import json
 import sqlite3
+
+MIN_JUDGES = 2  # an ensemble backed by fewer judges is provisional and does not count toward fitness
 
 # Weights sum to 1. Correctness dominates; evidence and efficiency keep agents honest and fast.
 WEIGHTS = {
@@ -15,12 +18,21 @@ WEIGHTS = {
 }
 
 
-def task_fitness(conn: sqlite3.Connection, task_id: int) -> float | None:
+def task_fitness(conn: sqlite3.Connection, task_id: int, *, min_judges: int = MIN_JUDGES) -> float | None:
+    """Weighted fitness, or None while the verdict is provisional (fewer than `min_judges` judges answered).
+    A single lenient judge inflated four agents on 2026-11-03; provisional tasks wait for the re-score."""
     rows = conn.execute(
-        "SELECT metric, value FROM scores WHERE task_id = ? AND judge_model IN ('deterministic','ensemble')",
-        (task_id,)).fetchall()
+        "SELECT metric, value, evidence_json FROM scores WHERE task_id = ?"
+        " AND judge_model IN ('deterministic','ensemble')", (task_id,)).fetchall()
     if not rows:
         return None
+    ens = next((r for r in rows if r["metric"] == "rubric:correctness"), None)
+    if ens is not None:
+        # judges ran: a verdict backed by too few of them is provisional. No ensemble at all (judges never
+        # ran, e.g. `score --no-judges`) still yields the coarse deterministic-only fitness.
+        judges = len(json.loads(ens["evidence_json"] or "{}").get("judges") or [])
+        if judges < min_judges:
+            return None
     have = {r["metric"]: r["value"] for r in rows}
     total, weight = 0.0, 0.0
     for metric, w in WEIGHTS.items():

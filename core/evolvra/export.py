@@ -69,6 +69,8 @@ def _missions(conn: sqlite3.Connection) -> list[dict]:
                 "acceptance": json.loads(t["acceptance_json"] or "[]"), "status": t["status"],
                 "attempts": t["attempts"], "verdict": t["verdict"], "attempt_log": json.loads(t["attempts_json"] or "[]"),
                 "traces": t["trace_count"], "fitness": fitness.task_fitness(conn, t["id"]),
+                "provisional": fitness.task_fitness(conn, t["id"]) is None
+                and fitness.task_fitness(conn, t["id"], min_judges=1) is not None,
                 "scores": _task_scores(conn, t["id"]),
             } for t in tasks],
         })

@@ -31,7 +31,7 @@ def output_files(output_dir: str | None, *, max_files: int = 20) -> list[Path]:
 
 
 BACKUP_MARKERS = (".attempt", ".bak", ".orig", ".old", "~")
-PRIMARY_CHARS = 14000   # the main deliverable gets most of the budget
+PRIMARY_CHARS = 10000   # the main deliverable gets most of the budget (~2.5k tokens)
 HEAD_SHARE = 0.65       # head + tail excerpt, so section headings late in a document still show
 
 
@@ -51,7 +51,7 @@ def excerpt(text: str, limit: int) -> str:
     return text[:head] + f"\n\n[... {omitted} characters omitted from the middle of this file ...]\n\n" + text[-tail:]
 
 
-def read_output(output_dir: str | None, *, per_file: int = 4000, total: int = 24000,
+def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16000,
                 primary_chars: int = PRIMARY_CHARS) -> str:
     """Concatenate text files under output_dir for the judge prompt.
 

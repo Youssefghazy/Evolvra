@@ -306,6 +306,17 @@ def _git(repo: Path, *args: str) -> tuple[int, str]:
     return proc.returncode, (proc.stdout + proc.stderr).strip()
 
 
+def _hours_since_last_evolution(conn) -> float:
+    row = conn.execute("SELECT MAX(created_at) AS t FROM evolutions").fetchone()
+    if not row or not row["t"]:
+        return 1e9
+    from datetime import UTC, datetime
+    last = datetime.fromisoformat(row["t"])
+    if last.tzinfo is None:
+        last = last.replace(tzinfo=UTC)
+    return (datetime.now(UTC) - last).total_seconds() / 3600.0
+
+
 def cmd_cycle(args) -> int:
     """ingest -> score -> (evolve weakest) -> export -> commit -> push. The no-hands loop."""
     conn = db.connect(args.db)
@@ -324,6 +335,10 @@ def cmd_cycle(args) -> int:
         log.append("score: nothing new")
 
     evolved = None
+    if args.evolve and _hours_since_last_evolution(conn) < args.evolve_interval:
+        log.append(f"evolve: skipped, last generation ran {_hours_since_last_evolution(conn):.1f}h ago"
+                   f" (interval {args.evolve_interval}h keeps Groq's daily token budget for scoring)")
+        args.evolve = None
     if args.evolve:
         rows = [r for r in fitness.agent_fitness(conn) if r["tasks"] >= args.min_tasks]
         target = args.evolve if args.evolve != "weakest" else (rows[0]["agent"] if rows else None)
@@ -424,6 +439,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--evolve", nargs="?", const="weakest", metavar="SLUG",
                    help="also run one evolution generation (default target: weakest agent)")
     s.add_argument("--min-tasks", type=int, default=1, help="min scored tasks before an agent may evolve")
+    s.add_argument("--evolve-interval", type=float, default=12.0,
+                   help="hours that must pass since the last generation before evolving again (default 12)")
     s.add_argument("--candidates", type=int, default=3)
     s.add_argument("--bank-size", type=int, default=4)
     s.add_argument("--margin", type=float, default=0.03)

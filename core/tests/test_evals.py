@@ -4,6 +4,7 @@ from pathlib import Path
 from evolvra.evals import checks, fitness, judge, runner
 from evolvra.missions import ingest
 from evolvra.registry import personas
+from evolvra.router import client
 from evolvra.store import db
 
 from .conftest import mission_id
@@ -109,14 +110,14 @@ def test_ensemble_scoring_fitness_and_idempotency(evolvra_home, recorder, monkey
 
     ens = {r["metric"]: r["value"] for r in conn.execute(
         "SELECT metric, value FROM scores WHERE judge_model = 'ensemble'")}
-    # trimmed-low mean: the single most lenient judge is dropped, the rest averaged
-    assert ens["rubric:correctness"] == 0.75 and ens["rubric:quality"] == 0.65
+    # ceiling-aware: no two judges at the ceiling here, so the median (0.9/0.7/0.8 -> 0.8; 0.8/0.6/0.7 -> 0.7)
+    assert ens["rubric:correctness"] == 0.8 and ens["rubric:quality"] == 0.7
     fc = conn.execute("SELECT json_extract(evidence_json,'$.failure_class') FROM scores"
                       " WHERE judge_model='ensemble' AND metric='rubric:correctness'").fetchone()[0]
     assert fc == "generic_copy"  # majority of judges
 
     f = fitness.task_fitness(conn, tasks[0]["id"])
-    expected = (0.35 * 0.75 + 0.15 * 0.9 + 0.15 * 0.65 + 0.10 * 0.8 + 0.10 * 1 + 0.10 * 1 + 0.05 * 1)
+    expected = (0.35 * 0.8 + 0.15 * 0.9 + 0.15 * 0.7 + 0.10 * 0.8 + 0.10 * 1 + 0.10 * 1 + 0.05 * 1)
     assert abs(f - round(expected, 4)) < 1e-6
     rows = fitness.agent_fitness(conn)
     assert rows[0]["agent"] == "content-creator" and rows[0]["version"] == 1
@@ -141,6 +142,10 @@ def test_aggregate_trims_lenient_judge_and_surfaces_strictest_critique():
     two = judge.aggregate(results[1:])
     assert two[0]["correctness"] == 0.7                                   # 2 judges: plain mean
     assert judge.trimmed_low_mean([]) == 0.0 and judge.trimmed_low_mean([0.5]) == 0.5
+    # genuine disagreement with only one judge at the ceiling: median, so one wrong low judge cannot sink it
+    assert judge.ceiling_aware([1.0, 0.68, 0.5]) == 0.68
+    assert judge.ceiling_aware([1.0, 1.0, 0.4]) == 0.7
+    assert judge.ceiling_aware([0.9, 0.6]) == 0.75
 
 
 def test_qa_efficiency_ignores_retries_caused_by_builder(evolvra_home, recorder):
@@ -175,9 +180,12 @@ def test_judge_error_does_not_break_scoring(evolvra_home, recorder, monkeypatch)
     report = runner.score_tasks(conn, runner.pending_tasks(conn), judges, _transport=transport)
     assert report.judge_errors == 2 and report.tasks_scored == 1
     ens = {r["metric"]: r["value"] for r in conn.execute("SELECT metric, value FROM scores WHERE judge_model='ensemble'")}
-    assert ens["rubric:correctness"] == 0.4  # single valid judge still yields an ensemble
+    assert ens["rubric:correctness"] == 0.4  # single valid judge still yields an ensemble row
     det = conn.execute("SELECT value FROM scores WHERE metric='det:output_exists'").fetchone()[0]
     assert det == 0.0
+    task_id = conn.execute("SELECT id FROM tasks").fetchone()[0]
+    assert fitness.task_fitness(conn, task_id) is None                 # provisional: one judge is not enough
+    assert fitness.task_fitness(conn, task_id, min_judges=1) is not None
 
 
 def test_unparseable_judge_gets_one_strict_retry(evolvra_home, recorder, monkeypatch):
@@ -267,3 +275,27 @@ def test_thin_ensemble_is_rescored_next_cycle(evolvra_home, recorder, monkeypatc
     assert rep.judge_cached == 1 and runner.pending_tasks(conn) == []   # cached first judge, now complete
     body = transport2.calls[0]
     assert body["model"] == "qwen/qwen3.8-27b" and body["reasoning_effort"] == "none"
+
+
+def test_rescore_keeps_the_better_covered_ensemble(evolvra_home, recorder, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    _recorded_mission(evolvra_home, recorder)
+    ingest.ingest_all(conn, evolvra_home)
+    three = [("groq", "openai/gpt-oss-120b"), ("gemini", "gemini-3.5-flash-lite"), ("groq", "qwen/qwen3.8-27b")]
+    full = judge_transport({"openai/gpt-oss-120b": _reply(0.6, 0.6), "gemini-3.5-flash-lite": _reply(0.7, 0.7),
+                            "qwen/qwen3.8-27b": _reply(0.8, 0.8)})
+    runner.score_tasks(conn, runner.pending_tasks(conn), three, _transport=full)
+    task_id = conn.execute("SELECT id FROM tasks").fetchone()[0]
+    before = fitness.task_fitness(conn, task_id)
+    assert judge.ensemble_judges(conn, task_id) == 3 and before is not None
+
+    def capped(url, body, api_key, timeout):           # Groq at its daily cap: only Gemini answers
+        if "gemini" in body["model"]:
+            return full(url, body, api_key, timeout)
+        raise client.ProviderError("HTTP 429 from provider: daily cap")
+
+    runner.score_tasks(conn, runner.pending_tasks(conn, rescore=True), three, _transport=capped)
+    assert judge.ensemble_judges(conn, task_id) == 3 and fitness.task_fitness(conn, task_id) == before

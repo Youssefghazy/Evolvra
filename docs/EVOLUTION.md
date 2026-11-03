@@ -45,6 +45,11 @@ A candidate is promoted only if `fitness >= parent + margin` (default 0.03). The
 Nothing is committed automatically. Review with `git diff plugin/agents` and commit; git history becomes the
 evolution history. Losers stay on disk under the evolution directory with `report.md` and `result.json`.
 
+## Cadence
+`evolvra cycle --evolve` runs a generation only if the last one is more than 12 hours old
+(`--evolve-interval`). Groq's free tier allows ~200k tokens per model per rolling day; scoring a day of
+missions plus one generation fits, two generations do not.
+
 ## Budget
 Calls per generation ≈ K + (1 + K_valid) × bank_size × (1 + judges). Defaults (K=3, bank 4, 3 judges)
 ≈ 3 + 4 × 4 × 4 = 67 calls, spread over Groq and Gemini. Well inside the daily caps; the cache makes reruns free.

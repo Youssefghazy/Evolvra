@@ -34,10 +34,14 @@ statement, and the output files (text, truncated). It must answer with strict JS
  "critique": "one sentence", "failure_class": "snake_case_or_none"}
 ```
 
-Every judge's row is stored (`judge_model = provider/model`). The **ensemble** row is the **trimmed-low
-mean**: with three or more valid judges the single most lenient score per metric is dropped and the rest
-averaged; with two it is the plain mean. The median was replaced on 2026-11-03 after two lenient judges
-outvoted the one that caught fabricated evidence. The `failure_class` and critique come from the strictest
+Every judge's row is stored (`judge_model = provider/model`). The **ensemble** row is **ceiling-aware**:
+with three or more valid judges, if two or more scores sit at the ceiling (≥ 0.95) the most lenient one is
+dropped and the rest averaged (lenient judges park at 1.0; this is the fabricated-evidence case,
+1.0/1.0/0.4 → 0.7); otherwise the judges genuinely disagree and the median is used, so one factually wrong
+low judge cannot sink correct work (1.0/0.68/0.5 → 0.68). With two judges it is the plain mean.
+A verdict backed by fewer than 2 judges is **provisional**: it does not count toward fitness, the task is
+picked up again by the next `evolvra score`, and a re-score never replaces a better-covered ensemble with
+a thinner one. The `failure_class` and critique come from the strictest
 judge that found a problem (ties broken by majority), because the diagnosis exists to surface problems.
 The judge prompt carries calibration anchors: 1.0 is reserved for flawless and verifiable work; invented
 measurements cap evidence at 0.2 and correctness at 0.5. Judges that error or return unparseable output are
@@ -60,8 +64,9 @@ One number per task, rolled up per **agent version**. This is what evolution opt
 | `det:efficiency` | 0.10 |
 | `det:output_exists` | 0.05 |
 
-Missing components are dropped and the rest renormalized, so deterministic-only scoring still yields a
-(coarser) fitness. `evolvra fitness` lists agents weakest first with their top failure class: the
+Missing components are dropped and the rest renormalized, so deterministic-only scoring (`--no-judges`)
+still yields a coarser fitness. A task whose judges ran but fewer than 2 answered has no fitness until it
+is re-scored. `evolvra fitness` lists agents weakest first with their top failure class: the
 input queue for `/evolvra:evolve`.
 
 ## Commands

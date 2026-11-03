@@ -203,24 +203,39 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
     return results
 
 
-def trimmed_low_mean(values: list[float]) -> float:
-    """Drop the single most lenient score when 3+ judges answered, then average.
+CEILING = 0.95
 
-    The median let two generous judges outvote one that caught fabricated evidence. Trimming the
-    top score means a high ensemble mark needs agreement from the stricter judges."""
+
+def trimmed_low_mean(values: list[float]) -> float:
+    """Drop the single most lenient score when 3+ judges answered, then average."""
     if not values:
         return 0.0
     kept = sorted(values)[:-1] if len(values) >= 3 else values
     return round(statistics.mean(kept), 3)
 
 
+def ceiling_aware(values: list[float]) -> float:
+    """Two failure modes need opposite cures. Lenient judges park at the ceiling, so when two or more
+    scores are >= CEILING we drop the most lenient one (the fabricated-evidence case: 1.0, 1.0, 0.4 -> 0.7).
+    Otherwise the judges genuinely disagree and the median is the robust choice, so one factually wrong
+    low judge cannot sink correct work (task 5 of 2026-11-03: 1.0, 0.68, 0.5 -> 0.68, not 0.59)."""
+    if not values:
+        return 0.0
+    if len(values) < 3:
+        return round(statistics.mean(values), 3)
+    if sum(1 for v in values if v >= CEILING) >= 2:
+        return trimmed_low_mean(values)
+    return round(statistics.median(values), 3)
+
+
 def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
-    """Trimmed-low mean per metric; failure class and critique from the strictest judge that found a
-    problem (ties broken by majority), because the diagnosis exists to surface problems."""
+    """Ceiling-aware aggregate per metric (see `ceiling_aware`); failure class and critique from the
+    strictest judge that found a problem (ties broken by majority), because the diagnosis exists to
+    surface problems."""
     valid = [r for r in results if r.scores]
     if not valid:
         return {}, "none", "none"
-    scores = {k: trimmed_low_mean([r.scores[k] for r in valid]) for k in RUBRIC}
+    scores = {k: ceiling_aware([r.scores[k] for r in valid]) for k in RUBRIC}
     flagged = [r for r in valid if r.failure_class not in ("none", "")]
     if flagged:
         classes = Counter(r.failure_class for r in flagged)
@@ -231,7 +246,25 @@ def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
     return scores, "none", next((r.critique for r in valid if r.critique and r.critique != "none"), "none")
 
 
+def ensemble_judges(conn: sqlite3.Connection, task_id: int) -> int:
+    row = conn.execute("SELECT evidence_json FROM scores WHERE task_id = ? AND judge_model = 'ensemble'"
+                       " AND metric = 'rubric:correctness'", (task_id,)).fetchone()
+    if not row or not row["evidence_json"]:
+        return 0
+    return len(json.loads(row["evidence_json"]).get("judges") or [])
+
+
 def store_judge_results(conn: sqlite3.Connection, task_id: int, results: list[JudgeResult]) -> dict[str, float]:
+    answered = sum(1 for r in results if r.scores)
+    if answered and answered < ensemble_judges(conn, task_id):
+        # A rate-limited day must not overwrite a 3-judge verdict with a 1-judge one. Keep the per-judge rows
+        # that did answer (they are cached anyway) and leave the stronger ensemble in place.
+        for r in results:
+            if r.scores:
+                rows = [(f"rubric:{k}", v, {"critique": r.critique, "failure_class": r.failure_class,
+                                             "acceptance": r.acceptance, "cached": r.cached}) for k, v in r.scores.items()]
+                checks.store_scores(conn, task_id, rows, judge_model=r.judge)
+        return {}
     for r in results:
         if not r.scores:
             checks.store_scores(conn, task_id, [("rubric:error", 0.0, {"critique": r.critique})], judge_model=r.judge)
