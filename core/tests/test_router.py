@@ -125,3 +125,23 @@ def test_timeout_becomes_provider_error(monkeypatch):
     monkeypatch.setattr(client.urllib.request, "urlopen", boom)
     with pytest.raises(client.ProviderError, match="timed out"):
         client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
+
+
+def test_503_is_retried_once(monkeypatch):
+    attempts = []
+
+    class FakeHTTPError(client.urllib.error.HTTPError):
+        def __init__(self):
+            super().__init__("u", 503, "overloaded", {}, None)
+        def read(self):
+            return b'{"error":"busy"}'
+
+    def urlopen(req, timeout):
+        attempts.append(1)
+        raise FakeHTTPError()
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(client.time, "sleep", lambda s: None)
+    with pytest.raises(client.ProviderError, match="HTTP 503"):
+        client._send(client.urllib.request.Request("https://example.invalid/x"), 1.0)
+    assert len(attempts) == 2

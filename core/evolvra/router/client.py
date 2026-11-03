@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -201,12 +202,19 @@ def _headers(api_key: str) -> dict:
     }
 
 
-def _send(req: urllib.request.Request, timeout: float) -> dict:
+RETRY_STATUSES = (429, 500, 502, 503, 504)
+RETRY_PAUSE_S = 4.0
+
+
+def _send(req: urllib.request.Request, timeout: float, _attempt: int = 1) -> dict:
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:  # keys never appear in error text
         detail = e.read().decode("utf-8", errors="replace")[:500]
+        if e.code in RETRY_STATUSES and _attempt == 1:
+            time.sleep(RETRY_PAUSE_S)  # free tiers hiccup; one retry fixes most 503s
+            return _send(req, timeout, _attempt=2)
         hint = ""
         if e.code == 404 and "model" in detail.lower():
             hint = " | hint: run `evolvra models <provider>` and set EVOLVRA_MODEL_<PROVIDER> in .env"

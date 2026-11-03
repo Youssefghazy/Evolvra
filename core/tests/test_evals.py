@@ -116,3 +116,21 @@ def test_judge_error_does_not_break_scoring(evolvra_home, recorder, monkeypatch)
     assert ens["rubric:correctness"] == 0.4  # single valid judge still yields an ensemble
     det = conn.execute("SELECT value FROM scores WHERE metric='det:output_exists'").fetchone()[0]
     assert det == 0.0
+
+
+def test_unparseable_judge_gets_one_strict_retry(evolvra_home, recorder, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    _recorded_mission(evolvra_home, recorder)
+    ingest.ingest_all(conn, evolvra_home)
+    calls = []
+
+    def transport(url, body, api_key, timeout):
+        calls.append(body)
+        text = "Sure! Here is my assessment in prose." if len(calls) == 1 else _reply(0.6, 0.6)
+        return {"choices": [{"message": {"content": text}, "finish_reason": "stop"}], "usage": {}}
+
+    report = runner.score_tasks(conn, runner.pending_tasks(conn), [("groq", "openai/gpt-oss-120b")], _transport=transport)
+    assert report.judge_errors == 0 and len(calls) == 2
+    assert "ONLY the JSON" in calls[1]["messages"][-1]["content"]

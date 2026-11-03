@@ -159,6 +159,14 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
             results.append(JudgeResult(name, {}, [], f"judge error: {e}", "judge_error", False, ""))
             continue
         data = parse_judge_json(res.text) or {}
+        if not data:
+            retry = messages + [{"role": "assistant", "content": res.text[:2000]},
+                                {"role": "user", "content": "That was not valid JSON. Reply with ONLY the JSON object, no prose, no code fences."}]
+            try:
+                res = client.chat(conn, retry, provider=provider, model=model, max_tokens=900, _transport=_transport)
+                data = parse_judge_json(res.text) or {}
+            except (client.ProviderError, quota.QuotaExceeded):
+                data = {}
         scores = {k: _clamp(data.get(k)) for k in RUBRIC} if data else {}
         results.append(JudgeResult(
             judge=name, scores=scores, acceptance=data.get("acceptance") or [],
