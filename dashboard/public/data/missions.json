@@ -1,5 +1,2579 @@
 [
  {
+  "id": "20261103-080434-propose-three-zero-budget",
+  "brief": "propose three zero-budget growth experiments for a free developer tool with 500 users, each with a hypothesis and a metric",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Three zero-budget growth experiments (acquisition/activation/retention) with power-checked hypotheses and metrics; passed QA on attempt 2 after fixing E2/E3 sizing and test mismatches.",
+  "started_at": "2026-11-03T08:04:34Z",
+  "finished_at": "2026-11-03T08:24:23Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "growth-hacker",
+    "task": "Write EXPERIMENTS.md proposing three zero-budget growth experiments for a free developer tool with 500 users",
+    "acceptance": [
+     "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+     "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+     "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+     "Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown)",
+     "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T08:04:35Z",
+      "finished_at": "2026-11-03T08:07:57Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "EXPERIMENTS.md written: 3 experiments (acquisition/activation/retention), If-then-because hypotheses, metrics+thresholds+windows, $0 tools, hand-worked power math with line refs."
+     }
+    ],
+    "traces": 11,
+    "fitness": 0.9875,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 178
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "EXPERIMENTS.attempt1.md",
+        "EXPERIMENTS.md"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-080434-propose-three-zero-budget\\01-growth-hacker"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are provided, each containing the exact required hypothesis template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All experiments specify these details clearly."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free tools and channels (GitHub, Hacker News, Reddit, etc.) are specified."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown)",
+         "met": true,
+         "reason": "Detailed sample-size and MDE calculations are provided for the given scale."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are provided, each containing the exact required hypothesis template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All experiments specify these details clearly."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free tools and channels (GitHub, Hacker News, Reddit, etc.) are specified."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown)",
+         "met": true,
+         "reason": "Detailed sample-size and MDE calculations are provided for the given scale."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are provided, each containing the exact required hypothesis template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All experiments specify these details clearly."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free tools and channels (GitHub, Hacker News, Reddit, etc.) are specified."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown)",
+         "met": true,
+         "reason": "Detailed sample-size and MDE calculations are provided for the given scale."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are provided, each containing the exact required hypothesis template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All experiments specify these details clearly."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free tools and channels (GitHub, Hacker News, Reddit, etc.) are specified."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown)",
+         "met": true,
+         "reason": "Detailed sample-size and MDE calculations are provided for the given scale."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Acquisition, Activation, and Retention are distinctly targeted with complete steps and stop criteria."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "unparseable judge output"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are listed and each hypothesis follows the required template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All three experiments specify a primary metric, baseline query, threshold number, and a 28‑day or 30‑day window."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free platforms (GitHub, Hacker News, Reddit, dev.to, Gmail, Google Sheets, Python) are referenced."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500‑user scale (sample‑size or minimum‑detectable‑effect reasoning shown)",
+         "met": true,
+         "reason": "Each experiment includes power calculations, MDE formulas, and justification based on the 500‑user base."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are listed and each hypothesis follows the required template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All three experiments specify a primary metric, baseline query, threshold number, and a 28‑day or 30‑day window."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free platforms (GitHub, Hacker News, Reddit, dev.to, Gmail, Google Sheets, Python) are referenced."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500‑user scale (sample‑size or minimum‑detectable‑effect reasoning shown)",
+         "met": true,
+         "reason": "Each experiment includes power calculations, MDE formulas, and justification based on the 500‑user base."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are listed and each hypothesis follows the required template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All three experiments specify a primary metric, baseline query, threshold number, and a 28‑day or 30‑day window."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free platforms (GitHub, Hacker News, Reddit, dev.to, Gmail, Google Sheets, Python) are referenced."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500‑user scale (sample‑size or minimum‑detectable‑effect reasoning shown)",
+         "met": true,
+         "reason": "Each experiment includes power calculations, MDE formulas, and justification based on the 500‑user base."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form",
+         "met": true,
+         "reason": "Three experiments are listed and each hypothesis follows the required template."
+        },
+        {
+         "criterion": "Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window",
+         "met": true,
+         "reason": "All three experiments specify a primary metric, baseline query, threshold number, and a 28‑day or 30‑day window."
+        },
+        {
+         "criterion": "Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software",
+         "met": true,
+         "reason": "Only free platforms (GitHub, Hacker News, Reddit, dev.to, Gmail, Google Sheets, Python) are referenced."
+        },
+        {
+         "criterion": "Each experiment's success threshold is plausibly detectable at 500‑user scale (sample‑size or minimum‑detectable‑effect reasoning shown)",
+         "met": true,
+         "reason": "Each experiment includes power calculations, MDE formulas, and justification based on the 500‑user base."
+        },
+        {
+         "criterion": "Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)",
+         "met": true,
+         "reason": "Steps, stop criteria, and distinct stages (Acquisition, Activation, Retention) are provided for each."
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify EXPERIMENTS.md against task 1 acceptance criteria",
+    "acceptance": [
+     "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+     "Independently recomputes each sample-size/MDE claim and records the calculation"
+    ],
+    "status": "done",
+    "attempts": 2,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T08:07:57Z",
+      "finished_at": "2026-11-03T08:16:39Z",
+      "verdict": "NEEDS_WORK",
+      "feedback": "Fix E2 sizing (pooled, 61/arm) and single decision test; fix E3 Fisher threshold 19/150 & MDE ~+10pp (or switch to pooled z); make Z consistent (=MDE) across hypotheses; add run order + per-experiment hash salt + exclusions; define E3 day 0 per batch; optional CAN-SPAM address, E1 exact binomtest >=78.",
+      "evidence": "13/15 cells PASS; T4 FAIL for E2 (unpooled n=58 vs pooled test needs 61; power 0.784) and E3 (Fisher decision test: 18/150 p=0.063, needs 19/150, MDE ~+10pp). recompute.py + QA-REPORT.md."
+     },
+     {
+      "n": 2,
+      "started_at": "2026-11-03T08:21:11Z",
+      "finished_at": "2026-11-03T08:24:23Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Attempt 2: 15/15 cells PASS; all new numbers recomputed correct (E2 power 0.816 @61/arm, E3 Fisher 19/150, E1 binomtest >=78); C1-C5 fixed. 3 optional notes (E1 exact MDE +44.4%, re-signup exclusion, postal address privacy)."
+     }
+    ],
+    "traces": 23,
+    "fitness": 0.2,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 0.5,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 2,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 224
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "typing_extensions.cpython-313.pyc",
+        "__init__.py",
+        "__init__.cpython-313.pyc",
+        "_common.cpython-313.pyc",
+        "_tzdata_impl.cpython-313.pyc",
+        "_version.cpython-313.pyc",
+        "easter.cpython-313.pyc",
+        "relativedelta.cpython-313.pyc",
+        "rrule.cpython-313.pyc",
+        "tzwin.cpython-313.pyc"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-080434-propose-three-zero-budget\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_content",
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_content",
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_content",
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_content",
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
+       "failure_class": "missing_deliverable",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
+       "failure_class": "missing_deliverable",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
+       "failure_class": "missing_deliverable",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required EXPERIMENTS.md verification deliverable in the output files.",
+       "failure_class": "missing_deliverable",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed."
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or EXPERIMENTS.md deliverable are present in the provided output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "missing_required_content",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or recomputations are present in the submission"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "missing_required_content",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or recomputations are present in the submission"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "missing_required_content",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or recomputations are present in the submission"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission contains unrelated code files and no evidence addressing the acceptance criteria.",
+       "failure_class": "missing_required_content",
+       "acceptance": [
+        {
+         "criterion": "Per-criterion PASS/FAIL table per experiment with quoted line evidence",
+         "met": false,
+         "reason": "No table or quoted lines from EXPERIMENTS.md were provided"
+        },
+        {
+         "criterion": "Independently recomputes each sample-size/MDE claim and records the calculation",
+         "met": false,
+         "reason": "No calculations or recomputations are present in the submission"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261103-075105-write-a-github-actions",
+  "brief": "write a GitHub Actions workflow that lints and tests a Python package on every push, with evidence it is valid YAML",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Python lint+test GitHub Actions workflow on every push, validated as YAML, by actionlint and SchemaStore schema, and independently QA-verified.",
+  "started_at": "2026-11-03T07:51:05Z",
+  "finished_at": "2026-11-03T07:58:52Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "devops-automator",
+    "task": "Write a GitHub Actions workflow (.github/workflows/ci.yml) that lints and tests a Python package on every push",
+    "acceptance": [
+     "ci.yml parses as valid YAML and has name, on, jobs keys",
+     "Trigger is 'on: push' (all branches)",
+     "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+     "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+     "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T07:51:06Z",
+      "finished_at": "2026-11-03T07:54:27Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "ci.yml (on: push, checkout@v4, setup-python@v5, ruff, pytest, py3.10-3.12) passes actionlint 1.7.7 + SchemaStore schema (0 errors); sample pkg ruff/pytest exit 0 locally."
+     }
+    ],
+    "traces": 15,
+    "fitness": 0.99,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 170
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "ci.yml",
+        "pyproject.toml",
+        "__init__.py",
+        "test_add.py"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-075105-write-a-github-actions\\01-devops-automator"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "None",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "The workflow file has name, \"on\", and jobs keys and is valid YAML."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Trigger is set to 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses actions/checkout@v4 and actions/setup-python@v5, followed by ruff and pytest."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Workflow syntax is clean and matches GitHub Actions schema requirements."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, source file, and test file constitute a working minimal package setup."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "The workflow file has name, \"on\", and jobs keys and is valid YAML."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Trigger is set to 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses actions/checkout@v4 and actions/setup-python@v5, followed by ruff and pytest."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Workflow syntax is clean and matches GitHub Actions schema requirements."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, source file, and test file constitute a working minimal package setup."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "The workflow file has name, \"on\", and jobs keys and is valid YAML."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Trigger is set to 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses actions/checkout@v4 and actions/setup-python@v5, followed by ruff and pytest."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Workflow syntax is clean and matches GitHub Actions schema requirements."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, source file, and test file constitute a working minimal package setup."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "The workflow file has name, \"on\", and jobs keys and is valid YAML."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Trigger is set to 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses actions/checkout@v4 and actions/setup-python@v5, followed by ruff and pytest."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Workflow syntax is clean and matches GitHub Actions schema requirements."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, source file, and test file constitute a working minimal package setup."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "All required keys are present and YAML syntax is valid."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "The workflow uses 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses checkout@v4, setup-python@v5, ruff, and pytest in the correct order."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "The YAML structure is standard and conforms to GitHub Actions schema."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, __init__.py, and test_add.py constitute a valid minimal package that passes linting and testing."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "All required keys are present and YAML syntax is valid."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "The workflow uses 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses checkout@v4, setup-python@v5, ruff, and pytest in the correct order."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "The YAML structure is standard and conforms to GitHub Actions schema."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, __init__.py, and test_add.py constitute a valid minimal package that passes linting and testing."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "All required keys are present and YAML syntax is valid."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "The workflow uses 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses checkout@v4, setup-python@v5, ruff, and pytest in the correct order."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "The YAML structure is standard and conforms to GitHub Actions schema."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, __init__.py, and test_add.py constitute a valid minimal package that passes linting and testing."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "All required keys are present and YAML syntax is valid."
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "The workflow uses 'on: push'."
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Uses checkout@v4, setup-python@v5, ruff, and pytest in the correct order."
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "The YAML structure is standard and conforms to GitHub Actions schema."
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, __init__.py, and test_add.py constitute a valid minimal package that passes linting and testing."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "YAML is syntactically correct and includes required keys"
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Workflow uses \"on\": push"
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Includes checkout@v4, setup-python@v5, ruff lint, pytest test"
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Agent claims it passes; structure appears compliant"
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, package code, and a passing test"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "YAML is syntactically correct and includes required keys"
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Workflow uses \"on\": push"
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Includes checkout@v4, setup-python@v5, ruff lint, pytest test"
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Agent claims it passes; structure appears compliant"
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, package code, and a passing test"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "YAML is syntactically correct and includes required keys"
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Workflow uses \"on\": push"
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Includes checkout@v4, setup-python@v5, ruff lint, pytest test"
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Agent claims it passes; structure appears compliant"
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, package code, and a passing test"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "ci.yml parses as valid YAML and has name, on, jobs keys",
+         "met": true,
+         "reason": "YAML is syntactically correct and includes required keys"
+        },
+        {
+         "criterion": "Trigger is 'on: push' (all branches)",
+         "met": true,
+         "reason": "Workflow uses \"on\": push"
+        },
+        {
+         "criterion": "Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions",
+         "met": true,
+         "reason": "Includes checkout@v4, setup-python@v5, ruff lint, pytest test"
+        },
+        {
+         "criterion": "Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors",
+         "met": true,
+         "reason": "Agent claims it passes; structure appears compliant"
+        },
+        {
+         "criterion": "Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0",
+         "met": true,
+         "reason": "Provided pyproject.toml, package code, and a passing test"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Independently verify the workflow is valid YAML and meets task 1 criteria",
+    "acceptance": [
+     "Runs own YAML parse + schema/actionlint check and records raw output",
+     "Per-criterion PASS/FAIL table with evidence and overall verdict"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T07:54:28Z",
+      "finished_at": "2026-11-03T07:58:51Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Own YAML/schema check + actionlint 1.7.7: 0 errors; negative controls caught; clean-venv install, ruff, pytest exit 0; failing test exits 1. QA-REPORT.md written."
+     }
+    ],
+    "traces": 6,
+    "fitness": 0.28,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 162
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "__editable__.samplepkg-0.1.0.pth",
+        "py.cpython-313.pyc",
+        "__init__.py",
+        "__init__.cpython-313.pyc",
+        "_argcomplete.cpython-313.pyc",
+        "_version.cpython-313.pyc",
+        "approx.cpython-313.pyc",
+        "cacheprovider.cpython-313.pyc",
+        "capture.cpython-313.pyc",
+        "compat.cpython-313.pyc"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-075105-write-a-github-actions\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_artifacts",
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_artifacts",
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_artifacts",
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.2,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_required_artifacts",
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.4,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required raw validation output and PASS/FAIL table in the response.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No explicit per-criterion PASS/FAIL table was provided in the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required raw validation output and PASS/FAIL table in the response.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No explicit per-criterion PASS/FAIL table was provided in the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.3,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required raw validation output and PASS/FAIL table in the response.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No explicit per-criterion PASS/FAIL table was provided in the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.5,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "The agent failed to include the required raw validation output and PASS/FAIL table in the response.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No explicit per-criterion PASS/FAIL table was provided in the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "The agent provided Python source and bytecode files instead of the required GitHub Actions workflow, validation logs, and QA report.",
+       "failure_class": "missing_deliverables",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No YAML file or tool output was provided in the output files."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "The mentioned QA-REPORT.md is missing from the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "The agent provided Python source and bytecode files instead of the required GitHub Actions workflow, validation logs, and QA report.",
+       "failure_class": "missing_deliverables",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No YAML file or tool output was provided in the output files."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "The mentioned QA-REPORT.md is missing from the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "The agent provided Python source and bytecode files instead of the required GitHub Actions workflow, validation logs, and QA report.",
+       "failure_class": "missing_deliverables",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No YAML file or tool output was provided in the output files."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "The mentioned QA-REPORT.md is missing from the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "The agent provided Python source and bytecode files instead of the required GitHub Actions workflow, validation logs, and QA report.",
+       "failure_class": "missing_deliverables",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No YAML file or tool output was provided in the output files."
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "The mentioned QA-REPORT.md is missing from the output."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "failure_class": "missing_required_artifacts",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No raw output or parse logs are provided"
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No PASS/FAIL table is included in the response"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "failure_class": "missing_required_artifacts",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No raw output or parse logs are provided"
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No PASS/FAIL table is included in the response"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "failure_class": "missing_required_artifacts",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No raw output or parse logs are provided"
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No PASS/FAIL table is included in the response"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.2,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.",
+       "failure_class": "missing_required_artifacts",
+       "acceptance": [
+        {
+         "criterion": "Runs own YAML parse + schema/actionlint check and records raw output",
+         "met": false,
+         "reason": "No raw output or parse logs are provided"
+        },
+        {
+         "criterion": "Per-criterion PASS/FAIL table with evidence and overall verdict",
+         "met": false,
+         "reason": "No PASS/FAIL table is included in the response"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261103-074446-design-a-rest-api",
+  "brief": "design a REST API for a todo app with user accounts, and have QA verify the design against the acceptance criteria",
+  "mode": "micro",
+  "status": "done",
+  "summary": "OpenAPI 3.1 todo API with accounts designed and independently QA-verified (100/100 checks, 9/9 mutants caught), with 5 low-severity follow-ups.",
+  "started_at": "2026-11-03T07:44:46Z",
+  "finished_at": "2026-11-03T07:55:07Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "backend-architect",
+    "task": "Design a REST API spec (OpenAPI 3.1 YAML + design notes) for a todo app with user accounts",
+    "acceptance": [
+     "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+     "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+     "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+     "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+     "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+     "DESIGN.md explains auth scheme, data model, pagination, and error format"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T07:45:01Z",
+      "finished_at": "2026-11-03T07:49:40Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "openapi.yaml (OpenAPI 3.1.0, validated by openapi-spec-validator) + DESIGN.md written; 12 ops, 3 public auth ops, all others bearer; all non-2xx -> shared Error schema via components/responses."
+     }
+    ],
+    "traces": 12,
+    "fitness": 0.7775,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 193
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "DESIGN.md",
+        "openapi.yaml"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-074446-design-a-rest-api\\01-backend-architect"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.7,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incomplete_specification",
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.7,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incomplete_specification",
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.65,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incomplete_specification",
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incomplete_specification",
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": true,
+         "reason": "OpenAPI 3.1 file provided with all mandatory sections."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "All specified auth and user management endpoints are present."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": true,
+         "reason": "Todos CRUD, pagination parameters, and completion status filter are fully defined."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Global and local security rules correctly applied, and ownership rule explicitly documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": true,
+         "reason": "Responses map standard errors to the shared components/responses and Error schema."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": true,
+         "reason": "Design notes thoroughly document all required system components."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": true,
+         "reason": "OpenAPI 3.1 file provided with all mandatory sections."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "All specified auth and user management endpoints are present."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": true,
+         "reason": "Todos CRUD, pagination parameters, and completion status filter are fully defined."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Global and local security rules correctly applied, and ownership rule explicitly documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": true,
+         "reason": "Responses map standard errors to the shared components/responses and Error schema."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": true,
+         "reason": "Design notes thoroughly document all required system components."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": true,
+         "reason": "OpenAPI 3.1 file provided with all mandatory sections."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "All specified auth and user management endpoints are present."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": true,
+         "reason": "Todos CRUD, pagination parameters, and completion status filter are fully defined."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Global and local security rules correctly applied, and ownership rule explicitly documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": true,
+         "reason": "Responses map standard errors to the shared components/responses and Error schema."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": true,
+         "reason": "Design notes thoroughly document all required system components."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": true,
+         "reason": "OpenAPI 3.1 file provided with all mandatory sections."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "All specified auth and user management endpoints are present."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": true,
+         "reason": "Todos CRUD, pagination parameters, and completion status filter are fully defined."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Global and local security rules correctly applied, and ownership rule explicitly documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": true,
+         "reason": "Responses map standard errors to the shared components/responses and Error schema."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": true,
+         "reason": "Design notes thoroughly document all required system components."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "judge error: HTTP 500 from provider: [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.4,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "failure_class": "incomplete_specification",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": false,
+         "reason": "Only a truncated portion of the file is shown; cannot confirm full validity or presence of required components."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "Register, login, refresh, logout, and /users/me endpoints are described."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": false,
+         "reason": "Todo endpoints are listed but pagination and filter parameters are not visible in the excerpt."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Security scheme is declared globally and overridden for public ops; ownership rule is documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": false,
+         "reason": "Only some responses are shown; many error response references are truncated or missing, and the shared Error schema definition is not present."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": false,
+         "reason": "Design notes cover auth and ownership but pagination and error format are not fully detailed in the visible excerpt."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.4,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "failure_class": "incomplete_specification",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": false,
+         "reason": "Only a truncated portion of the file is shown; cannot confirm full validity or presence of required components."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "Register, login, refresh, logout, and /users/me endpoints are described."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": false,
+         "reason": "Todo endpoints are listed but pagination and filter parameters are not visible in the excerpt."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Security scheme is declared globally and overridden for public ops; ownership rule is documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": false,
+         "reason": "Only some responses are shown; many error response references are truncated or missing, and the shared Error schema definition is not present."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": false,
+         "reason": "Design notes cover auth and ownership but pagination and error format are not fully detailed in the visible excerpt."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.3,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "failure_class": "incomplete_specification",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": false,
+         "reason": "Only a truncated portion of the file is shown; cannot confirm full validity or presence of required components."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "Register, login, refresh, logout, and /users/me endpoints are described."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": false,
+         "reason": "Todo endpoints are listed but pagination and filter parameters are not visible in the excerpt."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Security scheme is declared globally and overridden for public ops; ownership rule is documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": false,
+         "reason": "Only some responses are shown; many error response references are truncated or missing, and the shared Error schema definition is not present."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": false,
+         "reason": "Design notes cover auth and ownership but pagination and error format are not fully detailed in the visible excerpt."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission is incomplete and missing key parts of the OpenAPI spec such as full response definitions, pagination parameters, and the shared Error schema.",
+       "failure_class": "incomplete_specification",
+       "acceptance": [
+        {
+         "criterion": "openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components)",
+         "met": false,
+         "reason": "Only a truncated portion of the file is shown; cannot confirm full validity or presence of required components."
+        },
+        {
+         "criterion": "Defines user account endpoints: register, login, logout/refresh, get/update/delete current user",
+         "met": true,
+         "reason": "Register, login, refresh, logout, and /users/me endpoints are described."
+        },
+        {
+         "criterion": "Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status",
+         "met": false,
+         "reason": "Todo endpoints are listed but pagination and filter parameters are not visible in the excerpt."
+        },
+        {
+         "criterion": "Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated",
+         "met": true,
+         "reason": "Security scheme is declared globally and overridden for public ops; ownership rule is documented."
+        },
+        {
+         "criterion": "Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema",
+         "met": false,
+         "reason": "Only some responses are shown; many error response references are truncated or missing, and the shared Error schema definition is not present."
+        },
+        {
+         "criterion": "DESIGN.md explains auth scheme, data model, pagination, and error format",
+         "met": false,
+         "reason": "Design notes cover auth and ownership but pagination and error format are not fully detailed in the visible excerpt."
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify the API design against task 1 acceptance criteria with reproducible checks",
+    "acceptance": [
+     "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+     "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-03T07:49:40Z",
+      "finished_at": "2026-11-03T07:55:07Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Own checker 100/100 across T1-T6; mutation test caught 9/9 planted defects; QA-REPORT.md written. 5 low-severity notes (e.g. register 409 leaks email existence), none blocking."
+     }
+    ],
+    "traces": 6,
+    "fitness": 0.935,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 176
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "mutation_test.py",
+        "mutation_test_output.txt",
+        "QA-REPORT.md",
+        "qa_check.py",
+        "qa_check_output.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261103-074446-design-a-rest-api\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_check_script",
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_check_script",
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_check_script",
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_check_script",
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite",
+        "gemini/gemma-4-31b-it"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "Executed qa_check.py and mutation_test.py, recording output in QA-REPORT.md and text files."
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "Provided a detailed PASS/FAIL table covering T1-T6 with exact file/line references and an overall PASS verdict."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "Executed qa_check.py and mutation_test.py, recording output in QA-REPORT.md and text files."
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "Provided a detailed PASS/FAIL table covering T1-T6 with exact file/line references and an overall PASS verdict."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "Executed qa_check.py and mutation_test.py, recording output in QA-REPORT.md and text files."
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "Provided a detailed PASS/FAIL table covering T1-T6 with exact file/line references and an overall PASS verdict."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "Executed qa_check.py and mutation_test.py, recording output in QA-REPORT.md and text files."
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "Provided a detailed PASS/FAIL table covering T1-T6 with exact file/line references and an overall PASS verdict."
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.0,
+      "judge": "gemini/gemma-4-31b-it",
+      "evidence": {
+       "critique": "",
+       "failure_class": "none",
+       "acceptance": [],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "failure_class": "missing_check_script",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "qa_check.py is referenced and its execution output is shown"
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "QA-REPORT.md contains a detailed PASS/FAIL table with evidence and an overall PASS verdict"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "failure_class": "missing_check_script",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "qa_check.py is referenced and its execution output is shown"
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "QA-REPORT.md contains a detailed PASS/FAIL table with evidence and an overall PASS verdict"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "failure_class": "missing_check_script",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "qa_check.py is referenced and its execution output is shown"
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "QA-REPORT.md contains a detailed PASS/FAIL table with evidence and an overall PASS verdict"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks the actual qa_check.py source, making full verification of the checking logic impossible.",
+       "failure_class": "missing_check_script",
+       "acceptance": [
+        {
+         "criterion": "Runs a script or command that parses openapi.yaml and checks each task-1 criterion, recording output",
+         "met": true,
+         "reason": "qa_check.py is referenced and its execution output is shown"
+        },
+        {
+         "criterion": "Issues a per-criterion PASS/FAIL table with file/line evidence and an overall verdict",
+         "met": true,
+         "reason": "QA-REPORT.md contains a detailed PASS/FAIL table with evidence and an overall PASS verdict"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261102-130146-write-a-one-paragraph",
   "brief": "write a one-paragraph product description for a note-taking app",
   "mode": "micro",

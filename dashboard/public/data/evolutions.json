@@ -238,5 +238,199 @@
    }
   ],
   "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 1. Mean fitness: 0.77.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_feature_status_labels` x1\n\n## Worst tasks\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.77)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_feature_status_labels`\n- Critique: Missing PASS/NEEDS_WORK labels for each listed feature\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: Listed the features found but failed to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n"
+ },
+ {
+  "id": 3,
+  "agent": "evidence-collector",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.0,
+  "created_at": "2026-11-03T09:08:15.339Z",
+  "parent_fitness": 1.0,
+  "bank": [
+   {
+    "task": "Write the verification checklist and the evidence you would require",
+    "source": "seed",
+    "parent_fitness": 1.0,
+    "parent_failure": "none",
+    "parent_critique": "The deliverable correctly outlines the checklist but does not provide actual artefacts, which is expected in this context.",
+    "parent_output_excerpt": "# Login Bug Fix Verification Plan\n\n## 🔍 1. Reproduction Steps (Before and After)\n\n### Before (Verifying the Original Bug State)\n*Note: These steps document how the bug was originally observed.*\n1. Navigate to the login page (`/login`).\n2. Enter valid credentials (e.g., `test@example.com` / `correct-password`).\n3. Click the \"Submit\" or \"Log In\" button.\n4. **Observed Failure State**: The page hangs, throws a 500 Internal Server Error, or redirects back to the login page without establishing a session (as captured in previous incident reports).\n\n### After (Verifying the Fix)\n*Note: These are the exact steps to be executed to verify the developer's fix.*\n1. Clear browser cookies and local storag"
+   },
+   {
+    "task": "Specify what measurements would make that claim acceptable",
+    "source": "seed",
+    "parent_fitness": 1.0,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Performance Improvement Claim Verification Standard\n\n**QA Specialist**: EvidenceQA 📸  \n**Status**: Specification Required for Approval  \n\n---\n\nA pull request stating merely \"improved performance\" without verifiable data is categorized as **fantasy reporting**. To move this PR from \"unverified\" to \"approved,\" the author must provide objective, reproducible evidence adhering to the standard below.\n\n## 1. Rejection of Anecdotal Evidence\nAnecdotal statements—such as \"the page feels snappier,\" \"it loads faster on my machine,\" or \"we optimized the queries\"—are **explicitly rejected**. \n* **Rule**: Human perception under ideal local development conditions does not constitute engineering evidence."
+   },
+   {
+    "task": "Produce the evidence report template for a visual review",
+    "source": "seed",
+    "parent_fitness": 1.0,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The report fabricates command outputs and file contents without actual execution, weakening its evidential value.",
+    "parent_output_excerpt": "# QA Evidence-Based Report Template: Landing Page Review\n\n## 🔍 Reality Check & Intended Execution Protocol\n*(Note: As no live environment or tool execution is available for this exercise, the following commands and checks represent the required methodology for generating real evidence during execution).*\n\n**Commands to Run**:\n```bash\n# 1. Generate visual evidence across standard viewports using Playwright\n./qa-playwright-capture.sh http://localhost:8000 public/qa-screenshots\n\n# 2. Run automated accessibility checks against WCAG 2.1 AA standards\nnpx axe-core http://localhost:8000 --save public/qa-screenshots/a11y-report.json\n```\n**Specification Quote**: *[Insert exact requirements from the la"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "missing_required_content",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-085247-evidence-collector\\candidate-1-missing-required-content.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "32c98e2f929bb7e79f4991d06faf032b9f4618d610ae86e499c13349b39f1c8b",
+    "fitness": 1.0,
+    "paired_delta": 0.0,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# Login Bug Fix Verification Protocol\n\n**QA Agent**: EvidenceQA  \n**Mission**: Verify developer claim that the login bug is fixed.  \n**Constraint Notice**: No file access or tool execution available for this verification run. The following protocol defines the exact requirements and commands to execute for a valid sign-off.\n\n---\n\n## 1. Reproduction Steps (Before and After)\n\n### Before (Proving the Bug Exists / Did Exist)\n1. Navigate to the login endpoint (`/login`).\n2. Enter valid test credentials (`user@example.com` / `ValidPassword123!`).\n3. Click the \"Sign In\" submit button.\n4. **Expected Bug State**: The page hangs, throws a 500 server error, or loops back to the login screen without ses"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 1.0,
+      "failure": "missing_measurements",
+      "critique": "The deliverable lacks any real measurement data, providing only a template rather than satisfying the required criteria.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# Performance Claim Verification Specification\n\n## 🚨 Policy on Performance Claims\nAs a reality-driven QA specialist, this document establishes the strict evidentiary requirements for any pull request, commit message, or status report claiming \"improved performance.\" \n\n**Anecdotal evidence is strictly rejected.** Statements such as \"it feels faster,\" \"loads quicker now,\" or \"seems snappier\" will result in an **AUTOMATIC FAIL** of the performance claim. Visual or numerical proof is mandatory.\n\n---\n\n## 📋 Mandatory Requirements for Performance Validation\n\nTo accept any performance improvement claim, the submitter must provide a verification report containing the following sections:\n\n### 1. Basel"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "The deliverable contains no real evidence, only placeholders and suggested commands.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# QA Evidence-Based Report Template: Landing Page Visual Review\n\n## 🔍 Reality Check Commands & Verification Plan\n*Note: In the current sandbox environment with no live file access or tool execution, the following verification commands and expected success criteria must be executed in a live environment to generate the required evidence.*\n\n- **Visual Capture Command**: \n  ```bash\n  ./qa-playwright-capture.sh http://localhost:8000 public/qa-screenshots\n  ```\n  *PASS Criteria*: Generates screenshot artifacts for desktop (1920x1080), tablet (768x1024), and mobile (375x667) without script timeouts or rendering exceptions.\n- **Accessibility Audit Command**:\n  ```bash\n  npx pa11y http://localhost:8"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_required_artifacts",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-085247-evidence-collector\\candidate-2-missing-required-artifacts.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "3e873ad624f0e33efd4e2112cf36146d6eff4e80667a039cdbdd36478bd0fe79",
+    "fitness": 0.9683,
+    "paired_delta": -0.0317,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# QA Verification Plan: Login Bug Fix\n\nAs **EvidenceQA**, my default stance is skeptical. A developer's verbal claim that \"the login bug is fixed\" is merely a hypothesis. We require empirical proof. Below is the verification checklist and evidence requirements needed to validate this fix without relying on assumptions or fantasy.\n\n---\n\n## 1. Reproduction Steps (Before and After)\n\nTo prove the bug existed and is now resolved, testing must follow a strict lifecycle script.\n\n### Before (Proving the Bug Exists / Existed)\n1. **Navigate**: Open the target environment URL at `/login`.\n2. **Input**: Enter a known valid test account username/email and password.\n3. **Action**: Click the \"Submit\" or \"L"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 0.905,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 0.975,
+       "quality": 0.95,
+       "evidence": 0.7
+      },
+      "output_excerpt": "# Performance Improvement Verification Specification\n\n## 🚫 Rejection of Anecdotal Evidence\nClaims such as \"it feels faster\", \"page loads look snappier\", \"we optimized the queries\", or \"UI is smoother\" are **explicitly rejected** as fantasy. Subjective user perception is variable, biased, and inadmissible as proof of performance improvement. Every performance claim must be backed by reproducible, automated, and statistically significant empirical data.\n\n---\n\n## 📋 Required Measurement Parameters\n\nTo make a performance improvement claim acceptable, the submission must explicitly document the following testing conditions:\n\n### 1. Environment Specifications\nThe exact hardware, software, and netwo"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# QA Evidence-Based Report Template: Landing Page Visual Review\n\n```markdown\n# QA Evidence-Based Report: Landing Page\n\n## 🔍 Reality Check Protocol\n**Commands Required**: \n- `./qa-playwright-capture.sh [URL] public/qa-screenshots` (Expected PASS: Exit code 0, all screenshots generated)\n- `axe-core` accessibility scan against desktop and mobile viewports (Expected PASS: Zero critical/serious violations)\n**Artifact Files to Generate**: \n- `artifact_ls.txt`, `artifact_test_results.txt`, `artifact_accessibility.json`\n**Specification Reference**: [Insert exact project spec link or requirements quote here]\n\n---\n\n## 📸 Visual Evidence Analysis\n\n### 1. Desktop Width (1920x1080)\n- **Screenshot Evidence"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "missing_feature_status_labels",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261103-085247-evidence-collector\\candidate-3-missing-feature-status-labels.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "78b71db960a5189262e21744edab580f114986cb6a9054ed414c0f1c0644f4aa",
+    "fitness": 0.95,
+    "paired_delta": -0.05,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the verification checklist and the evidence you would require",
+      "fitness": 0.93,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.95,
+       "evidence": 0.7
+      },
+      "output_excerpt": "# Login Bug Verification Protocol\n\n**QA Agent**: EvidenceQA  \n**Mission**: Verify the developer's claim that the login bug is fixed.  \n**Constraint Notice**: No file access or tool execution is available in this environment. The plan below defines the exact verification steps, evidence types, and pass/fail criteria required to validate the claim objectively.\n\n---\n\n## 1. Reproduction Steps (Before and After)\n\n### Before (Proving the Bug Exists / Historical Reproduction)\n1. Navigate to the login page (`/login`).\n2. Input valid credentials (e.g., `test@example.com` / `correctpassword`).\n3. Click the \"Submit\" or \"Sign In\" button.\n4. **Expected Failure State (Bug)**: The application hangs on an i"
+     },
+     {
+      "task": "Specify what measurements would make that claim acceptable",
+      "fitness": 1.0,
+      "failure": "none",
+      "critique": "No actual benchmark data is provided, but the specification itself fulfills the acceptance criteria.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 1.0,
+       "evidence": 1.0
+      },
+      "output_excerpt": "# Performance Claim Verification Specification\n\n## 🚨 QA Reality Check: The \"Improved Performance\" Claim\nA PR stating \"improved performance\" without hard, reproducible numbers is **fantasy reporting**. \"Feels faster\" or \"seems snappier\" is anecdotal evidence and will be automatically rejected. \n\nTo make a performance improvement claim acceptable, the author must provide verifiable, controlled benchmark data satisfying the criteria below.\n\n---\n\n## 1. Baseline and After Numbers Required\nA valid claim must compare identical workloads or pages under identical conditions before and after the change.\n* **Required Metrics (Frontend)**:\n  * Largest Contentful Paint (LCP)\n  * Interaction to Next Paint"
+     },
+     {
+      "task": "Produce the evidence report template for a visual review",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "The template leaves many placeholders unfilled, providing no concrete evidence.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.95,
+       "evidence": 0.75
+      },
+      "output_excerpt": "# QA Evidence-Based Report Template (Visual Review)\n\n## 🔍 Reality Check Commands & Scope\n*Note: As this is a template-driven review exercise without live tool execution in this environment, the commands below represent the mandatory execution steps required to generate the verifiable evidence for this report.*\n\n**Commands to Execute**:\n```bash\n# 1. Generate multi-viewport visual evidence\n./qa-playwright-capture.sh http://localhost:8000 public/qa-screenshots\n\n# 2. Run automated accessibility checks\nnpx axe-core http://localhost:8000 --save public/qa-screenshots/a11y-report.json\n\n# 3. Verify markup and structural elements\nls -la resources/views/ || ls -la *.html\n```\n\n**Specification Quote**: *"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: evidence-collector v1\n\nTasks scored: 4. Mean fitness: 0.5463.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_required_content` x1\n- `missing_required_artifacts` x1\n- `missing_feature_status_labels` x1\n- `missing_check_script` x1\n\n## Worst tasks\n### 20261103-080434-propose-three-zero-budget #2 (fitness 0.2)\n- Task: Verify EXPERIMENTS.md against task 1 acceptance criteria\n- Acceptance: Per-criterion PASS/FAIL table per experiment with quoted line evidence; Independently recomputes each sample-size/MDE claim and records the calculation\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `missing_required_content`\n- Critique: The submission contains unrelated code files and no evidence addressing the acceptance criteria.\n- Unmet criteria:\n  - Per-criterion PASS/FAIL table per experiment with quoted line evidence: The file EXPERIMENTS.md was not provided in the output files, only python library source files are listed.\n  - Independently recomputes each sample-size/MDE claim and records the calculation: No calculations or EXPERIMENTS.md deliverable are present in the provided output.\n- QA feedback on failed attempts: Fix E2 sizing (pooled, 61/arm) and single decision test; fix E3 Fisher threshold 19/150 & MDE ~+10pp (or switch to pooled z); make Z consistent (=MDE) across hypotheses; add run order + per-experiment hash salt + exclusions; define E3 day 0 per batch; optional CAN-SPAM address, E1 exact binomtest >=78.\n- Output excerpt:\n```\n--- typing_extensions.cpython-313.pyc (binary, 165809 bytes) ---\n--- __init__.py ---\nimport sys\n\ntry:\n    from ._version import version as __version__\nexcept ImportError:\n    __version__ = 'unknown'\n\n__all__ = [\"easter\", \"parser\", \"relativedelta\", \"rrule\", \"tz\", \"utils\"]\n\n\ndef __getattr__(name):\n    import importlib\n\n    if name in __all__ or name == \"zoneinfo\":\n        return importlib.import_module(\".\" + name, __name__)\n    raise AttributeError(\n        \"module {!r} has no attribute {!r}\".format(__name__, name)\n    )\n\n\ndef __dir__():\n    # __dir__ should include all the lazy-importable modules as well.\n    return (\n        [x for x in globals() if x not in sys.modules] + __all__ + [\"zoneinfo\"]\n    )\n\n--- __init__.cpython-313.pyc (binary, 1248 bytes) ---\n--- _common.cpython-313.pyc (binary, 1906 bytes) ---\n--- _tzdata_impl.cpython-313.pyc (binary, 4025 bytes) ---\n--- _version.cpython-313.pyc (binary, 696 bytes) ---\n--- easter.cpython-313.pyc (binary, 2770 bytes) ---\n--- relativedelta.cpython-313.pyc (binary, 28700 bytes) ---\n--- rrule.cpython-313.pyc (binary, 70822 bytes) ---\n--- tzwin.cpython-313.pyc (binary, 267 bytes) ---\n--- utils.cpython-313.pyc (binary, 2449 bytes) ---\n--- _common.py ---\n\"\"\"\nCommon code used in multiple modules.\n\"\"\"\n\n\nclass weekday:\n    __slots__ = [\"weekday\", \"n\"]\n\n    def __init__(self, weekday, n=None):\n        self.weekday = weekday\n        self.n = n\n\n    def __call__(self, n):\n        if n == self.n:\n            return self\n        else:\n        \n```\n\n### 20261103-075105-write-a-github-actions #2 (fitness 0.28)\n- Task: Independently verify the workflow is valid YAML and meets task 1 criteria\n- Acceptance: Runs own YAML parse + schema/actionlint check and records raw output; Per-criterion PASS/FAIL table with evidence and overall verdict\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_artifacts`\n- Critique: The submission lacks the required YAML workflow, parse output, and the PASS/FAIL table, providing only unverifiable claims.\n- Unmet criteria:\n  - Runs own YAML parse + schema/actionlint check and records raw output: The agent provided an evidence statement and output files, but did not include the actual raw output of the YAML parse/actionlint check in the final response.\n  - Per-criterion PASS/FAIL table with evidence and overall verdict: No explicit per-criterion PASS/FAIL table was provided in the output.\n- Output excerpt:\n```\n--- __editable__.samplepkg-0.1.0.pth (binary, 113 bytes) ---\n--- py.cpython-313.pyc (binary, 553 bytes) ---\n--- __init__.py ---\nfrom __future__ import annotations\n\n\n__all__ = [\"__version__\", \"version_tuple\"]\n\ntry:\n    from ._version import version as __version__\n    from ._version import version_tuple\nexcept ImportError:  # pragma: no cover\n    # broken installation, we don't even try\n    # unknown only works because we do poor mans version compare\n    __version__ = \"unknown\"\n    version_tuple = (0, 0, \"unknown\")\n\n--- __init__.cpython-313.pyc (binary, 543 bytes) ---\n--- _argcomplete.cpython-313.pyc (binary, 4996 bytes) ---\n--- _version.cpython-313.pyc (binary, 696 bytes) ---\n--- approx.cpython-313.pyc (binary, 47489 bytes) ---\n--- cacheprovider.cpython-313.pyc (binary, 33842 bytes) ---\n--- capture.cpython-313.pyc (binary, 57271 bytes) ---\n--- compat.cpython-313.pyc (binary, 13828 bytes) ---\n--- debugging.cpython-313.pyc (binary, 18558 bytes) ---\n--- deprecated.cpython-313.pyc (binary, 6119 bytes) ---\n--- doctest.cpython-313.pyc (binary, 33601 bytes) ---\n--- faulthandler.cpython-313.pyc (binary, 5184 bytes) ---\n--- fixtures.cpython-313.pyc (binary, 106345 bytes) ---\n--- freeze_support.cpython-313.pyc (binary, 1873 bytes) ---\n--- helpconfig.cpython-313.pyc (binary, 13255 bytes) ---\n--- hookspec.cpython-313.pyc (binary, 42449 bytes) ---\n--- junitxml.cpython-313.pyc (binary, 35781 bytes) ---\n--- legacypath.cpython-313.pyc (binary, 24204 bytes) ---\n```\n\n### 20261102-130146-write-a-one-paragraph #2 (fitness 0.77)\n- Task: Verify description.md against the content task's acceptance criteria\n- Acceptance: Reports measured paragraph count and word count with the command used; Lists each feature found and states PASS or NEEDS_WORK\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_feature_status_labels`\n- Critique: Missing PASS/NEEDS_WORK labels for each listed feature\n- Unmet criteria:\n  - Lists each feature found and states PASS or NEEDS_WORK: Listed the features found but failed to explicitly state 'PASS' or 'NEEDS_WORK' next to each individual feature.\n- Output excerpt:\n```\n--- qa-report.md ---\n# QA Report: description.md (Inkwell)\n\nTarget: C:\\Users\\Training1\\.evolvra\\missions\\20261102-130146-write-a-one-paragraph\\01-content-creator\\description.md (not modified)\n\n## Measurements (Git Bash, F = path above)\n| Check | Command | Result |\n|---|---|---|\n| Total lines | `wc -l < \"$F\"` | 1 |\n| Blank lines | `grep -c '^[[:space:]]*$' \"$F\"` | 0 |\n| Headings | `grep -cE '^\\s*#' \"$F\"` | 0 |\n| Bullet/numbered list lines | `grep -cE '^\\s*([-*+]\\|[0-9]+\\.)\\s' \"$F\"` | 0 |\n| Paragraphs | `awk 'BEGIN{RS=\"\"} END{print NR}' \"$F\"` | 1 |\n| Paragraphs (cross-check) | Python `re.split(r'\\n\\s*\\n', t)` non-empty | 1 |\n| Words | `wc -w < \"$F\"` | 112 |\n| Words (cross-check) | Python `re.findall(r\"[A-Za-z0-9'-]+\", t)` | 112 |\n\nCreator claim of 112 words: confirmed by two independent methods.\n\n## Features found (9)\n1. Quick notes (\"Capture ideas instantly with quick notes\")\n2. Voice memos with automatic transcription\n3. One-click web clipper for articles\n4. Real-time sync across phone, tablet and laptop\n5. Offline mode (\"works offline when you lose signal\")\n6. Smart tags\n7. Full-text search, including text inside photos and PDFs\n8. Bidirectional links between notes\n9. End-to-end encryption\n\n## User be\n...[truncated]\n```\n"
  }
 ]
