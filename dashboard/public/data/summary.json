@@ -1,22 +1,22 @@
 {
- "generated_at": "2026-11-03T19:24:01Z",
+ "generated_at": "2026-11-04T01:25:55Z",
  "evolvra_version": "0.1.0",
  "agents": 10,
  "versions": 11,
  "missions": 11,
  "tasks": 22,
- "evolutions": 5,
+ "evolutions": 6,
  "promotions": 1,
  "providers": [
   {
    "provider": "gemini",
-   "requests": 221,
-   "tokens": 603655
+   "requests": 233,
+   "tokens": 641490
   },
   {
    "provider": "groq",
-   "requests": 257,
-   "tokens": 580241
+   "requests": 276,
+   "tokens": 622302
   }
  ]
 }
