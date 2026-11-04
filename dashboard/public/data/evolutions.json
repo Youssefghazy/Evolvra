@@ -909,5 +909,199 @@
    }
   ],
   "diagnosis": "# Diagnosis: ux-researcher v1\n\nTasks scored: 1. Mean fitness: 0.605.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_required_content` x1\n\n## Worst tasks\n### 20261103-104658-write-a-user-interview #1 (fitness 0.605)\n- Task: Write INTERVIEW-GUIDE.md: a 45-minute interview guide with recruiting screener on why students abandon study-planner apps\n- Acceptance: Exactly 5 main interview questions, all open-ended (none can be answered yes/no; none starts with Do, Does, Did, Is, Are, Was, Were, Would, Will, Can, Could, Have or Has), each with 1-2 follow-up probes; Recruiting screener with at least one measurable inclusion criterion (e.g. a count of uses and a time window), at least 2 exclusion criteria, and a target sample size with a one-line justification; Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_content`\n- Critique: Key deliverables (the five open‑ended questions, their probes, the timed plan, and the non‑leading table) are missing or not visible, preventing verification of the acceptance criteria.\n- Unmet criteria:\n  - Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading: The file output was truncated by the system, making it impossible to fully verify the session plan sum and the non-leading table.\n  - Exactly 5 main interview questions, all open-ended, each with 1-2 follow-up probes: The provided excerpt does not show the list of main questions, so we cannot verify that there are exactly five, that they are open‑ended, or that each has the required probes.\n- Output excerpt:\n```\n--- INTERVIEW-GUIDE.md (14768 chars) ---\n# Interview Guide: Why University Students Abandon Study-Planner Apps\n\n**Status:** Research plan only. No interviews have been run and no participant data exists yet. This document contains no findings, quotes or statistics about students.\n**Session length:** 45 minutes (42 minutes scheduled, 3 minutes of slack)\n**Format:** One-to-one, semi-structured, remote video call or in person, audio-recorded with consent\n**Prepared:** 2026-11-03\n\n---\n\n## 1. Research objectives\n\n**Primary research question:** What happens in the first two weeks of using a study-planner app that leads university students to stop using it?\n\n**Supporting questions**\n\n- What need or trigger made the student start using the app, and what did they expect from it?\n- What did their actual day-to-day use look like in the first days?\n- What events, frictions or changes in context came just before use dropped off?\n- What, if anything, replaced the app afterwards?\n- What has made any other planning m\n\n[... 13268 characters omitted from the middle of this file ...]\n\n\n## 7. Analysis plan (for after fieldwork)\n\n- Transcribe and pseudonymise all sessions.\n- Code transcripts inductively (thematic analysis); two researchers code the first 3 transcripts independently and agree a shared codebook before coding the rest.\n- Build a timeline per participant (trigger, first days, drop-off moment, replacement) to locate where in the two weeks drop-off happens.\n- Report themes with the num\n```\n"
+ },
+ {
+  "id": 7,
+  "agent": "ux-researcher",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.01,
+  "created_at": "2026-11-04T19:20:11.278Z",
+  "parent_fitness": 0.9033,
+  "bank": [
+   {
+    "task": "Draft a 5-question interview guide for recent abandoners",
+    "source": "seed",
+    "parent_fitness": 0.91,
+    "parent_failure": "evidence_fabrication",
+    "parent_critique": "The agent fabricates verification evidence rather than stating it cannot be verified.",
+    "parent_output_excerpt": "# User Interview Guide: Checkout Abandonment Research\n\n## Recruiting Criteria\nTo ensure high-fidelity insights from recent abandoners without relying on biased assumptions, participants must meet the following screening criteria:\n* **Behavioral Trigger**: Added items to a shopping cart and initiated the checkout flow (reached at least the shipping or payment information step) within the last **48 hours**, but did not complete the transaction.\n* **Transaction Status**: Verified non-purchaser (order status: abandoned/incomplete in analytics).\n* **Demographics**: A healthy mix of first-time visitors and returning customers.\n* **Exclusion**: Employees of the company or immediate family members.\n"
+   },
+   {
+    "task": "Design a 20-minute unmoderated usability test for onboarding",
+    "source": "seed",
+    "parent_fitness": 0.89,
+    "parent_failure": "none",
+    "parent_critique": "The deliverable is a well-structured plan that meets all acceptance criteria; the only minor gap is the lack of specific instructions for capturing qualitative feedback (e.g., post-task questions) which is standard for unmoderated tests to explain the quantitative metrics.",
+    "parent_output_excerpt": "# Unmoderated Usability Test Plan: Onboarding Flow Evaluation\n\n## Research Objectives\n**Primary Question**: Is the current product onboarding flow confusing to new users, leading to friction, drop-off, or misunderstandings of core value?\n**Business Impact**: Resolve team disagreement regarding onboarding UX by gathering empirical task-performance data from target users.\n**Methodology**: Unmoderated remote usability testing (via platforms like UserTesting, Lookback, or Maze) constrained to a 20-minute session limit.\n\n---\n\n## 👥 Sample Size Justification\nTo uncover critical usability issues efficiently in an unmoderated setting, we apply the Nielsen Norman Group guideline of **5 users per disti"
+   },
+   {
+    "task": "Propose a method to synthesize the tickets into themes",
+    "source": "seed",
+    "parent_fitness": 0.91,
+    "parent_failure": "none",
+    "parent_critique": "The deliverable is solid but lacks concrete examples or validation steps to demonstrate the method in practice.",
+    "parent_output_excerpt": "# Support Ticket Synthesis Protocol: Search Feedback\n\n## 1. Coding Approach: Inductive Thematic Analysis\nTo synthesize 40 support tickets regarding search without introducing premature assumptions, we will use an inductive (bottom-up) qualitative coding approach. \n\n### Step-by-Step Process:\n1. **Data Preparation & Familiarization**: \n   - Export all 40 text-based support tickets (including subject lines, user messages, and agent notes) into a neutral spreadsheet.\n   - Read through a random subset of 10 tickets to build baseline familiarity with user language and phrasing without applying labels yet.\n2. **Open Coding**:\n   - Go through each of the 40 tickets line-by-line. \n   - Apply descript"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "missing_required_content",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261104-191801-ux-researcher\\candidate-1-missing-required-content.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "4cbfe1d780527e1ec98e414372a0aee72dfcaa2b7c8337a18911b65e594c62a3",
+    "fitness": 0.8967,
+    "paired_delta": -0.0067,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.89,
+      "failure": "fabricated_evidence",
+      "critique": "The evidence section claims verification (e.g., a Non-Leading Question Analysis Table) that cannot be substantiated from the shown work.",
+      "scores": {
+       "correctness": 0.825,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Checkout Abandonment User Interview Guide\n\n## Recruiting Screener\n\n*   **Target Sample Size**: 12 participants to achieve thematic saturation based on prior checkout studies.\n*   **Measurable Inclusion Criterion**: Attempted an online purchase, added items to a digital shopping cart, and abandoned the checkout process without completing payment within the past 7 days.\n*   **Exclusion Criterion 1**: Currently employed in user experience research, UX design, product management, or e-commerce development.\n*   **Exclusion Criterion 2**: Participated in a usability study or user interview regarding online shopping or checkouts in the past 6 months.\n\n---\n\n## Timed Session Plan (Total: 40 Minutes"
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.89,
+      "failure": "none",
+      "critique": "The deliverable is a well-structured test plan that meets all acceptance criteria without fabricating data, though the 20-minute time constraint is not explicitly mapped to the task durations in the protocol.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.9,
+       "quality": 0.85,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Unmoderated Usability Testing Plan: Onboarding Flow Evaluation\n\n## 🎯 Research Overview\n* **Objective**: Resolve internal team disagreement regarding onboarding confusion by capturing objective behavioral data from target users.\n* **Format**: 20-minute unmoderated remote usability test (via platforms like Maze, UserTesting, or Lookback).\n* **Target Audience**: New users matching our core persona demographic who have never seen the current onboarding flow.\n\n---\n\n## 👥 Sample Size & Justification\n* **Target Sample Size**: **15 participants** per key user segment (Total: 15–30 participants).\n* **Justification**: Based on standard usability engineering principles (Nielsen Norman Group), testing "
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.91,
+      "failure": "none",
+      "critique": "No actual evidence of running the method is provided, but the description meets the criteria.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Support Ticket Synthesis Plan: Search Feedback\n\n## 1. Qualitative Coding Approach\n\nTo synthesize 40 support tickets related to search without relying on assumptions, we will employ a hybrid inductive-deductive thematic analysis framework (Braun & Clarke). Because the dataset size (40 tickets) is small enough for manual deep reading yet large enough to obscure patterns without structure, we will use the following step-by-step coding procedure:\n\n1. **Data Preparation & Sanitization:** Export the 40 tickets into a standardized spreadsheet. Remove personally identifiable information (PII) while preserving user terminology, error messages, and timestamps.\n2. **First-Cycle Coding (Open Coding):*"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "weak_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261104-191801-ux-researcher\\candidate-2-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "13cef41d01adc377bb9ee26c9eb60f6f3a32e74142a7ce779038edca4bc3dbb3",
+    "fitness": 0.899,
+    "paired_delta": -0.0043,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.9,
+      "failure": "fabricated_evidence",
+      "critique": "The evidence section fabricates verification procedures that cannot be confirmed from the shown material.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# User Research Interview Guide: Checkout Abandonment\n\n## 🎯 Research Overview\n\n### Objectives\n**Primary Questions**: \n1. What expectations do users have entering our checkout flow that fail to align with reality?\n2. What specific friction points (UX, trust, cost, technical) trigger cart abandonment?\n3. What alternative solutions or competitors do users turn to when they abandon our checkout?\n\n**Methodology**: Semi-structured remote user interviews (30 minutes each via video call with screen sharing capability, if participants are willing to show their recent experience).\n\n---\n\n## 📋 Recruiting Criteria\n\nTo ensure we speak with genuine recent abandoners without relying on assumptions, screenin"
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.896,
+      "failure": "none",
+      "critique": "The deliverable meets all criteria but could include more detail on participant recruitment filters.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.9,
+       "quality": 0.88,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Unmoderated Usability Testing Protocol: Onboarding Flow\n\n## 🎯 Research Overview\n\n### Objectives\n**Primary Research Question**: Is the current onboarding flow causing user confusion, drop-offs, or misunderstandings of core product value?\n**Methodology**: Unmoderated remote usability testing via a testing platform (e.g., UserTesting, Lookback, or Useberry) allowing participants to complete tasks independently on their own devices.\n**Duration**: 20 minutes per session.\n\n---\n\n## 👥 Sample Size Justification\n\n**Target Sample Size**: $N = 15$ participants per core user segment (Total: 30 participants if analyzing two distinct user personas).\n\n**Methodological Justification**:\n- While qualitative "
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.901,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.925,
+       "quality": 0.88,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Support Ticket Synthesis Method: Search Feedback\n\n## 1. Coding Approach (Thematic Analysis)\n\nTo synthesize the 40 support tickets regarding search without introducing subjective bias, we will employ a structured inductive/deductive qualitative coding approach:\n\n### Phase 1: Data Preparation & Familiarization\n*   **Export & Redaction:** Export all 40 tickets into a secure spreadsheet, removing Personally Identifiable Information (PII).\n*   **Active Reading:** Read through a random sample of 10 tickets to build initial familiarity with user phrasing, emotional tone, and contextual clues.\n\n### Phase 2: Open Coding (Line-by-Line)\n*   Review every ticket independently and assign descriptive cod"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "missing_acceptance_criteria_check",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261104-191801-ux-researcher\\candidate-3-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "45fe0c606af5ef3ab120250cdc3dbee91c6d793e0da2e3f5eb9fd87c3121f196",
+    "fitness": 0.9133,
+    "paired_delta": 0.01,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.93,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.925,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Interview Guide: Checkout Abandonment Investigation\n\n## 1. Recruiting Screener\n* **Inclusion Criterion (measurable):** Has added at least one item to a digital shopping cart and abandoned the checkout process (closed browser/tab or navigated away prior to payment confirmation) within the past 7 days.\n* **Additional Inclusion(s):** Completed the session on a desktop or mobile web browser.\n* **Exclusion Criteria ($\\ge 2$):** \n  1. Professional UX researcher, designer, or direct competitor employee.\n  2. Ultimately completed the purchase within 24 hours of abandonment.\n* **Target Sample Size:** 8 participants — justification: standard threshold for achieving thematic saturation in qualitative"
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.9,
+      "failure": "none",
+      "critique": "The plan is methodologically sound and meets all criteria, though it relies on placeholder text for specific product actions which is acceptable for a template.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.95,
+       "quality": 0.85,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Unmoderated Usability Test Plan: Onboarding Flow Evaluation\n\n## 1. Research Overview & Objective\n**Objective**: Resolve team disagreement regarding whether the current onboarding flow is confusing by capturing quantitative behavioral metrics and qualitative friction points from real users in an unmoderated remote setting.\n**Duration**: 20 minutes per participant.\n**Platform**: Remote unmoderated testing tool (e.g., UserTesting, Lookback, or Maze).\n\n## 2. Sample Size Justification\n**Target Sample Size**: $N = 20$ participants per critical user segment (Total $N = 40$ if testing two distinct personas, or $N = 20$ for a single core segment).\n**Justification**: Following Nielsen Norman Group g"
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.91,
+      "failure": "none",
+      "critique": "The deliverable is solid but relies on imagined verification (Cohen’s Kappa) without actual data, lowering evidence strength.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Support Ticket Synthesis Method: Search Feature\n\n## 1. Coding Approach\nTo synthesize 40 support tickets regarding search without relying on assumptions or fabricated data, we will employ a hybrid qualitative coding methodology (combining inductive open coding with deductive categorization based on standard search heuristics: relevance, speed, UI/UX, and zero-result states).\n\n*   **Step 1: Data Preparation & Anonymization**\n    *   Export the 40 tickets into a secure, shared spreadsheet. Remove PII (Personally Identifiable Information).\n*   **Step 2: Open Coding (Inductive)**\n    *   Two researchers independently review a subset of 10 tickets to generate initial descriptive codes (e.g., `fi"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: ux-researcher v1\n\nTasks scored: 1. Mean fitness: 0.605.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_required_content` x1\n\n## Worst tasks\n### 20261103-104658-write-a-user-interview #1 (fitness 0.605)\n- Task: Write INTERVIEW-GUIDE.md: a 45-minute interview guide with recruiting screener on why students abandon study-planner apps\n- Acceptance: Exactly 5 main interview questions, all open-ended (none can be answered yes/no; none starts with Do, Does, Did, Is, Are, Was, Were, Would, Will, Can, Could, Have or Has), each with 1-2 follow-up probes; Recruiting screener with at least one measurable inclusion criterion (e.g. a count of uses and a time window), at least 2 exclusion criteria, and a target sample size with a one-line justification; Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_content`\n- Critique: Key deliverables (the five open‑ended questions, their probes, the timed plan, and the non‑leading table) are missing or not visible, preventing verification of the acceptance criteria.\n- Unmet criteria:\n  - Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading: The file output was truncated by the system, making it impossible to fully verify the session plan sum and the non-leading table.\n  - Exactly 5 main interview questions, all open-ended, each with 1-2 follow-up probes: The provided excerpt does not show the list of main questions, so we cannot verify that there are exactly five, that they are open‑ended, or that each has the required probes.\n- Output excerpt:\n```\n--- INTERVIEW-GUIDE.md (14768 chars) ---\n# Interview Guide: Why University Students Abandon Study-Planner Apps\n\n**Status:** Research plan only. No interviews have been run and no participant data exists yet. This document contains no findings, quotes or statistics about students.\n**Session length:** 45 minutes (42 minutes scheduled, 3 minutes of slack)\n**Format:** One-to-one, semi-structured, remote video call or in person, audio-recorded with consent\n**Prepared:** 2026-11-03\n\n---\n\n## 1. Research objectives\n\n**Primary research question:** What happens in the first two weeks of using a study-planner app that leads university students to stop using it?\n\n**Supporting questions**\n\n- What need or trigger made the student start using the app, and what did they expect from it?\n- What did their actual day-to-day use look like in the first days?\n- What events, frictions or changes in context came just before use dropped off?\n- What, if anything, replaced the app afterwards?\n- What has made any other planning m\n\n[... 13268 characters omitted from the middle of this file ...]\n\n\n## 7. Analysis plan (for after fieldwork)\n\n- Transcribe and pseudonymise all sessions.\n- Code transcripts inductively (thematic analysis); two researchers code the first 3 transcripts independently and agree a shared codebook before coding the rest.\n- Build a timeline per participant (trigger, first days, drop-off moment, replacement) to locate where in the two weeks drop-off happens.\n- Report themes with the num\n```\n"
  }
 ]
