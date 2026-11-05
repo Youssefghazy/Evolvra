@@ -1,155 +1,108 @@
 # Operator status (written by the local Claude Code session at the end of every working session)
 
-## Session 2026-11-03 evening (15:13–16:30 AST, local operator, Opus 5.5, zero spend)
+## Session 2026-11-05 (10:20–11:25 AST, local operator, Opus 5.5, zero spend)
 
-### REVIEW.md items (round 3, 12:45Z version)
+### REVIEW.md items (round 5, "finish line")
 | # | item | state |
 |---|---|---|
-| 1 | pull, `score --rescore`, fitness before/after | **partial.** 7 of 16 tasks re-scored before Groq TPD 429s. I stopped, as instructed. Only 4 tasks have a full 3-judge result. Details below |
-| 2 | three missions with `evidence-collector` QA | **done.** content-creator, backend-architect, devops-automator: all PASS first attempt, QA by **v2**. v2 fitness is provisional (1 judge) |
-| 3 | judge reliability, candidate pings | **done.** Qwen 31% raw (71% without quota errors). After `910be39` every Qwen failure was a quota 429. Both candidates answered **HTTP 503** twice |
-| 4 | UX Researcher discrepancy | **done.** QA was right about the builder. The judges were wrong (truncation). Paragraph below |
-| 5 | 16:17 run fired? | **fired** 16:17:48, `LastTaskResult=0`, UTF-8 lines in cycle.log. Lock state not provable, see below |
-| 6 | let the scheduler pick the target | respected. No manual `-Evolve`. The 16:17 run picked ux-researcher itself |
-| 7 | no weight/judge/margin/actor changes | respected. One router fix (`bc47cd9`), test-first, reason below |
+| 1 | pull, plugin check, tests | **done.** `68d90cc`. Plugin unchanged (0.3.1, no `plugin/` diff), so no refresh. **60 passed**, ruff clean |
+| 2 | fix the stale UX score | **done.** ux-researcher **0.605 → 0.922** (2 → 3 judges, 0 errors). Tables below |
+| 3 | OpenRouter third judge | **done (report only).** Key present. Two non-OpenAI free models answer `pong`: NVIDIA Nemotron-3-ultra and Cohere north-mini-code. Both Gemma models gave upstream 429. Judge set unchanged |
+| 4 | real QA-failure retry | **both item-4 missions passed first time** (not forced). **The retry came in item 5** (growth-hacker): `"reopened": [1]`, builder attempt 1 `FAIL` + `reopened_by_qa: true`, QA attempt 2 `PASS` + `caused_by_builder: true` |
+| 5 | growth-hacker + sprint-prioritizer missions | **done.** growth-hacker PASS after 1 QA-driven retry; sprint-prioritizer PASS first attempt |
+| 6 | `cycle.ps1 -Evolve` once | **done.** Manual run: evolve **skipped** (last generation 0.9 h before). The scheduled 10:21 run did evolve: ux-researcher, 3 candidates, no promotion. Details below |
+| 7 | STATUS + still broken / unproven | this file; one-line answer at the end |
 
 ### Ran (in order)
-- `git pull --rebase` → `910be39`. `uv run pytest -q` **57 passed**, `ruff check .` clean.
-- `evolvra fitness` (the "before" table below); `evolvra providers`; `evolvra ping groq` and `--model qwen/qwen3.8-27b` (both `pong`).
-- `evolvra score --rescore` 15:15 → stopped 15:40 (TPD 429s, see item 1).
-- Missions via `/evolvra:mission` (plugin 0.3.1, cache files `cmp`-identical to the repo):
-  `20261103-121621-write-a-launch-blog`, `20261103-122155-build-a-stdlib-only`, `20261103-122908-write-a-backup-rotation`.
-- Router fix, tests **58 passed**, ruff clean, pushed `bc47cd9`.
-- Waited for the scheduled `cycle.ps1 -Evolve` (16:17:48 → 16:19:27, pushed `498ba33`).
-- `evolvra ping gemini --model gemini-3.6-flash` / `gemini-3.7-flash`, twice each (15:58 and 16:22).
+- `git pull --rebase` → `68d90cc`. `uv run pytest -q` **60 passed**, `uv run ruff check .` clean. `evolvra providers`, `evolvra fitness` (the "before" table).
+- The **scheduled 10:17 `cycle.ps1 -Evolve` was already running** when I started. It held the DB lock, so my first `ping groq` failed with `database is locked`. Its own `git pull` raced mine (`cannot lock ref 'refs/remotes/origin/main'`), which was harmless: the tree was already at `68d90cc`. It finished at 10:25, ran a ux-researcher generation (no promotion) and pushed `742d240`. I waited for it before touching the DB.
+- `evolvra ping groq` → `pong`. `evolvra score --mission 20261103-104658-write-a-user-interview --rescore` (8 s), then `evolvra fitness`.
+- `evolvra models openrouter`, then pings with `--model` (item 3).
+- Four missions via `/evolvra:mission` (plugin 0.3.1): `20261105-072406-write-a-product-announcement`, `20261105-073059-build-a-single-file`, `20261105-074515-design-a-referral-loop`, `20261105-080841-rank-10-bugs-of`.
+- `.\scripts\cycle.ps1 -Evolve` 11:12:10 → 11:16:45, pushed `de2364a`.
 
-### Item 1: re-score with whole-deliverable judge input
-The re-score did tasks 1–7 in order, then Groq refused with **TPD 429** on both models:
-- gpt-oss: "Used 199054 of 200000 … try again in 30m43s"
-- qwen: "Used 198036 … 26m48s"
-
-Groq's TPD is a **rolling** window, not a midnight reset: the wait shrinks as old usage ages out. So "finish tomorrow" really means "after ~10:30 AST tomorrow", when this morning's heavy use leaves the window. Run it then.
-
-**Tasks with a full 3-judge result before and after** (these are the real evidence for the truncation fix):
-
-| task | agent | correctness before → after | failure class after |
-|---|---|---|---|
-| 1 one-paragraph | content-creator | 0.975 → 1.00 | none |
-| 2 its QA | evidence-collector v1 | 0.475 → **0.675** (2 → 3 judges) | missing_acceptance_detail |
-| 3 REST API | backend-architect | 0.815 → 0.84 | (scored again by the 16:17 cycle) |
-| 5 GitHub Actions | devops-automator | 0.815 → **0.59** | `invalid_yaml_syntax`, **which is false**, see below |
-
-**Fitness per agent.** Before = the table at the start of this session (the "after" column of the pm STATUS). Now = after the partial re-score, the 16:17 cycle and the 3 new missions.
-
-| agent | before | now | why it moved |
-|---|---|---|---|
-| ux-researcher | 0.605 | 0.605 | not re-scored yet; still the truncated 2-judge verdict |
-| devops-automator | 0.830 | 0.832 | GH task fell to 0.663 (Qwen error); new rotation task 1.00 (1 judge) |
-| rapid-prototyper | 0.881 | 0.881 | not re-scored |
-| evidence-collector v1 | 0.860 | 0.910 | 5 of its 8 tasks are now **1-judge** (Flash-Lite) |
-| backend-architect | 0.848 | 0.943 | REST task 3 judges; new limiter task 1 judge |
-| growth-hacker | 0.882 | 0.988 | **1 judge only**, provisional |
-| content-creator | 0.968 | 0.978 | |
-| sprint-prioritizer | 0.970 | 0.970 | not re-scored |
-| frontend-developer | 0.975 | 0.975 | not re-scored |
-| **evidence-collector v2** | — | **0.988** (3 tasks) | all 3 tasks 1-judge, provisional |
-
-**Important:**
-- **A 1-judge ensemble counts fully in `fitness`.** `910be39` only makes such tasks pending again; `fitness` and evolution still use them now.
-- **My re-score made 4 tasks *worse* as data.** Tasks 3, 4, 6 and 7 had 3-judge ensembles before. When the Groq judges failed, the re-score replaced them with 1-judge Flash-Lite ensembles. Task 3 is back to 3 judges; tasks 4, 6 and 7 are still 1-judge.
-- **These scores are provisional.** All 1-judge tasks are pending and will be re-scored when Groq has room (the 22:17 run will try).
-- Flash-Lite alone gives 1.0 to almost everything, which is why growth-hacker, evidence-collector and v2 look so high. **Don't read the "now" column as a result yet.**
-- Suggestion (your call): `fitness` should ignore or down-weight ensembles with fewer than `MIN_JUDGES` judges, or `--rescore` should keep the old row when fewer judges answer than before.
-
-**Task 5 audit: Qwen made a factual error, and the trimmed-low mean amplified it.**
-- Qwen said `"on": push` is invalid YAML. It is valid: quoting `on` is the usual guard against YAML 1.1 reading it as a boolean.
-- QA saved `raw-actionlint.txt`: actionlint 1.7.7 "Found total 0 errors", exit 0. A negative control fails as expected.
-- The three verdicts were Flash-Lite 1.0, gpt-oss 0.68, Qwen 0.5. The trimmed-low mean drops the top judge and averages (0.68 + 0.5) / 2 = **0.59**. It also takes Qwen's failure class.
-- So with whole files visible, one wrong low judge now drives the score. That is the mirror image of the old "two lenient judges" problem. Data for your judge decision.
-
-### Item 2: Evidence Collector v2 on real missions
-| mission | builder (attempts, minutes) | QA v2 (attempts, minutes, tool events) | QA's own checks | raw files under `evidence/` |
-|---|---|---|---|---|
-| launch blog post (no-shell builder) | content-creator 1, 2.5 | 1, 2.4, 10 | own `verify_post.py`: 5 word-count methods 769–865, 4 closed code blocks, 0 quote marks, 1 CTA; tested itself on planted fake social proof | 2 |
-| stdlib token-bucket limiter | backend-architect 1, 2.1 | 1, 4.8, 18 | 11 builder tests ×20 runs; **23 own adversarial checks**; mutation test 5/7 killed; found 3 low test-quality gaps | 12 |
-| PowerShell backup rotation | devops-automator 1, 3.1 | 1, 6.5, 26 | self-test re-run on 5.1; **38 own edge checks** (ISO week 53, gaps, read-only/locked files); ISO-week function vs reference for 14,976 days, 0 mismatches; 3 mutants all caught | 9 |
-
-- **Fitness:** v2 **0.988** on 3 QA tasks vs v1's 0.86. **Not a valid comparison yet**: all three v2 tasks were judged by Flash-Lite alone, because Groq was at its cap. Decide after these 3 tasks have ≥2 judges (pending, re-scored automatically).
-- **"Raw Evidence Files" section:** **0 of 3** reports have a section with that exact title. **3 of 3** saved real raw output under `evidence/` and cite those files in every table row (VERIFICATION.md line 6; a "Raw evidence file(s)" column in criteria_table.md; inline `evidence/0N` refs in verification-table.md). The substance is there; the heading the persona asks for is not.
-- **Slower?** Somewhat. v2 QA took 2.4 / 4.8 / 6.5 min (mean 4.6). v1 first attempts took 0.8–8.7 min (mean 3.8, median 3.4, n=8). v2 also uses more tool events: median 18 vs v1's median 8. Most of the extra time is real extra checking (adversarial tests, mutants), not waste. n=3, so treat this as a hint.
-- **Off-record work:** **0**. All 89 trace events of the 3 missions carry `off_record: false`. 6 SubagentStop events, all inside `task start`. This is the first run with the 0.3.1 hook live.
-- v2 also reported its own mistakes honestly: a superseded mutation run, two harness-bug runs, all kept as raw files. It also corrected a builder's claim ("19 checks"; the self-test prints 16 PASS lines).
-- Builder-side notes from QA (not defects against the criteria):
-  - limiter: `retry_after` under-reports after an injected clock jumps backwards
-  - rotation: read-only backups are deleted via `-Force`, which the README doesn't mention
-
-### Item 3: judge reliability (current score rows created today)
-| judge | verdicts | errors | quota 429 | other | raw | without quota |
+### Item 2: UX builder re-score
+| | judges | correctness | completeness | evidence | quality | fitness |
 |---|---|---|---|---|---|---|
-| gpt-oss-120b (Groq) | 14 | 12 | 12 | 0 | 54% | 100% |
-| qwen3.8-27b (Groq) | 10 | 22 | 18 | 4 | **31%** | 71% |
-| flash-lite (Gemini) | 22 | 0 | 0 | 0 | 100% | 100% |
+| before (3 Nov 11:57, truncated input) | gpt-oss + Gemini (Qwen errored) | 0.45 | 0.50 | 0.25 | 0.65 | **0.605** |
+| after (5 Nov, whole file) | gpt-oss + Qwen + Gemini | 0.90 | 0.90 | 0.90 | 0.88 | **0.922** |
 
-- **Qwen's 4 "other" errors are all unparseable replies from 09:59–10:39Z, before `910be39`.** Since then, every Qwen failure is a quota 429 (14 TPD, 4 OTPM).
-- **`reasoning_effort: "none"` works.** Groq accepted it. Qwen's completion tokens dropped from 1,227–2,200 (pm) to **239–620** per verdict (llm_cache, 12:15–12:27Z).
-- **So Qwen's remaining problem is not reliability but budget.** It shares Groq's 200k TPD per model, and judge prompts are now 5–8k tokens because files are no longer cut.
-- **Candidates:** `gemini-3.6-flash` and `gemini-3.7-flash` both returned **HTTP 503 "model is currently experiencing high demand"**, at 15:58 and 16:22 AST. Each `ping` already retries a 503 once. Wall time was 8–25 s to fail. No `pong`, so no latency figure. I changed nothing.
-- Data for your decision: a third judge on **Gemini** would spread load away from Groq's TPD. gemma-4-31b-it (old judge, Gemini) logged 4 verdicts / 9 errors today (6× HTTP 500/503, 3 unparseable), so it is not a good fallback either.
+Per judge after: gpt-oss 0.85/0.9/0.9/0.88, Qwen 0.9/0.9/0.8/0.85, Gemini 1.0/1.0/1.0/0.9. Six calls, 3 cached (the QA task kept its stronger ensemble at 0.71, as round 4 rule 2 requires), 0 errors.
 
-### Item 4: who was right about the UX interview guide?
-**QA was right about the builder; the judges were wrong, and only because of truncation.**
-- The guide (14,768 chars) meets all three criteria. I read it myself:
-  - exactly 5 main questions, opening with Walk / Tell / Think / How / Tell, 2 probes each
-  - inclusion I4 "at least 3 separate days within the first 7 days" (a count plus a time window), 5 exclusions, target 12 with a saturation justification
-  - 8 timed sections summing to 42 ≤ 45
-  - a 5-row "why it is not leading" table
-- QA's own `verify_guide.py` output confirms each of these with line numbers.
-- The judges' critiques show why they disagreed:
-  - gpt-oss: "the provided excerpt does not show the list of main questions"
-  - Flash-Lite: "the output file was truncated mid-text"
-  - Qwen: errored
-  - Both scored criteria they could not see as unmet. `910be39` fixes this.
-- **QA was not lenient on the builder, but it was incomplete on its own task.** Its criterion 1 asked for a per-criterion PASS/FAIL table with quoted lines. That table lives only in its chat reply (mission.json evidence); the files have the script and raw output but no table. The 16:17 cycle re-judged task 16 with whole files, and Flash-Lite flagged exactly that (0.5, `missing_required_element`).
-- That was v1. All three v2 reports saved a table file, so v2 already does this.
-- Builder task 15 still sits at **0.45 / fitness 0.605**: it had 2 judges, so `910be39` does not re-pick it. It needs an explicit `uv run evolvra score --mission 20261103-104658-write-a-user-interview --rescore` once Groq has room.
+**Fitness before → after this session** (the "after" column also includes the 4 new missions, scored by the 11:12 cycle; every row has ≥2 judges):
 
-### Item 5: the scheduled runs
-- **16:17 run fired:**
-  - Task Scheduler: `LastRunTime 16:17:45`, `LastTaskResult 0`, next run 22:17:44.
-  - cycle.log (UTF-8, readable): `16:17:48 cycle start (evolve=True)` … `ingest: missions added=3 updated=8 | traces added=163`, `score: tasks scored=12 | judge calls=36 cached=4 errors=22`, `evolve: no promotion: parent ux-researcher v1 fitness=0.9417; no candidate completed enough shared tasks`, `push: ok`, `16:19:27 cycle end`.
-- **Lock state:** I could not prove the laptop was locked. No lock/unlock events (4800/4801) were in the Security log for the last 2 h; lock auditing may simply be off. This session was active at the time. The task's LogonType is `Interactive`, so it runs while Youssef is signed in, locked or not.
-- **Evolution:** ux-researcher was picked as weakest because of the stale 0.605. The mutator is gpt-oss on Groq, which was at its cap, so the generation made no usable candidates. This is harmless, as you predicted for this case.
+| agent | ver | before (tasks) | after (tasks) |
+|---|---|---|---|
+| devops-automator | 1 | 0.805 (2) | 0.805 (2), **now the weakest** |
+| backend-architect | 1 | 0.863 (2) | 0.863 (2) |
+| evidence-collector | 1 | 0.880 (8) | 0.880 (8) |
+| rapid-prototyper | 1 | 0.881 (1) | 0.923 (2) |
+| evidence-collector | 2 | 0.886 (3) | **0.924 (7)** |
+| growth-hacker | 1 | 0.915 (1) | 0.903 (2) |
+| ux-researcher | 1 | **0.605 (1)** | **0.922 (1)** |
+| content-creator | 1 | 0.965 (2) | 0.915 (3), see "judge miscount" below |
+| sprint-prioritizer | 1 | 0.970 (1) | 0.956 (2) |
+| frontend-developer | 1 | 0.975 (1) | 0.975 (1) |
 
-### What broke, and what I changed
-1. **`bc47cd9` Router: a 429 that asks for more than 90 s fails fast; `26m48s` is parsed.**
-   - The problem:
-     - Groq's TPD 429 says "try again in 26m48.768s". The regex only knew `Ns` and `Nms`.
-     - `_send` slept the 90 s maximum twice per judge anyway.
-     - Re-score tasks 3, 4, 6 and 7 took **~6 min each** doing nothing useful: 12:21, 12:27, 12:33, 12:39Z.
-   - The fix:
-     - Waits in h/m/s/ms are parsed.
-     - A 429 asking for more than `MAX_429_WAIT_S` (90 s) raises immediately.
-     - Per-minute 429s still wait and retry as before.
-   - Test first: `test_429_with_a_long_wait_fails_fast` uses Groq's real message and failed with 3 attempts before the fix. Tests 57 → 58.
-   - Effect: the 16:17 cycle scored 12 tasks with 22 judge errors in **1 min 39 s**, not about an hour.
-   - Why this is not a judge or budget change: same judges, same max_tokens, same retry count for per-minute limits. It only stops sleeping when the wait could not succeed anyway.
-2. **My re-score degraded 4 tasks from 3 judges to 1** (see item 1). Nothing was edited by hand; they re-score automatically.
+v2 vs v1 with the extra data: **evidence-collector v2 0.924 (7 tasks) vs v1 0.880 (8 tasks)**. The promotion still stands, and the gap has widened.
 
-Commits this session: `bc47cd9` (router fix), `498ba33` (scheduled cycle, data), plus this STATUS commit.
+### Item 3: OpenRouter
+- `providers` shows the OpenRouter key present (I did not open or print `.env`). `models openrouter` lists 421 ids. **Warning from the CLI: the default `openai/gpt-oss-120b:free` is not in the list**, so `EVOLVRA_MODEL_OPENROUTER` would need setting before it can be used. I left it unset: the judge set is your call.
 
-### Answers to your open questions
-- **Groq per-day cap (800 requests):** not close. Today 230 requests, 481k tokens. **The binding cap is TPD: 200k tokens per model.** gpt-oss and Qwen both sat at ~198–199k from ~14:40 AST until at least 16:17. Whole-file judge prompts (5–8k tokens each) reach it faster than the 4k-per-file prompts did.
-- **Duration of the data-only cycle for 2 new missions, 3 judges:** 14:42:19 → 15:04:05, **1308 s (22 min)** (pm session). Much of that was 429 sleeps that `bc47cd9` now skips when the wait is long.
+| model | result | latency |
+|---|---|---|
+| `nvidia/nemotron-3-ultra-550b-a55b:free` | `pong` (finish=stop, 51 tokens) | 2.8 s |
+| `cohere/north-mini-code:free` | `pong` (finish=stop, 44 tokens) | 3.1 s |
+| `google/gemma-4-31b-it:free` | HTTP 429, "rate-limited upstream" (shared Google AI Studio pool), twice | 45.6 s / 45.7 s |
+| `google/gemma-4-26b-a4b-it:free` | HTTP 429, same upstream message | 45.1 s |
 
-### Open questions / for you
-1. Should `fitness` (and the evolution target pick) ignore ensembles with fewer than 2 judges? Right now Flash-Lite-only rows inflate v1, v2, growth-hacker and backend-architect.
-2. Should `--rescore` keep the existing row when fewer judges answer than last time? It replaced 3-judge rows with 1-judge rows today.
-3. Third judge: Qwen is reliable when it has budget, but it shares Groq's TPD with gpt-oss. Both Gemini candidates were 503. Try again tomorrow, or another model?
-4. Trimmed-low mean plus one factually wrong low judge (task 5) gives 0.59 for a workflow that passes actionlint. Is that acceptable?
-5. The v2 persona asks for a section titled "Raw Evidence Files". v2 delivers the substance (real files, cited per row) but not the heading. Do you want the heading enforced, or is per-row citation enough?
+5 of 40 local OpenRouter calls used. The Gemma 429s took ~45 s each, because the router retries an upstream 429 that gives no retry-after. Note: north-mini-code is a code model, so it may be a weak prose judge. Nemotron-3-ultra is the stronger candidate.
 
-### Still not verified
-- v2 vs v1 with ≥2 judges (needs Groq budget).
-- The UX builder re-score with whole files (needs an explicit `--rescore` of that mission).
-- `reopened` on a real QA failure: all 6 tasks today passed on the first attempt.
-- Whether a run fires while the screen is actually locked: needs a lock-event log, or Youssef locking the laptop before 22:17.
+### Items 4 + 5: missions
+| mission | builder | attempts | QA | result |
+|---|---|---|---|---|
+| product announcement (3 × 90–110 words, adjective-free first sentences, 2 features) | content-creator | 1 | v2, PASS | 101/104/104 words (QA script + my own count agree), 0 adjectives, features "Flow Sync" and "Recall Search" |
+| HTML pricing mock (<6 KB, 0 external, 3 cards, 1 keyboard toggle) | rapid-prototyper | 1 | v2, PASS | 4038 B, 0 external requests (grep + headless network log), CDP keyboard test 11/11, **html-validate 11.18.0: 0 errors** (negative control: 8 errors). I re-ran the validator myself: exit 0 |
+| referral loop with fraud-risk section | growth-hacker | **2** | v2, **NEEDS_WORK → PASS** | QA attempt 1 failed C5: 6 assumed numbers untagged, and the header claimed they were all tagged. Builder reopened, added A15–A27; QA attempt 2: 27 tags = 27 rows, 0 untagged |
+| RICE ranking of 10 bugs | sprint-prioritizer | 1 | v2, PASS | 114 checks, 0 failed; 10/10 scores recomputed; tie rule verified |
+
+The record for the retry (`mission.json`, via the recorder only):
+- `task done … 2 --verdict NEEDS_WORK` printed `"reopened": [1]`.
+- Task 1 attempts: `{n:1, verdict: FAIL, reopened_by_qa: true}`, then `{n:2, verdict: PASS}`.
+- Task 2 attempts: `{n:1, NEEDS_WORK}`, then `{n:2, PASS, caused_by_builder: true}`.
+- The scorer saw it: growth-hacker's `det:efficiency` is **0.5** on that task (1.0 on every other new task).
+
+Both item-4 missions passed first time, and I did not force a failure. The tight criteria were met: content-creator wrote very plain first sentences, and rapid-prototyper produced clean HTML.
+
+### Item 6: evolution
+- **Manual run 11:12:10–11:16:45 (275 s):** ingest 4 missions / 120 traces, scored 8 tasks (24 judge calls, **1 error**: Gemini HTTP 503 on the RICE QA task, which therefore has 2 judges), `evolve: skipped, last generation ran 0.9h ago`, exported, pushed `de2364a`. That makes 275 s the wall-clock of an effectively data-only cycle with 8 tasks to score. Cycles with nothing new took 20–90 s in cycle.log.
+- **Scheduled 10:21 run (generation 8):**
+  - Target ux-researcher. It was chosen on the stale 0.605 before my re-score; its bank parent fitness was 0.9033.
+  - 3 candidates:
+    - `missing_required_content`: 0.8967, Δ −0.0067
+    - `weak_evidence`: 0.899, Δ −0.0043
+    - `missing_acceptance_criteria_check`: 0.9133, Δ **+0.01**
+  - All on 3 shared tasks. Margin 0.03, so **no promotion**.
+- **Generation 8 is byte-identical to generation 7** (22:17 yesterday): same 3 candidate SHAs (`4cbfe1d780`, `13cef41d01`, `45fe0c606a`), same fitness, same deltas. With an unchanged diagnosis, the cached LLM responses replay the same generation. It costs little budget, but it is a wasted generation that also blocks the 12 h slot. Now that ux-researcher is 0.922, the next generation should pick **devops-automator (0.805)**, so the loop breaks on its own.
+
+### What broke
+1. **Endpoint security alert (company PC, Trend Micro Apex One).** For item 4 the builder had no HTML validator. Youssef approved a local `npm install html-validate --ignore-scripts` into `…\02-evidence-collector\scratch\validator` (13 packages, about 10:41). Running its `.bin` shell shim through Git Bash failed to fork 5 times (`child_copy: stack write copy failed … Win32 error 5`). Apex One logged **5 "Program Library Injection" denials on `ZwWriteVirtualMemory`, Risk Low, Action Deny, last at 10:41**, from `…\AppData\Local\Programs\Git\usr\bin\sh.exe`. MSYS's fork copies memory into the child process, and behaviour monitoring read that as injection. Nothing ran that shouldn't have, but the network admin has to file a report. After that the session used **PowerShell only, with no downloads**, and every subagent handoff carried the same rule. No further alerts were reported.
+2. **Judge miscount.** On the announcement task Qwen wrote "the third paragraph exceeds the 110-word limit (113 words)". It is 104 by whitespace split, alphanumeric regex and `[\w']+` (3 methods). The ensemble took that critique (correctness 0.75, top failure `word_count_violation`), and content-creator dropped from 0.965 to 0.915. Gemini gave 1.0; gpt-oss said "not independently verified" (0.7). LLM judges cannot count words. I changed nothing (judges are yours).
+3. **Recorder call from PowerShell 5.1:** a `--feedback` string with embedded double quotes was split by PowerShell's native argument passing, and argparse rejected the call (nothing was recorded). The workaround was single quotes inside the text. This is not an engine bug, but the skill's examples assume a POSIX shell.
+4. Gemini HTTP 503 on one judge call (transient). The task still has 2 judges, so it is not provisional.
+
+### Changes / commits
+- No code changes this session. Data commits by the cycle: `742d240` (scheduled 10:21), `de2364a` (manual 11:12). This STATUS: see `git log -1 -- docs/STATUS.md`.
+
+### Answers to round 4's open questions
+- Judge prompt size (from `llm_cache` usage since 3 Nov 13:45): gpt-oss median **3082** prompt tokens (max 5361, n=27); Qwen median **1820** (max 5716, n=22); Gemini median **2980** (max 6428, n=28).
+- 22:17 skip message: confirmed on 3 Nov 22:17 and 4 Nov 10:17/16:17 and 5 Nov 04:17 (`evolve: skipped, last generation ran …h ago`). Generations ran at 4 Nov 04:22, 4 Nov 22:17 and 5 Nov 10:21.
+
+### Open questions
+1. **Deterministic length checks:** should the scorer count words, paragraphs and bytes itself when an acceptance criterion states a number (as it already does for output existence), so that a judge miscount cannot set the failure class?
+2. **Replay guard for evolution:** skip a generation when target + diagnosis + persona hash equal the last generation's (or bypass the cache for proposals), so the 12 h slot is not spent on a replay.
+3. **OpenRouter:** add Nemotron-3-ultra as a third lineage? If so, `EVOLVRA_MODEL_OPENROUTER` needs setting (the default id is gone), and Youssef should do that in `.env`.
+4. **Leftover validator:** `~\.evolvra\missions\20261105-073059-build-a-single-file\02-evidence-collector\scratch\validator` (html-validate, 13 packages) is still on disk. Delete it, or keep it as mission evidence? I have not deleted anything.
+5. **Machine constraint for future rounds:** this is a managed company PC. Any item that needs a download or install (validators, browsers, packages) should name a no-download alternative, or it will need an admin's OK.
+
+**Still broken or unproven:** promotion on *real-mission* fitness is still unproven, because every real-data generation so far has been refused (correctly). Length/count criteria are judged by LLMs that cannot count. Evolution can replay a cached generation when the diagnosis does not change.
