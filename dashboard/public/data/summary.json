@@ -1,11 +1,11 @@
 {
- "generated_at": "2026-11-05T01:18:16Z",
+ "generated_at": "2026-11-05T07:23:16Z",
  "evolvra_version": "0.1.0",
  "agents": 10,
  "versions": 11,
  "missions": 11,
  "tasks": 22,
- "evolutions": 7,
+ "evolutions": 8,
  "promotions": 1,
  "providers": [
   {
