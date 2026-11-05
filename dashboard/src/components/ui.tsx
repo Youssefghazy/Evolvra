@@ -1,44 +1,136 @@
 import type { ReactNode } from "react";
-import { fitnessColor, pct } from "../data";
+import { motion, useReducedMotion } from "motion/react";
+import { CheckCircle2, CircleDashed, Clock3, XCircle } from "lucide-react";
+import { divisionColor, grade, toneVar, type Agent } from "../data";
 
-export function Card({ title, children, right, className = "" }: { title?: ReactNode; children: ReactNode; right?: ReactNode; className?: string }) {
+export function SectionHeader({ eyebrow, title, action, sub }: { eyebrow?: string; title: ReactNode; action?: ReactNode; sub?: ReactNode }) {
   return (
-    <section className={`panel p-4 ${className}`}>
-      {(title || right) && (
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-medium muted uppercase tracking-wide">{title}</h2>
-          {right}
-        </div>
-      )}
-      {children}
-    </section>
-  );
-}
-
-export function Stat({ label, value, sub }: { label: string; value: ReactNode; sub?: ReactNode }) {
-  return (
-    <div className="panel p-4">
-      <div className="text-xs muted">{label}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
-      {sub && <div className="text-xs muted mt-1">{sub}</div>}
+    <div className="mb-5 flex items-end justify-between gap-4">
+      <div>
+        {eyebrow && <div className="mb-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{eyebrow}</div>}
+        <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{title}</h2>
+        {sub && <p className="mt-1 max-w-2xl text-sm text-ink2">{sub}</p>}
+      </div>
+      {action}
     </div>
   );
 }
 
-export function Fitness({ value, width = 96 }: { value: number | null | undefined; width?: number }) {
+export function Chip({ children, tone, className = "", title }: { children: ReactNode; tone?: string; className?: string; title?: string }) {
   return (
-    <span className="inline-flex items-center gap-2">
-      <span className="bar" style={{ width }}><span style={{ width: `${Math.round((value ?? 0) * 100)}%` }} /></span>
-      <span className="mono text-xs" style={{ color: fitnessColor(value) }}>{pct(value)}</span>
+    <span title={title} className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-2.5 py-0.5 text-[11px] font-medium text-ink2 ${className}`}>
+      {tone && <span className="h-1.5 w-1.5 rounded-full" style={{ background: tone }} />}
+      {children}
     </span>
   );
 }
 
-export function Verdict({ v }: { v: string | null | undefined }) {
-  const color = v === "PASS" ? "var(--good)" : v === "FAIL" ? "var(--bad)" : v ? "var(--warn)" : "var(--muted)";
-  return <span className="chip" style={{ color }}>{v ?? "–"}</span>;
+export function DivisionChip({ division }: { division: string }) {
+  return <Chip tone={divisionColor(division)}>{division.replace("-", " ")}</Chip>;
 }
 
-export function Badge({ children, color }: { children: ReactNode; color?: string }) {
-  return <span className="chip" style={color ? { borderColor: color, color } : undefined}>{children}</span>;
+export function Avatar({ agent, size = 40 }: { agent: Pick<Agent, "emoji" | "division" | "name">; size?: number }) {
+  const c = divisionColor(agent.division);
+  return (
+    <span className="relative inline-grid shrink-0 place-items-center rounded-full"
+      style={{ width: size, height: size, background: `conic-gradient(from 210deg, ${c}, transparent 55%, ${c})`, padding: 1.5 }}
+      aria-label={agent.name}>
+      <span className="grid h-full w-full place-items-center rounded-full bg-card-solid" style={{ fontSize: size * 0.48 }}>
+        {agent.emoji || "🤖"}
+      </span>
+    </span>
+  );
+}
+
+/** Radial fitness gauge. The number is always printed, so color is never the only channel. */
+export function Ring({ value, size = 64, stroke = 6, label = true }: { value: number | null; size?: number; stroke?: number; label?: boolean }) {
+  const reduce = useReducedMotion();
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const g = grade(value);
+  const frac = value ?? 0;
+  return (
+    <span className="relative inline-grid place-items-center" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--line)" strokeWidth={stroke} />
+        <motion.circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={toneVar[g.tone]} strokeWidth={stroke}
+          strokeLinecap="round" strokeDasharray={c}
+          initial={reduce ? false : { strokeDashoffset: c }}
+          whileInView={{ strokeDashoffset: c * (1 - frac) }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          style={reduce ? { strokeDashoffset: c * (1 - frac) } : undefined} />
+      </svg>
+      {label && (
+        <span className="absolute font-mono font-semibold tnum" style={{ fontSize: size * 0.24 }}>
+          {value == null ? "–" : Math.round(value * 100)}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** Thin horizontal bar, 4px rounded data end, recessive track. */
+export function Bar({ value, color = "var(--ink-2)", height = 6, className = "" }: { value: number | null; color?: string; height?: number; className?: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <div className={`w-full overflow-hidden rounded-full bg-line ${className}`} style={{ height }}>
+      <motion.div className="h-full rounded-full" style={{ background: color }}
+        initial={reduce ? false : { width: 0 }}
+        whileInView={{ width: `${Math.max(0, Math.min(1, value ?? 0)) * 100}%` }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} />
+    </div>
+  );
+}
+
+export function Verdict({ v, compact = false }: { v: string | null | undefined; compact?: boolean }) {
+  const map: Record<string, { icon: ReactNode; color: string; label: string }> = {
+    PASS: { icon: <CheckCircle2 size={14} />, color: "var(--good)", label: "Pass" },
+    DONE: { icon: <CheckCircle2 size={14} />, color: "var(--good)", label: "Done" },
+    FAIL: { icon: <XCircle size={14} />, color: "var(--bad)", label: "Fail" },
+    FAILED: { icon: <XCircle size={14} />, color: "var(--bad)", label: "Failed" },
+    NEEDS_WORK: { icon: <CircleDashed size={14} />, color: "var(--warn)", label: "Needs work" },
+    ESCALATED: { icon: <XCircle size={14} />, color: "var(--warn)", label: "Escalated" },
+    RUNNING: { icon: <Clock3 size={14} />, color: "var(--accent)", label: "Running" },
+  };
+  const m = map[(v ?? "").toUpperCase()] ?? { icon: <CircleDashed size={14} />, color: "var(--muted)", label: v ?? "–" };
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: m.color }}>
+      {m.icon}{!compact && <span className="text-ink2">{m.label}</span>}
+    </span>
+  );
+}
+
+export function Kbd({ children }: { children: ReactNode }) {
+  return <kbd className="rounded-md border border-line bg-card px-1.5 py-0.5 font-mono text-[10px] text-muted">{children}</kbd>;
+}
+
+export function Empty({ title, hint, icon }: { title: string; hint: string; icon?: ReactNode }) {
+  return (
+    <div className="surface grid place-items-center px-6 py-16 text-center">
+      {icon && <div className="mb-3 text-muted">{icon}</div>}
+      <div className="text-lg font-medium">{title}</div>
+      <div className="mt-2 max-w-md text-sm text-ink2">{hint}</div>
+    </div>
+  );
+}
+
+export function Stat({ label, children, sub, icon }: { label: string; children: ReactNode; sub?: ReactNode; icon?: ReactNode }) {
+  return (
+    <div className="surface p-4 md:p-5">
+      <div className="flex items-center justify-between text-xs text-muted">{label}{icon}</div>
+      <div className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{children}</div>
+      {sub && <div className="mt-1 text-xs text-muted">{sub}</div>}
+    </div>
+  );
+}
+
+/** GitHub mark (lucide dropped brand icons). */
+export function GithubIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a10.9 10.9 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z" />
+    </svg>
+  );
 }
