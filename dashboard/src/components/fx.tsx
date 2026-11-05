@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "motion/react";
+import { ArrowUpRight } from "lucide-react";
 
 /** Fixed page backdrop: masked grid + slow aurora. Pure CSS, GPU-cheap. */
 export function Backdrop() {
@@ -11,11 +12,16 @@ export function Backdrop() {
   );
 }
 
-/** Card with a mouse-following radial glow (CSS vars) and a lit border on hover. */
-export function Spotlight({ children, className = "", as = "div", href, style }: {
-  children: ReactNode; className?: string; as?: "div" | "a"; href?: string; style?: CSSProperties;
+/**
+ * Surface card. One rule for the whole site: if it has an `href` it is a link and looks like one
+ * (glow follows the cursor, border lights, card lifts, an arrow appears, pointer cursor, focus ring);
+ * without an `href` it is a static panel and does not react to hover at all.
+ */
+export function Spotlight({ children, className = "", href, style, arrow = true }: {
+  children: ReactNode; className?: string; as?: "div" | "a"; href?: string; style?: CSSProperties; arrow?: boolean;
 }) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLAnchorElement | null>(null);
+  if (!href) return <div className={`relative overflow-hidden surface ${className}`} style={style}>{children}</div>;
   const onMove = (e: React.MouseEvent) => {
     const el = ref.current;
     if (!el) return;
@@ -23,22 +29,19 @@ export function Spotlight({ children, className = "", as = "div", href, style }:
     el.style.setProperty("--mx", `${e.clientX - r.left}px`);
     el.style.setProperty("--my", `${e.clientY - r.top}px`);
   };
-  const cls = `group relative overflow-hidden surface transition-colors duration-300 hover:border-line-strong ${className}`;
-  const glow = (
-    <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--glow), transparent 45%)" }} />
-  );
-  if (as === "a") {
-    return (
-      <a ref={(n) => { ref.current = n; }} href={href} onMouseMove={onMove} className={cls} style={style}>
-        {glow}<div className="relative">{children}</div>
-      </a>
-    );
-  }
+  const external = /^https?:/.test(href);
   return (
-    <div ref={(n) => { ref.current = n; }} onMouseMove={onMove} className={cls} style={style}>
-      {glow}<div className="relative">{children}</div>
-    </div>
+    <a ref={ref} href={href} onMouseMove={onMove} style={style} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}
+      className={`group relative cursor-pointer overflow-hidden surface outline-none transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-line-strong focus-visible:ring-2 focus-visible:ring-accent ${className}`}>
+      <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--glow), transparent 45%)" }} />
+      {arrow && (
+        <span aria-hidden className="pointer-events-none absolute right-3 top-3 z-10 grid h-7 w-7 translate-x-1 -translate-y-1 place-items-center rounded-full border border-line bg-card-solid text-muted opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-ink group-hover:opacity-100">
+          <ArrowUpRight size={14} />
+        </span>
+      )}
+      <div className="relative">{children}</div>
+    </a>
   );
 }
 

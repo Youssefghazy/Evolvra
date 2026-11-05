@@ -165,10 +165,10 @@ function Keyboard() {
 function Steps({ data }: { data: Data }) {
   const promo = [...data.evolutions].reverse().find((e) => e.winner_version != null);
   const steps = [
-    { icon: Rocket, title: "A brief goes in", text: "You type one sentence. The orchestrator picks specialists, writes each a task with measurable acceptance criteria, and records every step." },
-    { icon: Gavel, title: "Independent judges grade it", text: "Three free models from three labs score correctness, completeness, quality and evidence. Word and byte counts are measured by code." },
-    { icon: Dna, title: "The weakest agent is diagnosed", text: "Its worst real tasks become a diagnosis. A coach model writes three rewrites of its persona, each fixing one named failure." },
-    { icon: Trophy, title: "Only a winner ships", text: promo ? `Rewrites play the original on held-out tasks. ${humanize(promo.agent)} v${promo.winner_version} won by ${Math.round((promo.delta ?? 0) * 1000) / 10} points and is live now.` : "Rewrites play the original on held-out tasks; a new version ships only if it clearly wins." },
+    { icon: Rocket, title: "A brief goes in", to: href.missions, text: "You type one sentence. The orchestrator picks specialists, writes each a task with measurable acceptance criteria, and records every step." },
+    { icon: Gavel, title: "Independent judges grade it", to: href.control, text: "Three free models from three labs score correctness, completeness, quality and evidence. Word and byte counts are measured by code." },
+    { icon: Dna, title: "The weakest agent is diagnosed", to: href.evolutions, text: "Its worst real tasks become a diagnosis. A coach model writes three rewrites of its persona, each fixing one named failure." },
+    { icon: Trophy, title: "Only a winner ships", to: promo ? href.agent(promo.agent) : href.evolutions, text: promo ? `Rewrites play the original on held-out tasks. ${humanize(promo.agent)} v${promo.winner_version} won by ${Math.round((promo.delta ?? 0) * 1000) / 10} points and is live now.` : "Rewrites play the original on held-out tasks; a new version ships only if it clearly wins." },
   ];
   return (
     <section>
@@ -176,7 +176,7 @@ function Steps({ data }: { data: Data }) {
       <div className="grid gap-4 md:grid-cols-2">
         {steps.map((s, i) => (
           <Reveal key={s.title} delay={i * 0.06}>
-            <Spotlight className="h-full p-6">
+            <Spotlight href={s.to} className="block h-full p-6">
               <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl border border-line-strong bg-card-solid"><s.icon size={18} className="text-accent" /></span>
                 <span className="font-mono text-xs text-muted">step {i + 1}</span></div>
               <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>

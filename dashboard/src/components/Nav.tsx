@@ -3,6 +3,7 @@ import { relTime, type Data } from "../data";
 import { href, type Route } from "../lib/router";
 import { FloatingDock, type DockItem } from "./ui/floating-dock";
 import { FloatingNav, NavAction, type NavItem } from "./ui/floating-navbar";
+import { NavLinks } from "./ui/nav-links";
 import { Logo, LogoMark } from "./Logo";
 import { GithubIcon, Kbd } from "./ui";
 
@@ -23,7 +24,8 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
     { key: "evolutions", name: "Evolution", link: href.evolutions, icon: <Dna size={16} /> },
     { key: "tour", name: "Tour", link: href.tour, icon: <Laptop size={16} /> },
   ];
-  const navItems: NavItem[] = pages.map((p) => ({ name: p.name, link: p.link, icon: p.icon, active: active === p.key }));
+  const navItems: NavItem[] = pages.map((p) => ({ key: p.key, name: p.name, link: p.link, icon: p.icon, active: active === p.key }));
+  const btn = "inline-flex items-center gap-2 rounded-full border border-line bg-card text-muted transition-[color,background-color,border-color,box-shadow] duration-200 hover:border-line-strong hover:bg-card-hover hover:text-ink hover:shadow-[0_0_0_1px_var(--glow),0_6px_20px_-8px_var(--glow)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
   const dock: DockItem[] = [
     ...pages.map((p) => ({ title: p.name, href: p.link, active: active === p.key,
       icon: <span className={`${ic} grid place-items-center`}>{iconFor(p.key)}</span> })),
@@ -33,14 +35,14 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
   ];
   return (
     <>
-      <header className="relative z-30 border-b border-line">
+      <header className="relative z-30 border-b border-line bg-card-solid/40 backdrop-blur-md">
+        <span aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px mx-auto h-px max-w-3xl"
+          style={{ background: "linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent)", opacity: 0.55 }} />
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <a href={href.home} aria-label="Evolvra home"><Logo size={28} /></a>
-          <nav className="ml-6 hidden items-center gap-1 text-sm lg:flex">
-            {pages.map((p) => (
-              <a key={p.key} href={p.link} className={`rounded-full px-3 py-1.5 transition-colors ${active === p.key ? "bg-card-hover text-ink" : "text-muted hover:text-ink"}`}>{p.name}</a>
-            ))}
-          </nav>
+          <a href={href.home} aria-label="Evolvra home" className="rounded-lg outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-accent"><Logo size={28} /></a>
+          <NavLinks id="header" className="ml-6 hidden gap-0.5 lg:flex"
+            items={pages.map((p) => ({ key: p.key, name: p.name, link: p.link, active: active === p.key,
+              icon: <span className="hidden xl:grid [&>svg]:h-3.5 [&>svg]:w-3.5">{p.icon}</span> }))} />
           <div className="ml-auto flex items-center gap-3">
             {data && (
               <span className="hidden items-center gap-2 text-xs text-muted xl:inline-flex" title={new Date(data.summary.generated_at).toLocaleString()}>
@@ -49,8 +51,8 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
               </span>
             )}
             <button onClick={toggle} aria-label={theme === "dark" ? "Switch to light" : "Switch to dark"}
-              className="rounded-full border border-line bg-card p-2 text-muted transition-colors hover:text-ink"><ThemeIcon size={14} /></button>
-            <button onClick={openPalette} className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-3 py-1.5 text-xs text-muted transition-colors hover:text-ink">
+              className={`${btn} p-2 [&>svg]:transition-transform [&>svg]:duration-500 hover:[&>svg]:rotate-[24deg]`}><ThemeIcon size={14} /></button>
+            <button onClick={openPalette} className={`${btn} px-3 py-1.5 text-xs`}>
               <Search size={13} /> <span className="hidden sm:inline">Search</span> <Kbd>Ctrl K</Kbd>
             </button>
           </div>

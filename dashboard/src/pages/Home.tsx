@@ -21,11 +21,11 @@ export default function Home({ data }: { data: Data }) {
 
       <Reveal>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-          <MiniStat label="Missions" value={s.missions} />
-          <MiniStat label="Tasks graded" value={s.tasks} />
-          <MiniStat label="Generations" value={s.evolutions} />
-          <MiniStat label="Promotions" value={s.promotions} />
-          <MiniStat label="Free-tier calls" value={calls} />
+          <MiniStat label="Missions" value={s.missions} to={href.missions} />
+          <MiniStat label="Tasks graded" value={s.tasks} to={href.missions} />
+          <MiniStat label="Generations" value={s.evolutions} to={href.evolutions} />
+          <MiniStat label="Promotions" value={s.promotions} to={href.evolutions} />
+          <MiniStat label="Free-tier calls" value={calls} to={href.control} />
           <div className="beam"><div className="beam-inner h-full p-4">
             <div className="text-xs text-muted">Money spent</div>
             <div className="mt-1.5 font-mono text-2xl font-semibold tracking-tight text-gradient">$0.00</div>
@@ -97,12 +97,12 @@ function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: number }) {
+function MiniStat({ label, value, to }: { label: string; value: number; to: string }) {
   return (
-    <div className="surface p-4">
+    <Spotlight href={to} className="block p-4">
       <div className="text-xs text-muted">{label}</div>
       <div className="mt-1.5 text-2xl font-semibold tracking-tight"><NumberTicker value={value} /></div>
-    </div>
+    </Spotlight>
   );
 }
 
@@ -110,13 +110,13 @@ function MiniStat({ label, value }: { label: string; value: number }) {
 
 function Pipeline({ data, calls, refused }: { data: Data; calls: number; refused: number }) {
   const steps = [
-    { icon: Rocket, title: "Mission", text: "Claude Code runs a brief through specialist agents. Every handoff, attempt and verdict is recorded.",
+    { icon: Rocket, title: "Mission", to: href.missions, text: "Claude Code runs a brief through specialist agents. Every handoff, attempt and verdict is recorded.",
       metric: `${data.summary.missions} missions` },
-    { icon: Gavel, title: "Judge", text: "Three free models from three labs grade each deliverable. Counts are measured by code, never guessed.",
+    { icon: Gavel, title: "Judge", to: href.control, text: "Three free models from three labs grade each deliverable. Counts are measured by code, never guessed.",
       metric: `${data.summary.tasks} tasks · ${calls} calls` },
-    { icon: Dna, title: "Evolve", text: "The weakest agent's failures become a diagnosis. An AI coach writes three targeted rewrites of its playbook.",
+    { icon: Dna, title: "Evolve", to: href.evolutions, text: "The weakest agent's failures become a diagnosis. An AI coach writes three targeted rewrites of its playbook.",
       metric: `${data.summary.evolutions} generations` },
-    { icon: Trophy, title: "Promote", text: "Each rewrite fights the original on held-out tasks. A new version ships only if it clearly wins.",
+    { icon: Trophy, title: "Promote", to: href.evolutions, text: "Each rewrite fights the original on held-out tasks. A new version ships only if it clearly wins.",
       metric: `${data.summary.promotions} promoted · ${refused} refused` },
   ];
   return (
@@ -135,12 +135,12 @@ function Pipeline({ data, calls, refused }: { data: Data; calls: number; refused
         </svg>
         {steps.map((st, i) => (
           <Reveal key={st.title} delay={i * 0.1}>
-            <Spotlight className="h-full p-5">
+            <Spotlight href={st.to} className="block h-full p-5">
               <div className="flex items-center justify-between">
                 <span className="relative z-10 grid h-11 w-11 place-items-center rounded-xl border border-line-strong bg-card-solid">
                   <st.icon size={18} className="text-accent" />
                 </span>
-                <span className="font-mono text-xs text-muted">0{i + 1}</span>
+                <span className="font-mono text-xs text-muted transition-opacity group-hover:opacity-0">0{i + 1}</span>
               </div>
               <h3 className="mt-5 text-base font-semibold">{st.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink2">{st.text}</p>
@@ -321,7 +321,7 @@ function RecentMissions({ data }: { data: Data }) {
           const retries = m.tasks.reduce((n, t) => n + Math.max(0, t.attempts - 1), 0);
           return (
             <Reveal key={m.id} delay={i * 0.06}>
-              <Spotlight as="a" href={href.mission(m.id)} className="block h-full p-5">
+              <Spotlight href={href.mission(m.id)} className="block h-full p-5">
                 <div className="flex items-center justify-between gap-3">
                   <Verdict v={m.status} />
                   <span className="text-xs text-muted">{relTime(m.started_at)}</span>

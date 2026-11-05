@@ -39,7 +39,7 @@ function MissionList({ data }: { data: Data }) {
           const retries = m.tasks.reduce((n, t) => n + Math.max(0, t.attempts - 1), 0);
           return (
             <Reveal key={m.id} delay={Math.min(i, 8) * 0.03}>
-              <Spotlight as="a" href={href.mission(m.id)} className="block px-5 py-4">
+              <Spotlight href={href.mission(m.id)} className="block px-5 py-4">
                 <div className="grid items-center gap-4 md:grid-cols-[1fr_auto_7rem]">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-xs text-muted">

@@ -57,7 +57,7 @@ export default function Agents({ data }: { data: Data }) {
             <motion.div key={a.slug} layout transition={{ type: "spring", stiffness: 300, damping: 30 }}>
               <Reveal delay={Math.min(i, 8) * 0.04} className="h-full">
                 <CometCard rotateDepth={6} translateDepth={6} glare="hover" glareOpacity={0.28} className="h-full">
-                <Spotlight as="a" href={href.agent(a.slug)} className="flex h-full flex-col p-5">
+                <Spotlight href={href.agent(a.slug)} className="flex h-full flex-col p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <Avatar agent={a} size={46} />

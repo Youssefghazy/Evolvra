@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, type MotionValue, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { ChevronDown, GitBranch, ShieldX } from "lucide-react";
 import { fmtDate, humanize, pct, signedPct, type Data, type Evolution } from "../data";
 import { href } from "../lib/router";
@@ -12,8 +12,23 @@ export default function Evolutions({ data }: { data: Data }) {
   const [agent, setAgent] = useState("all");
   const list = useMemo(() => [...data.evolutions].reverse().filter((e) => agent === "all" || e.agent === agent), [data, agent]);
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 70%", "end 60%"] });
-  const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const reduce = useReducedMotion();
+  // The comet rides a fixed reading line (55% down the viewport), so it reaches each circle exactly
+  // when that circle lights up. Near the end of the page the line can no longer reach the last
+  // generations, so `ramp` eases everything to "done" over the final 320 px of scroll.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 55%", "end 55%"] });
+  const { scrollY } = useScroll();
+  const ramp = useTransform(scrollY, (y) => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    return max <= 0 ? 1 : Math.min(1, Math.max(0, 1 - (max - y) / 320));
+  });
+  const reached = useTransform([scrollYProgress, ramp], ([a, r]: number[]) => a + (1 - a) * r);
+  // Spring-smoothed so the comet glides between wheel ticks instead of jumping.
+  const smooth = useSpring(reached, { stiffness: 140, damping: 26, mass: 0.4, restDelta: 0.0005 });
+  const full = useMotionValue(1);
+  const progress = reduce ? full : smooth;
+  const top = useTransform(progress, (v) => `${v * 100}%`);
+  const headOpacity = useTransform(progress, [0, 0.015, 0.985, 1], [0, 1, 1, 0]);
   if (data.evolutions.length === 0) return <Empty title="No generations yet" hint="The scheduler evolves the weakest agent at most every 12 hours." />;
   const promoted = data.evolutions.filter((e) => e.winner_version != null).length;
   const targets = [...new Set(data.evolutions.map((e) => e.agent))];
@@ -41,33 +56,67 @@ export default function Evolutions({ data }: { data: Data }) {
         })}
       </div>
       <div ref={ref} className="relative pl-8 md:pl-10">
+        {/* track, scroll-scrubbed fill, and the comet head that rides the fill's leading edge */}
         <div className="absolute bottom-0 left-[11px] top-0 w-px bg-line md:left-[15px]" />
         <motion.div className="absolute left-[11px] top-0 w-px origin-top md:left-[15px]"
-          style={{ scaleY, height: "100%", background: "linear-gradient(var(--accent), var(--accent-2), var(--accent-3))" }} />
+          style={{ scaleY: progress, height: "100%", background: "linear-gradient(var(--accent), var(--accent-2), var(--accent-3))" }} />
+        <motion.div aria-hidden className="pointer-events-none absolute left-[11.5px] z-10 md:left-[15.5px]" style={{ top, opacity: headOpacity }}>
+          <span className="absolute bottom-0 left-0 h-24 w-[3px] -translate-x-1/2 rounded-full"
+            style={{ background: "linear-gradient(transparent, var(--accent))", filter: "blur(0.5px)" }} />
+          <span className="absolute left-0 top-0 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ background: "radial-gradient(circle, var(--glow), transparent 70%)" }} />
+          <span className="absolute left-0 top-0 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ background: "var(--ink)", boxShadow: "0 0 0 2px var(--accent), 0 0 16px 4px var(--accent)" }} />
+        </motion.div>
         <div className="space-y-5">
-          {list.map((e, i) => <Reveal key={e.id} delay={Math.min(i, 6) * 0.04}><Generation e={e} data={data} /></Reveal>)}
+          {list.map((e) => <Generation key={e.id} e={e} data={data} ramp={ramp} />)}
         </div>
       </div>
     </div>
   );
 }
 
-function Generation({ e, data }: { e: Evolution; data: Data }) {
+function Generation({ e, data, ramp }: { e: Evolution; data: Data; ramp: MotionValue<number> }) {
   const [open, setOpen] = useState(false);
   const a = data.agents.find((x) => x.slug === e.agent);
   const won = e.winner_version != null;
+  const tone = won ? "var(--good)" : "var(--accent)";
+
+  // Each generation lights up as the comet reaches it: 0 while it is below the fold line, 1 once its
+  // node has crossed it. The same value drives the node, the connector and the card.
+  const reduce = useReducedMotion();
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: nodeRef, offset: ["start 72%", "start 52%"] });
+  const reached = useTransform([scrollYProgress, ramp], ([a, r]: number[]) => a + (1 - a) * r);
+  const eased = useSpring(reached, { stiffness: 160, damping: 24, mass: 0.4 });
+  const one = useMotionValue(1);
+  const p = reduce ? one : eased;
+  const fillScale = useTransform(p, [0, 1], [0.2, 1]);
+  const nodeScale = useTransform(p, [0, 0.85, 1], [0.8, 1.18, 1]);
+  const cardOpacity = useTransform(p, [0, 1], [0.42, 1]);
+  const cardX = useTransform(p, [0, 1], [18, 0]);
+  const cardBlur = useTransform(p, [0, 1], ["blur(1px)", "blur(0px)"]);
+  const [lit, setLit] = useState(false);
+  useMotionValueEvent(reached, "change", (v) => { if (v >= 0.98 !== lit) setLit(v >= 0.98); });
   const reason = won ? `Won by ${signedPct(e.delta)} on held-out tasks`
     : e.delta == null ? "No candidate finished enough shared tasks for a fair comparison"
       : `Best rewrite ${signedPct(e.delta)}; the gate is +${(MARGIN * 100).toFixed(0)}%`;
   return (
-    <div className="relative">
-      <span className="absolute -left-[29px] top-6 grid h-4 w-4 place-items-center rounded-full ring-4 ring-bg md:-left-[33px]"
-        style={{ background: won ? "var(--good)" : "var(--card-solid)", border: won ? undefined : "1px solid var(--line-strong)", boxShadow: won ? "0 0 18px var(--good)" : undefined }} />
-      <div className={won ? "beam" : ""}>
+    <div ref={nodeRef} className="relative">
+      {/* node: hollow ring that fills with the generation's color, pulses once when the comet arrives */}
+      <motion.span className="absolute -left-[29px] top-6 z-20 grid h-4 w-4 place-items-center rounded-full ring-4 ring-bg md:-left-[33px]"
+        style={{ scale: nodeScale, background: "var(--card-solid)", border: "1px solid var(--line-strong)" }}>
+        <motion.span className="absolute inset-[-1px] rounded-full" style={{ scale: fillScale, opacity: p, background: tone,
+          boxShadow: `0 0 ${won ? 18 : 12}px ${tone}` }} />
+        {lit && !reduce && <span key="ping" className="node-ping absolute inset-[-1px] rounded-full" style={{ borderColor: tone }} />}
+      </motion.span>
+      <motion.span aria-hidden className="absolute -left-[13px] top-[31px] h-px w-[13px] origin-left md:-left-[17px] md:w-[17px]"
+        style={{ scaleX: p, background: `linear-gradient(90deg, ${tone}, transparent)` }} />
+      <motion.div style={{ opacity: cardOpacity, x: cardX, filter: cardBlur }} className={won ? "beam" : ""}>
         <div className={won ? "beam-inner p-5" : "surface p-5"}>
           <div className="flex flex-wrap items-center gap-3">
             {a && <Avatar agent={a} size={36} />}
-            <div className="min-w-0 flex-1">
+            <div className="min-w-[12rem] flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <a href={href.agent(e.agent)} className="font-semibold hover:text-accent">{a?.name ?? e.agent}</a>
                 {won ? <Chip tone="var(--good)"><GitBranch size={11} /> v{e.parent_version} → v{e.winner_version}</Chip>
@@ -104,7 +153,7 @@ function Generation({ e, data }: { e: Evolution; data: Data }) {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -114,7 +163,7 @@ function Gate({ delta, won }: { delta: number | null; won: boolean }) {
   const lo = -0.1, hi = 0.2;
   const x = (v: number) => `${((Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo)) * 100}%`;
   return (
-    <div className="w-40" title="Best rewrite vs the promotion gate">
+    <div className="w-full sm:w-40" title="Best rewrite vs the promotion gate">
       <div className="relative h-5">
         <div className="absolute inset-x-0 top-1/2 h-px bg-line" />
         <div className="absolute top-0 h-5 w-px bg-muted/60" style={{ left: x(0) }} />

@@ -72,13 +72,13 @@ export default function Control({ data }: { data: Data }) {
       </Reveal>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi i={0} label="Mission quality" sub="avg fitness, last 5 missions" value={m.recent != null ? Math.round(m.recent * 100) : 0} suffix="%"
+        <Kpi i={0} to={href.missions} label="Mission quality" sub="avg fitness, last 5 missions" value={m.recent != null ? Math.round(m.recent * 100) : 0} suffix="%"
           delta={m.recent != null && m.prior != null ? m.recent - m.prior : null} deltaNote="vs the 5 before" spark={m.q} />
-        <Kpi i={1} label="Missions run" sub={`${m.last24} in the last 24 h`} value={data.summary.missions} spark={m.cumulative} />
-        <Kpi i={2} label="First-try pass rate" sub={`${m.firstTry} of ${m.tasks.length} tasks passed on attempt 1`}
+        <Kpi i={1} to={href.missions} label="Missions run" sub={`${m.last24} in the last 24 h`} value={data.summary.missions} spark={m.cumulative} />
+        <Kpi i={2} to={href.missions} label="First-try pass rate" sub={`${m.firstTry} of ${m.tasks.length} tasks passed on attempt 1`}
           value={Math.round((m.firstTry / Math.max(1, m.tasks.length)) * 100)} suffix="%" spark={m.firstTrySeries} />
         <Reveal delay={0.18}>
-          <Spotlight className="h-full p-5">
+          <Spotlight href={href.evolutions} className="block h-full p-5">
             <div className="text-xs text-muted">Promotion rate</div>
             <div className="mt-2 flex items-center gap-4">
               <div className="text-3xl font-semibold tracking-tight"><NumberTicker value={Math.round(promoRate * 100)} suffix="%" /></div>
@@ -154,7 +154,8 @@ export default function Control({ data }: { data: Data }) {
                     const g = grade(a.fitness);
                     const prev = a.versions.length > 1 ? a.versions[a.versions.length - 2] : null;
                     return (
-                      <tr key={a.slug} className="border-b border-line last:border-0 hover:bg-card-hover">
+                      <tr key={a.slug} onClick={() => { window.location.hash = href.agent(a.slug); }}
+                        className="cursor-pointer border-b border-line transition-colors last:border-0 hover:bg-card-hover">
                         <td className="px-5 py-3 md:px-6">
                           <a href={href.agent(a.slug)} className="flex items-center gap-3"><Avatar agent={a} size={30} />
                             <span><span className="block font-medium">{a.name}</span><span className="block text-xs capitalize text-muted">{a.division}</span></span></a>
@@ -192,12 +193,12 @@ export default function Control({ data }: { data: Data }) {
   );
 }
 
-function Kpi({ i, label, sub, value, suffix = "", delta, deltaNote, spark }: {
-  i: number; label: string; sub: string; value: number; suffix?: string; delta?: number | null; deltaNote?: string; spark: number[];
+function Kpi({ i, to, label, sub, value, suffix = "", delta, deltaNote, spark }: {
+  i: number; to: string; label: string; sub: string; value: number; suffix?: string; delta?: number | null; deltaNote?: string; spark: number[];
 }) {
   return (
     <Reveal delay={i * 0.06}>
-      <Spotlight className="h-full p-5">
+      <Spotlight href={to} arrow={false} className="block h-full p-5">
         <div className="flex items-center justify-between text-xs text-muted"><span>{label}</span>
           {delta != null && <span className="rounded-full px-1.5 py-0.5 font-mono text-[11px]" title={deltaNote}
             style={{ color: delta >= 0 ? "var(--good)" : "var(--bad)", background: `color-mix(in srgb, ${delta >= 0 ? "var(--good)" : "var(--bad)"} 12%, transparent)` }}>
