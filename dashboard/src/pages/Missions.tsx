@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { ArrowLeft, Check, Gavel, RotateCcw, Search, X } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, Gavel, RotateCcw, Search, X } from "lucide-react";
+import { useIsPhone } from "../lib/media";
 import { fmtDate, grade, humanize, pct, providerName, relTime, toneVar, type Data, type Mission, type Task } from "../data";
 import { href } from "../lib/router";
 import { Reveal, Spotlight } from "../components/fx";
@@ -21,6 +22,7 @@ function avgFitness(m: Mission) {
 function MissionList({ data }: { data: Data }) {
   const [q, setQ] = useState("");
   const list = useMemo(() => data.missions.filter((m) => m.brief.toLowerCase().includes(q.toLowerCase())), [data, q]);
+  const phone = useIsPhone();
   if (data.missions.length === 0) return <Empty title="No missions yet" hint="Run /evolvra:mission in Claude Code; the next cycle publishes it here." />;
   const retried = data.missions.filter((m) => m.tasks.some((t) => t.attempts > 1)).length;
   return (
@@ -28,9 +30,9 @@ function MissionList({ data }: { data: Data }) {
       <Reveal><SectionHeader eyebrow="Missions" title={`${data.missions.length} missions, every task independently checked`}
         sub={`A builder agent does the work, a QA agent verifies it, and three judges grade both. ${retried} mission${retried === 1 ? "" : "s"} needed a retry after QA pushed back.`} /></Reveal>
       <Reveal delay={0.04}>
-        <label className="mb-5 flex items-center gap-2 rounded-xl border border-line bg-card px-3 py-2 text-sm">
+        <label className="mb-4 flex h-11 items-center gap-2 rounded-xl border border-line bg-card px-3 text-sm focus-within:border-line-strong md:mb-5 md:h-auto md:py-2">
           <Search size={15} className="text-muted" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter missions…" className="w-full bg-transparent outline-none placeholder:text-muted" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter missions…" enterKeyHint="search" className="w-full bg-transparent text-base outline-none placeholder:text-muted md:text-sm" />
         </label>
       </Reveal>
       <div className="space-y-3">
@@ -39,19 +41,22 @@ function MissionList({ data }: { data: Data }) {
           const retries = m.tasks.reduce((n, t) => n + Math.max(0, t.attempts - 1), 0);
           return (
             <Reveal key={m.id} delay={Math.min(i, 8) * 0.03}>
-              <Spotlight href={href.mission(m.id)} className="block px-5 py-4">
-                <div className="grid items-center gap-4 md:grid-cols-[1fr_auto_7rem]">
+              <Spotlight href={href.mission(m.id)} className="block px-4 py-4 md:px-5">
+                <div className="grid items-center gap-3 md:grid-cols-[1fr_auto_7rem] md:gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-xs text-muted">
                       <Verdict v={m.status} compact /><span className="uppercase tracking-wider">{m.mode}</span><span>·</span><span>{relTime(m.started_at)}</span>
                       {retries > 0 && <span className="inline-flex items-center gap-1 text-warn"><RotateCcw size={11} />{retries} retry</span>}
                     </div>
-                    <p className="mt-1.5 line-clamp-1 font-medium">{m.brief}</p>
+                    <p className="mt-1.5 line-clamp-2 font-medium leading-snug md:line-clamp-1">{m.brief}</p>
                   </div>
-                  <div className="flex -space-x-2">
-                    {m.tasks.map((t) => { const a = data.agents.find((x) => x.slug === t.agent); return a ? <Avatar key={t.no} agent={a} size={30} /> : null; })}
+                  {/* phone: avatars and score share one row */}
+                  <div className="flex items-center gap-3 md:contents">
+                    <div className="flex -space-x-2">
+                      {m.tasks.map((t) => { const a = data.agents.find((x) => x.slug === t.agent); return a ? <Avatar key={t.no} agent={a} size={phone ? 26 : 30} /> : null; })}
+                    </div>
+                    <div className="flex flex-1 items-center gap-2"><Bar value={avg} color={toneVar[grade(avg).tone]} /><span className="font-mono text-xs tnum">{pct(avg)}</span></div>
                   </div>
-                  <div className="flex items-center gap-2"><Bar value={avg} color={toneVar[grade(avg).tone]} /><span className="font-mono text-xs tnum">{pct(avg)}</span></div>
                 </div>
               </Spotlight>
             </Reveal>
@@ -64,22 +69,22 @@ function MissionList({ data }: { data: Data }) {
 
 function MissionDetail({ m, data }: { m: Mission; data: Data }) {
   return (
-    <div className="space-y-6">
-      <a href={href.missions} className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"><ArrowLeft size={14} /> All missions</a>
+    <div className="space-y-4 md:space-y-6">
+      <a href={href.missions} className="-my-2 -ml-2 inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm text-muted hover:text-ink"><ArrowLeft size={14} /> All missions</a>
       <Reveal>
-        <div className="surface p-6 md:p-8">
-          <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+        <div className="surface p-5 md:p-8">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
             <Verdict v={m.status} /><span>·</span><span className="uppercase tracking-wider">{m.mode}</span><span>·</span>
             <span>{fmtDate(m.started_at)} → {fmtDate(m.finished_at)}</span>
           </div>
-          <h1 className="mt-3 text-2xl font-semibold leading-snug tracking-tight md:text-3xl">{m.brief}</h1>
+          <h1 className="mt-3 text-xl font-semibold leading-snug tracking-tight md:text-3xl">{m.brief}</h1>
           {m.summary && <p className="mt-3 max-w-3xl text-sm leading-relaxed text-ink2">{m.summary}</p>}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-col items-start gap-0 md:mt-6 md:flex-row md:flex-wrap md:items-center md:gap-3">
             {m.tasks.map((t, i) => {
               const a = data.agents.find((x) => x.slug === t.agent);
               return (
-                <div key={t.no} className="flex items-center gap-3">
-                  {i > 0 && <span className="h-px w-8 bg-line-strong" />}
+                <div key={t.no} className="flex flex-col items-start md:flex-row md:items-center md:gap-3">
+                  {i > 0 && <span className="ml-[18px] h-3 w-px bg-line-strong md:ml-0 md:h-px md:w-8" />}
                   <div className="flex items-center gap-2 rounded-full border border-line bg-card py-1 pl-1 pr-3 text-sm">
                     {a && <Avatar agent={a} size={26} />}<span>{a?.name ?? t.agent}</span><Verdict v={t.verdict} compact />
                   </div>
@@ -103,25 +108,31 @@ function TaskCard({ t, data }: { t: Task; data: Data }) {
   const det = t.scores.filter((s) => s.judge === "deterministic");
   const ev = (ens.correctness?.evidence ?? {}) as { critique?: string; failure_class?: string };
   const g = grade(t.fitness);
+  const phone = useIsPhone();
+  const [showJudges, setShowJudges] = useState(false);
   return (
     <div className="surface overflow-hidden">
-      <div className="flex flex-wrap items-center gap-4 border-b border-line p-5 md:p-6">
-        {a && <Avatar agent={a} size={44} />}
-        <div className="min-w-0 flex-1">
-          <div className="text-xs text-muted">Task {t.no} · <a className="hover:text-ink" href={href.agent(t.agent)}>{a?.name ?? t.agent}</a></div>
-          <div className="mt-0.5 font-medium">{t.task}</div>
+      <div className="border-b border-line p-4 md:p-6">
+        <div className="flex items-center gap-3 md:gap-4">
+          {a && <Avatar agent={a} size={phone ? 36 : 44} />}
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-xs text-muted">Task {t.no} · <a className="hover:text-ink" href={href.agent(t.agent)}>{a?.name ?? t.agent}</a></div>
+            <div className="mt-0.5 hidden font-medium md:block">{t.task}</div>
+          </div>
+          <div className="text-right">
+            <div className="font-mono text-xl font-semibold tnum md:text-2xl" style={{ color: toneVar[g.tone] }}>{pct(t.fitness)}</div>
+            <div className="text-[10px] text-muted md:text-[11px]">fitness · {g.label.toLowerCase()}</div>
+          </div>
         </div>
-        <div className="text-right">
-          <div className="font-mono text-2xl font-semibold tnum" style={{ color: toneVar[g.tone] }}>{pct(t.fitness)}</div>
-          <div className="text-[11px] text-muted">fitness · {g.label.toLowerCase()}</div>
-        </div>
+        {/* phone: the task gets the full width instead of a squeezed middle column */}
+        <div className="mt-3 text-[15px] font-medium leading-snug md:hidden">{t.task}</div>
       </div>
-      <div className="grid gap-6 p-5 md:p-6 lg:grid-cols-[1fr_1.4fr]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[1fr_1.4fr]">
         <div className="space-y-6">
           {t.acceptance.length > 0 && (
             <div>
               <div className="mb-2 text-xs font-medium uppercase tracking-[0.16em] text-muted">Acceptance criteria</div>
-              <ul className="space-y-1.5 text-sm text-ink2">{t.acceptance.map((c, i) => <li key={i} className="flex gap-2"><span className="text-muted">•</span>{c}</li>)}</ul>
+              <ul className="space-y-1.5 text-sm text-ink2">{t.acceptance.map((c, i) => <li key={i} className="flex min-w-0 gap-2 [overflow-wrap:anywhere]"><span className="text-muted">•</span><span className="min-w-0">{c}</span></li>)}</ul>
             </div>
           )}
           <div>
@@ -172,7 +183,10 @@ function TaskCard({ t, data }: { t: Task; data: Data }) {
                 </div>
                 {ev.critique && ev.critique !== "none" && <p className="mt-3 border-t border-line pt-3 text-sm leading-relaxed text-ink2">“{ev.critique}”</p>}
               </div>
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <button onClick={() => setShowJudges(!showJudges)} className="mt-3 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-line text-xs text-ink2 active:bg-card-hover md:hidden">
+                <ChevronDown size={14} className={`transition-transform ${showJudges ? "rotate-180" : ""}`} /> {showJudges ? "Hide" : "Show"} each judge ({judges.length})
+              </button>
+              <div className={`mt-3 gap-3 sm:grid-cols-3 md:grid ${showJudges ? "grid" : "hidden"}`}>
                 {judges.map((j) => {
                   const rows = t.scores.filter((s) => s.judge === j);
                   const err = rows.find((s) => s.metric === "rubric:error");
@@ -214,8 +228,8 @@ function Clamp({ text }: { text: string }) {
   const long = text.length > 220;
   return (
     <div className="mt-1">
-      <p className={`text-xs leading-relaxed text-ink2 ${!open && long ? "line-clamp-3" : ""}`}>{text}</p>
-      {long && <button onClick={() => setOpen(!open)} className="mt-0.5 text-[11px] text-accent hover:underline">{open ? "Show less" : "Show more"}</button>}
+      <p className={`text-xs leading-relaxed text-ink2 [overflow-wrap:anywhere] ${!open && long ? "line-clamp-3" : ""}`}>{text}</p>
+      {long && <button onClick={() => setOpen(!open)} className="-ml-1 mt-0.5 rounded px-1 py-1.5 text-[11px] text-accent hover:underline">{open ? "Show less" : "Show more"}</button>}
     </div>
   );
 }

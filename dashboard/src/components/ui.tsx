@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Bot, CheckCircle2, CircleDashed, Clock3, Code2, Gauge, ListOrdered, Megaphone, PenTool, ScanSearch, Server,
@@ -8,8 +8,8 @@ import { divisionColor, grade, toneVar, type Agent } from "../data";
 
 export function SectionHeader({ eyebrow, title, action, sub }: { eyebrow?: string; title: ReactNode; action?: ReactNode; sub?: ReactNode }) {
   return (
-    <div className="mb-5 flex items-end justify-between gap-4">
-      <div>
+    <div className="mb-4 flex items-end justify-between gap-4 md:mb-5">
+      <div className="min-w-0">
         {eyebrow && <div className="mb-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">{eyebrow}</div>}
         <h2 className="text-xl font-semibold tracking-tight md:text-2xl">{title}</h2>
         {sub && <p className="mt-1 max-w-2xl text-sm text-ink2">{sub}</p>}
@@ -153,5 +153,33 @@ export function GithubIcon({ size = 16 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a10.9 10.9 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z" />
     </svg>
+  );
+}
+
+/**
+ * Swipe rail on phones, plain grid from md up. Cards snap into place, the next one peeks in so the
+ * gesture is obvious, and dots underneath track which card is in view.
+ */
+export function Rail({ children, cols = "md:grid-cols-4", className = "" }: { children: ReactNode[]; cols?: string; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [at, setAt] = useState(0);
+  const onScroll = () => {
+    const el = ref.current; if (!el) return;
+    const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? el.clientWidth;
+    setAt(Math.round(el.scrollLeft / (w + 12)));
+  };
+  return (
+    <div className={className}>
+      <div ref={ref} onScroll={onScroll}
+        className={`no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-1 md:mx-0 md:grid md:gap-4 md:overflow-visible md:px-0 md:pb-0 ${cols}`}>
+        {children.map((c, i) => <div key={i} className="w-[84%] shrink-0 snap-start md:w-auto">{c}</div>)}
+      </div>
+      <div className="mt-3 flex justify-center gap-1.5 md:hidden" aria-hidden>
+        {children.map((_, i) => (
+          <span key={i} className="h-1.5 rounded-full transition-all duration-300"
+            style={{ width: i === at ? 18 : 6, background: i === at ? "var(--accent)" : "var(--line-strong)" }} />
+        ))}
+      </div>
+    </div>
   );
 }

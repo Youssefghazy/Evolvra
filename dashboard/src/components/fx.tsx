@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { coarsePointer } from "../lib/media";
 
 /** Fixed page backdrop: masked grid + slow aurora. Pure CSS, GPU-cheap. */
 export function Backdrop() {
@@ -32,7 +33,7 @@ export function Spotlight({ children, className = "", href, style, arrow = true 
   const external = /^https?:/.test(href);
   return (
     <a ref={ref} href={href} onMouseMove={onMove} style={style} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}
-      className={`group relative cursor-pointer overflow-hidden surface outline-none transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-line-strong focus-visible:ring-2 focus-visible:ring-accent ${className}`}>
+      className={`group relative cursor-pointer overflow-hidden surface outline-none transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-line-strong active:scale-[0.985] focus-visible:ring-2 [-webkit-tap-highlight-color:transparent] focus-visible:ring-accent ${className}`}>
       <span aria-hidden className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--glow), transparent 45%)" }} />
       {arrow && (
@@ -53,8 +54,8 @@ export function Reveal({ children, delay = 0, className = "", y = 14 }: {
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={reduce ? false : coarsePointer ? { opacity: 0, y } : { opacity: 0, y, filter: "blur(6px)" }}
+      whileInView={coarsePointer ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >

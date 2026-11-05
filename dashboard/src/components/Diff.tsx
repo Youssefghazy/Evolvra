@@ -43,13 +43,13 @@ export default function Diff({ a, b, labelA, labelB }: { a: string; b: string; l
         <span className="font-mono text-ink2">{labelA} → {labelB}</span>
         <span className="font-mono"><span style={{ color: "var(--good)" }}>+{added}</span> <span style={{ color: "var(--bad)" }}>−{removed}</span></span>
       </div>
-      <div className="max-h-[560px] overflow-auto font-mono text-[12px] leading-6">
+      <div className="max-h-[70vh] overflow-auto overscroll-contain font-mono text-[11px] leading-5 md:max-h-[560px] md:text-[12px] md:leading-6">
         {rows.map((r, idx) => {
           if (r.kind === "gap") {
             if (open.has(idx)) return r.hidden.map((h, k) => <Line key={`${idx}-${k}`} row={h} />);
             return (
               <button key={idx} onClick={() => setOpen(new Set(open).add(idx))}
-                className="flex w-full items-center gap-2 bg-bg2 px-3 py-1 text-left text-[11px] text-muted hover:text-ink">
+                className="flex min-h-9 w-full items-center gap-2 bg-bg2 px-3 py-1 text-left text-[11px] text-muted hover:text-ink md:min-h-0">
                 <ChevronsUpDown size={12} /> {r.hidden.length} unchanged lines
               </button>
             );
@@ -65,11 +65,13 @@ function Line({ row }: { row: Row }) {
   if (row.kind === "gap") return null;
   const cls = row.kind === "add" ? "diff-add" : row.kind === "del" ? "diff-del" : "";
   return (
-    <div className={`grid grid-cols-[3rem_3rem_1.25rem_1fr] ${cls}`}>
-      <span className="select-none pr-2 text-right text-muted/70">{row.a ?? ""}</span>
-      <span className="select-none pr-2 text-right text-muted/70">{row.b ?? ""}</span>
+    <div className={`grid grid-cols-[2rem_1rem_1fr] md:grid-cols-[3rem_3rem_1.25rem_1fr] ${cls}`}>
+      {/* phone: one line-number column (new number, or old for a removed line) to give the text room */}
+      <span className="select-none pr-1.5 text-right text-muted/70 md:hidden">{row.b ?? row.a ?? ""}</span>
+      <span className="hidden select-none pr-2 text-right text-muted/70 md:block">{row.a ?? ""}</span>
+      <span className="hidden select-none pr-2 text-right text-muted/70 md:block">{row.b ?? ""}</span>
       <span className="sign select-none text-center">{row.kind === "add" ? "+" : row.kind === "del" ? "−" : ""}</span>
-      <span className="whitespace-pre-wrap break-words pr-4 text-ink2">{row.text || " "}</span>
+      <span className="whitespace-pre-wrap break-words pr-3 text-ink2 [overflow-wrap:anywhere] md:pr-4">{row.text || " "}</span>
     </div>
   );
 }

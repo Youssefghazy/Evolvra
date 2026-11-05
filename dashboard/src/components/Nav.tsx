@@ -1,9 +1,12 @@
-import { Bot, Dna, Home, LayoutDashboard, Laptop, Moon, Rocket, Search, Sun } from "lucide-react";
+import { useState } from "react";
+import { Bot, Dna, Home, LayoutDashboard, Laptop, Menu, Moon, Rocket, Search, Sun } from "lucide-react";
+import { MobileMenu, MobileTabBar } from "./MobileNav";
 import { relTime, type Data } from "../data";
 import { href, type Route } from "../lib/router";
 import { FloatingDock, type DockItem } from "./ui/floating-dock";
 import { FloatingNav, NavAction, type NavItem } from "./ui/floating-navbar";
 import { NavLinks } from "./ui/nav-links";
+import { cn } from "../lib/utils";
 import { Logo, LogoMark } from "./Logo";
 import { GithubIcon, Kbd } from "./ui";
 
@@ -15,6 +18,7 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
 }) {
   const active = route.view === "agent" ? "agents" : route.view;
   const toggle = () => setTheme(theme === "dark" ? "light" : "dark");
+  const [menu, setMenu] = useState(false);
   const ThemeIcon = theme === "dark" ? Moon : Sun;
   const pages = [
     { key: "home", name: "Overview", link: href.home, icon: <Home size={16} /> },
@@ -38,7 +42,7 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
       <header className="relative z-30 border-b border-line bg-card-solid/40 backdrop-blur-md">
         <span aria-hidden className="pointer-events-none absolute inset-x-0 -bottom-px mx-auto h-px max-w-3xl"
           style={{ background: "linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent)", opacity: 0.55 }} />
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-2.5 md:gap-3 md:py-3">
           <a href={href.home} aria-label="Evolvra home" className="rounded-lg outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-accent"><Logo size={28} /></a>
           <NavLinks id="header" className="ml-6 hidden gap-0.5 lg:flex"
             items={pages.map((p) => ({ key: p.key, name: p.name, link: p.link, active: active === p.key,
@@ -51,17 +55,21 @@ export default function Nav({ route, data, theme, setTheme, openPalette }: {
               </span>
             )}
             <button onClick={toggle} aria-label={theme === "dark" ? "Switch to light" : "Switch to dark"}
-              className={`${btn} p-2 [&>svg]:transition-transform [&>svg]:duration-500 hover:[&>svg]:rotate-[24deg]`}><ThemeIcon size={14} /></button>
-            <button onClick={openPalette} className={`${btn} px-3 py-1.5 text-xs`}>
-              <Search size={13} /> <span className="hidden sm:inline">Search</span> <Kbd>Ctrl K</Kbd>
+              className={cn(btn, "hidden p-2 md:inline-flex [&>svg]:transition-transform [&>svg]:duration-500 hover:[&>svg]:rotate-[24deg]")}><ThemeIcon size={14} /></button>
+            <button onClick={openPalette} className={cn(btn, "hidden px-3 py-1.5 text-xs md:inline-flex")}>
+              <Search size={13} /> Search <Kbd>Ctrl K</Kbd>
             </button>
+            {/* phone: two 40 px icon buttons; everything else lives in the tab bar and the menu sheet */}
+            <button onClick={openPalette} aria-label="Search" className={cn(btn, "h-10 w-10 justify-center md:hidden")}><Search size={17} /></button>
+            <button onClick={() => setMenu(true)} aria-label="Open menu" aria-expanded={menu} className={cn(btn, "h-10 w-10 justify-center md:hidden")}><Menu size={18} /></button>
           </div>
         </div>
       </header>
-      <FloatingNav navItems={navItems} brand={<a href={href.home} aria-label="Evolvra home" className="text-ink"><LogoMark size={24} /></a>}
+      <FloatingNav className="hidden md:flex" navItems={navItems} brand={<a href={href.home} aria-label="Evolvra home" className="text-ink"><LogoMark size={24} /></a>}
         action={<NavAction onClick={openPalette}><Search size={13} /> Search</NavAction>} />
       <div className="fixed inset-x-0 bottom-5 z-40 hidden justify-center md:flex"><FloatingDock items={dock} /></div>
-      <div className="fixed bottom-4 right-4 z-40 md:hidden"><FloatingDock items={dock} /></div>
+      <MobileTabBar active={active} />
+      <MobileMenu open={menu} onClose={() => setMenu(false)} active={active} theme={theme} toggleTheme={toggle} openPalette={openPalette} />
     </>
   );
 }

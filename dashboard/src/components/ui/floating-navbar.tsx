@@ -33,8 +33,8 @@ export const FloatingNav = ({ navItems, brand, action, className }: {
         animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
         transition={{ duration: reduce ? 0 : 0.2 }}
         className={cn(
-          "fixed inset-x-0 top-6 z-[60] mx-auto flex max-w-fit items-center justify-center gap-1 rounded-full border border-line bg-card-solid/85 py-2 pl-4 pr-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] backdrop-blur-xl",
-          className,
+          "fixed inset-x-0 top-6 z-[60] mx-auto max-w-fit items-center justify-center gap-1 rounded-full border border-line bg-card-solid/85 py-2 pl-4 pr-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] backdrop-blur-xl",
+          className ?? "flex",
         )}>
         {brand && <span className="mr-2 flex items-center">{brand}</span>}
         <NavLinks id="floating" items={navItems} compact />

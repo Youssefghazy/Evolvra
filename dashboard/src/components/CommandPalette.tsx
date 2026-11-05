@@ -51,7 +51,7 @@ export default function CommandPalette({ open, onClose, data }: { open: boolean;
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-50 grid items-start justify-center bg-black/50 px-4 pt-[12vh] backdrop-blur-sm"
+        <motion.div className="fixed inset-0 z-[90] grid items-start justify-center bg-black/50 px-3 pt-[calc(env(safe-area-inset-top)+12px)] backdrop-blur-sm md:px-4 md:pt-[12vh]"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
           <motion.div role="dialog" aria-label="Search" onClick={(e) => e.stopPropagation()} onKeyDown={onKey}
             className="w-full max-w-xl overflow-hidden rounded-2xl border border-line-strong bg-card-solid shadow-2xl"
@@ -60,21 +60,22 @@ export default function CommandPalette({ open, onClose, data }: { open: boolean;
             <div className="flex items-center gap-3 border-b border-line px-4 py-3">
               <Search size={16} className="text-muted" />
               <input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Jump to an agent, mission or page…"
-                className="w-full bg-transparent text-sm outline-none placeholder:text-muted" />
-              <Kbd>Esc</Kbd>
+                enterKeyHint="go" className="w-full bg-transparent text-base outline-none placeholder:text-muted md:text-sm" />
+              <span className="hidden md:inline"><Kbd>Esc</Kbd></span>
+              <button onClick={onClose} className="-mr-1 shrink-0 rounded-lg px-2 py-1.5 text-sm font-medium text-accent md:hidden">Cancel</button>
             </div>
-            <ul className="max-h-[50vh] overflow-y-auto p-2">
+            <ul className="max-h-[65vh] overflow-y-auto overscroll-contain p-2 md:max-h-[50vh]">
               {filtered.length === 0 && <li className="px-3 py-8 text-center text-sm text-muted">No matches.</li>}
               {filtered.map((i, idx) => (
                 <li key={i.id}>
                   <button onMouseEnter={() => setSel(idx)} onClick={() => go(i)}
-                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm ${idx === sel ? "bg-card-hover text-ink" : "text-ink2"}`}>
+                    className={`flex min-h-[52px] w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm ${idx === sel ? "bg-card-hover text-ink" : "text-ink2"}`}>
                     <span className="text-muted">{i.icon}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate">{i.label}</span>
                       <span className="block truncate text-xs text-muted">{i.group} · {i.hint}</span>
                     </span>
-                    {idx === sel ? <CornerDownLeft size={14} className="text-muted" /> : <ArrowRight size={14} className="opacity-0" />}
+                    {idx === sel ? <CornerDownLeft size={14} className="hidden text-muted md:block" /> : <ArrowRight size={14} className="hidden opacity-0 md:block" />}
                   </button>
                 </li>
               ))}

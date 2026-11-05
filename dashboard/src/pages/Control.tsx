@@ -13,7 +13,7 @@ export default function Control({ data }: { data: Data }) {
     const missions = [...data.missions].sort((a, b) => a.started_at.localeCompare(b.started_at));
     const quality = missions.map((x) => avg(x.tasks.map((t) => t.fitness).filter((f): f is number => f != null)));
     const series: Point[] = missions.flatMap((x, i) => quality[i] == null ? [] : [{
-      x: i, y: quality[i]!, label: x.brief,
+      x: i, y: quality[i]!, label: x.brief, href: href.mission(x.id),
       sub: `${new Date(x.started_at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })} · ${x.tasks.length} tasks`,
     }]);
     const q = quality.filter((v): v is number => v != null);
@@ -64,27 +64,27 @@ export default function Control({ data }: { data: Data }) {
           </div>
           <div className="flex items-center gap-2">
             <Chip tone="var(--good)">$0.00 spent</Chip>
-            <a href={`${import.meta.env.BASE_URL}data/missions.json`} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1.5 text-xs text-ink2 hover:text-ink">
+            <a href={`${import.meta.env.BASE_URL}data/missions.json`} className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-card px-3 text-xs text-ink2 transition-colors hover:border-line-strong hover:text-ink active:bg-card-hover">
               <Download size={13} /> Raw data
             </a>
           </div>
         </div>
       </Reveal>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         <Kpi i={0} to={href.missions} label="Mission quality" sub="avg fitness, last 5 missions" value={m.recent != null ? Math.round(m.recent * 100) : 0} suffix="%"
           delta={m.recent != null && m.prior != null ? m.recent - m.prior : null} deltaNote="vs the 5 before" spark={m.q} />
         <Kpi i={1} to={href.missions} label="Missions run" sub={`${m.last24} in the last 24 h`} value={data.summary.missions} spark={m.cumulative} />
         <Kpi i={2} to={href.missions} label="First-try pass rate" sub={`${m.firstTry} of ${m.tasks.length} tasks passed on attempt 1`}
           value={Math.round((m.firstTry / Math.max(1, m.tasks.length)) * 100)} suffix="%" spark={m.firstTrySeries} />
         <Reveal delay={0.18}>
-          <Spotlight href={href.evolutions} className="block h-full p-5">
+          <Spotlight href={href.evolutions} arrow={false} className="block h-full p-4 md:p-5">
             <div className="text-xs text-muted">Promotion rate</div>
-            <div className="mt-2 flex items-center gap-4">
-              <div className="text-3xl font-semibold tracking-tight"><NumberTicker value={Math.round(promoRate * 100)} suffix="%" /></div>
+            <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+              <div className="text-2xl font-semibold tracking-tight md:text-3xl"><NumberTicker value={Math.round(promoRate * 100)} suffix="%" /></div>
               <div className="flex-1"><Bar value={promoRate} color="var(--good)" height={6} /></div>
             </div>
-            <div className="mt-2 text-xs text-muted">{promoted} promoted of {data.evolutions.length} generations. Strict by design: the gate is +3 points.</div>
+            <div className="mt-2 text-[11px] text-muted md:text-xs">{promoted} of {data.evolutions.length} generations<span className="hidden md:inline">. Strict by design: the gate is +3 points.</span></div>
           </Spotlight>
         </Reveal>
       </div>
@@ -92,7 +92,7 @@ export default function Control({ data }: { data: Data }) {
       <div className="grid gap-4 lg:grid-cols-3">
         <Reveal className="min-w-0 lg:col-span-2">
           <div className="surface p-5 md:p-6">
-            <SectionHeader eyebrow="Quality over time" title="Average fitness per mission" sub="Missions in the order they ran; the axis starts at 70 because every score sits above it. Hover a point to see the mission." />
+            <SectionHeader eyebrow="Quality over time" title="Average fitness per mission" sub="Missions in the order they ran; the axis starts at 70 because every score sits above it. Hover or tap a point to see the mission." />
             <AreaChart points={m.series} yMin={0.7} refLine={{ y: 0.9, label: "strong · 90" }} />
           </div>
         </Reveal>
@@ -141,7 +141,30 @@ export default function Control({ data }: { data: Data }) {
         <Reveal className="min-w-0 lg:col-span-2">
           <div className="surface overflow-hidden">
             <div className="px-5 pt-5 md:px-6"><SectionHeader eyebrow="Roster" title="Agents" /></div>
-            <div className="overflow-x-auto">
+            {/* phone: a tappable list (a 5-column table cannot fit 390 px without hiding the fitness column) */}
+            <ul className="border-t border-line md:hidden">
+              {agents.map((a) => {
+                const g = grade(a.fitness);
+                return (
+                  <li key={a.slug} className="border-b border-line last:border-0">
+                    <a href={href.agent(a.slug)} className="flex items-center gap-3 px-5 py-3 active:bg-card-hover">
+                      <Avatar agent={a} size={34} />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center gap-2"><span className="truncate text-sm font-medium">{a.name}</span>
+                          <span className="rounded-md border border-line px-1 font-mono text-[10px] text-muted">v{a.current_version}</span></span>
+                        <span className="mt-1.5 flex items-center gap-2"><span className="w-full max-w-[9rem]"><Bar value={a.fitness} color={toneVar[g.tone]} height={5} /></span>
+                          <span className="text-[11px] text-muted">{a.tasks} task{a.tasks === 1 ? "" : "s"}</span></span>
+                      </span>
+                      <span className="text-right">
+                        <span className="block font-mono text-sm font-semibold tnum" style={{ color: toneVar[g.tone] }}>{pct(a.fitness)}</span>
+                        <span className="block text-[10px] text-muted">{g.label}</span>
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-y border-line text-left text-[11px] uppercase tracking-wider text-muted">
@@ -180,7 +203,7 @@ export default function Control({ data }: { data: Data }) {
               {m.events.slice(0, 9).map((e, i) => (
                 <li key={i} className="relative">
                   <span className="absolute -left-[31px] grid h-5 w-5 place-items-center rounded-full border border-line bg-card-solid"><e.icon size={11} style={{ color: e.tone }} /></span>
-                  <a href={e.to} className="line-clamp-2 text-sm text-ink2 hover:text-ink">{e.text}</a>
+                  <a href={e.to} className="line-clamp-2 py-0.5 text-sm text-ink2 hover:text-ink">{e.text}</a>
                   <div className="text-[11px] text-muted">{relTime(e.at)}</div>
                 </li>
               ))}
@@ -198,15 +221,15 @@ function Kpi({ i, to, label, sub, value, suffix = "", delta, deltaNote, spark }:
 }) {
   return (
     <Reveal delay={i * 0.06}>
-      <Spotlight href={to} arrow={false} className="block h-full p-5">
-        <div className="flex items-center justify-between text-xs text-muted"><span>{label}</span>
+      <Spotlight href={to} arrow={false} className="block h-full p-4 md:p-5">
+        <div className="flex items-center justify-between gap-2 text-xs text-muted"><span className="truncate">{label}</span>
           {delta != null && <span className="rounded-full px-1.5 py-0.5 font-mono text-[11px]" title={deltaNote}
             style={{ color: delta >= 0 ? "var(--good)" : "var(--bad)", background: `color-mix(in srgb, ${delta >= 0 ? "var(--good)" : "var(--bad)"} 12%, transparent)` }}>
             {delta >= 0 ? "▲" : "▼"} {Math.abs(delta * 100).toFixed(1)}</span>}
         </div>
-        <div className="mt-2 text-3xl font-semibold tracking-tight"><NumberTicker value={value} suffix={suffix} /></div>
-        <div className="mt-3"><Sparkline values={spark} /></div>
-        <div className="mt-2 text-xs text-muted">{sub}</div>
+        <div className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"><NumberTicker value={value} suffix={suffix} /></div>
+        <div className="mt-2 md:mt-3"><Sparkline values={spark} height={32} /></div>
+        <div className="mt-2 line-clamp-2 text-[11px] text-muted md:text-xs">{sub}</div>
       </Spotlight>
     </Reveal>
   );

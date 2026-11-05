@@ -3,6 +3,7 @@ import { motion, type MotionValue, useMotionValue, useMotionValueEvent, useReduc
 import { ChevronDown, GitBranch, ShieldX } from "lucide-react";
 import { fmtDate, humanize, pct, signedPct, type Data, type Evolution } from "../data";
 import { href } from "../lib/router";
+import { coarsePointer } from "../lib/media";
 import { NumberTicker, Reveal } from "../components/fx";
 import { Avatar, Chip, Empty, SectionHeader } from "../components/ui";
 
@@ -38,18 +39,18 @@ export default function Evolutions({ data }: { data: Data }) {
       <Reveal><SectionHeader eyebrow="Evolution" title="Every generation, including the ones that lost"
         sub="Refusals are the point: a rewrite must beat the original by at least 3 points on the same held-out tasks, or nothing changes." /></Reveal>
       <Reveal delay={0.04}>
-        <div className="mb-8 grid grid-cols-3 gap-3">
+        <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
           <div className="surface p-4"><div className="text-xs text-muted">Generations</div><div className="mt-1 text-2xl font-semibold"><NumberTicker value={data.evolutions.length} /></div></div>
           <div className="surface p-4"><div className="text-xs text-muted">Promoted</div><div className="mt-1 text-2xl font-semibold text-good"><NumberTicker value={promoted} /></div></div>
           <div className="surface p-4"><div className="text-xs text-muted">Refused</div><div className="mt-1 text-2xl font-semibold"><NumberTicker value={data.evolutions.length - promoted} /></div></div>
         </div>
       </Reveal>
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="no-scrollbar -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         {["all", ...targets].map((t) => {
           const a = data.agents.find((x) => x.slug === t);
           return (
             <button key={t} onClick={() => setAgent(t)}
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs ${agent === t ? "border-line-strong bg-card-hover text-ink" : "border-line text-muted hover:text-ink"}`}>
+              className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-xs transition-colors sm:h-auto sm:py-1.5 ${agent === t ? "border-line-strong bg-card-hover text-ink" : "border-line text-muted hover:text-ink"}`}>
               {a && <Avatar agent={a} size={18} />}{a?.name ?? "All agents"}
             </button>
           );
@@ -93,9 +94,12 @@ function Generation({ e, data, ramp }: { e: Evolution; data: Data; ramp: MotionV
   const p = reduce ? one : eased;
   const fillScale = useTransform(p, [0, 1], [0.2, 1]);
   const nodeScale = useTransform(p, [0, 0.85, 1], [0.8, 1.18, 1]);
-  const cardOpacity = useTransform(p, [0, 1], [0.42, 1]);
-  const cardX = useTransform(p, [0, 1], [18, 0]);
-  const cardBlur = useTransform(p, [0, 1], ["blur(1px)", "blur(0px)"]);
+  // phones: lighter dimming, no blur filter (it is expensive to repaint while scrolling on mobile GPUs)
+  const cardOpacity = useTransform(p, [0, 1], [coarsePointer ? 0.55 : 0.42, 1]);
+  // phones slide up instead of sideways, so a card never pokes past the right edge of a narrow screen
+  const cardX = useTransform(p, [0, 1], [coarsePointer ? 0 : 18, 0]);
+  const cardY = useTransform(p, [0, 1], [coarsePointer ? 14 : 0, 0]);
+  const cardBlur = useTransform(p, [0, 1], coarsePointer ? ["none", "none"] : ["blur(1px)", "blur(0px)"]);
   const [lit, setLit] = useState(false);
   useMotionValueEvent(reached, "change", (v) => { if (v >= 0.98 !== lit) setLit(v >= 0.98); });
   const reason = won ? `Won by ${signedPct(e.delta)} on held-out tasks`
@@ -112,8 +116,8 @@ function Generation({ e, data, ramp }: { e: Evolution; data: Data; ramp: MotionV
       </motion.span>
       <motion.span aria-hidden className="absolute -left-[13px] top-[31px] h-px w-[13px] origin-left md:-left-[17px] md:w-[17px]"
         style={{ scaleX: p, background: `linear-gradient(90deg, ${tone}, transparent)` }} />
-      <motion.div style={{ opacity: cardOpacity, x: cardX, filter: cardBlur }} className={won ? "beam" : ""}>
-        <div className={won ? "beam-inner p-5" : "surface p-5"}>
+      <motion.div style={{ opacity: cardOpacity, x: cardX, y: cardY, filter: cardBlur }} className={won ? "beam" : ""}>
+        <div className={won ? "beam-inner p-4 sm:p-5" : "surface p-4 sm:p-5"}>
           <div className="flex flex-wrap items-center gap-3">
             {a && <Avatar agent={a} size={36} />}
             <div className="min-w-[12rem] flex-1">
@@ -127,15 +131,23 @@ function Generation({ e, data, ramp }: { e: Evolution; data: Data; ramp: MotionV
             <Gate delta={e.delta} won={won} />
           </div>
           {e.candidates.length > 0 && (
-            <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            <div className="mt-4 grid gap-1.5 sm:grid-cols-3 sm:gap-2">
               {e.candidates.map((c) => {
                 const best = won && c.paired_delta != null && c.paired_delta === e.delta;
                 return (
-                  <div key={c.index} className={`rounded-xl border p-3 text-xs ${best ? "border-line-strong bg-card-hover" : "border-line bg-card"}`}>
-                    <div className="flex items-center justify-between"><span className="font-mono text-muted">rewrite {c.index}</span>
+                  <div key={c.index} className={`rounded-xl border px-3 py-2.5 text-xs sm:p-3 ${best ? "border-line-strong bg-card-hover" : "border-line bg-card"}`}>
+                    {/* phone: one compact row per rewrite; sm+: a small card */}
+                    <div className="flex items-center gap-2 sm:hidden">
+                      <span className="font-mono text-muted">#{c.index}</span>
+                      <span className="min-w-0 flex-1 truncate font-medium text-ink2">{humanize(c.target)}</span>
+                      {c.lint_ok ? <span className={`font-mono ${(c.paired_delta ?? 0) >= MARGIN ? "text-good" : "text-muted"}`}>{signedPct(c.paired_delta)}</span>
+                        : <span className="font-mono text-bad">invalid</span>}
+                      {best && <span className="text-[10px] uppercase tracking-wider text-good">win</span>}
+                    </div>
+                    <div className="hidden items-center justify-between sm:flex"><span className="font-mono text-muted">rewrite {c.index}</span>
                       {best && <span className="text-[10px] uppercase tracking-wider text-good">winner</span>}</div>
-                    <div className="mt-1 line-clamp-1 font-medium text-ink2" title={c.target}>{humanize(c.target)}</div>
-                    <div className="mt-2 flex justify-between font-mono">
+                    <div className="mt-1 hidden sm:block"><div className="line-clamp-1 font-medium text-ink2" title={c.target}>{humanize(c.target)}</div></div>
+                    <div className="mt-2 hidden justify-between font-mono sm:flex">
                       {c.lint_ok ? <><span className="text-muted">score {pct(c.fitness)}</span><span className={(c.paired_delta ?? 0) >= MARGIN ? "text-good" : "text-muted"}>{signedPct(c.paired_delta)}</span></>
                         : <span className="text-bad">invalid file, not played</span>}
                     </div>
@@ -146,10 +158,10 @@ function Generation({ e, data, ramp }: { e: Evolution; data: Data; ramp: MotionV
           )}
           {e.diagnosis && (
             <div className="mt-3">
-              <button onClick={() => setOpen(!open)} className="inline-flex items-center gap-1 text-xs text-muted hover:text-ink">
+              <button onClick={() => setOpen(!open)} className="-ml-1 inline-flex items-center gap-1 rounded-lg px-1 py-2 text-xs text-muted hover:text-ink">
                 <ChevronDown size={13} className={`transition-transform ${open ? "rotate-180" : ""}`} /> Diagnosis that drove this generation
               </button>
-              {open && <pre className="mt-2 max-h-80 overflow-auto whitespace-pre-wrap rounded-xl border border-line bg-bg2 p-3 font-mono text-[11px] leading-relaxed text-ink2">{e.diagnosis}</pre>}
+              {open && <pre className="mt-1 max-h-80 overflow-auto overscroll-contain whitespace-pre-wrap break-words rounded-xl border border-line bg-bg2 p-3 font-mono text-[11px] leading-relaxed text-ink2">{e.diagnosis}</pre>}
             </div>
           )}
         </div>

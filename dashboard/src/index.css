@@ -175,3 +175,16 @@ button:not(:disabled), [role="button"], summary, label[for] { cursor: pointer; }
 /* One-shot ripple when a timeline node lights up. */
 .node-ping { border: 2px solid; animation: node-ping 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
 @keyframes node-ping { from { transform: scale(1); opacity: 0.9; } to { transform: scale(3.2); opacity: 0; } }
+
+/* Swipe rails scroll by touch; the bar itself is noise on a phone. */
+.no-scrollbar { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+/* No grey flash on tap, no rubber-band scroll chaining out of sheets. */
+a, button { -webkit-tap-highlight-color: transparent; }
+
+/* Phones: keep the aurora inside the screen and make it cheap (a big animated blur on a fixed layer
+   is what makes mobile scrolling stutter). */
+@media (max-width: 767px) {
+  .aurora { inset: -10% 0 auto 0; height: 55vh; filter: blur(48px); overflow: hidden; }
+  .aurora span { animation: none; }
+}

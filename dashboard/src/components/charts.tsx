@@ -1,4 +1,5 @@
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 
 /** Tiny trend line for KPI cards: one series, 2px line, soft fill, endpoint marker. */
@@ -29,13 +30,28 @@ export function Sparkline({ values, height = 40, color = "var(--series-1)" }: { 
 
 export type Point = { x: number; y: number; label: string; sub: string; href?: string };
 
-/** Area chart with a crosshair + tooltip. Y is a labelled 50-100 window, because every score sits above 50. */
+/**
+ * Area chart with a crosshair + tooltip. Y is a labelled window (yMin-100), because every score sits above it.
+ * The viewBox follows the real pixel width so axis text never stretches. With a mouse, a floating
+ * tooltip follows the pointer; on touch, a tap (or drag) picks a point and a readout under the chart
+ * shows it with a link, defaulting to the latest mission.
+ */
 export function AreaChart({ points, height = 260, yMin = 0.5, refLine }: { points: Point[]; height?: number; yMin?: number; refLine?: { y: number; label: string } }) {
   const id = useId().replace(/:/g, "");
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<number | null>(null);
-  const W = 800, H = height, L = 36, R = 12, T = 12, B = 26;
+  const [touched, setTouched] = useState<number | null>(null);
+  const [w, setW] = useState(800);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const ro = new ResizeObserver(([e]) => setW(Math.max(260, Math.round(e.contentRect.width))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const narrow = w < 520;
+  if (narrow) height = Math.min(height, 200);
+  const W = w, H = height, L = narrow ? 28 : 36, R = narrow ? 8 : 12, T = 12, B = narrow ? 14 : 26;
   const geo = useMemo(() => {
     if (points.length === 0) return null;
     const x0 = points[0].x, x1 = points[points.length - 1].x || x0 + 1;
@@ -45,19 +61,27 @@ export function AreaChart({ points, height = 260, yMin = 0.5, refLine }: { point
     const line = xy.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
     const area = `${line} L${xy[xy.length - 1][0]},${H - B} L${xy[0][0]},${H - B} Z`;
     return { sx, sy, xy, line, area };
-  }, [points, H, yMin]);
+  }, [points, W, H, L, R, B, yMin]);
   if (!geo) return <div className="grid h-40 place-items-center text-sm text-muted">No data yet.</div>;
   const ticks = [yMin, yMin + (1 - yMin) / 2, 1];
-  const onMove = (e: React.MouseEvent) => {
-    const r = ref.current?.getBoundingClientRect(); if (!r) return;
-    const x = ((e.clientX - r.left) / r.width) * W;
+  const nearest = (clientX: number) => {
+    const r = ref.current?.getBoundingClientRect(); if (!r) return 0;
+    const x = ((clientX - r.left) / r.width) * W;
     let best = 0, bd = Infinity;
     geo.xy.forEach(([px], i) => { const d = Math.abs(px - x); if (d < bd) { bd = d; best = i; } });
-    setHover(best);
+    return best;
   };
-  const hp = hover != null ? geo.xy[hover] : null;
+  const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") setHover(nearest(e.clientX));
+    else if (e.buttons) setTouched(nearest(e.clientX));
+  };
+  const onDown = (e: React.PointerEvent) => { if (e.pointerType !== "mouse") setTouched(nearest(e.clientX)); };
+  const sel = hover ?? touched;
+  const hp = sel != null ? geo.xy[sel] : null;
+  const pick = touched ?? points.length - 1;
   return (
-    <div ref={ref} className="relative" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
+    <div>
+    <div ref={ref} className="relative touch-pan-y select-none" onPointerMove={onMove} onPointerDown={onDown} onPointerLeave={(e) => { if (e.pointerType === "mouse") setHover(null); }}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height }} preserveAspectRatio="none" role="img" aria-label="Mission quality over time">
         <defs>
           <linearGradient id={`af-${id}`} x1="0" x2="0" y1="0" y2="1">
@@ -67,7 +91,7 @@ export function AreaChart({ points, height = 260, yMin = 0.5, refLine }: { point
         {ticks.map((t) => (
           <g key={t}>
             <line x1={L} x2={W - R} y1={geo.sy(t)} y2={geo.sy(t)} stroke="var(--line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <text x={L - 8} y={geo.sy(t) + 4} textAnchor="end" fontSize="11" fill="var(--muted)" className="tnum">{Math.round(t * 100)}</text>
+            <text x={L - 6} y={geo.sy(t) + 4} textAnchor="end" fontSize={narrow ? 10 : 11} fill="var(--muted)" className="tnum">{Math.round(t * 100)}</text>
           </g>
         ))}
         {refLine && (
@@ -83,18 +107,29 @@ export function AreaChart({ points, height = 260, yMin = 0.5, refLine }: { point
       </svg>
       {/* markers in HTML so they stay round under preserveAspectRatio=none */}
       {geo.xy.map(([x, y], i) => (
-        <span key={i} className="pointer-events-none absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{ left: `${(x / W) * 100}%`, top: `${(y / H) * height}px`, background: hover === i ? "var(--series-1)" : "var(--card-solid)",
-            boxShadow: `0 0 0 2px var(--series-1)${hover === i ? ", 0 0 0 6px color-mix(in srgb, var(--series-1) 25%, transparent)" : ""}` }} />
+        <span key={i} className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full ${narrow ? "h-1.5 w-1.5" : "h-2 w-2"}`}
+          style={{ left: `${(x / W) * 100}%`, top: `${(y / H) * height}px`, background: sel === i ? "var(--series-1)" : "var(--card-solid)",
+            boxShadow: `0 0 0 ${narrow ? 1.5 : 2}px var(--series-1)${sel === i ? ", 0 0 0 6px color-mix(in srgb, var(--series-1) 25%, transparent)" : ""}` }} />
       ))}
       {hover != null && hp && (
-        <div className="pointer-events-none absolute z-10 w-64 -translate-y-full rounded-xl border border-line-strong bg-card-solid p-3 text-xs shadow-2xl"
+        <div className="pointer-events-none absolute z-10 hidden w-64 md:block -translate-y-full rounded-xl border border-line-strong bg-card-solid p-3 text-xs shadow-2xl"
           style={{ left: `clamp(0px, calc(${(hp[0] / W) * 100}% - 8rem), calc(100% - 16rem))`, top: `${(hp[1] / H) * height - 14}px` }}>
           <div className="font-mono text-lg font-semibold tnum">{Math.round(points[hover].y * 100)}%</div>
           <div className="mt-1 line-clamp-2 text-ink2">{points[hover].label}</div>
           <div className="mt-1 text-muted">{points[hover].sub}</div>
         </div>
       )}
+    </div>
+    {narrow && points[pick] && (
+      <a href={points[pick].href} className="mt-3 flex items-center gap-3 rounded-xl border border-line bg-card p-3 active:bg-card-hover">
+        <span className="font-mono text-lg font-semibold tnum" style={{ color: "var(--series-1)" }}>{Math.round(points[pick].y * 100)}%</span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm text-ink">{points[pick].label}</span>
+          <span className="block text-[11px] text-muted">{touched == null ? "Latest · " : ""}{points[pick].sub}</span>
+        </span>
+        {points[pick].href && <ArrowRight size={15} className="shrink-0 text-muted" />}
+      </a>
+    )}
     </div>
   );
 }

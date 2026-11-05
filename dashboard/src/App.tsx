@@ -51,7 +51,7 @@ export default function App() {
     <div className="relative min-h-screen">
       <Backdrop />
       <Nav route={route} data={data} theme={theme} setTheme={setTheme} openPalette={() => setPalette(true)} />
-      <main className="mx-auto max-w-6xl px-4 pb-36 pt-8 md:pt-10">
+      <main className="mx-auto max-w-6xl px-4 pb-16 pt-6 md:pb-36 md:pt-10">
         <AnimatePresence mode="wait">
           <motion.div key={`${route.view}/${route.id ?? ""}`}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
@@ -61,7 +61,7 @@ export default function App() {
         </AnimatePresence>
       </main>
       <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pb-28 pt-8 text-xs text-muted md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pb-[calc(88px+env(safe-area-inset-bottom))] pt-8 text-xs text-muted md:flex-row md:pb-28 md:items-center md:justify-between">
           <span className="inline-flex items-center gap-2"><LogoMark size={16} /> Evolvra · every number on this site came from free-tier models and a $0 budget.</span>
           <span>Personas from msitarzewski/agency-agents (MIT) · ideas from GEPA, OpenEvolve, Darwin Gödel Machine</span>
         </div>
