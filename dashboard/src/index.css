@@ -2,6 +2,12 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/jetbrains-mono";
 
+/* `dark:` follows this site's theme: the OS setting unless the viewer picked light, or an explicit dark pick. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) { &:where(:root:not([data-theme="light"]) *) { @slot; } }
+  &:where([data-theme="dark"], [data-theme="dark"] *) { @slot; }
+}
+
 /* ---------- tokens: dark is the default; light is selected, not flipped ---------- */
 :root {
   color-scheme: dark;
@@ -23,6 +29,8 @@
   --bad: #f87171;
   --glow: rgba(167, 139, 250, 0.18);
   --grid: rgba(255, 255, 255, 0.045);
+  --series-1: #3987e5;
+  --series-muted: #4a4a55;
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 40px -24px rgba(0, 0, 0, 0.8);
 }
 @media (prefers-color-scheme: light) {
@@ -33,7 +41,7 @@
     --ink: #0d0d16; --ink-2: #44445a; --muted: #75758a;
     --accent: #0891b2; --accent-2: #7c3aed; --accent-3: #db2777;
     --good: #059669; --warn: #b45309; --bad: #dc2626;
-    --glow: rgba(124, 58, 237, 0.10); --grid: rgba(15, 15, 35, 0.05);
+    --glow: rgba(124, 58, 237, 0.10); --grid: rgba(15, 15, 35, 0.05); --series-1: #2a78d6; --series-muted: #c3c2b7;
     --shadow: 0 1px 2px rgba(15, 15, 35, 0.04), 0 12px 32px -18px rgba(15, 15, 35, 0.18);
   }
 }
@@ -44,7 +52,7 @@
   --ink: #0d0d16; --ink-2: #44445a; --muted: #75758a;
   --accent: #0891b2; --accent-2: #7c3aed; --accent-3: #db2777;
   --good: #059669; --warn: #b45309; --bad: #dc2626;
-  --glow: rgba(124, 58, 237, 0.10); --grid: rgba(15, 15, 35, 0.05);
+  --glow: rgba(124, 58, 237, 0.10); --grid: rgba(15, 15, 35, 0.05); --series-1: #2a78d6; --series-muted: #c3c2b7;
   --shadow: 0 1px 2px rgba(15, 15, 35, 0.04), 0 12px 32px -18px rgba(15, 15, 35, 0.18);
 }
 
@@ -67,6 +75,7 @@
   --color-good: var(--good);
   --color-warn: var(--warn);
   --color-bad: var(--bad);
+  --color-series: var(--series-1);
 }
 
 html, body, #root { min-height: 100%; }

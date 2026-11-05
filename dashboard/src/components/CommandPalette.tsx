@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Bot, CornerDownLeft, Dna, LayoutDashboard, Rocket, Search } from "lucide-react";
+import { ArrowRight, Bot, CornerDownLeft, Dna, Laptop, LayoutDashboard, Rocket, Search } from "lucide-react";
 import { type Data } from "../data";
 import { href } from "../lib/router";
 import { Kbd } from "./ui";
@@ -18,10 +18,12 @@ export default function CommandPalette({ open, onClose, data }: { open: boolean;
       { id: "p-agents", label: "Agents", hint: "The roster and their fitness", to: href.agents, group: "Pages", icon: <Bot size={15} /> },
       { id: "p-missions", label: "Missions", hint: "Every task, attempt and verdict", to: href.missions, group: "Pages", icon: <Rocket size={15} /> },
       { id: "p-evo", label: "Evolution", hint: "Every generation, promoted or refused", to: href.evolutions, group: "Pages", icon: <Dna size={15} /> },
+      { id: "p-control", label: "Control room", hint: "KPIs, quality over time, judges, activity", to: href.control, group: "Pages", icon: <LayoutDashboard size={15} /> },
+      { id: "p-tour", label: "Tour", hint: "Watch a real mission replay on a laptop", to: href.tour, group: "Pages", icon: <Laptop size={15} /> },
     ];
     if (!data) return pages;
     const agents = data.agents.map<Item>((a) => ({
-      id: `a-${a.slug}`, label: `${a.emoji ?? ""} ${a.name}`, hint: `${a.division} · v${a.current_version}`,
+      id: `a-${a.slug}`, label: a.name, hint: `${a.division} · v${a.current_version}`,
       to: href.agent(a.slug), group: "Agents", icon: <Bot size={15} />,
     }));
     const missions = data.missions.map<Item>((m) => ({

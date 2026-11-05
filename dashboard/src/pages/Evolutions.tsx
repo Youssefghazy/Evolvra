@@ -35,7 +35,7 @@ export default function Evolutions({ data }: { data: Data }) {
           return (
             <button key={t} onClick={() => setAgent(t)}
               className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs ${agent === t ? "border-line-strong bg-card-hover text-ink" : "border-line text-muted hover:text-ink"}`}>
-              {a && <span>{a.emoji}</span>}{a?.name ?? "All agents"}
+              {a && <Avatar agent={a} size={18} />}{a?.name ?? "All agents"}
             </button>
           );
         })}

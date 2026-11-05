@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export type Route = { view: string; id?: string };
 
-const ALIASES: Record<string, string> = { overview: "home", roster: "agents", agent: "agent" };
+const ALIASES: Record<string, string> = { overview: "home", roster: "agents", agent: "agent", dashboard: "control" };
 
 export function parse(hash: string): Route {
   const [raw = "", id] = hash.replace(/^#\/?/, "").split("/");
@@ -21,7 +21,7 @@ export function useRoute(): Route {
 }
 
 export const href = {
-  home: "#/", agents: "#/agents", missions: "#/missions", evolutions: "#/evolutions",
+  home: "#/", agents: "#/agents", missions: "#/missions", evolutions: "#/evolutions", control: "#/control", tour: "#/tour",
   agent: (slug: string) => `#/agent/${encodeURIComponent(slug)}`,
   mission: (id: string) => `#/missions/${encodeURIComponent(id)}`,
 };

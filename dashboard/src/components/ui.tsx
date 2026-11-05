@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { CheckCircle2, CircleDashed, Clock3, XCircle } from "lucide-react";
+import {
+  Bot, CheckCircle2, CircleDashed, Clock3, Code2, Gauge, ListOrdered, Megaphone, PenTool, ScanSearch, Server,
+  ShieldCheck, TrendingUp, Workflow, XCircle, Zap, type LucideIcon,
+} from "lucide-react";
 import { divisionColor, grade, toneVar, type Agent } from "../data";
 
 export function SectionHeader({ eyebrow, title, action, sub }: { eyebrow?: string; title: ReactNode; action?: ReactNode; sub?: ReactNode }) {
@@ -29,15 +32,33 @@ export function DivisionChip({ division }: { division: string }) {
   return <Chip tone={divisionColor(division)}>{division.replace("-", " ")}</Chip>;
 }
 
-export function Avatar({ agent, size = 40 }: { agent: Pick<Agent, "emoji" | "division" | "name">; size?: number }) {
+/** One line-icon per role, so the roster reads like a team, not a sticker sheet. */
+const ROLE_ICONS: Record<string, LucideIcon> = {
+  "frontend-developer": Code2, "backend-architect": Server, "devops-automator": Workflow, "rapid-prototyper": Zap,
+  "ux-researcher": ScanSearch, "content-creator": PenTool, "growth-hacker": TrendingUp, "sprint-prioritizer": ListOrdered,
+  "evidence-collector": Gauge, "reality-checker": ShieldCheck,
+};
+const DIVISION_ICONS: Record<string, LucideIcon> = { engineering: Code2, marketing: Megaphone, testing: ShieldCheck };
+
+export function roleIcon(agent: { slug?: string; name: string; division: string }): LucideIcon {
+  const slug = agent.slug ?? agent.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return ROLE_ICONS[slug] ?? DIVISION_ICONS[agent.division] ?? Bot;
+}
+
+export function Avatar({ agent, size = 40, ring = false }: {
+  agent: Pick<Agent, "division" | "name"> & { slug?: string }; size?: number; ring?: boolean;
+}) {
   const c = divisionColor(agent.division);
+  const Icon = roleIcon(agent);
   return (
-    <span className="relative inline-grid shrink-0 place-items-center rounded-full"
-      style={{ width: size, height: size, background: `conic-gradient(from 210deg, ${c}, transparent 55%, ${c})`, padding: 1.5 }}
-      aria-label={agent.name}>
-      <span className="grid h-full w-full place-items-center rounded-full bg-card-solid" style={{ fontSize: size * 0.48 }}>
-        {agent.emoji || "🤖"}
-      </span>
+    <span className="relative inline-grid shrink-0 place-items-center"
+      style={{
+        width: size, height: size, borderRadius: size * 0.3,
+        background: `linear-gradient(145deg, color-mix(in srgb, ${c} 34%, var(--card-solid)), color-mix(in srgb, ${c} 10%, var(--card-solid)))`,
+        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 0 1px color-mix(in srgb, ${c} 45%, transparent)${ring ? `, 0 0 0 3px var(--bg), 0 0 22px -2px ${c}` : ""}`,
+      }}
+      aria-label={agent.name} title={agent.name}>
+      <Icon size={Math.round(size * 0.5)} strokeWidth={1.75} style={{ color: `color-mix(in srgb, ${c} 55%, white)` }} />
     </span>
   );
 }

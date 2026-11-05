@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, ArrowUpRight, Dna, Gavel, Rocket, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Dna, Gavel, LayoutDashboard, Laptop, Rocket, Sparkles, Trophy } from "lucide-react";
 import {
   addedLines, grade, humanize, latestPromotion, pct, relTime, signedPct, toneVar, type Agent, type Data,
 } from "../data";
 import { href } from "../lib/router";
 import { NumberTicker, Reveal, Spotlight, WordsReveal } from "../components/fx";
-import { Avatar, Bar, Chip, GithubIcon, SectionHeader, Verdict } from "../components/ui";
+import Orbit from "../components/Orbit";
+import { Avatar, Bar, Chip, SectionHeader, Verdict } from "../components/ui";
 
 export default function Home({ data }: { data: Data }) {
   const s = data.summary;
@@ -61,7 +62,7 @@ function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
         <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
           <WordsReveal text="AI agents that evolve themselves." />
           <br />
-          <WordsReveal text="With receipts." delay={0.35} className="text-gradient" />
+          <WordsReveal text="With receipts." delay={0.35} wordClassName="text-gradient pb-1" />
         </h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.6 }}
           className="mt-6 max-w-xl text-base leading-relaxed text-ink2 md:text-lg">
@@ -73,9 +74,11 @@ function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
           <a href={href.agents} style={{ background: "var(--ink)", color: "var(--bg)" }} className="group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-transform hover:-translate-y-0.5">
             Meet the agents <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href="https://github.com/Youssefghazy/Evolvra" target="_blank" rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-5 py-2.5 text-sm text-ink2 hover:text-ink">
-            <GithubIcon size={15} /> Source on GitHub
+          <a href={href.tour} className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-5 py-2.5 text-sm text-ink2 hover:text-ink">
+            <Laptop size={15} /> Take the tour
+          </a>
+          <a href={href.control} className="inline-flex items-center gap-2 rounded-full px-3 py-2.5 text-sm text-muted hover:text-ink">
+            <LayoutDashboard size={15} /> Control room
           </a>
         </motion.div>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-8 flex flex-wrap gap-2">
@@ -84,63 +87,8 @@ function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
           <Chip tone="var(--accent-2)">3 judges from 3 labs</Chip>
         </motion.div>
       </div>
-      <AgentOrbit agents={data.agents} promotedSlug={promotedSlug} promotions={data.summary.promotions} />
+      <Orbit agents={data.agents} promotedSlug={promotedSlug} promotions={data.summary.promotions} />
     </section>
-  );
-}
-
-function AgentOrbit({ agents, promotedSlug, promotions }: { agents: Agent[]; promotedSlug?: string; promotions: number }) {
-  const [hover, setHover] = useState<Agent | null>(null);
-  const inner = agents.slice(0, 4), outer = agents.slice(4);
-  const place = (list: Agent[], radius: number, offset: number) =>
-    list.map((a, i) => {
-      const t = (i / list.length) * Math.PI * 2 + offset;
-      return { a, x: Math.cos(t) * radius, y: Math.sin(t) * radius };
-    });
-  const nodes = [...place(inner, 27, 0.4), ...place(outer, 45, 0)];
-  return (
-    <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative mx-auto aspect-square w-full max-w-[460px] ${hover ? "orbit-paused" : ""}`}>
-      <div className="absolute inset-[5%] rounded-full border border-dashed border-line" />
-      <div className="absolute inset-[23%] rounded-full border border-line" />
-      <div className="absolute inset-[38%] rounded-full" style={{ background: "radial-gradient(circle, var(--glow), transparent 70%)" }} />
-      <div className="absolute inset-0 grid place-items-center">
-        <div className="grid h-24 w-24 place-items-center rounded-full border border-line-strong bg-card-solid text-center shadow-2xl"
-          style={{ boxShadow: "0 0 60px -10px var(--accent-2)" }}>
-          <div>
-            <div className="text-2xl">🧬</div>
-            <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted">{promotions} evolved</div>
-          </div>
-        </div>
-      </div>
-      <div className="orbit absolute inset-0">
-        {nodes.map(({ a, x, y }) => {
-          const promoted = a.slug === promotedSlug;
-          return (
-            <a key={a.slug} href={href.agent(a.slug)} onMouseEnter={() => setHover(a)} onMouseLeave={() => setHover(null)}
-              className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${50 + x}%`, top: `${50 + y}%` }}
-              aria-label={a.name}>
-              <span className="orbit-counter block transition-transform duration-300 hover:scale-110">
-                <span className="relative block">
-                  {promoted && <span className="absolute -inset-2 rounded-full" style={{ boxShadow: "0 0 26px 2px var(--good)" }} />}
-                  <Avatar agent={a} size={promoted ? 54 : 44} />
-                  {promoted && (
-                    <span className="absolute -right-2 -top-1 rounded-full border border-line bg-card-solid px-1.5 font-mono text-[10px] text-good">
-                      v{a.current_version}
-                    </span>
-                  )}
-                </span>
-              </span>
-            </a>
-          );
-        })}
-      </div>
-      <div className="pointer-events-none absolute inset-x-0 -bottom-2 flex justify-center">
-        <div className={`rounded-full border border-line bg-card-solid px-3 py-1 text-xs transition-opacity ${hover ? "opacity-100" : "opacity-0"}`}>
-          {hover && (<><span className="font-medium">{hover.name}</span> <span className="text-muted">· fitness {pct(hover.fitness)} · v{hover.current_version}</span></>)}
-        </div>
-      </div>
-    </motion.div>
   );
 }
 

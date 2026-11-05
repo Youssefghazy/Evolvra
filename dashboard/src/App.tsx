@@ -4,6 +4,7 @@ import { loadData, type Data } from "./data";
 import { useRoute } from "./lib/router";
 import { Backdrop } from "./components/fx";
 import Nav from "./components/Nav";
+import { LogoMark } from "./components/Logo";
 import CommandPalette from "./components/CommandPalette";
 import { Empty } from "./components/ui";
 import Home from "./pages/Home";
@@ -11,6 +12,8 @@ import Agents from "./pages/Agents";
 import AgentDetail from "./pages/AgentDetail";
 import Missions from "./pages/Missions";
 import Evolutions from "./pages/Evolutions";
+import Control from "./pages/Control";
+import Tour from "./pages/Tour";
 
 export default function App() {
   const route = useRoute();
@@ -40,13 +43,15 @@ export default function App() {
   else if (route.view === "agent") page = <AgentDetail data={data} slug={route.id ?? ""} />;
   else if (route.view === "missions") page = <Missions data={data} id={route.id} />;
   else if (route.view === "evolutions") page = <Evolutions data={data} />;
+  else if (route.view === "control") page = <Control data={data} />;
+  else if (route.view === "tour") page = <Tour data={data} />;
   else page = <Home data={data} />;
 
   return (
     <div className="relative min-h-screen">
       <Backdrop />
       <Nav route={route} data={data} theme={theme} setTheme={setTheme} openPalette={() => setPalette(true)} />
-      <main className="mx-auto max-w-6xl px-4 pb-24 pt-8 md:pt-10">
+      <main className="mx-auto max-w-6xl px-4 pb-36 pt-8 md:pt-10">
         <AnimatePresence mode="wait">
           <motion.div key={`${route.view}/${route.id ?? ""}`}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
@@ -56,8 +61,8 @@ export default function App() {
         </AnimatePresence>
       </main>
       <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-xs text-muted md:flex-row md:items-center md:justify-between">
-          <span>Evolvra · every number on this site came from free-tier models and a $0 budget.</span>
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pb-28 pt-8 text-xs text-muted md:flex-row md:items-center md:justify-between">
+          <span className="inline-flex items-center gap-2"><LogoMark size={16} /> Evolvra · every number on this site came from free-tier models and a $0 budget.</span>
           <span>Personas from msitarzewski/agency-agents (MIT) · ideas from GEPA, OpenEvolve, Darwin Gödel Machine</span>
         </div>
       </footer>

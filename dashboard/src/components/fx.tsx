@@ -80,12 +80,15 @@ export function NumberTicker({ value, decimals = 0, prefix = "", suffix = "", cl
 }
 
 /** Text that appears word by word. */
-export function WordsReveal({ text, className = "", delay = 0 }: { text: string; className?: string; delay?: number }) {
+export function WordsReveal({ text, className = "", wordClassName = "", delay = 0 }: {
+  text: string; className?: string; wordClassName?: string; delay?: number;
+}) {
   const reduce = useReducedMotion();
+  // gradient text must sit on each animated word: Chrome drops background-clip:text through transformed children
   return (
     <span className={className}>
       {text.split(" ").map((w, i) => (
-        <motion.span key={i} className="inline-block"
+        <motion.span key={i} className={`inline-block ${wordClassName}`}
           initial={reduce ? false : { opacity: 0, y: 12, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: delay + i * 0.06, ease: [0.22, 1, 0.36, 1] }}>
