@@ -9,13 +9,63 @@
 </p>
 
 <p align="center">
-  <img alt="status" src="https://img.shields.io/badge/status-phase%204%20%C2%B7%20dashboard-blue">
+  <img alt="status" src="https://img.shields.io/badge/status-running%20autonomously-brightgreen">
+  <img alt="tests" src="https://img.shields.io/badge/tests-60%20passing-brightgreen">
   <img alt="cost" src="https://img.shields.io/badge/total%20cost-%240.00-brightgreen">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow">
   <img alt="runtime" src="https://img.shields.io/badge/runtime-Claude%20Code%20plugin-8A2BE2">
 </p>
 
 ---
+
+**Live dashboard:** https://youssefghazy.github.io/Evolvra/
+
+## Results so far
+
+Measured from the system's own records (`dashboard/public/data/`), first 3 days of operation.
+
+| | |
+|---|---|
+| Real missions run | 11 (22 tasks, every one independently QA-checked) |
+| Evolution generations | 7 |
+| Promotions | 1 (Evidence Collector v1 → v2) |
+| Generations correctly refused | 6 (no candidate beat its parent by the margin, or the arena was unfair) |
+| Free-tier model calls | ~520 (Gemini + Groq) |
+| Money spent | **$0.00** |
+| Scheduled cycles that ran unattended | 7, including overnight |
+
+**The promotion.** The judges kept flagging Evidence Collector, the QA agent, for claims it could not prove.
+Evolution read those failures, wrote three persona variants, and played each against the original on four
+held-out tasks. The winner added one workflow step ("save every command's raw output under `evidence/`"), a
+report section listing those files, and an automatic-fail rule for any claim without a referenced file.
+
+| | v1 (original) | v2 (evolved) |
+|---|---|---|
+| Arena, 4 held-out tasks (paired) | 0.63 | **0.80** (+0.17) |
+| Real missions, ≥2 judges | 0.880 (8 tasks) | 0.886 (3 tasks) |
+
+The arena gain was large; on real missions v2 held level with v1 rather than pulling ahead, because v1 was
+already strong at real QA. That is reported as it is: the point of the system is that a promotion has to
+survive contact with real work, and the dashboard shows both numbers side by side.
+
+**What three days of running taught the engine.** Each of these was found by the system's own operator
+session, fixed test-first, and is now enforced in code:
+judges were reading only the first 4,000 characters of long deliverables; two lenient judges could outvote the
+one that caught fabricated evidence (aggregation is now ceiling-aware); a single wrong low judge could sink
+correct work (median when judges genuinely disagree); a rate-limited day could overwrite a 3-judge verdict with
+a 1-judge one; QA retries caused by a builder were charged to QA; a promoted persona was not shipped to the
+installed plugin. Details: [docs/SCORING.md](docs/SCORING.md), [docs/EVOLUTION.md](docs/EVOLUTION.md).
+
+## How it runs: two Claude sessions and a timer
+
+- **Operator** (local Claude Code, on the owner's Pro plan): runs missions, cycles and audits, fixes engine
+  bugs test-first, and writes [`docs/STATUS.md`](docs/STATUS.md).
+- **Reviewer** (cloud Claude session): reads STATUS from git, reviews every commit, owns scoring and evolution
+  policy, and writes [`docs/REVIEW.md`](docs/REVIEW.md).
+- **Scheduler** (Windows Task Scheduler): every 6 hours ingests, scores, evolves the weakest agent at most every
+  12 hours, exports and pushes. The dashboard redeploys on every push.
+
+Git is the only channel between them, so every decision has a commit and a reason.
 
 ## What it does
 
@@ -58,7 +108,7 @@ Claude Code (plugin: plugin/)            core/ (Python, zero deps)              
                                          └──────────────────────────┘
 ```
 
-## Quick start (Phase 0)
+## Quick start
 
 ```bash
 # 1. Install the plugin into Claude Code
@@ -88,17 +138,17 @@ evolvra cycle [--evolve]     # ingest -> score -> [evolve weakest] -> export -> 
 Windows users: `scripts\schedule.ps1` runs the cycle on a timer, so missions you run get scored, evolved
 and published without touching a terminal.
 
-**Live dashboard:** https://youssefghazy.github.io/Evolvra/ (after enabling Pages once: Settings → Pages → Source: GitHub Actions)
 Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 
 ## Roadmap
 
 - [x] **Phase 0 — Skeleton.** Plugin scaffold, 10 starter agents, SQLite schema, provider router with quota guard, CI.
 - [x] **Phase 1 — Missions.** Recorder-driven NEXUS runner with handoffs, 3-attempt Dev↔QA loop, gates; traces tagged per task; `evolvra ingest / missions / mission show / stats`.
-- [x] **Phase 2 — Scoring.** Deterministic checks, 3-judge free-tier ensemble (Groq gpt-oss-120b, Gemini Flash-Lite, Gemma 4), per-task fitness, `evolvra score / fitness`. See [docs/SCORING.md](docs/SCORING.md).
+- [x] **Phase 2 — Scoring.** Deterministic checks, 3-judge free-tier ensemble from three lineages (Groq gpt-oss-120b, Groq Qwen 3.8, Gemini Flash-Lite), ceiling-aware aggregation, provisional verdicts below 2 judges, `evolvra score / fitness`. See [docs/SCORING.md](docs/SCORING.md).
 - [x] **Phase 3 — Evolution.** Diagnose → mutate (K variants) → lint → proxy tournament on held-out banks → promote only if it beats the parent. `evolvra evolve`. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
 - [x] **Phase 4 — Dashboard.** Static Vite + React site on GitHub Pages: overview, roster, genealogy, fitness by version, version diffs, missions with per-judge scores, evolutions. `evolvra export`. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
-- [ ] **Phase 5 — Polish.** Inspect AI tasks, demo video, upstream PRs to agency-agents.
+- [x] **Phase 4b — Autonomy.** `evolvra cycle`, Windows scheduler, operator/reviewer protocol over git (`CLAUDE.md`, STATUS/REVIEW).
+- [ ] **Phase 5 — Proof and polish.** A second promotion on another agent, a recorded QA-failure retry, demo video, upstream contribution to agency-agents.
 
 ## Credits
 
