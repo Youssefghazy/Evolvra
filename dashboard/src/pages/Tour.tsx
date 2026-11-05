@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useIsPhone } from "../lib/media";
 import { ArrowRight, Dna, Gavel, Rocket, Trophy } from "lucide-react";
 import { humanize, pct, providerName, type Data, type Mission } from "../data";
@@ -10,6 +10,9 @@ import MatrixTrail from "../components/MatrixTrail";
 import { Rail, SectionHeader } from "../components/ui";
 
 type Line = { text: string; tone?: "cmd" | "ok" | "warn" | "bad" | "dim" | "accent" };
+
+const LID_CLOSED = -102; // degrees: lid folded flat onto the deck (180 - DECK_TILT, minus 2 so they never z-fight)
+const DECK_TILT = 76;   // degrees: deck seen from slightly above, receding from the hinge
 
 /** Turn a recorded mission into terminal lines: the replay is built from real data, not a mock. */
 function replay(m: Mission): Line[] {
@@ -86,33 +89,50 @@ function MacbookScroll({ lines, title }: { lines: Line[]; title: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const lid = useTransform(scrollYProgress, [0, 0.28], reduce ? [0, 0] : [-68, 0]);
-  const lift = useTransform(scrollYProgress, [0.28, 0.9], reduce ? [1, 1] : [1, 1.18]);
-  const rise = useTransform(scrollYProgress, [0.28, 0.9], reduce ? [0, 0] : [0, -40]);
-  const glow = useTransform(scrollYProgress, [0.15, 0.35], [0, 1]);
+  // Spring-smoothed: the lid glides between wheel ticks instead of stepping with them.
+  const p = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.35, restDelta: 0.0005 });
+  // One 3D scene: lid and deck share the same perspective, hinged on the same edge. The lid opens
+  // fully first; the terminal only starts typing once it is upright, so it never types into a half-shut screen.
+  const lid = useTransform(p, [0.02, 0.3], reduce ? [0, 0] : [LID_CLOSED, 0]);
+  const lift = useTransform(p, [0.3, 0.92], reduce ? [1, 1] : [1, 1.1]);
+  const rise = useTransform(p, [0.3, 0.92], reduce ? [0, 0] : [0, -30]);
+  const glow = useTransform(p, [0.2, 0.36], [0, 1]);
+  const shade = useTransform(p, [0.02, 0.3], [0.85, 0]);
   const [count, setCount] = useState(reduce ? lines.length : 0);
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
+  useMotionValueEvent(p, "change", (v) => {
     if (reduce) return;
-    setCount(Math.max(0, Math.min(lines.length, Math.round(((v - 0.22) / 0.62) * lines.length))));
+    setCount(Math.max(0, Math.min(lines.length, Math.round(((v - 0.34) / 0.56) * lines.length))));
   });
 
   return (
-    <section ref={ref} className="relative h-[260vh]">
-      <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center justify-center overflow-hidden [perspective:1600px]">
+    <section ref={ref} className="relative h-[280vh]">
+      <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center justify-center overflow-hidden"
+        style={{ perspective: "1800px", perspectiveOrigin: "50% 30%" }}>
         <motion.div className="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-64 max-w-3xl rounded-full blur-3xl"
           style={{ opacity: glow, background: "radial-gradient(closest-side, var(--glow), transparent)" }} />
-        <motion.div style={{ scale: lift, y: rise }} className="relative w-[min(92vw,820px)]">
-          {/* lid */}
-          <motion.div style={{ rotateX: lid, transformOrigin: "bottom center", transformStyle: "preserve-3d" }}
-            className="relative mx-auto aspect-[16/10] w-[88%] rounded-t-[18px] rounded-b-[4px] border border-neutral-700/60 bg-[#0b0b0f] p-[1.6%] shadow-2xl">
-            <div className="absolute left-1/2 top-[0.7%] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-neutral-700" />
-            <div className="relative h-full overflow-hidden rounded-[8px] border border-neutral-800 bg-[#09090d]">
-              <Terminal lines={lines} count={count} title={title} />
+        <motion.div style={{ scale: lift, y: rise, transformStyle: "preserve-3d" }} className="relative w-[min(88vw,780px)]">
+          {/* lid, hinged on its bottom edge */}
+          <motion.div style={{ rotateX: lid, transformOrigin: "50% 100%", transformStyle: "preserve-3d" }}
+            className="relative mx-auto aspect-[16/10] w-[88%]">
+            {/* front: bezel + screen; hidden once the lid folds past vertical */}
+            <div className="absolute inset-0 rounded-t-[18px] rounded-b-[3px] border border-neutral-700/70 bg-[#0b0b0f] p-[1.6%] shadow-2xl"
+              style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+              <div className="absolute left-1/2 top-[0.7%] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-neutral-700" />
+              <div className="relative h-full overflow-hidden rounded-[8px] border border-neutral-800 bg-[#09090d]">
+                <Terminal lines={lines} count={count} title={title} />
+                {/* the screen stays dark until the lid is nearly upright */}
+                <motion.div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: shade }} />
+              </div>
+            </div>
+            {/* back: the aluminium shell you see while the lid is closed */}
+            <div className="absolute inset-0 grid place-items-center rounded-t-[18px] rounded-b-[3px] border border-neutral-600/60 bg-gradient-to-b from-neutral-700 to-neutral-800"
+              style={{ transform: "rotateX(180deg)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+              <LogoMark size={44} className="text-neutral-500/70" />
             </div>
           </motion.div>
-          {/* base */}
-          <div className="relative mx-auto -mt-px h-[18px] w-full rounded-b-[18px] rounded-t-[3px] border border-neutral-700/60 bg-gradient-to-b from-neutral-700 to-neutral-900 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
-            <div className="absolute left-1/2 top-0 h-[6px] w-[16%] -translate-x-1/2 rounded-b-xl bg-neutral-800" />
+          {/* hinge + deck: the deck tilts toward the viewer from the same hinge line, so it foreshortens like a real base */}
+          <div className="relative mx-auto h-[10px] w-full rounded-t-[3px] bg-gradient-to-b from-neutral-600 to-neutral-800">
+            <div className="absolute left-1/2 top-0 h-[5px] w-[16%] -translate-x-1/2 rounded-b-lg bg-neutral-900/80" />
           </div>
           <Keyboard />
         </motion.div>
@@ -179,19 +199,19 @@ function Terminal({ lines, count, title, wrap = false }: { lines: Line[]; count:
 function Keyboard() {
   const rows = [14, 14, 13, 12, 10];
   return (
-    <div className="mx-auto mt-[-1px] hidden w-[94%] rounded-b-[22px] border-x border-b border-neutral-800 bg-gradient-to-b from-neutral-900 to-[#0c0c10] px-[4%] pb-[3%] pt-[2.4%] sm:block"
-      style={{ transform: "perspective(900px) rotateX(58deg)", transformOrigin: "top center" }}>
+    <div className="mx-auto w-full rounded-b-[20px] border-x border-b border-neutral-700/60 bg-gradient-to-b from-neutral-800 to-neutral-900 px-[4%] pb-[2.5%] pt-[2.2%] shadow-[0_40px_60px_-20px_rgba(0,0,0,0.85)]"
+      style={{ transform: `rotateX(${DECK_TILT}deg)`, transformOrigin: "50% 0%" }}>
       <div className="space-y-[0.6%]">
         {rows.map((n, r) => (
           <div key={r} className="flex gap-[0.6%]">
             {Array.from({ length: n }).map((_, k) => (
-              <span key={k} className="h-3 flex-1 rounded-[3px] bg-neutral-800/90 shadow-[inset_0_-1px_0_rgba(0,0,0,0.6)]"
+              <span key={k} className="h-4 flex-1 rounded-[3px] bg-neutral-950/80 shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)]"
                 style={{ flexGrow: r === 4 && k === 4 ? 5 : 1 }} />
             ))}
           </div>
         ))}
       </div>
-      <div className="mx-auto mt-[3%] h-10 w-[38%] rounded-lg border border-neutral-800 bg-neutral-900/80" />
+      <div className="mx-auto mt-[3%] h-16 w-[38%] rounded-lg border border-neutral-700/50 bg-neutral-800/60" />
     </div>
   );
 }
