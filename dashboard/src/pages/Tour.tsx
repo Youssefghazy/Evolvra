@@ -6,6 +6,7 @@ import { humanize, pct, providerName, type Data, type Mission } from "../data";
 import { href } from "../lib/router";
 import { Reveal, Spotlight } from "../components/fx";
 import { LogoMark } from "../components/Logo";
+import MatrixTrail from "../components/MatrixTrail";
 import { SectionHeader } from "../components/ui";
 
 type Line = { text: string; tone?: "cmd" | "ok" | "warn" | "bad" | "dim" | "accent" };
@@ -52,7 +53,11 @@ export default function Tour({ data }: { data: Data }) {
   const lines = useMemo(() => (mission ? replay(mission) : []), [mission]);
   return (
     <div className="space-y-24">
-      <div className="pt-4 text-center">
+      <div className="relative pt-4 text-center">
+        <div className="pointer-events-none absolute -inset-x-[50vw] -top-20 bottom-[-6rem] -z-10"
+          style={{ maskImage: "radial-gradient(ellipse 55% 65% at 50% 40%, #000 15%, transparent 72%)", WebkitMaskImage: "radial-gradient(ellipse 55% 65% at 50% 40%, #000 15%, transparent 72%)" }}>
+          <MatrixTrail cell={20} ambient={0.0016} />
+        </div>
         <Reveal><div className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted">The tour</div></Reveal>
         <Reveal delay={0.05}><h1 className="mx-auto mt-3 max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
           One mission, from brief to <span className="text-gradient">evolved agent</span></h1></Reveal>

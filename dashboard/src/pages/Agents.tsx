@@ -5,6 +5,7 @@ import { description, divisionColor, grade, humanize, type Data } from "../data"
 import { href } from "../lib/router";
 import { Reveal, Spotlight } from "../components/fx";
 import { Avatar, Chip, DivisionChip, Ring, SectionHeader } from "../components/ui";
+import { CometCard } from "../components/ui/comet-card";
 
 type Sort = "fitness" | "weakest" | "name";
 
@@ -55,6 +56,7 @@ export default function Agents({ data }: { data: Data }) {
           return (
             <motion.div key={a.slug} layout transition={{ type: "spring", stiffness: 300, damping: 30 }}>
               <Reveal delay={Math.min(i, 8) * 0.04} className="h-full">
+                <CometCard rotateDepth={6} translateDepth={6} glare="hover" glareOpacity={0.28} className="h-full">
                 <Spotlight as="a" href={href.agent(a.slug)} className="flex h-full flex-col p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -75,6 +77,7 @@ export default function Agents({ data }: { data: Data }) {
                     {a.versions.length === 1 && cur?.top_failure && <Chip className="ml-auto" title="Most common issue the judges raised">{humanize(cur.top_failure)}</Chip>}
                   </div>
                 </Spotlight>
+                </CometCard>
               </Reveal>
             </motion.div>
           );

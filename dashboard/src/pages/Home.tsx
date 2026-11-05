@@ -7,6 +7,7 @@ import {
 import { href } from "../lib/router";
 import { NumberTicker, Reveal, Spotlight, WordsReveal } from "../components/fx";
 import Orbit from "../components/Orbit";
+import MatrixTrail from "../components/MatrixTrail";
 import { Avatar, Bar, Chip, SectionHeader, Verdict } from "../components/ui";
 
 export default function Home({ data }: { data: Data }) {
@@ -51,7 +52,11 @@ export default function Home({ data }: { data: Data }) {
 
 function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
   return (
-    <section className="grid items-center gap-10 pt-6 md:pt-14 lg:grid-cols-[1.1fr_1fr]">
+    <section className="relative grid items-center gap-10 pt-6 md:pt-14 lg:grid-cols-[1.1fr_1fr]">
+      <div className="pointer-events-none absolute -inset-x-[50vw] -top-24 bottom-[-4rem] -z-10"
+        style={{ maskImage: "radial-gradient(ellipse 34% 62% at 64% 46%, #000 25%, transparent 80%)", WebkitMaskImage: "radial-gradient(ellipse 34% 62% at 64% 46%, #000 25%, transparent 80%)" }}>
+        <MatrixTrail />
+      </div>
       <div>
         <motion.a href={href.evolutions} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-3 py-1 text-xs text-ink2 hover:border-line-strong">

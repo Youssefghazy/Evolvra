@@ -20,11 +20,11 @@ export default function App() {
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [palette, setPalette] = useState(false);
-  const [theme, setTheme] = useState<string>(() => { try { return localStorage.getItem("theme") || ""; } catch { return ""; } });
+  const [theme, setTheme] = useState<"dark" | "light">(() => (document.documentElement.dataset.theme === "light" ? "light" : "dark"));
 
   useEffect(() => { loadData().then(setData).catch((e) => setError(String(e))); }, []);
   useEffect(() => {
-    if (theme) document.documentElement.dataset.theme = theme; else delete document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = theme;
     try { localStorage.setItem("theme", theme); } catch { /* private mode */ }
   }, [theme]);
   useEffect(() => {

@@ -6,6 +6,7 @@ import { href } from "../lib/router";
 import { Reveal, Spotlight } from "../components/fx";
 import { Avatar, Bar, Chip, DivisionChip, Empty, Ring, SectionHeader, Verdict } from "../components/ui";
 import Diff from "../components/Diff";
+import AgentPassport from "../components/AgentPassport";
 
 export default function AgentDetail({ data, slug }: { data: Data; slug: string }) {
   const agent = data.agents.find((a) => a.slug === slug);
@@ -30,6 +31,7 @@ export default function AgentDetail({ data, slug }: { data: Data; slug: string }
     <div className="space-y-8">
       <a href={href.agents} className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"><ArrowLeft size={14} /> All agents</a>
 
+      <div className="grid items-center gap-6 lg:grid-cols-[1fr_auto]">
       <Reveal>
         <Spotlight className="p-6 md:p-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center">
@@ -54,6 +56,8 @@ export default function AgentDetail({ data, slug }: { data: Data; slug: string }
           </div>
         </Spotlight>
       </Reveal>
+      <Reveal delay={0.1} className="hidden justify-center lg:flex"><AgentPassport agent={agent} /></Reveal>
+      </div>
 
       <div className="grid gap-5 lg:grid-cols-5">
         <Reveal className="min-w-0 lg:col-span-3">
