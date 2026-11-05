@@ -233,3 +233,19 @@ def test_bank_drops_tasks_that_require_execution():
     personas.import_dir(conn, AGENTS_DIR)
     devops = bank.load_bank(conn, AGENTS_DIR, "devops-automator")
     assert all(not bank.requires_execution(t.task, list(t.acceptance)) for t in devops)
+
+
+def test_unchanged_generation_is_refused_as_replay(tmp_path, evolvra_home, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    plugin = _plugin_copy(tmp_path)
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, plugin)
+    base = (plugin / "testing-reality-checker.md").read_text(encoding="utf-8")
+    transport = make_transport({"parent": 0.8, "c1": 0.81}, {1: _variant(base, "c1"), 2: _variant(base, "c1")})
+    opts = engine.EvolveOptions(candidates=1, bank_size=1, margin=0.03, actor=ACTOR, judges=JUDGES, mutator=ACTOR)
+    engine.evolve(conn, "reality-checker", plugin, opts, home=evolvra_home, _transport=transport)
+    import pytest
+    with pytest.raises(engine.ReplayError):
+        engine.evolve(conn, "reality-checker", plugin, opts, home=evolvra_home, _transport=transport)
+    assert conn.execute("SELECT COUNT(*) FROM evolutions").fetchone()[0] == 1

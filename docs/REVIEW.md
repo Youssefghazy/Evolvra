@@ -1,33 +1,36 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-05, after two days of unattended scheduled cycles (`8e7201d` … `6eb7d8f`). Supersedes round 4._
+_Updated 2026-11-05 ~09:00Z, after STATUS `0c627ab` (round 5)._
 
-## What happened while nobody was watching
-- The scheduler ran 6 cycles on its own, including 22:17 and 04:17: **the unattended loop is proven.**
-- Every provisional verdict has been re-scored: **0 of 22 tasks provisional**, all with ≥2 judges.
-- **v2 verdict:** Evidence Collector v2 0.886 (3 tasks) vs v1 0.880 (8 tasks), both with ≥2 judges. v2 ≥ v1, so
-  **the promotion stands**. It is parity on real missions, not a big win; the README says so.
-- Two ux-researcher generations ran and were refused (paired +0.01 and −0.004, margin 0.03). Correct refusals,
-  but the target was chosen on a stale 0.605 that came from truncated judging.
+## Verdict
+Round 5 closed the proof. Verified against the export:
+- **The promotion holds on real work:** Evidence Collector v2 0.924 over 7 real QA tasks vs v1 0.880 over 8,
+  all with ≥2 judges. README updated.
+- **The QA-retry path is on the record:** referral-loop mission, builder attempt 1 `FAIL` + `reopened_by_qa`,
+  QA attempt 2 `PASS` + `caused_by_builder`, builder efficiency 0.5. Exactly as designed.
+- UX Researcher 0.605 → 0.922 once judges saw the whole file.
 
-## Finish line (priority order; this list completes the project)
-1. `git pull`; refresh the plugin only if `plugin/.claude-plugin/plugin.json` changed; tests (expect 60).
-2. **Fix the stale UX score:** `cd core; uv run evolvra score --mission 20261103-104658-write-a-user-interview --rescore`,
-   then `uv run evolvra fitness`. Report before/after. (It had 2 judges under the old truncated input, so it is
-   not auto-picked.)
-3. **OpenRouter third judge (only if `OPENROUTER_API_KEY` is set in `.env`; never print it):**
-   `uv run evolvra models openrouter`, then ping two free non-OpenAI models with `--model <id>`. Report ids,
-   latency, `pong` or not. Do not change the judge set; I decide.
-4. **Record a real QA-failure retry.** Run two missions with deliberately tight criteria:
-   - `/evolvra:mission write a product announcement for a note app: exactly 3 paragraphs, each 90-110 words, the first sentence of each paragraph contains no adjectives, and it names exactly two features`
-   - `/evolvra:mission build a single-file HTML pricing mock under 6 KB, zero external requests, three plan cards, and one keyboard-reachable toggle`
-   If QA fails the builder, the record must show `"reopened": [1]` and a QA attempt with `caused_by_builder`.
-   If both pass first time, say so; do not force a failure.
-5. **Broaden the data:** two missions for agents with one task each: `growth-hacker` (a referral loop with a
-   fraud-risk section) and `sprint-prioritizer` (rank 10 bugs by RICE with the formula shown).
-6. `.\scripts\cycle.ps1 -Evolve` once (the 12 h interval may skip evolution; that is fine). Report the target,
-   candidates, paired deltas and whether anything was promoted.
-7. STATUS.md as usual, plus one line: anything you believe is still broken or unproven.
+Thank you for stopping at the security alert and switching to PowerShell-only. That was the right call.
 
-After this round the remaining work is presentation only (demo video, upstream contribution), owned by Youssef
-and the reviewer.
+## Decisions on your open questions (implemented, tests 62, plugin 0.3.2)
+1. **Measured facts:** when a criterion mentions words/paragraphs/sentences/characters/lines/bytes, the judge
+   prompt now carries program-computed counts of the main deliverable and an instruction to trust them.
+2. **Replay guard:** same persona version + same diagnosis as the last generation → refused; `cycle` moves to the
+   next weakest **current** version (old versions are no longer eligible targets).
+3. **Third judge:** Nemotron-3-ultra (OpenRouter) replaces Qwen. Three seats on three providers. It is the
+   OpenRouter default model in code, so `.env` needs no change. Qwen remains available via `EVOLVRA_JUDGES`.
+4. **Leftover validator:** ask Youssef; if he agrees, delete only the `scratch\validator` folder (the QA report
+   and raw evidence stay). Do not delete anything else.
+5. **Machine constraint:** now in `CLAUDE.md` and the mission skill: no downloads or installs without Youssef's
+   OK in-session; PowerShell, not Git Bash; single quotes for recorder text arguments.
+
+## Requested now (short round)
+1. `git pull`; refresh the plugin to 0.3.2 (`claude plugin marketplace update evolvra`,
+   `claude plugin update evolvra@evolvra`); tests (expect 62).
+2. `cd core; uv run evolvra score --rescore` once Groq has room. Report per-judge verdict counts: the point is to
+   see Nemotron's reliability as a judge (verdicts vs errors, and whether its scores spread or sit at 1.0).
+3. Re-score the announcement mission specifically and confirm the false "113 words" failure is gone:
+   `uv run evolvra score --mission 20261105-072406-write-a-product-announcement --rescore`.
+4. One mission for **devops-automator** (now the weakest): a PowerShell script with a `-WhatIf` mode and a
+   self-test, no downloads. Then `.\scripts\cycle.ps1 -Evolve` when the 12 h slot allows.
+5. Validator folder (decision 4). STATUS as usual.

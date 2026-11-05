@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 from pathlib import Path
 
@@ -113,3 +114,61 @@ def store_scores(conn: sqlite3.Connection, task_id: int, rows: list[tuple[str, f
         )
     conn.commit()
     return len(rows)
+
+
+_COUNT_HINT = re.compile(r"\b(words?|paragraphs?|sentences?|characters?|chars|lines?|bytes?|kb|kib)\b", re.IGNORECASE)
+_WORD = re.compile(r"[\w']+", re.UNICODE)
+
+
+def needs_measurements(criteria: list[str]) -> bool:
+    return any(_COUNT_HINT.search(c) for c in criteria)
+
+
+def measure_text(text: str) -> dict:
+    """Counts a judge would otherwise guess at. Paragraphs are blank-line separated prose blocks,
+    ignoring headings, list items, tables and fenced code."""
+    paras, block, in_fence = [], [], False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        prose = stripped and not stripped.startswith(("#", "|", "- ", "* ", ">")) and not re.match(r"^\d+[.)] ", stripped)
+        if prose:
+            block.append(stripped)
+        elif block:
+            paras.append(" ".join(block)); block = []
+    if block:
+        paras.append(" ".join(block))
+    return {
+        "bytes": len(text.encode("utf-8")),
+        "characters": len(text),
+        "lines": text.count("\n") + (1 if text and not text.endswith("\n") else 0),
+        "words": len(_WORD.findall(text)),
+        "paragraphs": len(paras),
+        "words_per_paragraph": [len(_WORD.findall(p)) for p in paras[:20]],
+    }
+
+
+def facts_block(name: str, text: str) -> str:
+    m = measure_text(text)
+    return (f"File `{name}`: {m['bytes']} bytes, {m['characters']} characters, {m['lines']} lines, "
+            f"{m['words']} words, {m['paragraphs']} prose paragraphs; words per paragraph: {m['words_per_paragraph']}")
+
+
+def measured_facts(output_dir: str | None, criteria: list[str]) -> str:
+    """Deterministic measurements of the main deliverable, only when a criterion talks about counts."""
+    if not needs_measurements(criteria):
+        return ""
+    texts = []
+    for path in output_files(output_dir):
+        if is_backup(path) or (path.suffix and path.suffix.lower() not in TEXT_SUFFIXES):
+            continue
+        try:
+            texts.append((path, path.read_text(encoding="utf-8", errors="replace")))
+        except OSError:
+            continue
+    texts.sort(key=lambda pt: -len(pt[1]))
+    return "\n".join(facts_block(p.name, t) for p, t in texts[:3])

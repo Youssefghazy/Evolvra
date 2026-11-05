@@ -299,3 +299,16 @@ def test_rescore_keeps_the_better_covered_ensemble(evolvra_home, recorder, monke
 
     runner.score_tasks(conn, runner.pending_tasks(conn, rescore=True), three, _transport=capped)
     assert judge.ensemble_judges(conn, task_id) == 3 and fitness.task_fitness(conn, task_id) == before
+
+
+def test_measured_facts_count_words_and_paragraphs(tmp_path):
+    out = tmp_path / "out"
+    out.mkdir()
+    para = " ".join(["word"] * 104)
+    (out / "ANNOUNCEMENT.md").write_text(f"# Title\n\n{para}\n\n{para}\n\n- a list item\n\n{para}\n", encoding="utf-8")
+    facts = checks.measured_facts(str(out), ["exactly 3 paragraphs, each 90-110 words"])
+    assert "3 prose paragraphs" in facts and "[104, 104, 104]" in facts
+    assert checks.measured_facts(str(out), ["mentions offline sync"]) == ""     # no count criterion, no block
+    prompt = judge.render_prompt(brief="b", agent="a", agent_description="d", task="t", criteria=["90-110 words"],
+                                 attempts=1, verdict="PASS", evidence="e", output="o", facts=facts)
+    assert "# Measured facts" in prompt and "never report a count violation" in prompt

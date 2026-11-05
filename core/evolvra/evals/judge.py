@@ -17,11 +17,12 @@ from dataclasses import dataclass
 from ..router import client, quota
 from . import checks
 
-# Three free models, three training lineages (OpenAI, Alibaba, Google). Gemma was dropped on 2026-11-03:
-# it failed most calls (HTTP 500/503, unparseable) and scored 1.0 on everything it did answer.
+# Three free models, three lineages, three providers (OpenAI on Groq, NVIDIA on OpenRouter, Google on Gemini).
+# Gemma was dropped 2026-11-03 (failed most calls, 1.0 on the rest). Qwen was replaced 2026-11-05: reliable when it
+# had budget, but it shared Groq's 200k tokens/day with gpt-oss and starved on busy days. Override: EVOLVRA_JUDGES.
 DEFAULT_JUDGES: tuple[tuple[str, str], ...] = (
     ("groq", "openai/gpt-oss-120b"),
-    ("groq", "qwen/qwen3.8-27b"),
+    ("openrouter", "nvidia/nemotron-3-ultra-550b-a55b:free"),
     ("gemini", "gemini-3.5-flash-lite"),
 )
 # Qwen on Groq is capped at 1,000 output tokens/minute and spends 1-2k on hidden reasoning per verdict.
@@ -56,7 +57,7 @@ PROMPT = """# Mission brief
 
 # Output files
 {output}
-
+{facts}
 # Calibration (apply strictly)
 - 1.0 means flawless AND every claim is verifiable from what is shown. Reserve it.
 - Typical competent work scores 0.6-0.8. Minor gaps: 0.8-0.9.
@@ -103,9 +104,15 @@ def judges_from_env() -> list[tuple[str, str]]:
     return out
 
 
+FACTS_HEADER = ("\n# Measured facts (computed by a program; trust these over your own counting and never report "
+                "a count violation that contradicts them)\n")
+
+
 def render_prompt(*, brief: str, agent: str, agent_description: str, task: str, criteria: list[str],
-                  attempts: int, verdict: str | None, evidence: str | None, output: str | None) -> str:
+                  attempts: int, verdict: str | None, evidence: str | None, output: str | None,
+                  facts: str = "") -> str:
     return PROMPT.format(
+        facts=(FACTS_HEADER + facts + "\n") if facts else "",
         brief=brief,
         agent=agent,
         agent_description=agent_description or "(unknown)",
@@ -121,10 +128,12 @@ def render_prompt(*, brief: str, agent: str, agent_description: str, task: str, 
 def build_prompt(task: sqlite3.Row, brief: str, agent_description: str) -> str:
     attempts = json.loads(task["attempts_json"] or "[]")
     last = attempts[-1] if attempts else {}
+    criteria = json.loads(task["acceptance_json"] or "[]")
     return render_prompt(
         brief=brief, agent=task["agent_slug"], agent_description=agent_description, task=task["task"],
-        criteria=json.loads(task["acceptance_json"] or "[]"), attempts=task["attempts"],
+        criteria=criteria, attempts=task["attempts"],
         verdict=task["verdict"], evidence=last.get("evidence"), output=checks.read_output(task["output_dir"]),
+        facts=checks.measured_facts(task["output_dir"], criteria),
     )
 
 

@@ -14,6 +14,10 @@ from . import diagnose as diagnose_mod
 from . import mutate, tournament
 
 
+class ReplayError(ValueError):
+    """Same persona version and same diagnosis as the last generation: the cached proposals would replay it."""
+
+
 @dataclass
 class EvolveOptions:
     candidates: int = 3
@@ -77,6 +81,13 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
     conn.commit()
 
     diag = diagnose_mod.diagnose(conn, slug)
+    agent_row = conn.execute("SELECT id FROM agents WHERE slug = ?", (slug,)).fetchone()
+    last = conn.execute(
+        "SELECT diagnosis_md FROM evolutions WHERE agent_id = ? AND parent_version = ? ORDER BY id DESC LIMIT 1",
+        (agent_row["id"], diag.version)).fetchone()
+    if last and last["diagnosis_md"] == diag.to_markdown() and not opts.dry_run:
+        raise ReplayError(f"{slug} v{diag.version}: nothing changed since its last generation (same persona, same"
+                          " diagnosis); it would replay from cache")
     stamp = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
     evo_dir = home / "evolutions" / f"{stamp}-{slug}"
     evo_dir.mkdir(parents=True, exist_ok=True)

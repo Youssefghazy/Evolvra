@@ -18,10 +18,16 @@ Three judges from three training lineages, so no single vendor's taste dominates
 | Judge | Why |
 |---|---|
 | Groq · `openai/gpt-oss-120b` | strong reasoning; the strictest judge in practice |
-| Groq · `qwen/qwen3.8-27b` | different lineage (Alibaba), fast |
+| OpenRouter · `nvidia/nemotron-3-ultra-550b-a55b:free` | different lineage (NVIDIA), different provider budget |
 | Gemini · `gemini-3.5-flash-lite` | fast, generous free quota; lenient |
 
-Gemma 4 was dropped on 2026-11-03: it failed most calls and gave 1.0 to everything it did answer.
+History: Gemma 4 dropped 2026-11-03 (failed most calls, 1.0 on the rest). Qwen 3.8 (Groq) replaced 2026-11-05: it
+shared Groq's 200k tokens/day with gpt-oss and starved on busy days. Three providers now carry the three seats.
+
+**Measured facts.** When an acceptance criterion mentions words, paragraphs, sentences, characters, lines or
+bytes, the judge prompt carries program-computed counts of the main deliverable (bytes, words, prose paragraphs,
+words per paragraph) and an instruction to trust them over its own counting. LLM judges miscount: on 2026-11-05 a
+judge called a 104-word paragraph 113 words and set the failure class.
 
 Override with `EVOLVRA_JUDGES="groq:openai/gpt-oss-120b,gemini:gemma-4-31b-it"` or `evolvra score --judges ...`.
 

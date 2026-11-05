@@ -17,6 +17,14 @@ and a static dashboard (`dashboard/`) publishes the results. Read `README.md`, t
    (`plugin/scripts/mission.py`) and the CLI. If QA fails a builder, use `task reopen` so the retry counts.
 6. **Small commits, clear messages, push to `main`.** Rebase on pull (`git pull --rebase`). Never force-push.
 
+## This machine is a managed company PC (non-negotiable)
+- **No downloads or installs** (npm, pip, browsers, validators, binaries) without Youssef's explicit OK in this
+  session. On 2026-11-05 a validator run through Git Bash triggered 5 Trend Micro Apex One "Program Library
+  Injection" alerts (MSYS fork), which the network admin had to report.
+- **Use PowerShell, not Git Bash/MSYS `sh`**, to run anything. Prefer standard-library Python and tools already
+  on the machine. If a check needs a tool that is not installed, say so and route it to a no-download method.
+- In PowerShell 5.1, quote recorder arguments with single quotes; embedded double quotes get split.
+
 ## Daily operations (your machine has the DB, keys and Claude login; the cloud reviewer does not)
 ```powershell
 cd ~/Evolvra

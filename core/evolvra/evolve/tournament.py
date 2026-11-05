@@ -11,7 +11,7 @@ import sqlite3
 import statistics
 from dataclasses import dataclass, field
 
-from ..evals import judge
+from ..evals import checks, judge
 from ..router import client, quota
 from .bank import BankTask
 
@@ -125,9 +125,10 @@ def play(conn: sqlite3.Connection, persona_text: str, label: str, bank: list[Ban
             pr.results.append(TaskResult(t, "", {}, None, "actor_error", f"actor error: {e}", 0))
             continue
         body, evidence = split_evidence(output)
+        facts = checks.facts_block("deliverable", body) if checks.needs_measurements(list(t.acceptance)) else ""
         prompt = judge.render_prompt(brief=t.brief, agent=agent_slug, agent_description=agent_description,
                                      task=t.task, criteria=list(t.acceptance), attempts=1, verdict="PASS",
-                                     evidence=evidence, output=body) + PROXY_JUDGE_NOTE
+                                     evidence=evidence, output=body, facts=facts) + PROXY_JUDGE_NOTE
         jr = judge.judge_prompt(conn, prompt, judges, _transport=_transport)
         scores, failure, critique = judge.aggregate(jr)
         pr.results.append(TaskResult(t, output, scores, proxy_fitness(scores), failure, critique,

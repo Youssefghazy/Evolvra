@@ -22,17 +22,18 @@
 
 ## Results so far
 
-Measured from the system's own records (`dashboard/public/data/`), first 3 days of operation.
+Measured from the system's own records (`dashboard/public/data/`), first 4 days of operation.
 
 | | |
 |---|---|
-| Real missions run | 11 (22 tasks, every one independently QA-checked) |
-| Evolution generations | 7 |
+| Real missions run | 15 (30 tasks, every one independently QA-checked) |
+| QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
+| Evolution generations | 8 |
 | Promotions | 1 (Evidence Collector v1 → v2) |
-| Generations correctly refused | 6 (no candidate beat its parent by the margin, or the arena was unfair) |
-| Free-tier model calls | ~520 (Gemini + Groq) |
+| Generations correctly refused | 7 (no candidate beat its parent by the margin, or the arena was unfair) |
+| Free-tier model calls | ~560 (Gemini, Groq, OpenRouter) |
 | Money spent | **$0.00** |
-| Scheduled cycles that ran unattended | 7, including overnight |
+| Scheduled cycles that ran unattended | 9, including overnight |
 
 **The promotion.** The judges kept flagging Evidence Collector, the QA agent, for claims it could not prove.
 Evolution read those failures, wrote three persona variants, and played each against the original on four
@@ -42,11 +43,11 @@ report section listing those files, and an automatic-fail rule for any claim wit
 | | v1 (original) | v2 (evolved) |
 |---|---|---|
 | Arena, 4 held-out tasks (paired) | 0.63 | **0.80** (+0.17) |
-| Real missions, ≥2 judges | 0.880 (8 tasks) | 0.886 (3 tasks) |
+| Real missions, ≥2 judges | 0.880 (8 tasks) | **0.924** (7 tasks) |
 
-The arena gain was large; on real missions v2 held level with v1 rather than pulling ahead, because v1 was
-already strong at real QA. That is reported as it is: the point of the system is that a promotion has to
-survive contact with real work, and the dashboard shows both numbers side by side.
+The arena predicted the improvement, and it then held on work the arena never saw: across seven real QA tasks
+after promotion, v2 scored higher than v1 did across its eight. Every v2 report saved real raw command output
+under `evidence/` and cited it per finding, which is exactly the behaviour the promotion targeted.
 
 **What three days of running taught the engine.** Each of these was found by the system's own operator
 session, fixed test-first, and is now enforced in code:
@@ -54,7 +55,8 @@ judges were reading only the first 4,000 characters of long deliverables; two le
 one that caught fabricated evidence (aggregation is now ceiling-aware); a single wrong low judge could sink
 correct work (median when judges genuinely disagree); a rate-limited day could overwrite a 3-judge verdict with
 a 1-judge one; QA retries caused by a builder were charged to QA; a promoted persona was not shipped to the
-installed plugin. Details: [docs/SCORING.md](docs/SCORING.md), [docs/EVOLUTION.md](docs/EVOLUTION.md).
+installed plugin; LLM judges miscounted words (counts are now measured by code and given to them); and an
+unchanged generation could replay from cache (now refused, the next weakest agent goes instead). Details: [docs/SCORING.md](docs/SCORING.md), [docs/EVOLUTION.md](docs/EVOLUTION.md).
 
 ## How it runs: two Claude sessions and a timer
 

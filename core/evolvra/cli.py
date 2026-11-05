@@ -340,18 +340,24 @@ def cmd_cycle(args) -> int:
                    f" (interval {args.evolve_interval}h keeps Groq's daily token budget for scoring)")
         args.evolve = None
     if args.evolve:
-        rows = [r for r in fitness.agent_fitness(conn) if r["tasks"] >= args.min_tasks]
-        target = args.evolve if args.evolve != "weakest" else (rows[0]["agent"] if rows else None)
-        if target:
+        current = {r["slug"]: r["current_version"] for r in personas.list_agents(conn)}
+        rows = [r for r in fitness.agent_fitness(conn)
+                if r["tasks"] >= args.min_tasks and current.get(r["agent"]) == r["version"]]  # weakest first
+        targets = [args.evolve] if args.evolve != "weakest" else [r["agent"] for r in rows]
+        if not targets:
+            log.append(f"evolve: no agent with >= {args.min_tasks} scored task(s) yet")
+        for target in targets:
             try:
                 res = engine.evolve(conn, target, plugin_dir, engine.EvolveOptions(
                     candidates=args.candidates, bank_size=args.bank_size, margin=args.margin))
                 log.append(f"evolve: {res.summary()}")
                 evolved = res if res.new_version else None
+                break
+            except engine.ReplayError as e:
+                log.append(f"evolve: {e}; trying the next weakest")
             except ValueError as e:
                 log.append(f"evolve: skipped ({e})")
-        else:
-            log.append(f"evolve: no agent with >= {args.min_tasks} scored task(s) yet")
+                break
 
     out = repo / "dashboard" / "public" / "data"
     counts = export_mod.export_all(conn, out)

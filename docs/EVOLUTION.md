@@ -50,6 +50,10 @@ evolution history. Losers stay on disk under the evolution directory with `repor
 (`--evolve-interval`). Groq's free tier allows ~200k tokens per model per rolling day; scoring a day of
 missions plus one generation fits, two generations do not.
 
+**Replay guard.** If the target's persona version and diagnosis are identical to its last generation, the
+cached proposals would replay that generation byte for byte (it happened on 2026-11-05). The engine refuses it
+and the cycle moves to the next weakest agent. Only current persona versions are eligible targets.
+
 ## Budget
 Calls per generation ≈ K + (1 + K_valid) × bank_size × (1 + judges). Defaults (K=3, bank 4, 3 judges)
 ≈ 3 + 4 × 4 × 4 = 67 calls, spread over Groq and Gemini. Well inside the daily caps; the cache makes reruns free.

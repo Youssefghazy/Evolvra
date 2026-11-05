@@ -41,7 +41,7 @@ PROVIDERS = {
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
         "key_env": "OPENROUTER_API_KEY",
-        "default_model": "openai/gpt-oss-120b:free",
+        "default_model": "nvidia/nemotron-3-ultra-550b-a55b:free",  # gpt-oss-120b:free left the catalog
         "reasoning_style": "nested",    # {"reasoning": {"effort": "low"}}
     },
 }
