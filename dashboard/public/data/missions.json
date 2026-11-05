@@ -899,7 +899,7 @@
      }
     ],
     "traces": 5,
-    "fitness": 0.9422,
+    "fitness": 0.953,
     "provisional": false,
     "scores": [
      {
@@ -941,11 +941,11 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.95,
+      "value": 0.96,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -955,11 +955,11 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.93,
+      "value": 0.94,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -969,11 +969,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.9,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -983,11 +983,11 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.895,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -2583,7 +2583,7 @@
      }
     ],
     "traces": 22,
-    "fitness": 0.9485,
+    "fitness": 0.9477,
     "provisional": false,
     "scores": [
      {
@@ -2633,11 +2633,11 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.975,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "The verification is thorough and correctly identifies that the file hash changed between attempts, confirming the agent re-verified the updated content rather than relying on cached results.",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -2651,7 +2651,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "The verification is thorough and correctly identifies that the file hash changed between attempts, confirming the agent re-verified the updated content rather than relying on cached results.",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -2661,11 +2661,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.9,
+      "value": 0.93,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "The verification is thorough and correctly identifies that the file hash changed between attempts, confirming the agent re-verified the updated content rather than relying on cached results.",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -2679,7 +2679,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "The verification is thorough and correctly identifies that the file hash changed between attempts, confirming the agent re-verified the updated content rather than relying on cached results.",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -3149,7 +3149,7 @@
      }
     ],
     "traces": 13,
-    "fitness": 0.965,
+    "fitness": 0.94,
     "provisional": false,
     "scores": [
      {
@@ -3193,30 +3193,32 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 1.0,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "none",
-       "critique": "The agent did not run an HTML validator as required by the acceptance criteria, though the code is manually verifiable as valid.",
+       "failure_class": "missing_validator_verification",
+       "critique": "Validator result is unverified, but all other criteria are satisfied.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 1.0,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "none",
-       "critique": "The agent did not run an HTML validator as required by the acceptance criteria, though the code is manually verifiable as valid.",
+       "failure_class": "missing_validator_verification",
+       "critique": "Validator result is unverified, but all other criteria are satisfied.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -3224,13 +3226,14 @@
       "value": 0.8,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "none",
-       "critique": "The agent did not run an HTML validator as required by the acceptance criteria, though the code is manually verifiable as valid.",
+       "failure_class": "missing_validator_verification",
+       "critique": "Validator result is unverified, but all other criteria are satisfied.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -3238,13 +3241,14 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "none",
-       "critique": "The agent did not run an HTML validator as required by the acceptance criteria, though the code is manually verifiable as valid.",
+       "failure_class": "missing_validator_verification",
+       "critique": "Validator result is unverified, but all other criteria are satisfied.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -3779,7 +3783,8 @@
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/qwen/qwen3.8-27b"
       }
      },
      {
@@ -3793,7 +3798,8 @@
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/qwen/qwen3.8-27b"
       }
      },
      {
@@ -3807,7 +3813,8 @@
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/qwen/qwen3.8-27b"
       }
      },
      {
@@ -3821,7 +3828,8 @@
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/qwen/qwen3.8-27b"
       }
      },
      {
@@ -4416,7 +4424,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -4430,7 +4439,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -4444,7 +4454,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -4458,7 +4469,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -6578,8 +6590,8 @@
       "value": 0.8,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "incomplete_test_suite",
-       "critique": "The test suite is incomplete and contains syntax errors, so the acceptance criteria for testing are not satisfied.",
+       "failure_class": "test_suite_invalid",
+       "critique": "The test suite is incomplete and contains syntax errors, preventing verification of functionality.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -6592,8 +6604,8 @@
       "value": 0.8,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "incomplete_test_suite",
-       "critique": "The test suite is incomplete and contains syntax errors, so the acceptance criteria for testing are not satisfied.",
+       "failure_class": "test_suite_invalid",
+       "critique": "The test suite is incomplete and contains syntax errors, preventing verification of functionality.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -6606,8 +6618,8 @@
       "value": 0.5,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "incomplete_test_suite",
-       "critique": "The test suite is incomplete and contains syntax errors, so the acceptance criteria for testing are not satisfied.",
+       "failure_class": "test_suite_invalid",
+       "critique": "The test suite is incomplete and contains syntax errors, preventing verification of functionality.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -6620,8 +6632,8 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "incomplete_test_suite",
-       "critique": "The test suite is incomplete and contains syntax errors, so the acceptance criteria for testing are not satisfied.",
+       "failure_class": "test_suite_invalid",
+       "critique": "The test suite is incomplete and contains syntax errors, preventing verification of functionality.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -7048,8 +7060,8 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_builder_test_output",
-       "critique": "The submission does not include the required raw output of the builder's test run, making that acceptance criterion unverified.",
+       "failure_class": "missing_evidence",
+       "critique": "Key pieces of required evidence (raw test and adversarial check outputs) are missing, making several acceptance criteria unverifiable.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -7062,8 +7074,8 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_builder_test_output",
-       "critique": "The submission does not include the required raw output of the builder's test run, making that acceptance criterion unverified.",
+       "failure_class": "missing_evidence",
+       "critique": "Key pieces of required evidence (raw test and adversarial check outputs) are missing, making several acceptance criteria unverifiable.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -7076,8 +7088,8 @@
       "value": 0.6,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_builder_test_output",
-       "critique": "The submission does not include the required raw output of the builder's test run, making that acceptance criterion unverified.",
+       "failure_class": "missing_evidence",
+       "critique": "Key pieces of required evidence (raw test and adversarial check outputs) are missing, making several acceptance criteria unverifiable.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -7090,8 +7102,8 @@
       "value": 0.8,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_builder_test_output",
-       "critique": "The submission does not include the required raw output of the builder's test run, making that acceptance criterion unverified.",
+       "failure_class": "missing_evidence",
+       "critique": "Key pieces of required evidence (raw test and adversarial check outputs) are missing, making several acceptance criteria unverifiable.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -11304,7 +11316,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11318,7 +11331,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11332,7 +11346,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11346,7 +11361,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11810,7 +11826,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11824,7 +11841,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11838,7 +11856,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -11852,7 +11871,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -14056,7 +14076,7 @@
      }
     ],
     "traces": 15,
-    "fitness": 0.663,
+    "fitness": 0.716,
     "provisional": false,
     "scores": [
      {
@@ -14101,7 +14121,7 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.55,
+      "value": 0.6,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "invalid_yaml_syntax",
@@ -14115,7 +14135,7 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.59,
+      "value": 0.68,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "invalid_yaml_syntax",
@@ -14129,7 +14149,7 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.25,
+      "value": 0.3,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "invalid_yaml_syntax",
@@ -14143,7 +14163,7 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.66,
+      "value": 0.72,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "invalid_yaml_syntax",
@@ -15439,7 +15459,7 @@
      }
     ],
     "traces": 12,
-    "fitness": 0.891,
+    "fitness": 0.924,
     "provisional": false,
     "scores": [
      {
@@ -15485,8 +15505,8 @@
       "value": 0.96,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "unverifiable_validation_claim",
-       "critique": "The claim that the OpenAPI file validates cannot be verified from the provided material.",
+       "failure_class": "none",
+       "critique": "The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -15496,11 +15516,11 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.84,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "unverifiable_validation_claim",
-       "critique": "The claim that the OpenAPI file validates cannot be verified from the provided material.",
+       "failure_class": "none",
+       "critique": "The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -15510,11 +15530,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.71,
+      "value": 0.8,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "unverifiable_validation_claim",
-       "critique": "The claim that the OpenAPI file validates cannot be verified from the provided material.",
+       "failure_class": "none",
+       "critique": "The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -15524,11 +15544,11 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.88,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "unverifiable_validation_claim",
-       "critique": "The claim that the OpenAPI file validates cannot be verified from the provided material.",
+       "failure_class": "none",
+       "critique": "The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "groq/qwen/qwen3.8-27b",
@@ -17423,7 +17443,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -17437,7 +17458,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -17451,7 +17473,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -17465,7 +17488,8 @@
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
