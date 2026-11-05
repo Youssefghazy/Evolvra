@@ -29,13 +29,27 @@ bytes, the judge prompt carries program-computed counts of the main deliverable 
 words per paragraph) and an instruction to trust them over its own counting. LLM judges miscount: on 2026-11-05 a
 judge called a 104-word paragraph 113 words and set the failure class.
 
+**Criteria by id, read literally.** The prompt numbers the acceptance criteria (`C1. ...`) and judges answer
+per id, with an instruction not to restate, merge, split or narrow a criterion. Answers are mapped back to the
+criteria as written; an entry that matches none is kept but marked `rewritten` and left out of the evolution
+diagnosis. On 2026-11-05 a judge narrowed "the text names exactly two product features" to "each paragraph
+names…", failed it, and that misread became content-creator's top failure class.
+
+**Lone dissent is labelled, not dropped.** When the failure class comes from a single judge, no other judge
+raised any failure, and at least two others put correctness at the ceiling, the ensemble keeps the class but
+records `contested_by`. The score is unchanged (the ceiling rule still applies). It is labelled rather than
+discarded because the same shape caught fabricated evidence on 2026-11-03. Contested classes are shown as
+`(contested)` in `evolvra fitness`, lose ties to uncontested ones, are not counted when the diagnosis ranks
+which failures the rewrites should target, and appear in the diagnosis with the per-criterion vote
+("unmet per X; 2 other judges marked it met") so the coach can check them against the output.
+
 Override with `EVOLVRA_JUDGES="groq:openai/gpt-oss-120b,gemini:gemma-4-31b-it"` or `evolvra score --judges ...`.
 
 Each judge sees the brief, the agent's role, the task, the acceptance criteria, the agent's evidence
 statement, and the output files (text, truncated). It must answer with strict JSON:
 
 ```json
-{"acceptance": [{"criterion": "...", "met": true, "reason": "..."}],
+{"acceptance": [{"id": "C1", "met": true, "reason": "..."}],
  "correctness": 0.8, "completeness": 0.9, "quality": 0.7, "evidence": 0.8,
  "critique": "one sentence", "failure_class": "snake_case_or_none"}
 ```
@@ -51,10 +65,15 @@ a thinner one. The `failure_class` and critique come from the strictest
 judge that found a problem (ties broken by majority), because the diagnosis exists to surface problems.
 The judge prompt carries calibration anchors: 1.0 is reserved for flawless and verifiable work; invented
 measurements cap evidence at 0.2 and correctness at 0.5. Judges that error or return unparseable output are
-recorded as `rubric:error` and excluded; one valid judge is enough to produce an ensemble.
+recorded as `rubric:error` and excluded (also when the coverage guard keeps an older ensemble, so the cause of
+every missing verdict stays on record); one valid judge is enough to produce an ensemble. Judges get 900 output
+tokens and one retry at 2400 if cut off; Nemotron gets 2400 first, because OpenRouter's free tier counts
+requests (40/day), not tokens, and the retry was costing it a second request on many verdicts.
 
 Calls go through the router: daily caps stop before free limits, and identical prompts hit the SQLite
-cache, so `evolvra score --rescore` costs zero requests.
+cache, so `evolvra score --rescore` costs zero requests **while the prompt is unchanged**. Any change to the
+judge prompt (such as numbering the criteria) makes every rescore a fresh call. When only the aggregation
+rule changes, use `evolvra reaggregate`: it rebuilds every ensemble from the stored judge rows with no calls.
 
 ## 3. Fitness
 
@@ -83,6 +102,7 @@ evolvra score --dry-run        # what would be scored, with which judges
 evolvra score                  # checks + ensemble on every unscored finished task
 evolvra score --no-judges      # deterministic only, no network
 evolvra score --mission <id>   # one mission
-evolvra score --rescore        # recompute (served from cache)
+evolvra score --rescore        # recompute (served from cache only if the prompt is unchanged)
+evolvra reaggregate            # re-apply aggregation rules to stored verdicts, 0 API calls
 evolvra fitness                # per agent version, weakest first
 ```

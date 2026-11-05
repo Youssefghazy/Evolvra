@@ -55,17 +55,21 @@ def agent_fitness(conn: sqlite3.Connection) -> list[dict]:
             buckets.setdefault((t["agent_slug"], t["version"]), []).append(f)
     out = []
     for (slug, version), values in sorted(buckets.items()):
+        # contested classes (raised by one judge while two others found the work flawless) count, but an
+        # uncontested class with the same count wins the tie, and the result says whether it is contested
         failure = conn.execute(
-            "SELECT json_extract(s.evidence_json, '$.failure_class') AS fc, COUNT(*) AS n"
+            "SELECT json_extract(s.evidence_json, '$.failure_class') AS fc, COUNT(*) AS n,"
+            " SUM(json_extract(s.evidence_json, '$.contested_by') IS NOT NULL) AS contested"
             " FROM scores s JOIN tasks t ON t.id = s.task_id"
             " LEFT JOIN agent_versions v ON v.id = t.agent_version_id"
             " WHERE t.agent_slug = ? AND COALESCE(v.version, 0) = ? AND s.judge_model = 'ensemble'"
             " AND s.metric = 'rubric:correctness' AND fc IS NOT NULL AND fc != 'none'"
-            " GROUP BY fc ORDER BY n DESC LIMIT 1", (slug, version)).fetchone()
+            " GROUP BY fc ORDER BY n DESC, contested ASC LIMIT 1", (slug, version)).fetchone()
         out.append({
             "agent": slug, "version": version, "tasks": len(values),
             "fitness": round(sum(values) / len(values), 4),
             "min": round(min(values), 3), "max": round(max(values), 3),
             "top_failure": failure["fc"] if failure else None,
+            "top_failure_contested": bool(failure and failure["contested"] == failure["n"]),
         })
     return sorted(out, key=lambda r: r["fitness"])

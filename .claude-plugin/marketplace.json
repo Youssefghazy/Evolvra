@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Evolvra: a self-evolving AI agency for Claude Code. Survival of the promptest.",
-    "version": "0.3.2"
+    "version": "0.3.3"
   },
   "plugins": [
     {
       "name": "evolvra",
       "source": "./plugin",
       "description": "Run the agency on a mission, score every agent with evidence, evolve the losers.",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "author": {
         "name": "Youssef Ghazy"
       },

@@ -185,7 +185,7 @@ def test_evolve_dry_run_makes_no_calls(tmp_path, evolvra_home):
 def test_judge_prompt_render_is_used_by_tournament():
     text = judge.render_prompt(brief="b", agent="a", agent_description="d", task="t", criteria=["c1"],
                                attempts=1, verdict="PASS", evidence="e", output="o")
-    assert "- c1" in text and "# Output files\no" in text
+    assert "C1. c1" in text and "# Output files\no" in text
 
 
 def test_paired_delta_only_counts_shared_tasks():

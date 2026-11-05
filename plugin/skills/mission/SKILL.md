@@ -13,6 +13,11 @@ It prints JSON. Read the JSON; do not guess ids or paths. On Windows PowerShell,
 single quotes; embedded double quotes are split by PowerShell and the recorder rejects the call.
 Agents must not download or install anything (packages, browsers, validators) unless the user approves it
 in this session; verify with the standard library and tools already present.
+Known quirks of the user's machine go in every handoff's "Machine notes" line, so agents don't spend
+attempts rediscovering them. Current list (Windows, managed PC):
+- `Compress-Archive` fails with "being used by another process" on every attempt. The in-box .NET
+  `System.IO.Compression.ZipArchive` / `ZipFile` classes are allowed: they ship with Windows, nothing is downloaded.
+- Run commands in PowerShell, never Git Bash/MSYS `sh` (security software flags it).
 
 ## 0. Brief and mode
 - `$ARGUMENTS` is the brief. If empty, ask for one sentence describing the goal and stop.
@@ -48,6 +53,7 @@ Mission: <brief>
 Your task: <task>
 Acceptance criteria: <list>
 Context so far: <what previous tasks produced, with file paths>
+Machine notes: <the known quirks listed above that apply to this task, or "none">
 Previous feedback (if retry): <QA feedback verbatim>
 Write all output files under: <output_dir from the recorder>
 End your reply with a section titled "## Evidence" listing exactly what proves each criterion is met

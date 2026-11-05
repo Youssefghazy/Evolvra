@@ -47,6 +47,7 @@ def _agents(conn: sqlite3.Connection) -> list[dict]:
                 "content": v["content_md"],
                 "fitness": f["fitness"] if f else None, "tasks": f["tasks"] if f else 0,
                 "top_failure": f["top_failure"] if f else None,
+                "top_failure_contested": bool(f and f.get("top_failure_contested")),
             })
         current = next((v for v in versions if v["version"] == a["current_version"]), None)
         out.append({

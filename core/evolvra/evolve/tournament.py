@@ -129,7 +129,7 @@ def play(conn: sqlite3.Connection, persona_text: str, label: str, bank: list[Ban
         prompt = judge.render_prompt(brief=t.brief, agent=agent_slug, agent_description=agent_description,
                                      task=t.task, criteria=list(t.acceptance), attempts=1, verdict="PASS",
                                      evidence=evidence, output=body, facts=facts) + PROXY_JUDGE_NOTE
-        jr = judge.judge_prompt(conn, prompt, judges, _transport=_transport)
+        jr = judge.judge_prompt(conn, prompt, judges, criteria=list(t.acceptance), _transport=_transport)
         scores, failure, critique = judge.aggregate(jr)
         pr.results.append(TaskResult(t, output, scores, proxy_fitness(scores), failure, critique,
                                      sum(1 for r in jr if not r.scores)))

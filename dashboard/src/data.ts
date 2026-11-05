@@ -2,7 +2,7 @@ import { diffLines } from "diff";
 
 export type Version = {
   version: number; parent: number | null; created_by: string; rationale: string | null; created_at: string;
-  sha: string; content: string; fitness: number | null; tasks: number; top_failure: string | null;
+  sha: string; content: string; fitness: number | null; tasks: number; top_failure: string | null; top_failure_contested?: boolean;
 };
 export type Agent = {
   slug: string; name: string; division: string; emoji: string | null; color: string | null;

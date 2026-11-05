@@ -31,11 +31,16 @@ class Diagnosis:
                           f"- Task: {w['task']}",
                           f"- Acceptance: {'; '.join(w['acceptance']) or '(none)'}",
                           f"- Verdict: {w['verdict']} after {w['attempts']} attempt(s)",
-                          f"- Failure class: `{w['failure_class']}`",
+                          f"- Failure class: `{w['failure_class']}`" + (
+                              f" (contested: raised only by {w['contested_by']}; the other judges found every"
+                              " criterion met. Check it against the output before acting on it.)"
+                              if w.get("contested_by") else ""),
                           f"- Critique: {w['critique']}"]
                 if w["misses"]:
                     lines.append("- Unmet criteria:")
-                    lines += [f"  - {m['criterion']}: {m['reason']}" for m in w["misses"]]
+                    lines += [f"  - {m['criterion']}: {m['reason']}"
+                              + (f" [unmet per {m['judge']}; {m['met_by']} other judge(s) marked it met]"
+                                 if m.get("met_by") else "") for m in w["misses"]]
                 if w["feedback"]:
                     lines.append(f"- QA feedback on failed attempts: {w['feedback']}")
                 if w["output_excerpt"]:
@@ -63,25 +68,36 @@ def diagnose(conn: sqlite3.Connection, slug: str, *, worst_n: int = 3) -> Diagno
             "SELECT evidence_json FROM scores WHERE task_id = ? AND judge_model = 'ensemble'"
             " AND metric = 'rubric:correctness'", (r["id"],)).fetchone()
         ev = json.loads(ens["evidence_json"]) if ens else {}
-        misses = []
-        for j in conn.execute("SELECT evidence_json FROM scores WHERE task_id = ? AND judge_model NOT IN"
+        contested_by = ev.get("contested_by")
+        misses, met_votes = [], {}
+        for j in conn.execute("SELECT judge_model, evidence_json FROM scores WHERE task_id = ? AND judge_model NOT IN"
                               " ('ensemble','deterministic') AND metric = 'rubric:correctness'", (r["id"],)):
             for a in (json.loads(j["evidence_json"]).get("acceptance") or []):
-                if a.get("met") is False and a.get("criterion"):
-                    misses.append({"criterion": a["criterion"], "reason": a.get("reason", "")})
+                if a.get("rewritten") or not a.get("criterion"):
+                    continue  # the judge graded its own rewording of a criterion, not the criterion
+                key = a["criterion"].strip().lower()
+                if a.get("met") is False:
+                    misses.append({"criterion": a["criterion"], "reason": a.get("reason", ""),
+                                   "judge": j["judge_model"]})
+                elif a.get("met") is True:
+                    met_votes[key] = met_votes.get(key, 0) + 1
+        for m in misses:  # show the vote, so the coach can tell a shared finding from a lone reading
+            m["met_by"] = met_votes.get(m["criterion"].strip().lower(), 0)
         attempts = json.loads(r["attempts_json"] or "[]")
         feedback = " | ".join(a["feedback"] for a in attempts if a.get("feedback"))
         scored.append({
             "task_id": r["id"], "mission": r["external_id"], "task_no": r["task_no"], "task": r["task"],
             "acceptance": json.loads(r["acceptance_json"] or "[]"), "verdict": r["verdict"],
             "attempts": r["attempts"], "fitness": f, "failure_class": ev.get("failure_class", "none"),
+            "contested_by": contested_by,
             "critique": ev.get("critique", ""), "misses": _dedupe(misses), "feedback": feedback,
             "output_excerpt": checks.read_output(r["output_dir"], per_file=1200, total=1500),
         })
     scored.sort(key=lambda s: s["fitness"])
     counts: dict[str, int] = {}
     for s in scored:
-        if s["failure_class"] not in ("none", "", None):
+        # a contested class is not counted toward the ranking that picks what the rewrites target
+        if s["failure_class"] not in ("none", "", None) and not s["contested_by"]:
             counts[s["failure_class"]] = counts.get(s["failure_class"], 0) + 1
     mean = round(sum(s["fitness"] for s in scored) / len(scored), 4) if scored else None
     return Diagnosis(slug, agent["current_version"], len(scored), mean,

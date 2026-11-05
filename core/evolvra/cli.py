@@ -211,6 +211,28 @@ def cmd_score(args) -> int:
     return 0
 
 
+def cmd_reaggregate(args) -> int:
+    """Re-apply the current aggregation rules to stored judge rows. Zero API calls."""
+    conn = db.connect(args.db)
+    ids = [r["task_id"] for r in conn.execute(
+        "SELECT DISTINCT task_id FROM scores WHERE judge_model = 'ensemble' ORDER BY task_id")]
+    done, skipped, contested = 0, 0, 0
+    for tid in ids:
+        if judge.reaggregate(conn, tid):
+            done += 1
+        else:
+            skipped += 1
+    for r in conn.execute("SELECT t.agent_slug, t.task_no, m.external_id, json_extract(s.evidence_json,"
+                          " '$.failure_class') AS fc, json_extract(s.evidence_json, '$.contested_by') AS by"
+                          " FROM scores s JOIN tasks t ON t.id = s.task_id JOIN missions m ON m.id = t.mission_id"
+                          " WHERE s.judge_model = 'ensemble' AND s.metric = 'rubric:correctness' AND by IS NOT NULL"):
+        contested += 1
+        print(f"  contested  {r['external_id']} #{r['task_no']} {r['agent_slug']:<20} {r['fc']}  (only {r['by']})")
+    print(f"reaggregated {done} task(s), skipped {skipped} (a judge's rows are missing), "
+          f"{contested} contested failure class(es); 0 API calls")
+    return 0
+
+
 def cmd_fitness(args) -> int:
     conn = db.connect(args.db)
     rows = fitness.agent_fitness(conn)
@@ -223,7 +245,7 @@ def cmd_fitness(args) -> int:
     print(f"{'agent':<22}{'ver':>4}{'tasks':>6}{'fitness':>9}{'min':>7}{'max':>7}  top failure")
     for r in rows:
         print(f"{r['agent']:<22}{r['version']:>4}{r['tasks']:>6}{r['fitness']:>9.3f}{r['min']:>7.2f}"
-              f"{r['max']:>7.2f}  {r['top_failure'] or '-'}")
+              f"{r['max']:>7.2f}  {r['top_failure'] or '-'}{' (contested)' if r.get('top_failure_contested') else ''}")
     return 0
 
 
@@ -334,6 +356,10 @@ def cmd_cycle(args) -> int:
     else:
         log.append("score: nothing new")
 
+    # zero API calls: keeps every stored ensemble on the current aggregation rules before fitness is read
+    ids = [r["task_id"] for r in conn.execute("SELECT DISTINCT task_id FROM scores WHERE judge_model = 'ensemble'")]
+    log.append(f"reaggregate: {sum(judge.reaggregate(conn, t) for t in ids)}/{len(ids)} ensembles, 0 calls")
+
     evolved = None
     if args.evolve and _hours_since_last_evolution(conn) < args.evolve_interval:
         log.append(f"evolve: skipped, last generation ran {_hours_since_last_evolution(conn):.1f}h ago"
@@ -436,6 +462,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--rescore", action="store_true", help="re-score tasks that already have ensemble scores")
     s.add_argument("--dry-run", action="store_true")
     s.set_defaults(fn=cmd_score)
+
+    sub.add_parser("reaggregate", help="re-apply aggregation rules to stored judge verdicts (no API calls)"
+                   ).set_defaults(fn=cmd_reaggregate)
 
     s = sub.add_parser("fitness", help="fitness per agent version (what evolution optimizes)")
     s.add_argument("--json", action="store_true")

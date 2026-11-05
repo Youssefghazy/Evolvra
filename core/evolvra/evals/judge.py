@@ -32,6 +32,9 @@ RUBRIC = ("correctness", "completeness", "quality", "evidence")
 MAX_TOKENS = 900
 # Qwen on Groq can spend all 900 tokens on hidden reasoning and return empty content.
 RETRY_MAX_TOKENS = 2400
+# OpenRouter's free tier is capped by requests per day (40), not tokens. Nemotron was cut off at 900 tokens
+# often enough to average ~2 requests per verdict (round 6), so it gets the large budget on the first try.
+JUDGE_MAX_TOKENS: dict[str, int] = {"nvidia/nemotron-3-ultra-550b-a55b:free": RETRY_MAX_TOKENS}
 
 SYSTEM = (
     "You are a strict, fair QA reviewer for an AI agency. You grade one agent's work on one task. "
@@ -48,7 +51,7 @@ PROMPT = """# Mission brief
 # Task
 {task}
 
-# Acceptance criteria
+# Acceptance criteria (grade each one by its id, exactly as written)
 {criteria}
 
 # Attempts: {attempts}   Final verdict recorded by the orchestrator: {verdict}
@@ -65,10 +68,15 @@ PROMPT = """# Mission brief
 - A missing required element (an acceptance criterion not addressed) caps `completeness` at 0.5.
 - Honestly stating what could not be verified is NOT a flaw; pretending to have verified it is.
 
+# Reading the criteria (apply literally)
+- Grade every criterion by its id (C1, C2, ...), one entry per id, in order. Do not restate, merge, split or
+  narrow a criterion. Its scope is exactly its words: "the text names exactly two features" is about the whole
+  text, not each paragraph. Mark it unmet only when the shown work contradicts what the words say.
+
 # Grade
 Return JSON with exactly these keys:
 {{
-  "acceptance": [{{"criterion": "<text>", "met": true|false, "reason": "<short>"}}],
+  "acceptance": [{{"id": "C1", "met": true|false, "reason": "<short>"}}],
   "correctness": <0..1, acceptance criteria actually met>,
   "completeness": <0..1, nothing required is missing>,
   "quality": <0..1, craftsmanship of the deliverable>,
@@ -117,7 +125,7 @@ def render_prompt(*, brief: str, agent: str, agent_description: str, task: str, 
         agent=agent,
         agent_description=agent_description or "(unknown)",
         task=task,
-        criteria="\n".join(f"- {c}" for c in criteria) or "- (none given)",
+        criteria="\n".join(f"C{i}. {c}" for i, c in enumerate(criteria, 1)) or "- (none given)",
         attempts=attempts,
         verdict=verdict or "none",
         evidence=(evidence or "(no evidence statement)").strip(),
@@ -173,20 +181,52 @@ def _clamp(value) -> float:
 
 def judge_task(conn: sqlite3.Connection, task: sqlite3.Row, brief: str, agent_description: str,
                judges: list[tuple[str, str]] | None = None, *, _transport=None) -> list[JudgeResult]:
-    return judge_prompt(conn, build_prompt(task, brief, agent_description), judges, _transport=_transport)
+    criteria = json.loads(task["acceptance_json"] or "[]")
+    return judge_prompt(conn, build_prompt(task, brief, agent_description), judges, criteria=criteria,
+                        _transport=_transport)
+
+
+def normalize_acceptance(items, criteria: list[str]) -> list[dict]:
+    """Map a judge's acceptance entries back to the criteria as written. Entries answer by id ("C2"), by
+    index, or (older prompt) by quoting the text. Anything that matches no criterion verbatim is kept but
+    marked `rewritten`: on 2026-11-05 a judge narrowed "the text names exactly two product features" to
+    "each paragraph names...", failed it, and that misread became the agent's top failure class."""
+    if not isinstance(items, list):
+        return []
+    canon = {c.strip().lower(): i for i, c in enumerate(criteria)}
+    out = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        idx = None
+        ref = it.get("id", it.get("index"))
+        if ref is not None:
+            m = re.fullmatch(r"\s*[Cc]?(\d+)\s*", str(ref))
+            if m and 1 <= int(m.group(1)) <= len(criteria):
+                idx = int(m.group(1)) - 1
+        if idx is None and isinstance(it.get("criterion"), str):
+            idx = canon.get(it["criterion"].strip().lower())
+        entry = {"met": it.get("met"), "reason": str(it.get("reason") or "")}
+        if idx is not None:
+            entry.update(id=f"C{idx + 1}", criterion=criteria[idx])
+        else:
+            entry.update(criterion=str(it.get("criterion") or ref or ""), rewritten=True)
+        out.append(entry)
+    return out
 
 
 def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, str]] | None = None, *,
-                 _transport=None) -> list[JudgeResult]:
+                 criteria: list[str] | None = None, _transport=None) -> list[JudgeResult]:
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}]
     results: list[JudgeResult] = []
     for provider, model in judges or judges_from_env():
         name = f"{provider}/{model}"
         try:
             effort = JUDGE_REASONING.get(model, client.DEFAULT_REASONING_EFFORT)
-            res = client.chat(conn, messages, provider=provider, model=model, max_tokens=MAX_TOKENS,
+            first = JUDGE_MAX_TOKENS.get(model, MAX_TOKENS)
+            res = client.chat(conn, messages, provider=provider, model=model, max_tokens=first,
                               reasoning_effort=effort, _transport=_transport)
-            if res.truncated and not parse_verdict(res.text):
+            if res.truncated and not parse_verdict(res.text) and first < RETRY_MAX_TOKENS:
                 res = client.chat(conn, messages, provider=provider, model=model,
                                   max_tokens=RETRY_MAX_TOKENS, reasoning_effort=effort, _transport=_transport)
         except (client.ProviderError, quota.QuotaExceeded) as e:
@@ -197,14 +237,16 @@ def judge_prompt(conn: sqlite3.Connection, prompt: str, judges: list[tuple[str, 
             retry = messages + [{"role": "assistant", "content": res.text[:2000]},
                                 {"role": "user", "content": "That was not valid JSON. Reply with ONLY the JSON object, no prose, no code fences."}]
             try:
-                res = client.chat(conn, retry, provider=provider, model=model, max_tokens=MAX_TOKENS,
+                res = client.chat(conn, retry, provider=provider, model=model, max_tokens=first,
                                   reasoning_effort=effort, _transport=_transport)
                 data = parse_verdict(res.text) or {}
             except (client.ProviderError, quota.QuotaExceeded):
                 data = {}
         scores = {k: _clamp(data.get(k)) for k in RUBRIC} if data else {}
         results.append(JudgeResult(
-            judge=name, scores=scores, acceptance=data.get("acceptance") or [],
+            judge=name, scores=scores,
+            acceptance=normalize_acceptance(data.get("acceptance") or [], criteria) if criteria is not None
+            else (data.get("acceptance") or []),
             critique=str(data.get("critique") or ("unparseable judge output" if not data else "")),
             failure_class=str(data.get("failure_class") or ("judge_unparseable" if not data else "none")),
             cached=res.cached, raw_text=res.text,
@@ -237,13 +279,18 @@ def ceiling_aware(values: list[float]) -> float:
     return round(statistics.median(values), 3)
 
 
-def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
+def aggregate_detail(results: list[JudgeResult]) -> dict:
     """Ceiling-aware aggregate per metric (see `ceiling_aware`); failure class and critique from the
     strictest judge that found a problem (ties broken by majority), because the diagnosis exists to
-    surface problems."""
+    surface problems.
+
+    `contested_by` names that judge when it stands alone: no other judge raised any failure and at least two
+    others put correctness at the ceiling. The class is still kept, because that is also the shape of the
+    2026-11-03 fabricated-evidence case (two lenient judges at 1.0, one strict judge right). It is labelled so
+    the fitness table and the evolution diagnosis can show it as a minority view instead of a settled fact."""
     valid = [r for r in results if r.scores]
     if not valid:
-        return {}, "none", "none"
+        return {"scores": {}, "failure_class": "none", "critique": "none", "contested_by": None}
     scores = {k: ceiling_aware([r.scores[k] for r in valid]) for k in RUBRIC}
     flagged = [r for r in valid if r.failure_class not in ("none", "")]
     if flagged:
@@ -251,8 +298,17 @@ def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
         top_count = classes.most_common(1)[0][1]
         contenders = [r for r in flagged if classes[r.failure_class] == top_count]
         strictest = min(contenders, key=lambda r: (r.scores.get("correctness", 1.0), r.scores.get("evidence", 1.0)))
-        return scores, strictest.failure_class, strictest.critique or "none"
-    return scores, "none", next((r.critique for r in valid if r.critique and r.critique != "none"), "none")
+        others = [r for r in valid if r is not strictest]
+        alone = len(flagged) == 1 and sum(1 for r in others if r.scores.get("correctness", 0.0) >= CEILING) >= 2
+        return {"scores": scores, "failure_class": strictest.failure_class, "critique": strictest.critique or "none",
+                "contested_by": strictest.judge if alone else None}
+    return {"scores": scores, "failure_class": "none", "contested_by": None,
+            "critique": next((r.critique for r in valid if r.critique and r.critique != "none"), "none")}
+
+
+def aggregate(results: list[JudgeResult]) -> tuple[dict[str, float], str, str]:
+    d = aggregate_detail(results)
+    return d["scores"], d["failure_class"], d["critique"]
 
 
 def ensemble_judges(conn: sqlite3.Connection, task_id: int) -> int:
@@ -264,15 +320,22 @@ def ensemble_judges(conn: sqlite3.Connection, task_id: int) -> int:
 
 
 def store_judge_results(conn: sqlite3.Connection, task_id: int, results: list[JudgeResult]) -> dict[str, float]:
+    for r in results:
+        if r.scores:  # a judge that answers now clears any stale error row from an earlier, failed run
+            conn.execute("DELETE FROM scores WHERE task_id = ? AND judge_model = ? AND metric = 'rubric:error'",
+                         (task_id, r.judge))
     answered = sum(1 for r in results if r.scores)
     if answered and answered < ensemble_judges(conn, task_id):
         # A rate-limited day must not overwrite a 3-judge verdict with a 1-judge one. Keep the per-judge rows
         # that did answer (they are cached anyway) and leave the stronger ensemble in place.
+        # Error rows are stored too, so the cause of every missing verdict stays auditable (round 6 lost 10).
         for r in results:
             if r.scores:
                 rows = [(f"rubric:{k}", v, {"critique": r.critique, "failure_class": r.failure_class,
                                              "acceptance": r.acceptance, "cached": r.cached}) for k, v in r.scores.items()]
                 checks.store_scores(conn, task_id, rows, judge_model=r.judge)
+            else:
+                checks.store_scores(conn, task_id, [("rubric:error", 0.0, {"critique": r.critique})], judge_model=r.judge)
         return {}
     for r in results:
         if not r.scores:
@@ -281,9 +344,39 @@ def store_judge_results(conn: sqlite3.Connection, task_id: int, results: list[Ju
         rows = [(f"rubric:{k}", v, {"critique": r.critique, "failure_class": r.failure_class,
                                      "acceptance": r.acceptance, "cached": r.cached}) for k, v in r.scores.items()]
         checks.store_scores(conn, task_id, rows, judge_model=r.judge)
-    scores, failure, critique = aggregate(results)
-    if scores:
-        rows = [(f"rubric:{k}", v, {"failure_class": failure, "critique": critique,
-                                     "judges": [r.judge for r in results if r.scores]}) for k, v in scores.items()]
+    return _store_ensemble(conn, task_id, results)
+
+
+def _store_ensemble(conn: sqlite3.Connection, task_id: int, results: list[JudgeResult]) -> dict[str, float]:
+    d = aggregate_detail(results)
+    if d["scores"]:
+        ev = {"failure_class": d["failure_class"], "critique": d["critique"],
+              "judges": [r.judge for r in results if r.scores]}
+        if d["contested_by"]:
+            ev["contested_by"] = d["contested_by"]
+        rows = [(f"rubric:{k}", v, ev) for k, v in d["scores"].items()]
         checks.store_scores(conn, task_id, rows, judge_model="ensemble")
-    return scores
+    return d["scores"]
+
+
+def reaggregate(conn: sqlite3.Connection, task_id: int) -> bool:
+    """Rebuild a task's ensemble from the per-judge rows already stored, with no API calls. Used after an
+    aggregation rule changes, so old verdicts follow the new rule without spending free-tier budget.
+    Only the judges the current ensemble was built from are used; returns False if any of them is missing."""
+    row = conn.execute("SELECT evidence_json FROM scores WHERE task_id = ? AND judge_model = 'ensemble'"
+                       " AND metric = 'rubric:correctness'", (task_id,)).fetchone()
+    if not row:
+        return False
+    names = json.loads(row["evidence_json"] or "{}").get("judges") or []
+    results = []
+    for name in names:
+        rows = conn.execute("SELECT metric, value, evidence_json FROM scores WHERE task_id = ? AND judge_model = ?"
+                            " AND metric LIKE 'rubric:%' AND metric != 'rubric:error'", (task_id, name)).fetchall()
+        have = {r["metric"].removeprefix("rubric:"): r for r in rows}
+        if not all(k in have for k in RUBRIC):
+            return False
+        ev = json.loads(have["correctness"]["evidence_json"] or "{}")
+        results.append(JudgeResult(name, {k: have[k]["value"] for k in RUBRIC}, ev.get("acceptance") or [],
+                                   ev.get("critique") or "none", ev.get("failure_class") or "none", True, ""))
+    _store_ensemble(conn, task_id, results)
+    return True

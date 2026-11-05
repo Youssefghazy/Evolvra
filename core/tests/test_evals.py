@@ -312,3 +312,91 @@ def test_measured_facts_count_words_and_paragraphs(tmp_path):
     prompt = judge.render_prompt(brief="b", agent="a", agent_description="d", task="t", criteria=["90-110 words"],
                                  attempts=1, verdict="PASS", evidence="e", output="o", facts=facts)
     assert "# Measured facts" in prompt and "never report a count violation" in prompt
+
+
+def test_prompt_numbers_criteria_and_judges_answer_by_id():
+    prompt = judge.render_prompt(brief="b", agent="a", agent_description="d", task="t",
+                                 criteria=["the text names exactly two product features", "3 paragraphs"],
+                                 attempts=1, verdict="PASS", evidence="e", output="o")
+    assert "C1. the text names exactly two product features" in prompt and "C2. 3 paragraphs" in prompt
+    assert '"id": "C1"' in prompt and "not each paragraph" in prompt
+    crit = ["the text names exactly two product features", "3 paragraphs"]
+    got = judge.normalize_acceptance([
+        {"id": "C2", "met": True, "reason": "3"},                                   # by id
+        {"index": 1, "met": True, "reason": "two"},                                 # by index
+        {"criterion": "3 Paragraphs ", "met": True, "reason": "ok"},                # older prompt: verbatim text
+        {"criterion": "Each paragraph names exactly two product features", "met": False, "reason": "p1 none"},
+        "junk",
+    ], crit)
+    assert [g.get("id") for g in got] == ["C2", "C1", "C2", None]
+    assert got[1]["criterion"] == crit[0] and got[2]["criterion"] == crit[1]
+    assert got[3]["rewritten"] is True and "rewritten" not in got[0]
+    assert judge.normalize_acceptance("not a list", crit) == []
+
+
+def _jr(name, c, fc="none", crit="none"):
+    return judge.JudgeResult(name, {"correctness": c, "completeness": 1.0, "quality": 1.0, "evidence": c},
+                             [], crit, fc, False, "")
+
+
+def test_lone_failure_class_is_kept_but_labelled_contested():
+    # the announcement case of 2026-11-05: one judge misreads a criterion, two find every criterion met
+    lone = judge.aggregate_detail([_jr("groq/gpt-oss", 0.4, "missing_feature_mentions"),
+                                   _jr("openrouter/nemotron", 1.0), _jr("gemini/flash-lite", 1.0)])
+    assert lone["failure_class"] == "missing_feature_mentions" and lone["contested_by"] == "groq/gpt-oss"
+    assert lone["scores"]["correctness"] == 0.7                       # the score rule is unchanged
+    # a second judge raising any failure, or a second judge below the ceiling, makes it a real finding
+    shared = judge.aggregate_detail([_jr("a", 0.4, "x"), _jr("b", 0.8, "y"), _jr("c", 1.0)])
+    split = judge.aggregate_detail([_jr("a", 0.4, "x"), _jr("b", 0.8), _jr("c", 1.0)])
+    assert shared["contested_by"] is None and split["contested_by"] is None
+    assert judge.aggregate([_jr("a", 0.4, "x"), _jr("b", 1.0), _jr("c", 1.0)])[1] == "x"   # old API intact
+
+
+def test_reaggregate_applies_new_rules_without_calls_and_errors_are_kept(evolvra_home, recorder, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, AGENTS_DIR)
+    _recorded_mission(evolvra_home, recorder)
+    ingest.ingest_all(conn, evolvra_home)
+    three = [("groq", "openai/gpt-oss-120b"), ("gemini", "gemini-3.5-flash-lite"), ("groq", "qwen/qwen3.8-27b")]
+    replies = {"openai/gpt-oss-120b": _reply(0.4, 0.5, fc="generic_copy"),
+               "gemini-3.5-flash-lite": _reply(1.0, 1.0), "qwen/qwen3.8-27b": _reply(1.0, 1.0)}
+    runner.score_tasks(conn, runner.pending_tasks(conn), three, _transport=judge_transport(replies))
+    tid = conn.execute("SELECT id FROM tasks").fetchone()[0]
+    sql = ("SELECT evidence_json FROM scores WHERE task_id=? AND judge_model='ensemble' AND metric='rubric:correctness'")
+    ev = json.loads(conn.execute(sql, (tid,)).fetchone()[0])
+    assert ev["contested_by"] == "groq/openai/gpt-oss-120b"
+    # simulate an ensemble written before the rule existed, then rebuild it from the stored judge rows
+    del ev["contested_by"]
+    conn.execute("UPDATE scores SET evidence_json=? WHERE task_id=? AND judge_model='ensemble'", (json.dumps(ev), tid))
+    assert judge.reaggregate(conn, tid) is True
+    assert json.loads(conn.execute(sql, (tid,)).fetchone()[0])["contested_by"] == "groq/openai/gpt-oss-120b"
+    row = fitness.agent_fitness(conn)[0]
+    assert row["top_failure"] == "generic_copy" and row["top_failure_contested"] is True
+
+    def capped(url, body, api_key, timeout):            # a capped day: the guard keeps the 3-judge ensemble...
+        if "gemini" in body["model"]:
+            return judge_transport(replies)(url, body, api_key, timeout)
+        raise client.ProviderError("HTTP 429 from provider: daily cap")
+
+    conn.execute("DELETE FROM llm_cache")              # force real (failing) calls instead of cache hits
+    runner.score_tasks(conn, runner.pending_tasks(conn, rescore=True), three, _transport=capped)
+    errors = conn.execute("SELECT COUNT(*) FROM scores WHERE task_id=? AND metric='rubric:error'", (tid,)).fetchone()[0]
+    assert judge.ensemble_judges(conn, tid) == 3 and errors == 2      # ...and still records why two judges missed
+
+
+def test_nemotron_gets_the_large_budget_first_and_no_second_request():
+    sent = []
+
+    def t(url, body, api_key, timeout):
+        sent.append(body["max_tokens"])
+        return {"choices": [{"message": {"content": ""}, "finish_reason": "length"}], "usage": {"total_tokens": 9}}
+
+    import os
+    os.environ.setdefault("OPENROUTER_API_KEY", "k")
+    conn = db.connect(":memory:")
+    res = judge.judge_prompt(conn, "p", [("openrouter", "nvidia/nemotron-3-ultra-550b-a55b:free")], _transport=t)
+    assert sent[0] == judge.RETRY_MAX_TOKENS          # no 900-token attempt to throw away
+    assert sent.count(judge.RETRY_MAX_TOKENS) == len(sent) and len(sent) <= 2   # at most the JSON-repair retry
+    assert res[0].failure_class == "judge_unparseable"

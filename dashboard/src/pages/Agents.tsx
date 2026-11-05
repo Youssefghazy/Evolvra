@@ -76,7 +76,9 @@ export default function Agents({ data }: { data: Data }) {
                     <span>·</span>
                     <span className="text-ink2">{g.label}</span>
                     {a.versions.length > 1 && <Chip tone="var(--good)" className="ml-auto"><GitBranch size={11} /> evolved to v{a.current_version}</Chip>}
-                    {a.versions.length === 1 && cur?.top_failure && <Chip className="ml-auto" title="Most common issue the judges raised">{humanize(cur.top_failure)}</Chip>}
+                    {a.versions.length === 1 && cur?.top_failure && <Chip className="ml-auto"
+                      title={cur.top_failure_contested ? "Raised by only one judge; the other two found every criterion met" : "Most common issue the judges raised"}>
+                      {humanize(cur.top_failure)}{cur.top_failure_contested && <span className="text-muted">· contested</span>}</Chip>}
                   </div>
                 </Spotlight>
                 </CometCard>

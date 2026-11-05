@@ -106,7 +106,7 @@ function TaskCard({ t, data }: { t: Task; data: Data }) {
   const ens = Object.fromEntries(t.scores.filter((s) => s.judge === "ensemble").map((s) => [s.metric.replace("rubric:", ""), s]));
   const judges = [...new Set(t.scores.filter((s) => !["ensemble", "deterministic"].includes(s.judge) && s.metric.startsWith("rubric:")).map((s) => s.judge))];
   const det = t.scores.filter((s) => s.judge === "deterministic");
-  const ev = (ens.correctness?.evidence ?? {}) as { critique?: string; failure_class?: string };
+  const ev = (ens.correctness?.evidence ?? {}) as { critique?: string; failure_class?: string; contested_by?: string };
   const g = grade(t.fitness);
   const phone = useIsPhone();
   const [showJudges, setShowJudges] = useState(false);
@@ -172,7 +172,10 @@ function TaskCard({ t, data }: { t: Task; data: Data }) {
             <>
               <div className="rounded-xl border border-line-strong bg-card-hover p-4">
                 <div className="mb-3 flex items-center justify-between text-sm"><span className="font-medium">Ensemble verdict</span>
-                  {ev.failure_class && ev.failure_class !== "none" && <Chip tone="var(--warn)">{humanize(ev.failure_class)}</Chip>}</div>
+                  {ev.failure_class && ev.failure_class !== "none" && (
+                    <Chip tone={ev.contested_by ? "var(--muted)" : "var(--warn)"}
+                      title={ev.contested_by ? `Raised only by ${providerName(ev.contested_by).model}; the other judges found every criterion met` : undefined}>
+                      {humanize(ev.failure_class)}{ev.contested_by && <span className="text-muted">· contested</span>}</Chip>)}</div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
                   {RUBRIC.map((k) => (
                     <div key={k}>

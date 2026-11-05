@@ -3,6 +3,8 @@
 #         .\scripts\cycle.ps1 -Evolve    (also evolve the weakest scored agent, ~70 free-tier calls)
 param([switch]$Evolve)
 $ErrorActionPreference = "Continue"
+# Judge critiques contain characters cp1252 cannot print (e.g. non-breaking hyphens); keep Python on UTF-8.
+$env:PYTHONIOENCODING = "utf-8"
 $repo = Split-Path -Parent $PSScriptRoot
 Push-Location "$repo\core"
 $log = Join-Path $HOME ".evolvra\cycle.log"
