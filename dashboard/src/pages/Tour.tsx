@@ -11,8 +11,8 @@ import { Rail, SectionHeader } from "../components/ui";
 
 type Line = { text: string; tone?: "cmd" | "ok" | "warn" | "bad" | "dim" | "accent" };
 
-const LID_CLOSED = -102; // degrees: lid folded flat onto the deck (180 - DECK_TILT, minus 2 so they never z-fight)
-const DECK_TILT = 76;   // degrees: deck seen from slightly above, receding from the hinge
+const DECK_TILT = 66;   // degrees: deck seen from slightly above, receding from the hinge
+const LID_CLOSED = -(180 - DECK_TILT) + 2; // degrees: lid folded flat onto the deck (2 deg clear so they never z-fight)
 
 /** Turn a recorded mission into terminal lines: the replay is built from real data, not a mock. */
 function replay(m: Mission): Line[] {
@@ -94,8 +94,8 @@ function MacbookScroll({ lines, title }: { lines: Line[]; title: string }) {
   // One 3D scene: lid and deck share the same perspective, hinged on the same edge. The lid opens
   // fully first; the terminal only starts typing once it is upright, so it never types into a half-shut screen.
   const lid = useTransform(p, [0.02, 0.3], reduce ? [0, 0] : [LID_CLOSED, 0]);
-  const lift = useTransform(p, [0.3, 0.92], reduce ? [1, 1] : [1, 1.1]);
-  const rise = useTransform(p, [0.3, 0.92], reduce ? [0, 0] : [0, -30]);
+  const lift = useTransform(p, [0.3, 0.92], reduce ? [1, 1] : [1, 1.04]);
+  const rise = useTransform(p, [0.3, 0.92], reduce ? [0, 0] : [0, -12]);
   const glow = useTransform(p, [0.2, 0.36], [0, 1]);
   const shade = useTransform(p, [0.02, 0.3], [0.85, 0]);
   const [count, setCount] = useState(reduce ? lines.length : 0);
@@ -110,7 +110,7 @@ function MacbookScroll({ lines, title }: { lines: Line[]; title: string }) {
         style={{ perspective: "1800px", perspectiveOrigin: "50% 30%" }}>
         <motion.div className="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-64 max-w-3xl rounded-full blur-3xl"
           style={{ opacity: glow, background: "radial-gradient(closest-side, var(--glow), transparent)" }} />
-        <motion.div style={{ scale: lift, y: rise, transformStyle: "preserve-3d" }} className="relative w-[min(80vw,700px)]">
+        <motion.div style={{ scale: lift, y: rise, transformStyle: "preserve-3d" }} className="relative mt-[6vh] w-[min(72vw,640px,calc((100vh-13rem)*1.02))]">
           {/* lid, hinged on its bottom edge; exactly as wide as the base, like a real laptop */}
           <motion.div style={{ rotateX: lid, transformOrigin: "50% 100%", transformStyle: "preserve-3d" }}
             className="relative mx-auto aspect-[16/10] w-full">
@@ -185,7 +185,7 @@ function Terminal({ lines, count, title, wrap = false }: { lines: Line[]; count:
         <span className="h-2 w-2 rounded-full bg-rose-500/80" /><span className="h-2 w-2 rounded-full bg-amber-400/80" /><span className="h-2 w-2 rounded-full bg-emerald-500/80" />
         <span className="ml-2 flex min-w-0 items-center gap-1.5 text-[0.9em] text-neutral-500"><LogoMark size={11} /><span className="truncate">claude · ~/Evolvra · {title.slice(0, 48)}</span></span>
       </div>
-      <div className={`flex flex-1 flex-col justify-end overflow-hidden px-3 py-2 ${wrap ? "[mask-image:linear-gradient(transparent,#000_16%)]" : ""}`}>
+      <div className={`flex flex-1 flex-col justify-end overflow-hidden px-3 py-2 [mask-image:linear-gradient(transparent,#000_16%)]`}>
         {shown.slice(wrap ? -14 : -17).map((l, i) => (
           <motion.div key={`${i}-${l.text}`} initial={{ opacity: 0, x: -4 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.18 }}
             className={`${wrap ? "mb-1 whitespace-pre-wrap break-words [overflow-wrap:anywhere]" : "whitespace-pre truncate"} ${tone[l.tone ?? "dim"]}`}>{wrap ? l.text.replace(/ {2,}/g, " ") : l.text}</motion.div>
@@ -196,22 +196,27 @@ function Terminal({ lines, count, title, wrap = false }: { lines: Line[]; count:
   );
 }
 
+/**
+ * The base, built at real proportions (as deep as the lid is tall, 16:10.5) and then tilted back, so the
+ * perspective foreshortens it the way a real laptop deck looks from slightly above: keys on the far half,
+ * palm rest and trackpad on the near half.
+ */
 function Keyboard() {
-  const rows = [14, 14, 13, 12, 10];
+  const rows = [15, 14, 14, 13, 12, 9];
   return (
-    <div className="mx-auto w-full rounded-b-[20px] border-x border-b border-neutral-700/60 bg-gradient-to-b from-neutral-800 to-neutral-900 px-[4%] pb-[2.5%] pt-[2.2%] shadow-[0_40px_60px_-20px_rgba(0,0,0,0.85)]"
+    <div className="mx-auto flex aspect-[16/10.5] w-full flex-col rounded-b-[22px] border-x border-b border-neutral-700/60 bg-gradient-to-b from-neutral-800 via-neutral-800 to-neutral-900 px-[3.5%] pb-[4%] pt-[3%] shadow-[0_50px_70px_-25px_rgba(0,0,0,0.9)]"
       style={{ transform: `rotateX(${DECK_TILT}deg)`, transformOrigin: "50% 0%" }}>
-      <div className="space-y-[0.6%]">
+      <div className="flex h-[52%] flex-col gap-[1.6%] rounded-[6px] bg-black/30 p-[1.2%]">
         {rows.map((n, r) => (
-          <div key={r} className="flex gap-[0.6%]">
+          <div key={r} className={`flex flex-1 gap-[0.7%] ${r === 0 ? "max-h-[11%]" : ""}`}>
             {Array.from({ length: n }).map((_, k) => (
-              <span key={k} className="h-4 flex-1 rounded-[3px] bg-neutral-950/80 shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)]"
-                style={{ flexGrow: r === 4 && k === 4 ? 5 : 1 }} />
+              <span key={k} className="flex-1 rounded-[4px] bg-neutral-950 shadow-[inset_0_-2px_0_rgba(255,255,255,0.05),0_1px_0_rgba(0,0,0,0.6)]"
+                style={{ flexGrow: r === 5 && k === 4 ? 6 : (r === 1 && k === n - 1) || (r === 3 && (k === 0 || k === n - 1)) ? 1.8 : 1 }} />
             ))}
           </div>
         ))}
       </div>
-      <div className="mx-auto mt-[3%] h-16 w-[38%] rounded-lg border border-neutral-700/50 bg-neutral-800/60" />
+      <div className="mx-auto mt-[5%] w-[40%] flex-1 rounded-[10px] border border-neutral-700/60 bg-neutral-800/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]" />
     </div>
   );
 }
