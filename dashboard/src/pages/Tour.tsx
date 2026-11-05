@@ -110,10 +110,10 @@ function MacbookScroll({ lines, title }: { lines: Line[]; title: string }) {
         style={{ perspective: "1800px", perspectiveOrigin: "50% 30%" }}>
         <motion.div className="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-64 max-w-3xl rounded-full blur-3xl"
           style={{ opacity: glow, background: "radial-gradient(closest-side, var(--glow), transparent)" }} />
-        <motion.div style={{ scale: lift, y: rise, transformStyle: "preserve-3d" }} className="relative w-[min(88vw,780px)]">
-          {/* lid, hinged on its bottom edge */}
+        <motion.div style={{ scale: lift, y: rise, transformStyle: "preserve-3d" }} className="relative w-[min(80vw,700px)]">
+          {/* lid, hinged on its bottom edge; exactly as wide as the base, like a real laptop */}
           <motion.div style={{ rotateX: lid, transformOrigin: "50% 100%", transformStyle: "preserve-3d" }}
-            className="relative mx-auto aspect-[16/10] w-[88%]">
+            className="relative mx-auto aspect-[16/10] w-full">
             {/* front: bezel + screen; hidden once the lid folds past vertical */}
             <div className="absolute inset-0 rounded-t-[18px] rounded-b-[3px] border border-neutral-700/70 bg-[#0b0b0f] p-[1.6%] shadow-2xl"
               style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
