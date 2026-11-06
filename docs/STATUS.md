@@ -1,127 +1,72 @@
 # Operator status (written by the local Claude Code session at the end of every working session)
 
-## Session 2026-11-05 (11:30–12:10 AST, local operator, Opus 5.5, zero spend)
+## Session 2026-11-06 (round 7): STOPPED EARLY under the stop rule
 
-### REVIEW.md items (round 6)
+Unattended headless run (claude -p), Fri 6 Nov 09:30 AST; no one present.
+
+**Why it stopped:** a tool call was denied. `uv run --directory core evolvra fitness` ran past the 120 s tool
+timeout and was moved to the background. It later finished with exit code 0. Reading its output file
+(`C:\Users\TRAINI~1\AppData\Local\Temp\claude\...\tasks\bctf90mrd.output`) was then **denied**:
+`Permission to use Read has been denied because Claude Code is running in don't ask mode.`
+The run brief says to stop on any denial and never to retry it in another form, so I did not re-run `fitness`
+and did nothing after this point except write and push this file.
+
+### REVIEW.md items (round 7)
 | # | item | state |
 |---|---|---|
-| 1 | pull, plugin 0.3.2, tests | **done.** `48c767a`. `claude plugin marketplace update evolvra` + `claude plugin update evolvra@evolvra`: **0.3.1 → 0.3.2**. **62 passed**, ruff clean |
-| 2 | full `score --rescore`, per-judge counts | **done, partly limited by budget.** 30 tasks, 90 judge calls, 19 cached, **14 errors**. Nemotron answered **18 of 30** before OpenRouter's 40/day cap. Numbers below |
-| 3 | announcement rescore | **done.** The false "113 words" failure is **gone**: all three judges counted 101/104/104. **A new false failure replaced it** (gpt-oss rewrote a criterion). Details below |
-| 4 | devops-automator mission + `cycle.ps1 -Evolve` | **mission done** (PASS first attempt, fitness 0.956). Cycle ran and pushed `69e51d1`. **Evolve skipped** (last generation 1.6 h earlier). First run that can evolve: the scheduled **6 Nov 04:17 AST** |
-| 5 | validator folder | **done.** Youssef said yes in-session. Deleted only `…\20261105-073059-build-a-single-file\02-evidence-collector\scratch\validator` (844 files, 9.9 MB). `scratch\` still holds its 3 other files; `evidence\` untouched |
+| 1 | pull, plugin 0.3.3, tests, ruff | **done (tests/ruff).** `git pull --rebase`: already up to date at `74f2d0f`. **66 passed**, ruff `All checks passed!`. Plugin refresh to 0.3.3: **deferred to Sunday** (not allowed in an unattended run) |
+| 2 | reaggregate + fitness | **reaggregate done** (list below). **fitness: ran (exit 0), output not read** because the read was denied. Whether content-creator's top failure shows `(contested)` is **not verified** |
+| 3 | 04:17 AST devops-automator generation | **not done** (stopped before it). See the partial reads below, which are inconclusive |
+| 4 | announcement re-score | **not done** (stopped; `providers` not run, no API calls made) |
+| 5 | backend-architect mission + cycle | **postponed to Sunday 8 Nov: a mission needs someone present.** |
 
-### Ran (in order)
-- `git pull --rebase` → `48c767a`. Plugin refresh (above). `uv run pytest -q` **62 passed**; `uv run ruff check .` clean.
-- No cycle was running at the start (`current.json` absent; the scheduled run had finished at 10:17). `evolvra providers`; `ping groq` and `ping openrouter` both returned `pong`.
-- `evolvra score --mission 20261105-072406-write-a-product-announcement --rescore`: 08:36:58Z–08:38:01Z, 6 calls, 0 cached, 0 errors.
-- `evolvra score --rescore`: 08:39:03Z–08:57:08Z (18 min), 30 tasks.
-- Mission `20261105-084006-write-a-powershell-5` (recorder from the 0.3.2 install; single-quoted arguments).
-- Deleted the validator folder (item 5).
-- `.\scripts\cycle.ps1 -Evolve` 11:58:34–11:59:22 AST: ingest 1 mission / 111 traces, scored 2 tasks (6 calls, **2 errors** = OpenRouter cap), evolve skipped, export, push `69e51d1`. The pull before it also brought in `a7b0b30` (dashboard redesign, not mine).
-- Per-judge numbers come from a read-only (`?mode=ro`) query of `scores`, filtered to rows written after 08:39:03Z.
+### Ran (in order; exact clock times were not captured)
+1. `git pull --rebase` → `Already up to date.`
+2. Read `docs/REVIEW.md`: header `_Updated 2026-11-05 ~13:30Z, after STATUS 69bfdb5 (round 6)._`, and its
+   "Requested now" list holds the 5 round-7 items. I accepted it as round 7.
+3. `uv run --directory core pytest -q` → `66 passed in 47.56s`
+4. `uv run --directory core ruff check .` → `All checks passed!`
+5. `uv run --directory core evolvra reaggregate`. Output:
+   ```
+   contested  20261102-130146-write-a-one-paragraph #2 evidence-collector   missing_feature_status  (only groq/openai/gpt-oss-120b)
+   contested  20261103-091344-build-a-small-accessible #1 frontend-developer   unverified_evidence  (only groq/openai/gpt-oss-120b)
+   contested  20261103-092430-rank-a-12-item #2 evidence-collector   missing_required_evidence  (only groq/openai/gpt-oss-120b)
+   contested  20261105-072406-write-a-product-announcement #1 content-creator      missing_feature_mentions  (only groq/openai/gpt-oss-120b)
+   contested  20261105-073059-build-a-single-file #1 rapid-prototyper     missing_validator_verification  (only groq/openai/gpt-oss-120b)
+   contested  20261105-073059-build-a-single-file #2 evidence-collector   missing_evidence_artifact  (only groq/qwen/qwen3.8-27b)
+   reaggregated 32 task(s), skipped 0 (a judge's rows are missing), 6 contested failure class(es); 0 API calls
+   ```
+6. `uv run --directory core evolvra fitness`: over 120 s, moved to the background, completed with exit 0. The output
+   read was **denied** (above).
+7. Grep for `2026-11-06` in `C:\Users\Training1\.evolvra\cycle.log`: **no matches**. Glob `evolutions/*` under
+   `C:\Users\Training1\.evolvra`: **no files found**. Both ran before the denial.
 
-### Item 2: Nemotron as a judge
-| judge | verdicts / 30 | errors | mean of 4 rubrics | sd | min–max | correctness ≥ 0.95 | correctness = 1.0 | failure_class set |
-|---|---|---|---|---|---|---|---|---|
-| Groq gpt-oss-120b | **30** | 0 | 0.791 | 0.170 | 0.28–0.95 | 5 | 4 | 11 |
-| OpenRouter Nemotron-3-ultra | **18** | 12 | 0.954 | 0.086 | 0.62–1.00 | 16 | 12 | 1 |
-| Gemini 3.5 Flash-Lite | **28** | 2 | 0.980 | 0.030 | 0.85–1.00 | 27 | 27 | 1 |
+### Numbers
+- Tests 66 passed; ruff clean.
+- Reaggregate: 32 tasks, 0 skipped, **6 contested** (5 from gpt-oss alone, 1 from Qwen alone), 0 API calls. That matches
+  the reviewer's preview of 6 of 32. The announcement task (content-creator #1, `missing_feature_mentions`) is on the list.
 
-- **Reliability:** all 18 Nemotron verdicts had valid scores. Of its 12 misses:
-  - The 2 stored errors both read `daily cap reached for openrouter (40 requests)`.
-  - The other 10 were not stored: when fewer judges answer than last time, `store_judge_results` keeps only the judges that answered, so error rows are dropped. Their cause is therefore not recorded. The cap is the likely one, since OpenRouter ended at 40/40, but an unparseable reply would look the same.
-  - Gemini's 2 misses include one stored HTTP 503 ("high demand").
-- **Nemotron costs about 2 requests per verdict.** OpenRouter used 34 requests for scoring today (40 minus 5 earlier pings and today's ping) and returned 18 Nemotron verdicts.
-  - Since 08:30Z the cache holds 24 OpenRouter responses. **5 of them ended with `finish=length`.** The model spends its reasoning inside `MAX_TOKENS=900`, so the judge retries at 2400.
-  - Empty truncated replies are not cached, so the real retry count is higher than 5.
-  - At this rate, the 40/day cap covers about 20 Nemotron verdicts a day.
-- **Spread:** Nemotron sits near the ceiling, though less so than Gemini.
-  - In the 16 tasks where all three judges answered, the **most lenient on correctness** was Gemini 12 times, gpt-oss 3 and Nemotron 1. The **strictest was gpt-oss 16 of 16**.
-  - Nemotron set a non-`none` failure class once in 18 answers.
-  - So in practice the ensemble is two lenient seats plus one strict seat. gpt-oss's failure class decides the diagnosis almost every time.
-- **The ensemble is now mixed.**
-  - 19 tasks got a fresh ensemble: 16 from 3 judges (gpt-oss, Nemotron, Gemini) and 3 from 2 judges.
-  - **11 tasks kept their older 3-judge ensemble that includes Qwen.** The guard behaved as designed: 2 fresh answers do not overwrite 3 older ones.
-  - Finishing the switch needs about 22 more OpenRouter requests on a day with a fresh cap (open question 3).
-
-### Item 3: announcement mission (content-creator task)
-| | judges | correctness | completeness | evidence | quality | fitness | failure class |
-|---|---|---|---|---|---|---|---|
-| before (5 Nov 08:12Z) | gpt-oss, Qwen, Gemini | 0.75 | 0.90 | 0.40 | 0.85 | 0.8325 | `word_count_violation` (Qwen: "113 words") |
-| after (5 Nov 08:37Z) | gpt-oss, Nemotron, Gemini | 0.70 | 0.75 | 0.90 | 0.90 | 0.8325 | `missing_feature_mentions` (gpt-oss) |
-
-- **The measured facts work.** All three judges now state 101/104/104. Before, gpt-oss wrote "Agent claims counts within range"; now it writes "Word counts 101, 104, 104". The count failure is gone.
-- **A new false failure took its place.** The criterion is `the text names exactly two product features`. gpt-oss rewrote it in its acceptance list as **"Each paragraph names exactly two product features"** and marked it unmet: "Paragraph 1 and 3 name no features; only paragraph 2 names two".
-  - The text names exactly two features, Flow Sync and Recall Search, both in paragraph 2. I re-read the file to confirm.
-  - Nemotron and Gemini both gave correctness 1.0. gpt-oss gave 0.4, so the median is 1.0 on correctness. The ensemble shows 0.70 only because the ceiling rule applies: two scores ≥ 0.95 → drop the most lenient → mean(0.4, 1.0).
-  - The failure class comes from the strictest judge, so **`missing_feature_mentions` is now content-creator's top failure in `evolvra fitness`**. If content-creator becomes the evolution target, the diagnosis would be built on a misread criterion. Open question 1.
-  - The QA task scored 0.98 (all three judges ≥ 0.9).
-
-### Item 4: devops-automator mission
-| task | agent | attempts | verdict | fitness |
-|---|---|---|---|---|
-| 1. `archive-logs.ps1`: zip `*.log` older than N days into `logs-YYYYMMDD.zip`, delete originals; `-WhatIf` and `-SelfTest` | devops-automator v1 | 1 | PASS | **0.956** (gpt-oss + Gemini; Nemotron hit the cap) |
-| 2. Verify by running it, with counted evidence | evidence-collector v2 | 1 | PASS | 0.981 |
-
-- **QA evidence (all re-checked from its files):**
-  - parser 0 errors; `-SelfTest` 13 of 13 PASS, exit 0, no temp fixture left behind
-  - `-WhatIf` on an 11-file fixture: 0 differences (name, SHA256 and LastWriteTime), 0 zips
-  - real run: removed exactly the 4 expected old `.log` files; the other 7 kept with unchanged hashes; 4 zip entries, all hash-matched
-  - search for download or install commands: 0 hits
-  - script SHA256 `6FE6A739…837636` was the same before and after QA
-- **Deviation the builder disclosed, which QA accepted:**
-  - **What:** the zip is written with the in-box .NET `System.IO.Compression.ZipArchive` (from the GAC), not `Compress-Archive`.
-  - **Why:** on this PC `Compress-Archive` (module 1.0.1) failed every time with "being used by another process": builder 3/3 plus 5/5 retries, QA 4/4. The module opens sources with no sharing.
-  - **Cause:** the builder blames Apex One's on-access scan. **QA reproduced the failure but could not confirm that cause:** its own exclusive opens of the same files succeeded.
-  - **Why QA accepted it:** criterion B5 names Invoke-WebRequest, Install-Module, external executables and downloads, and the script uses none of them.
-- No download, no install and no Git Bash in either agent. Both handoffs carried the machine rules.
-- **Fitness change:** devops-automator **0.805 (2 tasks) → 0.856 (3 tasks)**, still the weakest, so it is the next evolve target.
-
-**Fitness now** (`evolvra fitness` after the cycle; "before" is the end of round 5):
-
-| agent | ver | before (tasks) | now (tasks) |
-|---|---|---|---|
-| devops-automator | 1 | 0.805 (2) | **0.856 (3)**, still weakest |
-| backend-architect | 1 | 0.863 (2) | 0.863 (2) |
-| evidence-collector | 1 | 0.880 (8) | 0.872 (8) |
-| growth-hacker | 1 | 0.903 (2) | 0.910 (2) |
-| content-creator | 1 | 0.915 (3) | 0.923 (3) |
-| evidence-collector | 2 | 0.924 (7) | **0.933 (8)** |
-| frontend-developer | 1 | 0.975 (1) | 0.936 (1) |
-| sprint-prioritizer | 1 | 0.956 (2) | 0.944 (2) |
-| ux-researcher | 1 | 0.922 (1) | 0.953 (1) |
-| rapid-prototyper | 1 | 0.923 (2) | 0.971 (2) |
-
-v2 still leads v1 (0.933 vs 0.872, 8 tasks each). Every change in this table except devops-automator's new task comes from the judge swap.
-
-**Evolve timing:**
-- Generation 8 ran at 07:23Z, so the 12 h slot opens at 19:23Z (22:23 AST).
-- The scheduled 22:17 AST run is 6 minutes early and will skip. The 04:17 AST run on 6 Nov should evolve devops-automator, the weakest current version.
-- The replay guard is not needed for that run: generation 8's target was ux-researcher.
-- OpenRouter resets at 00:00Z, so Nemotron will have its full 40 requests. A generation needs about 16 tournament verdicts, roughly 30 Nemotron requests at today's rate.
+### Verified vs not verified
+- **Verified:** pull up to date; 66 tests pass; ruff clean; the reaggregate output above (6 contested, 0 calls).
+- **Not verified:**
+  - `fitness` output: whether content-creator shows `(contested)`.
+  - Why `fitness` took more than 120 s. Earlier sessions did not report it as slow.
+  - The 04:17 AST generation. The grep and glob results do not show that it did not run: the log may use another
+    date format (e.g. UTC or a different layout), and the glob may not list directories. Nothing about the 04:17 result,
+    the tournament judges, or OpenRouter requests vs Nemotron verdicts was checked.
+  - Provider quota today; the announcement re-score was not run.
 
 ### What broke
-1. **OpenRouter's daily cap (40) ran out during the full rescore.** 12 of 30 tasks have no Nemotron verdict, and the new mission's 2 tasks were scored by 2 judges. It was a hard stop, as designed: nothing was upgraded or paid.
-2. **Judge rewrote a criterion** (item 3): a new false failure class on content-creator.
-3. **`Compress-Archive` does not work on this PC** (file-in-use on every attempt). This matters for future bank tasks and missions that zip files.
-4. Gemini HTTP 503 once (transient).
-5. A small issue with my own tooling: printing judge evidence with `‑` (non-breaking hyphen) crashed Python on the cp1252 console. I fixed it with `PYTHONIOENCODING=utf-8` for the query. No engine change.
+1. A Read of the background task's output file was denied in don't-ask mode. That stopped the run.
+2. `evolvra fitness` took more than 120 s (cause unknown; it did finish, exit 0).
 
 ### Changes / commits
-- **No code changes** (judges and weights are yours; tests still 62).
-- Data commit from the cycle: `69e51d1`. This STATUS: see `git log -1 -- docs/STATUS.md`.
-- Outside git: the plugin install was updated to 0.3.2 (restart needed for running sessions), and the validator folder was deleted (item 5).
-- Usage today: Groq 47 requests / **188,684 tokens** (close to the ~200k rolling daily budget), Gemini 35 / 145,137 tokens, OpenRouter 40 / 40 requests. No paid calls.
+- No code, test, record, trace or DB changes. No plugin update. No API calls (reaggregate is 0-call; fitness is local).
+- This STATUS only: see `git log -1 -- docs/STATUS.md`.
 
 ### Open questions
-1. **Criterion rewriting:** should the judge prompt require each acceptance entry to quote its criterion verbatim (or answer by index), and should `parse_verdict` reject or flag an entry whose text does not match? Today a rewritten criterion set the failure class, which feeds the evolution diagnosis. Separately: should a single judge's failure class win when the other two judges both gave correctness 1.0?
-2. **Nemotron's budget:** it truncates at `MAX_TOKENS=900` often enough to average about 2 requests per verdict, so 40/day covers about 20 verdicts. Options:
-   - an entry in `JUDGE_REASONING` (e.g. `"low"`) for Nemotron
-   - a higher first-try budget for it
-   - accepting 2-judge ensembles on busy days
-3. **Finish the judge switch?** 11 tasks still carry Qwen-era ensembles. Should I run `score --rescore` again on a day with a fresh OpenRouter cap, at about 22 Nemotron requests plus the Groq tokens? The guard means only tasks where all 3 answer will be replaced.
-4. **Leniency:** with Nemotron and Gemini both near the ceiling, the ceiling rule usually reduces to mean(gpt-oss, one lenient judge), and gpt-oss alone sets the diagnosis. Is that the balance you want?
-5. **`Compress-Archive`:** should bank tasks and mission briefs that need zips say "in-box .NET `ZipArchive` allowed" up front, so builders don't spend retries rediscovering this?
-
-**Still broken or unproven:** promotion on real-mission fitness is still unproven; the next real test is the 6 Nov 04:17 generation on devops-automator. The judge change is half applied (11 tasks on old ensembles). Judges can still misread a criterion's scope.
+1. Allow Read on the Claude temp task-output folder for headless runs, or give `fitness` a longer tool timeout, so a
+   slow command can be read back.
+2. Why is `evolvra fitness` slow now? Could it be DB contention, or the reaggregate just before it?
+3. Items 2 (fitness check), 3 and 4 still need doing. Item 4 needs OpenRouter quota on the day it runs. Item 5 and the
+   plugin refresh to 0.3.3 are for Sunday 8 Nov.
