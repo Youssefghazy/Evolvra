@@ -1394,5 +1394,199 @@
    }
   ],
   "diagnosis": "# Diagnosis: devops-automator v1\n\nTasks scored: 3. Mean fitness: 0.8733.\n\n## Failure classes (ensemble majority, most frequent first)\n- `invalid_yaml_syntax` x1\n\n## Worst tasks\n### 20261103-075105-write-a-github-actions #1 (fitness 0.716)\n- Task: Write a GitHub Actions workflow (.github/workflows/ci.yml) that lints and tests a Python package on every push\n- Acceptance: ci.yml parses as valid YAML and has name, on, jobs keys; Trigger is 'on: push' (all branches); Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions; Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors; Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `invalid_yaml_syntax`\n- Critique: The provided ci.yml file contains invalid YAML syntax ('\"on\": push') which contradicts the agent's claim that it passes actionlint with zero errors.\n- Unmet criteria:\n  - Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors: Pass claim is not verifiable from the provided files [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n  - Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0: Test file is not placed in the expected tests/ directory and src layout is unclear, so package may not be importable [unmet per groq/openai/gpt-oss-120b; 3 other judge(s) marked it met]\n  - ci.yml parses as valid YAML and has name, on, jobs keys: The provided ci.yml content is not valid YAML; the line '\"on\": push' is syntactically incorrect (should be 'on: push' without quotes around the key or value in this context, or simply 'on: push'). Additionally, the key is quoted as a string \"on\" which is valid YAML but the value 'push' is a string, whereas GitHub Actions expects a mapping or list for the trigger. More critically, the formatting suggests a copy-paste error or invalid structure that would fail standard YAML parsers or actionlint. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n  - Trigger is 'on: push' (all branches): The trigger is written as '\"on\": push'. While semantically close, the quoting and structure are non-standard and likely invalid for GitHub Actions parsing. Standard syntax is 'on: push'. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ci.yml (709 chars) ---\nname: CI\n\n\"on\": push\n\npermissions:\n  contents: read\n\njobs:\n  lint-and-test:\n    runs-on: ubuntu-latest\n    strategy:\n      fail-fast: false\n      matrix:\n        python-version: [\"3.10\", \"3.11\", \"3.12\"]\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v4\n\n      - name: Set up Python ${{ matrix.python-version }}\n        uses: actions/setup-python@v5\n        with:\n          python-version: ${{ matrix.python-version }}\n\n      - name: Install package and dev tools\n        run: |\n          python -m pip install --upgrade pip\n          python -m pip install -e \".[dev]\"\n\n      - name: Lint with ruff\n        run: ruff check .\n\n      - name: Test with pytest\n        run: pytest -q\n\n--- pyproject.toml (436 chars) ---\n[build-system]\nrequires = [\"setuptools>=61\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"samplepkg\"\nversion = \"0.1.0\"\ndescription = \"Minimal sample package exercised by the CI workflow.\"\nrequires-python = \">=3.10\"\n\n[project.optional-dependencies]\ndev = [\"ruff\", \"pytest\"]\n\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npythonpath = [\"src\"]\n\n[tool.ruff]\nline-length = 88\n\n--- __init__.py (141 chars) ---\n\"\"\"Minimal sample package.\"\"\"\n\n__version__ = \"0.1.0\"\n\n\ndef add(a: int, b: int) -> int:\n    \"\"\"Return the sum of a and b.\"\"\"\n    return a + b\n\n--- test_add.py (78 chars) ---\nfrom samplepkg import add\n\n\ndef test_add() -> None:\n    assert add(2, 3) == 5\n\n```\n\n### 20261103-122908-write-a-backup-rotation #1 (fitness 0.9477)\n- Task: Write Rotate-Backups.ps1 (Windows PowerShell 5.1 compatible) plus Test-Rotate.ps1 self-test and README.md\n- Acceptance: Rotate-Backups.ps1 takes -Path, -KeepDaily (default 7), -KeepWeekly (default 4) and -DryRun; dates come from file names like backup-YYYY-MM-DD.zip, never from timestamps; files not matching the pattern are never deleted; Weekly = newest backup of each ISO week beyond the daily set; with -DryRun nothing is deleted and every would-delete file is printed; Test-Rotate.ps1 builds a temp folder with 60 consecutive daily backups plus 2 non-matching files, runs the script in dry-run and real mode, asserts the exact kept set, cleans up, and exits 0 on success under powershell.exe (5.1); README.md explains usage and how to schedule it with Task Scheduler\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The evidence statement claims the self-test passed, but the actual output of the test run is not provided in the prompt, so the success is inferred from the code logic rather than verified by execution logs.\n- Output excerpt:\n```\n--- Test-Rotate.ps1 (8783 chars) ---\n<#\n.SYNOPSIS\n    Self-test for Rotate-Backups.ps1. Exits 0 on success, 1 on failure.\n\n.DESCRIPTION\n    1. Creates a fresh folder under $env:TEMP (rotate-test-<guid>).\n    2. Fills it with 60 consecutive daily backups, 2025-12-01 .. 2026-01-29,\n       plus 2 files that do not match the pattern. File timestamps are set in\n       REVERSE order (newest name = oldest timestamp) so the test fails if the\n       script ever uses timestamps instead of names.\n    3. Runs Rotate-Backups.ps1 -DryRun in a child process and asserts:\n       exit 0, nothing deleted, and the WOULD DELETE lines are exactly the\n       expected 49 files.\n    4. Runs Rotate-Backups.ps1 for real and asserts the folder contains\n       exactly the expected kept set (11 backups + 2 non-matching files).\n    5. Runs it a second time and asserts nothing more is deleted (idempotent).\n    6. Deletes the temp folder (only that folder) in a finally block.\n\n    Expected kept set (worked out by hand, not by re-\n\n[... 7283 characters omitted from the middle of this file ...]\n\n (Test-Path -LiteralPath $full) {\n            Remove-Item -LiteralPath $full -Recurse -Force\n        }\n        Assert-True (-not (Test-Path -LiteralPath $full)) 'temp folder removed'\n    } else {\n        Write-Host \"Refusing to clean up unexpected path: $full\" -ForegroundColor Red\n        $script:failures++\n    }\n}\n\nWrite-Host ''\nif ($script:failures -eq 0) {\n    Write-Host 'ALL TESTS PASSED' -ForegroundColor Green\n   \n```\n\n### 20261105-084006-write-a-powershell-5 #1 (fitness 0.9562)\n- Task: Write archive-logs.ps1: zip *.log files older than -OlderThanDays from -Path into -ArchiveDir as logs-YYYYMMDD.zip, delete the archived originals, support -WhatIf and a -SelfTest switch\n- Acceptance: archive-logs.ps1 parses under Windows PowerShell 5.1 with zero parser errors and declares CmdletBinding(SupportsShouldProcess) with parameters Path, OlderThanDays, ArchiveDir and SelfTest; running with -WhatIf against a fixture folder changes nothing: file list and SHA256 hashes are identical before and after, and no zip is created; a normal run archives only files older than OlderThanDays into one logs-YYYYMMDD.zip, removes exactly those originals, and leaves newer files and non-.log files untouched; -SelfTest builds its own fixture under the system temp folder, checks both the -WhatIf and the normal run, prints PASS or FAIL per check, exits 0 only if every check passes, and removes its fixture; uses only built-in Windows PowerShell 5.1 cmdlets: no Invoke-WebRequest, Install-Module, external executables or downloads\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The script is lengthy and some helper functions are truncated in the excerpt, but the visible parts demonstrate compliance with all acceptance criteria.\n- Output excerpt:\n```\n--- archive-logs.ps1 (21297 chars) ---\n<#\n.SYNOPSIS\n    Archives old *.log files into a dated zip and removes the archived originals.\n\n.DESCRIPTION\n    Finds *.log files directly inside -Path (not in subfolders) whose LastWriteTime is\n    older than -OlderThanDays, zips them into <ArchiveDir>\\logs-YYYYMMDD.zip, checks\n    that every file inside the zip has the same SHA256 hash as its original, and only\n    then deletes the originals that passed that check.\n\n    Safety rules:\n      * Only files whose extension is exactly \".log\" are touched (old.logx, a.log.bak,\n        notes.txt are never archived or deleted).\n      * If today's logs-YYYYMMDD.zip already exists the script stops and changes\n        nothing (it never overwrites or merges into an existing archive).\n      * An original is deleted only if its copy inside the zip has a matching SHA256.\n      * -WhatIf shows what would happen and changes nothing.\n      * -Confirm asks before creating the zip and before each deletion.\n\n    Uses only what shi\n\n[... 19797 characters omitted from the middle of this file ...]\n\ned -eq 0 -and $notRemoved.Count -eq 0 -and $zipPath -and (Test-Path -LiteralPath $zipPath)) {\n        Remove-Item -LiteralPath $zipPath -Force -WhatIf:$false -Confirm:$false -ErrorAction SilentlyContinue\n    }\n    Write-Error -Message (\"archive-logs failed: {0}\" -f $_.Exception.Message) -ErrorAction Continue\n    exit 1\n}\nfinally {\n    if ($verifyDir -and (Test-Path -LiteralPath $verifyDir)) {\n        Remove-Item -Li\n```\n"
+ },
+ {
+  "id": 10,
+  "agent": "backend-architect",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.015,
+  "created_at": "2026-11-06T19:33:18.148Z",
+  "parent_fitness": 0.935,
+  "bank": [
+   {
+    "task": "Design a REST API for todos with auth, as an OpenAPI-style outline plus one example request/response",
+    "source": "seed",
+    "parent_fitness": 0.95,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Todo API Architecture Specification\n\n## Overview\nThis specification defines a RESTful API for a Todo application. It uses JSON for request and response payloads, Bearer Token (JWT) authentication for all endpoints, and standard HTTP status codes for error handling.\n\n---\n\n## Security Scheme\n- **Type**: HTTP\n- **Scheme**: Bearer\n- **Format**: JWT\n- **Application**: Required on every endpoint via the `Authorization: Bearer <token>` header.\n\n---\n\n## API Endpoints Outline\n\n### 1. Create a Todo\n- **Method**: `POST`\n- **Path**: `/todos`\n- **Security**: Bearer JWT Required\n- **Request Body**:\n  ```json\n  {\n    \"title\": \"Finish backend architecture spec\",\n    \"description\": \"Write out OpenAPI-style"
+   },
+   {
+    "task": "Propose a schema and indexing plan to make monthly revenue reports fast",
+    "source": "seed",
+    "parent_fitness": 0.9,
+    "parent_failure": "none",
+    "parent_critique": "The solution relies heavily on a materialized view without detailing refresh impact on write latency.",
+    "parent_output_excerpt": "# Database Optimization Specification: Monthly Revenue Reports at Scale\n\n## High-Level Architecture\n**Architecture Pattern**: Relational Database with Date-Range Partitioning and Materialized Reporting Views  \n**Communication Pattern**: Synchronous Reporting APIs / Asynchronous ETL Export  \n**Data Pattern**: CQRS (Separation of OLTP operational writes from OLTP/OLAP analytical reads)  \n**Migration Strategy**: Zero-downtime expand-and-contract rollout with shadow table partitioning  \n**Reliability Pattern**: Query timeout budgets, read replicas for heavy reporting queries  \n**Observability Pattern**: Structured query logging with execution plan analysis (EXPLAIN ANALYZE)\n\n---\n\n## 1. Identific"
+   },
+   {
+    "task": "Choose between sync HTTP and an event queue for order-created notifications and justify it",
+    "source": "seed",
+    "parent_fitness": 0.955,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Architectural Decision Record: Inter-Service Communication for Order-Created Notifications\n\n## Decision: Event Queue\n\nFor transmitting `order-created` notifications between the Order Service and downstream consumers (e.g., Notification Service, Inventory/Analytics), we choose an **Asynchronous Event Queue** (e.g., RabbitMQ, AWS SQS, or Apache Kafka) over synchronous HTTP (REST/gRPC).\n\n### Justification\n1. **Temporal Decoupling:** Synchronous HTTP requires both the Order Service and the notification consumer to be online and healthy simultaneously. An event queue allows the Order Service to emit the event and immediately complete the transaction without waiting for the notification service "
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "test_suite_invalid",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261106-192403-backend-architect\\candidate-1-test-suite-invalid.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "fcae80790d2cebc4968387bc142c960a22b42f7b64b8901e3763da76984cfdf6",
+    "fitness": 0.95,
+    "paired_delta": 0.015,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Design a REST API for todos with auth, as an OpenAPI-style outline plus one example request/response",
+      "fitness": 0.98,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.95,
+       "evidence": 0.95
+      },
+      "output_excerpt": "# System Architecture Specification: Todo REST API\n\n## High-Level Architecture\n**Architecture Pattern**: Modular Monolith / Stateless REST API  \n**Authentication**: Bearer Token (JWT) issued by an Identity Provider  \n**API Contract**: OpenAPI 3.1.0 Specification Outline  \n**Error Handling**: RFC 7807 (Problem Details for HTTP APIs)  \n\n---\n\n## 1. OpenAPI 3.1.0 Specification Outline\n\n```yaml\nopenapi: 3.1.0\ninfo:\n  title: Todo Service API\n  version: 1.0.0\n  description: Secure REST API for managing user todos.\n\nservers:\n  - url: https://api.example.com/v1\n\nsecurity:\n  - BearerAuth: []\n\npaths:\n  /todos:\n    post:\n      summary: Create a todo\n      operationId: createTodo\n      security:\n        "
+     },
+     {
+      "task": "Propose a schema and indexing plan to make monthly revenue reports fast",
+      "fitness": 0.92,
+      "failure": "missing_operational_details",
+      "critique": "The answer does not provide concrete automation steps for creating future partitions or quantitative estimates of the write overhead.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# System Architecture Specification: High-Performance Revenue Reporting\n\n## 1. High-Level Architecture & Problem Analysis\n\n### 1.1 The Slow Query Pattern\nA typical monthly revenue report query on a monolithic 50-million-row `orders` table usually looks like this:\n\n```sql\nSELECT \n    date_trunc('month', created_at) AS revenue_month,\n    SUM(total_amount) AS total_revenue,\n    COUNT(id) AS total_orders\nFROM orders\nWHERE status = 'completed'\n  AND created_at >= '2023-01-01 00:00:00+00'\n  AND created_at < '2024-01-01 00:00:00+00'\nGROUP BY 1\nORDER BY 1;\n```\n\n**Why it times out:**\n1. **Full Table Scans (or massive bitmap heap scans):** If the database lacks a targeted composite index, or if the se"
+     },
+     {
+      "task": "Choose between sync HTTP and an event queue for order-created notifications and justify it",
+      "fitness": 0.95,
+      "failure": "missing_concrete_implementation_details",
+      "critique": "The answer lacks concrete selection of a specific queue technology and sizing details.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.95
+      },
+      "output_excerpt": "# Architectural Decision Record: Order-Created Notifications\n\n## Decision & Justification\n\n**Decision**: Use an **Asynchronous Event Queue** (e.g., RabbitMQ, AWS SQS/EventBridge, or Kafka) rather than synchronous HTTP (REST/gRPC) for order-created notifications.\n\n### Justification\n1. **Loose Coupling**: The Order Service publishes the `order.created` event and immediately returns success to the client. It has no knowledge of downstream consumers (e.g., Inventory, Notification, Analytics services), allowing consumers to be added, removed, or modified independently.\n2. **Fault Isolation and Resilience**: If a downstream consumer (like the Notification Service) experiences an outage, the Order "
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "weak_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261106-192403-backend-architect\\candidate-2-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "4448d7413357eb9188b8099b6f60d129b5bdc1d1701d10bb84d59fa8f9ea6d8a",
+    "fitness": 0.9233,
+    "paired_delta": -0.0117,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Design a REST API for todos with auth, as an OpenAPI-style outline plus one example request/response",
+      "fitness": 0.95,
+      "failure": "none",
+      "critique": "The test suite code is cut off at the end, but the OpenAPI specification and example request/response are fully complete and well-designed.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.95
+      },
+      "output_excerpt": "# System Architecture Specification: Todo REST API\n\n## High-Level Architecture\n**Architecture Pattern**: Modular Monolith / Stateless REST API  \n**Communication Pattern**: HTTPS / REST with JSON payload  \n**Authentication**: Bearer Token (JSON Web Token - JWT)  \n**API Contract**: OpenAPI 3.1 specification outline  \n\n---\n\n## OpenAPI 3.1 Specification Outline\n\n```yaml\nopenapi: 3.1.0\ninfo:\n  title: Todo Management API\n  version: 1.0.0\n  description: Secure REST API for managing user todos.\nservers:\n  - url: https://api.todoapp.example.com/v1\nsecurity:\n  - BearerAuth: []\n\npaths:\n  /todos:\n    post:\n      summary: Create a todo\n      operationId: createTodo\n      requestBody:\n        required: tr"
+     },
+     {
+      "task": "Propose a schema and indexing plan to make monthly revenue reports fast",
+      "fitness": 0.9,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# System Architecture Specification: High-Performance Monthly Revenue Reporting\n\n## High-Level Architecture & Problem Analysis\n\n### 1. Slow Query Pattern Identification\nAt 50 million rows, analytical queries aggregate data across the entire `orders` table. The typical slow query pattern driving timeouts looks like this:\n\n```sql\nSELECT \n    date_trunc('month', created_at) AS revenue_month,\n    SUM(total_amount) AS total_revenue\nFROM orders\nWHERE status = 'completed'\n  AND created_at >= '2023-01-01 00:00:00+00'\nGROUP BY 1\nORDER BY 1;\n```\n\n**Why it times out:**\n- **Full Table / Large Index Scan:** Without a targeted composite index containing the filter predicate (`status`), the filtering condi"
+     },
+     {
+      "task": "Choose between sync HTTP and an event queue for order-created notifications and justify it",
+      "fitness": 0.92,
+      "failure": "insufficient_external_evidence",
+      "critique": "The answer is solid but relies on self‑referenced evidence rather than verifiable artifacts.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Architectural Decision Record: Order-Created Notification Architecture\n\n## Context & Decision\n**Decision**: Use an **Event-Driven Architecture with a Message Queue** (e.g., RabbitMQ, AWS SQS/SNS, or Kafka) rather than Synchronous HTTP (REST/gRPC webhooks) for order-created notifications between the Order Service and downstream dependent services (e.g., Notification Service, Inventory Service).\n\n### Justification\n1. **Loose Coupling**: The Order Service emits an `order.created` event and immediately returns a response to the client. It does not need to know which services consume this event, their network locations, or their current health status.\n2. **Resilience & Fault Isolation**: If a d"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "missing_acceptance_criteria_check",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261106-192403-backend-architect\\candidate-3-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "5ae469db8e0bb6b80305556241b00f1374127d50771b065b695191e2c0b1b4a6",
+    "fitness": 0.5933,
+    "paired_delta": -0.3417,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Design a REST API for todos with auth, as an OpenAPI-style outline plus one example request/response",
+      "fitness": 0.88,
+      "failure": "fabricated_evidence",
+      "critique": "The answer fabricates verification steps, lowering the evidential strength",
+      "scores": {
+       "correctness": 0.85,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Todo App REST API Specification\n\n## System Overview & Security Model\n- **Base URL**: `https://api.example.com/v1`\n- **Authentication Mechanism**: OAuth 2.0 Bearer Token (JWT). Every endpoint requires the `Authorization: Bearer <token>` header.\n- **Content-Type**: `application/json`\n\n---\n\n## OpenAPI 3.1 Outline\n\n```yaml\nopenapi: 3.1.0\ninfo:\n  title: Todo Service API\n  version: 1.0.0\n  description: Secure REST API for managing user todos.\nservers:\n  - url: https://api.example.com/v1\nsecurity:\n  - BearerAuth: []\npaths:\n  /todos:\n    post:\n      summary: Create a todo\n      operationId: createTodo\n      requestBody:\n        required: true\n        content:\n          application/json:\n          "
+     },
+     {
+      "task": "Propose a schema and indexing plan to make monthly revenue reports fast",
+      "fitness": 0.9,
+      "failure": "none",
+      "critique": "The plan does not show concrete automation or verification steps for partition management.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# System Architecture Specification: Orders Table Optimization for Reporting\n\n## 1. Context & Problem Statement\nThe `orders` table has grown to 50 million rows. Standard monthly revenue reports (aggregating total revenue grouped by month) are currently timing out due to full table scans and heavy I/O overhead.\n\n---\n\n## 2. Slow Query Pattern Identification\nThe typical slow query pattern for monthly revenue reports looks like this:\n```sql\nSELECT \n    date_trunc('month', created_at) AS revenue_month,\n    SUM(total_amount) AS total_revenue,\n    COUNT(id) AS total_orders\nFROM orders\nWHERE status = 'completed'\nGROUP BY revenue_month\nORDER BY revenue_month DESC;\n```\n**Why it is slow:**\n- **Sequenti"
+     },
+     {
+      "task": "Choose between sync HTTP and an event queue for order-created notifications and justify it",
+      "fitness": 0.0,
+      "failure": "missing_content",
+      "critique": "The agent provided no content addressing any acceptance criteria.",
+      "scores": {
+       "correctness": 0.0,
+       "completeness": 0.0,
+       "quality": 0.0,
+       "evidence": 0.0
+      },
+      "output_excerpt": ""
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: backend-architect v1\n\nTasks scored: 2. Mean fitness: 0.8795.\n\n## Failure classes (ensemble majority, most frequent first)\n- `test_suite_invalid` x1\n\n## Worst tasks\n### 20261103-122155-build-a-stdlib-only #1 (fitness 0.835)\n- Task: Write ratelimit.py (stdlib-only token-bucket limiter keyed by client id, injectable clock, thread-safe) plus test_ratelimit.py and DESIGN.md\n- Acceptance: ratelimit.py imports only the Python standard library and exposes allow(client_id) -> bool and retry_after(client_id) -> float; test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest; DESIGN.md (under 400 words) states the algorithm, memory growth per client and how idle clients are evicted\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `test_suite_invalid`\n- Critique: The test suite is incomplete and contains syntax errors, preventing verification of functionality.\n- Unmet criteria:\n  - test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest: Test file is truncated and contains a syntax error (\"for _ i\"), so it cannot be executed. [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ratelimit.py (5865 chars) ---\n\"\"\"Token-bucket rate limiter keyed by client id.\n\nStandard library only. Thread-safe. The clock is injectable so tests (and\ncallers) can control time without sleeping.\n\nUsage::\n\n    limiter = TokenBucketLimiter(capacity=10, refill_rate=5.0)  # 10 burst, 5 req/s\n    if not limiter.allow(client_id):\n        wait = limiter.retry_after(client_id)   # seconds; send as Retry-After\n\nModule-level ``allow`` / ``retry_after`` use a shared default limiter\n(capacity 60, refill 1 token/s) for the simplest integrations.\n\"\"\"\n\nimport math\nimport threading\nimport time\nfrom collections import OrderedDict\n\n__all__ = [\"TokenBucketLimiter\", \"allow\", \"retry_after\", \"default_limiter\"]\n\n\nclass _Bucket(object):\n    __slots__ = (\"tokens\", \"last\")\n\n    def __init__(self, tokens, last):\n        self.tokens = tokens  # float, 0 <= tokens <= capacity\n        self.last = last      # clock time of the last refill/access\n\n\nclass TokenBucketLimiter(object):\n    \"\"\"Per-client token buckets.\n\n   \n\n[... 4365 characters omitted from the middle of this file ...]\n\nself._lock:\n            if client_id is None:\n                self._buckets.clear()\n            else:\n                self._buckets.pop(client_id, None)\n\n\ndefault_limiter = TokenBucketLimiter(capacity=60, refill_rate=1.0)\n\n\ndef allow(client_id):\n    \"\"\"allow(client_id) -> bool, using the module default limiter.\"\"\"\n    return default_limiter.allow(client_id)\n\n\ndef retry_after(client_id):\n    \"\"\"retry_after(client_id) -> fl\n```\n\n### 20261103-074446-design-a-rest-api #1 (fitness 0.924)\n- Task: Design a REST API spec (OpenAPI 3.1 YAML + design notes) for a todo app with user accounts\n- Acceptance: openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components); Defines user account endpoints: register, login, logout/refresh, get/update/delete current user; Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status; Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated; Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema; DESIGN.md explains auth scheme, data model, pagination, and error format\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.\n- Output excerpt:\n```\n--- openapi.yaml (34353 chars) ---\nopenapi: 3.1.0\ninfo:\n  title: Todo App API\n  version: 1.0.0\n  summary: REST API for a multi-user todo application with user accounts.\n  description: |\n    Design-only contract for a todo application.\n\n    **Authentication.** Clients obtain a short-lived JWT access token (15 min) and a\n    long-lived opaque refresh token (30 days, rotated on every use) from\n    `POST /v1/auth/register` or `POST /v1/auth/login`. Every endpoint except\n    register, login and refresh requires `Authorization: Bearer <accessToken>`\n    (security scheme `bearerAuth`).\n\n    **Ownership rule.** Every todo belongs to exactly one user (`ownerId`). A user can\n    only list, read, create, update or delete their own todos. The owner is always\n    taken from the access token's `sub` claim, never from the request body or query.\n    A todo owned by another user is treated as nonexistent and returns\n    `404 NOT_FOUND` (so todo IDs cannot be probed). `403 FORBIDDEN` is returned when\n    the toke\n\n[... 32853 characters omitted from the middle of this file ...]\n\n             status: 429\n              requestId: req_01JBX3Q9T6Z1\n    InternalError:\n      description: Unexpected server error. Code INTERNAL.\n      headers:\n        X-Request-ID:\n          $ref: '#/components/headers/RequestId'\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/Error'\n          example:\n            error:\n              code: INTERNAL\n              messa\n```\n"
  }
 ]
