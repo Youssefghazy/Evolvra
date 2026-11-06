@@ -1297,5 +1297,102 @@
    }
   ],
   "diagnosis": "# Diagnosis: ux-researcher v1\n\nTasks scored: 1. Mean fitness: 0.605.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_required_content` x1\n\n## Worst tasks\n### 20261103-104658-write-a-user-interview #1 (fitness 0.605)\n- Task: Write INTERVIEW-GUIDE.md: a 45-minute interview guide with recruiting screener on why students abandon study-planner apps\n- Acceptance: Exactly 5 main interview questions, all open-ended (none can be answered yes/no; none starts with Do, Does, Did, Is, Are, Was, Were, Would, Will, Can, Could, Have or Has), each with 1-2 follow-up probes; Recruiting screener with at least one measurable inclusion criterion (e.g. a count of uses and a time window), at least 2 exclusion criteria, and a target sample size with a one-line justification; Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_content`\n- Critique: Key deliverables (the five open‑ended questions, their probes, the timed plan, and the non‑leading table) are missing or not visible, preventing verification of the acceptance criteria.\n- Unmet criteria:\n  - Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading: The file output was truncated by the system, making it impossible to fully verify the session plan sum and the non-leading table.\n  - Exactly 5 main interview questions, all open-ended, each with 1-2 follow-up probes: The provided excerpt does not show the list of main questions, so we cannot verify that there are exactly five, that they are open‑ended, or that each has the required probes.\n- Output excerpt:\n```\n--- INTERVIEW-GUIDE.md (14768 chars) ---\n# Interview Guide: Why University Students Abandon Study-Planner Apps\n\n**Status:** Research plan only. No interviews have been run and no participant data exists yet. This document contains no findings, quotes or statistics about students.\n**Session length:** 45 minutes (42 minutes scheduled, 3 minutes of slack)\n**Format:** One-to-one, semi-structured, remote video call or in person, audio-recorded with consent\n**Prepared:** 2026-11-03\n\n---\n\n## 1. Research objectives\n\n**Primary research question:** What happens in the first two weeks of using a study-planner app that leads university students to stop using it?\n\n**Supporting questions**\n\n- What need or trigger made the student start using the app, and what did they expect from it?\n- What did their actual day-to-day use look like in the first days?\n- What events, frictions or changes in context came just before use dropped off?\n- What, if anything, replaced the app afterwards?\n- What has made any other planning m\n\n[... 13268 characters omitted from the middle of this file ...]\n\n\n## 7. Analysis plan (for after fieldwork)\n\n- Transcribe and pseudonymise all sessions.\n- Code transcripts inductively (thematic analysis); two researchers code the first 3 transcripts independently and agree a shared codebook before coding the rest.\n- Build a timeline per participant (trigger, first days, drop-off moment, replacement) to locate where in the two weeks drop-off happens.\n- Report themes with the num\n```\n"
+ },
+ {
+  "id": 9,
+  "agent": "devops-automator",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.006,
+  "created_at": "2026-11-06T01:40:19.307Z",
+  "parent_fitness": 0.885,
+  "bank": [
+   {
+    "task": "Write a GitHub Pages deploy workflow for a Vite site",
+    "source": "seed",
+    "parent_fitness": 0.95,
+    "parent_failure": "none",
+    "parent_critique": "No major issues; the workflow is correct and meets all criteria.",
+    "parent_output_excerpt": "# Vite Static Site Deployment Workflow for GitHub Pages\n\nHere is the production-ready GitHub Actions workflow designed to build and deploy a Vite static site to GitHub Pages upon every merge to the `main` branch, adhering to the principle of least privilege and utilizing official GitHub Pages actions.\n\n## 🚀 GitHub Actions Workflow (`.github/workflows/deploy.yml`)\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Set minimal necessary permissions for the GITHUB_TOKEN\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.\nconcurrency:\n  g"
+   },
+   {
+    "task": "Write a runbook to diagnose a crash-looping container",
+    "source": "seed",
+    "parent_fitness": 0.82,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The runbook lists commands and steps but provides no verifiable output or real evidence of their correctness.",
+    "parent_output_excerpt": "# Production Container Crash-Loop Runbook\n\n## 1. Objective\nProvide a systematic, ordered procedure to diagnose and remediate a production container that is periodically restarting (crash-looping) every few hours.\n\n---\n\n## 2. Diagnostic Steps\n\n### Step 1: Identify Pod Status and Restart Count\nVerify the current lifecycle state of the workload and confirm the restart frequency.\n\n* **Command (Kubernetes)**:\n  ```bash\n  kubectl get pods -l app=<app-name> -n <namespace> -o wide\n  ```\n* **Command (Docker / Swarm)**:\n  ```bash\n  docker ps -a --filter \"name=<container-name>\"\n  ```\n* **Pass Criteria**: Pod status shows `CrashLoopBackOff` or `Error`, and the `RESTARTS` counter is incrementing over tim"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "invalid_yaml_syntax",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261106-012535-devops-automator\\candidate-1-invalid-yaml-syntax.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "aea30cde28572e6d354a6ed21de6a2a3ddfd4391dd6fb9b631d47000e49b0180",
+    "fitness": 0.891,
+    "paired_delta": 0.006,
+    "shared_tasks": 2,
+    "per_task": [
+     {
+      "task": "Write a GitHub Pages deploy workflow for a Vite site",
+      "fitness": 0.87,
+      "failure": "none",
+      "critique": "The evidence statements are not actual verification, only described checks.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.65
+      },
+      "output_excerpt": "# Vite Static Site GitHub Pages Deployment Pipeline\n\nBelow is the complete, syntactically valid GitHub Actions workflow designed to build and deploy a Vite static site to GitHub Pages whenever code is merged to the `main` branch.\n\n## 🚀 GitHub Actions Workflow\n\nSave this file as `.github/workflows/deploy.yml`:\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.\n# However, do NOT cancel in-progress runs as we want "
+     },
+     {
+      "task": "Write a runbook to diagnose a crash-looping container",
+      "fitness": 0.912,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.96,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Runbook: Diagnosing Intermittent Container Crashes (CrashLoopBackOff)\n\n## Overview\nThis runbook provides a systematic, ordered procedure to diagnose a production container that restarts intermittently (e.g., every few hours). \n\n---\n\n## Step 1: Check Current Pod Status and Restart History\nIdentify the affected pod, its current state, and how frequently it has restarted.\n\n* **Command**:\n  ```bash\n  kubectl get pods -n <namespace> -l app=<app-name> -o wide\n  ```\n* **What to look for**: Check the `RESTARTS` column for incrementing counts and the `STATUS` column for states like `CrashLoopBackOff`, `Error`, or `Completed`.\n* **PASS Criteria**: The exact pod instance experiencing the issue is iso"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "weak_evidence",
+    "path": null,
+    "lint_ok": false,
+    "problems": [
+     "mutator error: HTTP 413 from provider: {\"error\":{\"message\":\"Request too large for model `openai/gpt-oss-120b` in organization `org_01m5snhbg1en8arxxxhnptkfjs` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 8563, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    ],
+    "sha": "",
+    "fitness": null,
+    "paired_delta": null,
+    "shared_tasks": 0,
+    "per_task": []
+   },
+   {
+    "index": 3,
+    "target": "missing_acceptance_criteria_check",
+    "path": null,
+    "lint_ok": false,
+    "problems": [
+     "mutator error: HTTP 413 from provider: {\"error\":{\"message\":\"Request too large for model `openai/gpt-oss-120b` in organization `org_01m5snhbg1en8arxxxhnptkfjs` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 8566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+    ],
+    "sha": "",
+    "fitness": null,
+    "paired_delta": null,
+    "shared_tasks": 0,
+    "per_task": []
+   }
+  ],
+  "diagnosis": "# Diagnosis: devops-automator v1\n\nTasks scored: 3. Mean fitness: 0.8733.\n\n## Failure classes (ensemble majority, most frequent first)\n- `invalid_yaml_syntax` x1\n\n## Worst tasks\n### 20261103-075105-write-a-github-actions #1 (fitness 0.716)\n- Task: Write a GitHub Actions workflow (.github/workflows/ci.yml) that lints and tests a Python package on every push\n- Acceptance: ci.yml parses as valid YAML and has name, on, jobs keys; Trigger is 'on: push' (all branches); Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions; Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors; Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `invalid_yaml_syntax`\n- Critique: The provided ci.yml file contains invalid YAML syntax ('\"on\": push') which contradicts the agent's claim that it passes actionlint with zero errors.\n- Unmet criteria:\n  - Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors: Pass claim is not verifiable from the provided files [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n  - Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0: Test file is not placed in the expected tests/ directory and src layout is unclear, so package may not be importable [unmet per groq/openai/gpt-oss-120b; 3 other judge(s) marked it met]\n  - ci.yml parses as valid YAML and has name, on, jobs keys: The provided ci.yml content is not valid YAML; the line '\"on\": push' is syntactically incorrect (should be 'on: push' without quotes around the key or value in this context, or simply 'on: push'). Additionally, the key is quoted as a string \"on\" which is valid YAML but the value 'push' is a string, whereas GitHub Actions expects a mapping or list for the trigger. More critically, the formatting suggests a copy-paste error or invalid structure that would fail standard YAML parsers or actionlint. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n  - Trigger is 'on: push' (all branches): The trigger is written as '\"on\": push'. While semantically close, the quoting and structure are non-standard and likely invalid for GitHub Actions parsing. Standard syntax is 'on: push'. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ci.yml (709 chars) ---\nname: CI\n\n\"on\": push\n\npermissions:\n  contents: read\n\njobs:\n  lint-and-test:\n    runs-on: ubuntu-latest\n    strategy:\n      fail-fast: false\n      matrix:\n        python-version: [\"3.10\", \"3.11\", \"3.12\"]\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v4\n\n      - name: Set up Python ${{ matrix.python-version }}\n        uses: actions/setup-python@v5\n        with:\n          python-version: ${{ matrix.python-version }}\n\n      - name: Install package and dev tools\n        run: |\n          python -m pip install --upgrade pip\n          python -m pip install -e \".[dev]\"\n\n      - name: Lint with ruff\n        run: ruff check .\n\n      - name: Test with pytest\n        run: pytest -q\n\n--- pyproject.toml (436 chars) ---\n[build-system]\nrequires = [\"setuptools>=61\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"samplepkg\"\nversion = \"0.1.0\"\ndescription = \"Minimal sample package exercised by the CI workflow.\"\nrequires-python = \">=3.10\"\n\n[project.optional-dependencies]\ndev = [\"ruff\", \"pytest\"]\n\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npythonpath = [\"src\"]\n\n[tool.ruff]\nline-length = 88\n\n--- __init__.py (141 chars) ---\n\"\"\"Minimal sample package.\"\"\"\n\n__version__ = \"0.1.0\"\n\n\ndef add(a: int, b: int) -> int:\n    \"\"\"Return the sum of a and b.\"\"\"\n    return a + b\n\n--- test_add.py (78 chars) ---\nfrom samplepkg import add\n\n\ndef test_add() -> None:\n    assert add(2, 3) == 5\n\n```\n\n### 20261103-122908-write-a-backup-rotation #1 (fitness 0.9477)\n- Task: Write Rotate-Backups.ps1 (Windows PowerShell 5.1 compatible) plus Test-Rotate.ps1 self-test and README.md\n- Acceptance: Rotate-Backups.ps1 takes -Path, -KeepDaily (default 7), -KeepWeekly (default 4) and -DryRun; dates come from file names like backup-YYYY-MM-DD.zip, never from timestamps; files not matching the pattern are never deleted; Weekly = newest backup of each ISO week beyond the daily set; with -DryRun nothing is deleted and every would-delete file is printed; Test-Rotate.ps1 builds a temp folder with 60 consecutive daily backups plus 2 non-matching files, runs the script in dry-run and real mode, asserts the exact kept set, cleans up, and exits 0 on success under powershell.exe (5.1); README.md explains usage and how to schedule it with Task Scheduler\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The evidence statement claims the self-test passed, but the actual output of the test run is not provided in the prompt, so the success is inferred from the code logic rather than verified by execution logs.\n- Output excerpt:\n```\n--- Test-Rotate.ps1 (8783 chars) ---\n<#\n.SYNOPSIS\n    Self-test for Rotate-Backups.ps1. Exits 0 on success, 1 on failure.\n\n.DESCRIPTION\n    1. Creates a fresh folder under $env:TEMP (rotate-test-<guid>).\n    2. Fills it with 60 consecutive daily backups, 2025-12-01 .. 2026-01-29,\n       plus 2 files that do not match the pattern. File timestamps are set in\n       REVERSE order (newest name = oldest timestamp) so the test fails if the\n       script ever uses timestamps instead of names.\n    3. Runs Rotate-Backups.ps1 -DryRun in a child process and asserts:\n       exit 0, nothing deleted, and the WOULD DELETE lines are exactly the\n       expected 49 files.\n    4. Runs Rotate-Backups.ps1 for real and asserts the folder contains\n       exactly the expected kept set (11 backups + 2 non-matching files).\n    5. Runs it a second time and asserts nothing more is deleted (idempotent).\n    6. Deletes the temp folder (only that folder) in a finally block.\n\n    Expected kept set (worked out by hand, not by re-\n\n[... 7283 characters omitted from the middle of this file ...]\n\n (Test-Path -LiteralPath $full) {\n            Remove-Item -LiteralPath $full -Recurse -Force\n        }\n        Assert-True (-not (Test-Path -LiteralPath $full)) 'temp folder removed'\n    } else {\n        Write-Host \"Refusing to clean up unexpected path: $full\" -ForegroundColor Red\n        $script:failures++\n    }\n}\n\nWrite-Host ''\nif ($script:failures -eq 0) {\n    Write-Host 'ALL TESTS PASSED' -ForegroundColor Green\n   \n```\n\n### 20261105-084006-write-a-powershell-5 #1 (fitness 0.9562)\n- Task: Write archive-logs.ps1: zip *.log files older than -OlderThanDays from -Path into -ArchiveDir as logs-YYYYMMDD.zip, delete the archived originals, support -WhatIf and a -SelfTest switch\n- Acceptance: archive-logs.ps1 parses under Windows PowerShell 5.1 with zero parser errors and declares CmdletBinding(SupportsShouldProcess) with parameters Path, OlderThanDays, ArchiveDir and SelfTest; running with -WhatIf against a fixture folder changes nothing: file list and SHA256 hashes are identical before and after, and no zip is created; a normal run archives only files older than OlderThanDays into one logs-YYYYMMDD.zip, removes exactly those originals, and leaves newer files and non-.log files untouched; -SelfTest builds its own fixture under the system temp folder, checks both the -WhatIf and the normal run, prints PASS or FAIL per check, exits 0 only if every check passes, and removes its fixture; uses only built-in Windows PowerShell 5.1 cmdlets: no Invoke-WebRequest, Install-Module, external executables or downloads\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The script is lengthy and some helper functions are truncated in the excerpt, but the visible parts demonstrate compliance with all acceptance criteria.\n- Output excerpt:\n```\n--- archive-logs.ps1 (21297 chars) ---\n<#\n.SYNOPSIS\n    Archives old *.log files into a dated zip and removes the archived originals.\n\n.DESCRIPTION\n    Finds *.log files directly inside -Path (not in subfolders) whose LastWriteTime is\n    older than -OlderThanDays, zips them into <ArchiveDir>\\logs-YYYYMMDD.zip, checks\n    that every file inside the zip has the same SHA256 hash as its original, and only\n    then deletes the originals that passed that check.\n\n    Safety rules:\n      * Only files whose extension is exactly \".log\" are touched (old.logx, a.log.bak,\n        notes.txt are never archived or deleted).\n      * If today's logs-YYYYMMDD.zip already exists the script stops and changes\n        nothing (it never overwrites or merges into an existing archive).\n      * An original is deleted only if its copy inside the zip has a matching SHA256.\n      * -WhatIf shows what would happen and changes nothing.\n      * -Confirm asks before creating the zip and before each deletion.\n\n    Uses only what shi\n\n[... 19797 characters omitted from the middle of this file ...]\n\ned -eq 0 -and $notRemoved.Count -eq 0 -and $zipPath -and (Test-Path -LiteralPath $zipPath)) {\n        Remove-Item -LiteralPath $zipPath -Force -WhatIf:$false -Confirm:$false -ErrorAction SilentlyContinue\n    }\n    Write-Error -Message (\"archive-logs failed: {0}\" -f $_.Exception.Message) -ErrorAction Continue\n    exit 1\n}\nfinally {\n    if ($verifyDir -and (Test-Path -LiteralPath $verifyDir)) {\n        Remove-Item -Li\n```\n"
  }
 ]
