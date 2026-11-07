@@ -1588,5 +1588,199 @@
    }
   ],
   "diagnosis": "# Diagnosis: backend-architect v1\n\nTasks scored: 2. Mean fitness: 0.8795.\n\n## Failure classes (ensemble majority, most frequent first)\n- `test_suite_invalid` x1\n\n## Worst tasks\n### 20261103-122155-build-a-stdlib-only #1 (fitness 0.835)\n- Task: Write ratelimit.py (stdlib-only token-bucket limiter keyed by client id, injectable clock, thread-safe) plus test_ratelimit.py and DESIGN.md\n- Acceptance: ratelimit.py imports only the Python standard library and exposes allow(client_id) -> bool and retry_after(client_id) -> float; test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest; DESIGN.md (under 400 words) states the algorithm, memory growth per client and how idle clients are evicted\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `test_suite_invalid`\n- Critique: The test suite is incomplete and contains syntax errors, preventing verification of functionality.\n- Unmet criteria:\n  - test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest: Test file is truncated and contains a syntax error (\"for _ i\"), so it cannot be executed. [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ratelimit.py (5865 chars) ---\n\"\"\"Token-bucket rate limiter keyed by client id.\n\nStandard library only. Thread-safe. The clock is injectable so tests (and\ncallers) can control time without sleeping.\n\nUsage::\n\n    limiter = TokenBucketLimiter(capacity=10, refill_rate=5.0)  # 10 burst, 5 req/s\n    if not limiter.allow(client_id):\n        wait = limiter.retry_after(client_id)   # seconds; send as Retry-After\n\nModule-level ``allow`` / ``retry_after`` use a shared default limiter\n(capacity 60, refill 1 token/s) for the simplest integrations.\n\"\"\"\n\nimport math\nimport threading\nimport time\nfrom collections import OrderedDict\n\n__all__ = [\"TokenBucketLimiter\", \"allow\", \"retry_after\", \"default_limiter\"]\n\n\nclass _Bucket(object):\n    __slots__ = (\"tokens\", \"last\")\n\n    def __init__(self, tokens, last):\n        self.tokens = tokens  # float, 0 <= tokens <= capacity\n        self.last = last      # clock time of the last refill/access\n\n\nclass TokenBucketLimiter(object):\n    \"\"\"Per-client token buckets.\n\n   \n\n[... 4365 characters omitted from the middle of this file ...]\n\nself._lock:\n            if client_id is None:\n                self._buckets.clear()\n            else:\n                self._buckets.pop(client_id, None)\n\n\ndefault_limiter = TokenBucketLimiter(capacity=60, refill_rate=1.0)\n\n\ndef allow(client_id):\n    \"\"\"allow(client_id) -> bool, using the module default limiter.\"\"\"\n    return default_limiter.allow(client_id)\n\n\ndef retry_after(client_id):\n    \"\"\"retry_after(client_id) -> fl\n```\n\n### 20261103-074446-design-a-rest-api #1 (fitness 0.924)\n- Task: Design a REST API spec (OpenAPI 3.1 YAML + design notes) for a todo app with user accounts\n- Acceptance: openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components); Defines user account endpoints: register, login, logout/refresh, get/update/delete current user; Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status; Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated; Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema; DESIGN.md explains auth scheme, data model, pagination, and error format\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.\n- Output excerpt:\n```\n--- openapi.yaml (34353 chars) ---\nopenapi: 3.1.0\ninfo:\n  title: Todo App API\n  version: 1.0.0\n  summary: REST API for a multi-user todo application with user accounts.\n  description: |\n    Design-only contract for a todo application.\n\n    **Authentication.** Clients obtain a short-lived JWT access token (15 min) and a\n    long-lived opaque refresh token (30 days, rotated on every use) from\n    `POST /v1/auth/register` or `POST /v1/auth/login`. Every endpoint except\n    register, login and refresh requires `Authorization: Bearer <accessToken>`\n    (security scheme `bearerAuth`).\n\n    **Ownership rule.** Every todo belongs to exactly one user (`ownerId`). A user can\n    only list, read, create, update or delete their own todos. The owner is always\n    taken from the access token's `sub` claim, never from the request body or query.\n    A todo owned by another user is treated as nonexistent and returns\n    `404 NOT_FOUND` (so todo IDs cannot be probed). `403 FORBIDDEN` is returned when\n    the toke\n\n[... 32853 characters omitted from the middle of this file ...]\n\n             status: 429\n              requestId: req_01JBX3Q9T6Z1\n    InternalError:\n      description: Unexpected server error. Code INTERNAL.\n      headers:\n        X-Request-ID:\n          $ref: '#/components/headers/RequestId'\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/Error'\n          example:\n            error:\n              code: INTERNAL\n              messa\n```\n"
+ },
+ {
+  "id": 11,
+  "agent": "growth-hacker",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.005,
+  "created_at": "2026-11-07T13:43:11.744Z",
+  "parent_fitness": 0.895,
+  "bank": [
+   {
+    "task": "Propose three growth experiments ranked by expected impact",
+    "source": "seed",
+    "parent_fitness": 0.925,
+    "parent_failure": "none",
+    "parent_critique": "The plan lacks concrete risk mitigation or fallback steps if the hypothesized metrics are not met.",
+    "parent_output_excerpt": "# Growth Experimentation Playbook: Breaking the 500-User Plateau\n\nYou have 500 users of a free developer tool and flat growth. At this stage, your primary bottleneck is likely a lack of **distribution loops** and **organic sharing mechanisms**. Developers hate traditional marketing, but they love sharing tools that save them time or make them look smart.\n\nHere are three high-impact growth experiments designed to reignite acquisition, ranked by expected impact.\n\n---\n\n## Experiment 1: The \"Built With / Powered By\" Open-Source Footer Loop\n* **Expected Impact:** Highest (Product-Led Viral Loop)\n* **Budget:** $0 (Zero-budget)\n\n### Overview\nIf your dev tool generates an output, artifact, UI compon"
+   },
+   {
+    "task": "Define activation precisely and propose two changes to raise it",
+    "source": "seed",
+    "parent_fitness": 0.9,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The evidence relies on fabricated queries and verification steps that were never actually run.",
+    "parent_output_excerpt": "# Growth Brief: Activation Optimization\n\n## 1. Precise Definition of Activation\n\nTo fix a 20% activation rate, we must first stop treating \"activation\" as a vague feeling of onboarding completion and tie it strictly to the **Aha! moment**—the exact behavioral milestone where a user first experiences the core value proposition of the product.\n\n*   **Measurable Event (The North Star Activation Metric):** \n    > *\"[User ID] successfully completes [Core Action X] within [Y hours/days] of signup.\"*\n*   **Operational Example (SaaS/Product-Led Growth):** \n    A user is classified as \"Activated\" when they create their first project, invite at least one collaborator, and export/publish a tangible out"
+   },
+   {
+    "task": "Design a referral loop and say how it could fail",
+    "source": "seed",
+    "parent_fitness": 0.86,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "All claims are unverified and rely on fabricated calculations.",
+    "parent_output_excerpt": "# Referral Loop Design & Risk Analysis: The \"Double-Sided Value Stack\"\n\n## 1. Product Context & Mechanics\n*Assumed Context: A B2B SaaS productivity/collaboration tool with a standard self-serve tier ($30/user/month).*\n\n### The Referral Loop Architecture\n1. **Trigger:** Inside the product, a user hits a natural collaboration wall (e.g., inviting a 6th team member or needing an advanced integration) or reaches an \"Aha!\" moment (e.g., successfully completing their first weekly project sprint).\n2. **Action:** The user generates a frictionless, personalized invite link via a native in-app modal or Slack integration.\n3. **Reward (Both Sides):** \n   * **The Inviter (Advocate):** Receives 1 month of"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261107-133624-growth-hacker\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "e576d02ef2236bb1cc1b544cc251d176383fa5884e46aa3980fa6703609e68b6",
+    "fitness": 0.8267,
+    "paired_delta": -0.0683,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.8,
+      "failure": "low_evidence",
+      "critique": "The deliverable fabricates measurement criteria and pass thresholds without any real data.",
+      "scores": {
+       "correctness": 0.75,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.6
+      },
+      "output_excerpt": "# Growth Experiment Playbook: Free Dev Tool (500 Users, Flat Growth)\n\nTo break out of the 500-user plateau, a developer tool needs to leverage developer habits: building in public, sharing productivity wins, and integrating into existing developer workflows (GitHub, CLI, IDEs). \n\nBelow are three high-impact growth experiments ranked by expected impact, designed for rapid execution and data-driven learning.\n\n---\n\n## Experiment 1: The \"Built-With\" Footer / Open-Source Watermark (Viral Loop)\n* **Rank:** #1 (Highest Impact — Leverages existing user base for zero-dollar acquisition with high contextual relevance).\n* **Budget:** $0\n* **Type:** Product-Led Growth / Viral Loop\n\n### Hypothesis\nIf we "
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.84,
+      "failure": "fabricated_evidence",
+      "critique": "All claims about measurement and effect sizes are unverified fabrications.",
+      "scores": {
+       "correctness": 0.7,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Growth Strategy: Raising Activation from 20%\n\n## 1. Precise Definition of Activation\nActivation is the critical inflection point where a new user first experiences the core value proposition (\"Aha! moment\") of the product. \n\nFor the purposes of this strategy, Activation is defined as a measurable event: **A newly registered user successfully completes [Core Action X] within [Timeframe Y] of their first session.**\n\n*Example formulation (to be calibrated per product):* A project management tool might define activation as: *\"Creating a project, adding at least 2 team members, and checking off the first completed task within 7 days of signup.\"*\n\n**Measurement Command/Query (SQL equivalent):**\n"
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.84,
+      "failure": "fabricated_evidence",
+      "critique": "The deliverable fabricates verification results without any real evidence.",
+      "scores": {
+       "correctness": 0.725,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.85
+      },
+      "output_excerpt": "# Referral Loop Design & Risk Analysis: Project Velocity (B2B SaaS)\n\n## Product Context & Assumptions Table\n\nTo ensure rigorous and transparent unit economics, all numeric projections below rely on explicit baseline metrics for our hypothetical B2B SaaS product (\"Velocity\"), priced at standard mid-market tiers.\n\n| ID | Assumption | Value | Rationale / Source |\n|---|---|---|---|\n| **[A1]** | Average Revenue Per User (ARPU) | $50 / month ($600 / year) | Historical baseline for current tier-1 subscription plans. |\n| **[A2]** | Baseline Paid CAC | $150 | Blended cost across LinkedIn, Google Ads, and Meta. |\n| **[A3]** | Gross Margin | 80% | Standard SaaS infrastructure and support cost structure"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261107-133624-growth-hacker\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "87689e1c6f5c7ce512218954197643b3f10b680593696991c0f07a021c73f99d",
+    "fitness": 0.8733,
+    "paired_delta": -0.0217,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.84,
+      "failure": "fabricated_metrics",
+      "critique": "The deliverable relies on many fabricated assumptions and metric values that cannot be verified.",
+      "scores": {
+       "correctness": 0.7,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Growth Experiment Portfolio: Scaling a Free Dev Tool from 500 Users\n\n## Executive Summary\nThis document outlines three high-leverage growth experiments designed to break the flat growth trajectory of our free developer tool (currently at **[A1]** 500 total users). The experiments are ranked by expected impact, combining product-led growth (PLG), community distribution, and developer ecosystem leverage.\n\n---\n\n## Assumptions Table\n\n| Tag | Description | Value |\n|     |             |       |\n| **[A1]** | Current total registered user base | 500 users |\n| **[A2]** | Average monthly active users (MAU) sharing artifacts | 20% of user base |\n| **[A3]** | Average monthly click-through rate (CTR) o"
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.9,
+      "failure": "unverified_assumptions",
+      "critique": "The plan relies on assumed effect sizes without any empirical validation.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Growth Brief: Activation Optimization\n\n## 1. Activation Definition & Measurement\n\nTo move our activation rate from its current baseline, we must define activation not as a vague feeling of \"engagement,\" but as a precise, behavioral milestone that correlates with long-term retention (the \"Aha!\" moment).\n\n- **Activation Event (`M1`)**: A user successfully completes the core value proposition action within `[A1]` days of sign-up. \n  * *Example for SaaS*: Inviting at least 1 team member and creating the first project.\n  * *Example for E-commerce*: Completing the first purchase of an item using a personalized recommendation within 7 days of account creation.\n- **Current Baseline (`M2`)**: `[A2]"
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.88,
+      "failure": "fabricated_evidence",
+      "critique": "The deliverable provides no real verification data, relying on assumed numbers and fabricated test plans.",
+      "scores": {
+       "correctness": 0.85,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Growth Engine Spec: The \"Double-Sided Milestone\" Referral Loop\n\n## 1. Executive Summary & Growth Mechanics\nThis document outlines a product-led, double-sided referral loop designed to turn existing active users into acquisition channels. Instead of rewarding simple sign-ups (which invites heavy fraud and low-intent traffic), this loop gates the reward behind a **Core Activation Milestone** (`[A1]`).\n\n```\n[Existing User] ---> Shares Unique Link ---> [New User Signs Up]\n                                                    |\n                                          [Reaches Activation M1]\n                                                    |\n                              +--------------------"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261107-133624-growth-hacker\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "d1eac8ce1a604b1c4aa4148b382b4e7261ed5fcda2ae437fc84c6117d05491e6",
+    "fitness": 0.9,
+    "paired_delta": 0.005,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.91,
+      "failure": "none",
+      "critique": "The ranking rationale is stated but could be more quantitative about expected impact.",
+      "scores": {
+       "correctness": 0.875,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "1. **Purpose & Scope** – To unlock exponential user acquisition for a free developer tool currently stagnant at 500 users through three prioritized, data-driven growth experiments targeting viral loops, SEO, and product-led growth.  \n2. **Assumptions Table**  \n\n| ID | Assumption | Value |\n| :--- | :--- | :--- |\n| `[A1]` | Current active user base | 500 developers |\n| `[A2]` | Monthly organic growth rate | 0% (flat) |\n| `[A3]` | Average monthly website traffic | 1,000 unique visitors |\n| `[A4]` | Experiment duration | 14 days per test |\n| `[A5]` | Target viral coefficient (K-factor) for Experiment 1 | > 0.4 |\n\n3. **Step‑by‑Step Process**  \n   1. **Experiment 1: The \"Built with [Tool]\" Waterma"
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.9,
+      "failure": "fabricated_evidence",
+      "critique": "The deliverable fabricates verification steps and data without actual evidence.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "1. **Purpose & Scope** – To define the core activation event for new B2B SaaS signups and outline a two-pronged product intervention strategy to increase the activation rate from 20% to 35% among newly registered users.\n\n2. **Assumptions**\n| ID | Assumption | Value |\n| :--- | :--- | :--- |\n| `[A1]` | Definition of Activation (Aha! Moment) | User creates a workspace, builds their first project, and invites $\\ge 1$ teammate within 7 days of signup |\n| `[A2]` | Current Activation Baseline Rate | 20% |\n| `[A3]` | Expected absolute lift from Change 1 (Interactive Guided Onboarding Checklist) | +8 percentage points |\n| `[A4]` | Expected absolute lift from Change 2 (One-Click Industry Template Impo"
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.89,
+      "failure": "insufficient_evidence",
+      "critique": "The work lacks any verifiable evidence for the incentives, fraud controls, or payback calculations.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "1. **Purpose & Scope** – Design a double-sided referral loop for a $50/month B2B SaaS product to drive scalable user acquisition, minimize churn, and maintain a payback period under 3 months while preventing fraudulent self-referrals.  \n\n2. **Assumptions**\n   | ID | Assumption | Value |\n   |---|---|---|\n   | [A1] | Current Average Revenue Per User (ARPU) | $50 / month |\n   | [A2] | Current Customer Acquisition Cost (CAC) via paid channels | $150 |\n   | [A3] | Advocate Incentive (Give) | 1 month free credit ($50 value) |\n   | [A4] | Referred User Incentive (Get) | $20 discount on the first month ($30 first-month payment) |\n   | [A5] | Average Monthly Churn Rate | 5% |\n   | [A6] | Referral Pro"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: growth-hacker v1\n\nTasks scored: 2. Mean fitness: 0.9104.\n\n## Worst tasks\n### 20261105-074515-design-a-referral-loop #1 (fitness 0.8912)\n- Task: Write REFERRAL-LOOP.md: a referral loop design for a note-taking app with a fraud-risk section\n- Acceptance: describes the loop step by step: trigger, invite, reward for referrer and for invitee, and the action that re-enters the loop; defines a viral coefficient (K) formula with assumed inputs and shows the arithmetic; has a section headed 'Fraud risk' listing at least 4 distinct abuse vectors, each with a concrete mitigation; lists at least 3 metrics to track, each with a target number; any assumed number is labelled as an assumption\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `none`\n- Critique: none\n- QA feedback on failed attempts: C1-C4 met (K arithmetic 0.10/0.2625 matches; 7 vectors; 7 metrics). C5 NOT MET: 6 assumed numbers have no [A#] tag, no Assumptions row and no inline label, contradicting lines 4-5 ('Each one is tagged ... and listed'). Fixes: A15 prompt cap 1 per 7 days (L49); A16 storage trigger 80% of free limit (L46: '80% [A16] of the free storage limit [A1]'); A17 bot alert >10 signups per code in 24h (L163, replace '(threshold is an assumption)' with [A17]); A18 collusion low-activity window after day 7 (L168); A19 M1 window 30 days (L180; optionally add the window to A4); A20 experiment arms day 2 vs day 7 and 3+ people (L198-199) and fix L203-205 'no numbers assumed here'. Optional: tag inline repeats of '1 month' (L43, L45, L74, L94, L96) with [A8]/[A9]. Re-check lines 4-5 so the claim is true.\n- Output excerpt:\n```\n--- REFERRAL-LOOP.md (17344 chars) ---\n# REFERRAL-LOOP.md: Referral Loop Design for \"Inkwell\" (fictional note-taking app)\n\n> **Read this first.** \"Inkwell\" is a made-up name for a generic freemium note-taking app.\n> No real company data exists for this design. **Every assumed number in this document is\n> tagged `[A1]` to `[A27]` where it appears, and each tag has a row in the Assumptions table\n> (section 1).** None of them is a measured fact or an industry benchmark. Replace them with\n> real numbers once the loop is live.\n>\n> Numbers that carry **no** tag are not assumptions. They are only: section, step, trigger,\n> metric or assumption IDs (for example \"Step 1\", \"M4\", \"A3\"); the count of items in a list or\n> formula (for example \"four inputs\", \"2 x\" rewards per referral); fixed math in a formula (the\n> `1` in `1 / (1 - K)` and the K = 1.0 self-growth threshold); and results computed from tagged\n> inputs (for example K = 0.10, 1.111, $12).\n\n---\n\n## 1. Assumptions table\n\n| ID | Assumption | Value | W\n\n[... 15844 characters omitted from the middle of this file ...]\n\n vs a generic signup page | Higher M2 |\n| a | Pre-save the shared note + onboarding checklist vs empty account | Higher M3 |\n\nEach experiment runs until it reaches a pre-set sample size and is judged by a pre-set\nsignificance level. This document does **not** set values for sample size or significance\nlevel; they will be chosen (and added to the Assumptions table) once real traffic volumes are\nknown. The only number\n```\n\n### 20261103-080434-propose-three-zero-budget #1 (fitness 0.9297)\n- Task: Write EXPERIMENTS.md proposing three zero-budget growth experiments for a free developer tool with 500 users\n- Acceptance: Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form; Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window; Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software; Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown); Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The statistical verification claims are not directly observable in the document, but the overall structure meets the brief.\n- Output excerpt:\n```\n--- EXPERIMENTS.md (26234 chars) ---\n# Zero-Budget Growth Experiments: Free Developer Tool (~500 users)\n\n## 0. Assumptions (stated explicitly because the product is unspecified)\n\n| # | Assumption | Value used in the math |\n|---|---|---|\n| A1 | Product | Open-source CLI with an optional free account / API key (freemium). Hosted on GitHub, installed via a package manager (npm/pip/brew). |\n| A2 | Total users | 500 registered accounts (an account = an email plus an install ID). |\n| A3 | New-user inflow | About 15 new accounts/week (about 60 per 4 weeks), roughly steady in non-holiday weeks. |\n| A4 | Activation baseline | 30% of new accounts complete a \"first successful core run\" within 7 days of signup. |\n| A5 | Dormant users | About 300 of the 500 accounts have had no successful run in 30+ days and have agreed to product emails. |\n| A6 | Natural reactivation | 5% of dormant users come back on their own within any 30-day window. |\n| A7 | Instrumentation | The tool's own backend already logs `signup` a\n\n[... 24734 characters omitted from the middle of this file ...]\n\n5 |\n| 8 | C5: E3 uses 100% of the dormant pool | Explicitly acknowledged, with the justification that no other experiment uses this pool, the 90-day re-use cost, and an instruction to recompute if the pool is under 300. | 151, 184 |\n| 9 | Optional: CAN-SPAM | Added the maintainer's existing postal address to the email (no paid P.O. box, so it stays $0). | 157 |\n| 10 | Housekeeping | Removed the unpooled constant 7.849\n```\n"
  }
 ]
