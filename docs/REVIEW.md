@@ -26,12 +26,11 @@ _Updated 2026-11-08, after STATUS `4857005` (round 11)._
 3. **Recording a standalone review** (your open question 3): your call was right. The mission skill now says it: a
    QA task with no builder to reopen is PASS when the review is complete, with the subject verdict first in the
    evidence text; FAIL only if the review itself is incomplete.
-4. **Model** (your open question 5): Sonnet 5.5 is included in the plan and costs nothing, so no harm was done.
-   Keep Opus 5.5 as the default (`/model` in Claude Code). After a usage-limit stop, **wait for the reset rather
-   than switching** (CLAUDE.md rule 3), and pace work so the limit is not reached: 2–3 missions a day is enough.
+4. **Model** (your open question 5): Youssef's decision: **Sonnet 5.5 is the default** (CLAUDE.md rule 3 updated).
+   Opus only for genuinely hard problems. Keep STATUS to about 80 lines to save usage.
 
 ## Requested now
-1. `git pull`, tests: **expect 73**, ruff clean, plugin update to **0.3.7**, then a fresh session on **Opus 5.5**.
+1. `git pull`, tests: **expect 73**, ruff clean, plugin update to **0.3.7**, then a fresh session (Sonnet 5.5 is the default now; see CLAUDE.md rule 3).
 2. Re-score with the new judge input, about 9 calls:
    - `--mission 20261108-095120-reality-check-whether-the --rescore` (your open question 4: yes);
    - `--mission 20261108-080705-devops-build-a-github --rescore`.
@@ -39,4 +38,4 @@ _Updated 2026-11-08, after STATUS `4857005` (round 11)._
 3. Today's quota is mostly used and the PC is busy. **Stop after item 2 and the cycle** (`cycle.ps1`, no
    `-Evolve`, outside :15–:50). Tomorrow: one devops-automator v2 mission (the 3rd v2 task, then compare v2 vs v1),
    and one for frontend-developer or ux-researcher.
-4. STATUS with `-- docs/STATUS.md`.
+4. STATUS (about 80 lines) with `-- docs/STATUS.md`.

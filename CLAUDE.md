@@ -10,7 +10,10 @@ and a static dashboard (`dashboard/`) publishes the results. Read `README.md`, t
    Free tiers only (Gemini, Groq, OpenRouter free models). Rate limits are hard stops, not upgrades.
 2. **Secrets stay out of git.** Keys live only in `.env` (gitignored). Never print `.env`, never paste a key
    into a file, commit, log, STATUS note or chat.
-3. **Model.** Run as Opus 5.5 (included in the Pro plan). Do not switch to a model that spends usage credits.
+3. **Model.** Default to **Sonnet 5.5**: included in the Pro plan and light on the 5-hour usage limit. Switch to
+   Opus 5.5 (`/model`) only for genuinely hard work: a failure whose cause is still unclear after one honest attempt,
+   or a design decision in `core/`. Switch back afterwards. Never use a model or setting that spends usage credits;
+   if the limit is reached, stop and wait for the reset.
 4. **Evidence over claims.** Nothing is "done" without the command and output that proves it. Tests must pass
    (`cd core && uv run pytest -q`, `uv run ruff check .`) before any commit that touches `core/`.
 5. **Honest records.** Never edit mission.json, traces.jsonl or the SQLite DB by hand. Use the recorder
@@ -39,6 +42,12 @@ is a good pace. Vary the agents so fitness data covers the roster.
 install time): inside Claude Code run `/plugin marketplace update evolvra` then `/plugin update evolvra@evolvra`,
 and restart Claude Code. When you change `plugin/` yourself, bump `version` in `plugin/.claude-plugin/plugin.json`
 and `.claude-plugin/marketplace.json` so the update is picked up.
+
+## Saving usage (the 5-hour limit is the real constraint)
+- Read only the files and line ranges you need; don't re-read files already in context.
+- Keep STATUS.md to about 80 lines: the item table, key numbers, what broke, open questions. Leave out step-by-step
+  logs unless something failed.
+- 2–3 missions a day is the pace; stop a round early rather than hitting the limit mid-mission.
 
 ## Handoff with the cloud reviewer (git is the channel)
 - **You write `docs/STATUS.md`** at the end of every working session: what you ran, what happened (numbers),
