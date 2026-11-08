@@ -1,65 +1,52 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-08, after STATUS `523bcc5` (round 7, headless run stopped early) and the weekend cycles._
+_Updated 2026-11-08 ~07:40Z, after STATUS `9c2719f` (round 8)._
 
 ## Verdict
-The weekend ran unattended and safely: 10 cycles, all pushed, no alerts reported. Stopping the headless run at the
-first denied tool call was exactly the stop rule. The reaggregate output (6 contested of 32, 0 calls) matches my preview.
+Excellent round. The two results that matter:
+- **The hook is shell-free.** In 529 process polls over 2 minutes, no bash.exe or sh.exe appeared, and traces still
+  grew one line per tool call. The 5 Nov signature (`bash.exe <- claude.exe`) is gone. Tell the network admin when
+  convenient; only their console can confirm the alerts stopped.
+- **Nemotron is 1:1** (7 Nov: 12 requests, 12 verdicts), and gpt-oss now answers by criterion id.
 
-Three generations ran, all refused, all honest:
+Finding "weekend cycles never pulled" in cycle.log was the most useful catch of the round.
 
-| gen | agent | best paired delta | candidates that played |
-|---|---|---|---|
-| 9 | devops-automator v1 | +0.6% | **1 of 3**: 2 lost to HTTP 413 |
-| 10 | backend-architect v1 | +1.5% | 3 of 3 |
-| 11 | growth-hacker v1 | +0.5% | 3 of 3 |
+## Fixed this round (tests 70, ruff clean; no plugin change)
+1. **Your open question 1 was a scorer bug, not harsh judges.** `read_output` capped the folder at 20 files
+   (alphabetical), fed the largest file first, and labelled files by bare name. A QA folder with a large harness
+   script, many scratch files and small `evidence/*.txt` proofs therefore sent the harness and lost the proof.
+   - Files the agent's evidence statement or the criteria mention now go first (matched by path or name, `\` or `/`).
+   - `scratch/`, `fixtures/` and `tmp/` go last.
+   - Every file is labelled with its path inside the folder.
+   - The cut-middle marker now says the omitted text exists and must not be reported as missing; if a criterion
+     depends on it, the judge must say it could not be verified from the excerpt. This targets gpt-oss's
+     "missing_implementation" on the 20 KB devops script.
+2. **Weekend cycles ran old code** because the stray STATUS edit blocked `git pull --rebase`. `cycle.ps1` and the
+   cycle's retry now use `--autostash`, so a local edit can no longer stop the pull.
 
-Generations 10 and 11 were fair: the parents already score 0.90–0.94 on their banks, so the +3-point gate has
-little room. Generation 9 was **not** fair. Two problems surfaced, and I fixed both (see below).
+## Decisions on your open questions
+1. Fixed above. **Re-score the two new missions** so their 4 tasks are judged on what the agents actually produced
+   (item 2).
+2. **A missing criterion id** (gpt-oss skipped C4): no change. The rubric numbers are the judge's own; a skipped id
+   is treated as not graded, not as failed.
+3. **One extra OpenRouter request:** expected. That is the JSON-repair retry or a truncation retry. 1:1 on a full
+   day is the number that matters.
+4. **`stash@{0}`:** it is superseded (its content is committed in `523bcc5`). Drop it if Youssef agrees in-session.
+5. **Generation 12:** the 10:17 run should retry devops-automator with all 3 rewrites (Gemini writes any that are too
+   large for Groq). Report it.
 
-## Fixed this round (tests 69, ruff clean, plugin 0.3.4)
-1. **Rewrites too large for Groq.**
-   - Groq's free tier rejects a single request whose prompt plus requested output exceeds ~8k tokens (HTTP 413).
-     The devops persona is 13.7 KB, and the rewrite asks for 6,000 output tokens.
-   - On a 413 the mutator now falls back to Gemini Flash-Lite and records the author of each candidate.
-   - rapid-prototyper (15.8 KB) would have hit the same wall.
-2. **Replay guard vs. lost rewrites.** A generation that lost rewrites to provider errors no longer counts as a
-   finished test, so devops-automator may run again even though its diagnosis is unchanged.
-3. **Cycle committed someone else's staged file.** The headless run had staged `docs/STATUS.md` when it stopped, and
-   the 10:17 cycle's commit carried it (`523bcc5` is titled "cycle: refresh data" but contains your STATUS).
-   The cycle now commits only its own paths.
-4. **Git Bash from the plugin hook (your round-7 finding).** The trace hook was a bash `if … then … fi` command, so
-   Claude Code started Git Bash on every tool call. It now uses the documented **exec form**
-   (`"command": "python", "args": [".../log_event.py"]`), which starts no shell at all. This is a likely source of the
-   Apex One alerts, but that is still unproven; please verify (item 2).
-
-## Decisions on your open questions (round 7)
-1. **Headless permissions:** don't widen them. The denial worked as intended. For future unattended runs,
-   redirect slow commands to a file inside the repo's own scratch path that is already readable (for example
-   `... *> .evolvra-out.txt`, gitignored), rather than allowing Read on the temp folder.
-2. **`fitness` over 120 s:** on this machine pytest also took 47 s (it takes 1 s on Linux), so the likely cause is
-   on-access scanning of Python processes, not the database. Please measure it once (item 3) so we know.
-3. **The rest (fitness check, the 04:17 report, the announcement re-score):** they are folded into today's list.
-
-## Requested now (Youssef is present)
-1. `git pull`; refresh the plugin to **0.3.4** (`claude plugin marketplace update evolvra`,
-   `claude plugin update evolvra@evolvra`), then **restart Claude Code**. Tests: **expect 69**; ruff clean.
-2. **Verify the hook change** (important for the network admin):
-   - In PowerShell, run `Get-Process bash -ErrorAction SilentlyContinue | Measure-Object` and note the count.
-   - In the restarted Claude Code, run any 3 tool calls (e.g. read 3 files).
-   - Run the bash count again: it should not have risen.
-   - `~\.evolvra\traces.jsonl` should have grown by about 3 lines.
-   - If traces did **not** grow, Claude Code may be too old for exec form. Report the version
-     (`claude --version`) and do not run missions until we fix it, because missions need traces.
-3. Measure once: `Measure-Command { uv run evolvra fitness }` (in `core`). Report the seconds and the table,
-   including whether content-creator shows `(contested)`.
-4. From the DB and `~\.evolvra\evolutions\`, report generations 9–11:
-   - verdicts and errors per judge in each tournament;
-   - OpenRouter requests vs Nemotron verdicts (expect about 1:1 now);
-   - whether any diagnosis contains "contested".
-5. **One devops-automator mission** (it is the weakest, and gen 9 never got a fair test): a PowerShell 5.1 script
-   with `-WhatIf` and `-SelfTest`, and the Machine notes line in the handoff. Then **one backend-architect mission**
-   if time allows. Then `.\scripts\cycle.ps1` (no `-Evolve`: the scheduled run handles evolution).
-6. If OpenRouter has at least 8 requests left: `uv run evolvra score --mission
-   20261105-072406-write-a-product-announcement --rescore`, and say whether gpt-oss now answers by id.
-7. STATUS as usual. Commit it with `git commit -m '...' -- docs/STATUS.md` (pathspec, so nothing else rides along).
+## Requested now (short round)
+1. `git pull` (expect `cycle: refresh data` from the 10:17 run plus this commit). Tests: **expect 70**; ruff clean.
+   No plugin update is needed.
+2. Re-score today's missions with the fixed scorer (about 12 judge calls):
+   - `uv run evolvra score --mission 20261108-063451-write-a-powershell-5 --rescore`
+   - `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore`
+   Report per task, before and after: each judge's correctness and evidence scores, and the failure class. Did the
+   "missing evidence" and "missing_implementation" calls go away?
+3. Report generation 12 from cycle.log, the evolutions folder and the DB:
+   - target, delta, outcome;
+   - each candidate's author (Groq or the Gemini fallback);
+   - verdicts per judge.
+4. `.\scripts\cycle.ps1` (no `-Evolve`) to export the re-scores. Mind the scheduled run: not between :15 and :50
+   past 04/10/16/22, or while cycle.log shows a start without an end.
+5. With Youssef's OK, `git stash drop stash@{0}`. STATUS as usual (commit with `-- docs/STATUS.md`).

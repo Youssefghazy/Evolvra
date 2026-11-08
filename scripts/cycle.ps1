@@ -16,7 +16,8 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)
 function Write-Log { process { $_; [System.IO.File]::AppendAllText($log, "$_`r`n", $utf8) } }
 $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 "[$stamp] cycle start (evolve=$Evolve)" | Write-Log
-git pull -q --rebase origin main 2>&1 | Write-Log
+# --autostash: a stray local edit (6-8 Nov: a leftover STATUS.md) must not stop the pull; without it 8 cycles ran old code
+git pull -q --rebase --autostash origin main 2>&1 | Write-Log
 if ($Evolve) { uv run evolvra cycle --evolve 2>&1 | Write-Log }
 else         { uv run evolvra cycle          2>&1 | Write-Log }
 "[$((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))] cycle end" | Write-Log

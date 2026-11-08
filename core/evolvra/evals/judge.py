@@ -140,7 +140,9 @@ def build_prompt(task: sqlite3.Row, brief: str, agent_description: str) -> str:
     return render_prompt(
         brief=brief, agent=task["agent_slug"], agent_description=agent_description, task=task["task"],
         criteria=criteria, attempts=task["attempts"],
-        verdict=task["verdict"], evidence=last.get("evidence"), output=checks.read_output(task["output_dir"]),
+        verdict=task["verdict"], evidence=last.get("evidence"),
+        output=checks.read_output(task["output_dir"],
+                                  mentions="\n".join([last.get("evidence") or "", task["task"] or "", *criteria])),
         facts=checks.measured_facts(task["output_dir"], criteria),
     )
 

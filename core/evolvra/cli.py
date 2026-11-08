@@ -404,7 +404,7 @@ def cmd_cycle(args) -> int:
             _git(repo, "commit", "-q", "-m", msg, "--", *paths)
             code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
             if code != 0:  # remote moved on (e.g. new code pushed meanwhile): rebase our commit and retry once
-                _git(repo, "pull", "-q", "--rebase", "origin", "main")
+                _git(repo, "pull", "-q", "--rebase", "--autostash", "origin", "main")
                 code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
             log.append("push: ok" if code == 0 else f"push failed: {pushed}")
         else:

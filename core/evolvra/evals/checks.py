@@ -49,37 +49,53 @@ def excerpt(text: str, limit: int) -> str:
     head = int(limit * HEAD_SHARE)
     tail = limit - head
     omitted = len(text) - head - tail
-    return text[:head] + f"\n\n[... {omitted} characters omitted from the middle of this file ...]\n\n" + text[-tail:]
+    return (text[:head] + f"\n\n[... {omitted} characters omitted from the middle of this file to fit the prompt. They exist"
+            " but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be"
+            " verified from the excerpt ...]\n\n" + text[-tail:])
+
+
+LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "work", "build", "dist"}
 
 
 def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16000,
-                primary_chars: int = PRIMARY_CHARS) -> str:
-    """Concatenate text files under output_dir for the judge prompt.
+                primary_chars: int = PRIMARY_CHARS, mentions: str = "") -> str:
+    """Concatenate text files under output_dir for the judge prompt, each labelled with its path in the folder.
 
-    Order: largest text file first (it is almost always the deliverable), then the rest by size.
-    The first file may use `primary_chars`; the others `per_file`; backups (*.attempt*, *.bak) are skipped.
+    Order: files the agent's evidence statement or the criteria mention (by path or name), then the rest, with
+    scratch/fixture folders last; largest first within each group. The first file may use `primary_chars`, the
+    others `per_file`; backups (*.attempt*, *.bak) are skipped.
+    2026-11-08: QA agents put their proof in evidence/*.txt next to a large harness script. Largest-first plus a
+    20-file cap pushed the proof out of the prompt, and judges scored it "missing evidence".
     """
-    files = [p for p in output_files(output_dir) if not is_backup(p)]
+    if not output_dir:
+        return ""
+    root = Path(output_dir)
+    files = [p for p in output_files(output_dir, max_files=400) if not is_backup(p)]
+    m = mentions.lower().replace("\\", "/")
     texts, binaries = [], []
     for path in files:
+        rel = path.relative_to(root).as_posix()
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
-            binaries.append(f"--- {path.name} (binary, {path.stat().st_size} bytes) ---")
+            binaries.append(f"--- {rel} (binary, {path.stat().st_size} bytes) ---")
             continue
         try:
-            texts.append((path, path.read_text(encoding="utf-8", errors="replace")))
+            text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-    texts.sort(key=lambda pt: -len(pt[1]))
+        mentioned = bool(m) and (rel.lower() in m or path.name.lower() in m)
+        low = any(part in LOW_PRIORITY_DIRS for part in rel.lower().split("/")[:-1])
+        texts.append((not mentioned, low, -len(text), rel, text))
+    texts.sort()
     chunks, used = [], 0
-    for i, (path, text) in enumerate(texts):
+    for i, (_, _, _, rel, text) in enumerate(texts):
         limit = primary_chars if i == 0 else per_file
         body = excerpt(text, min(limit, max(0, total - used)))
         if used + len(body) >= total and i > 0:
-            chunks.append("--- [more files omitted] ---")
+            chunks.append(f"--- [{len(texts) - i} more file(s) omitted to fit the prompt] ---")
             break
-        chunks.append(f"--- {path.name} ({len(text)} chars) ---\n{body}")
+        chunks.append(f"--- {rel} ({len(text)} chars) ---\n{body}")
         used += len(body)
-    return "\n".join(chunks + binaries)
+    return "\n".join(chunks + binaries[:20])
 
 
 def run_checks(task: sqlite3.Row) -> list[tuple[str, float, dict]]:

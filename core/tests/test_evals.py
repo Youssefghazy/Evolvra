@@ -400,3 +400,18 @@ def test_nemotron_gets_the_large_budget_first_and_no_second_request():
     assert sent[0] == judge.RETRY_MAX_TOKENS          # no 900-token attempt to throw away
     assert sent.count(judge.RETRY_MAX_TOKENS) == len(sent) and len(sent) <= 2   # at most the JSON-repair retry
     assert res[0].failure_class == "judge_unparseable"
+
+
+def test_judges_see_the_files_the_agent_cites_first_with_their_paths(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    (out / "scratch").mkdir(parents=True)
+    (out / "evidence").mkdir()
+    (out / "scratch" / "harness.ps1").write_text("x" * 30000, encoding="utf-8")          # big, unmentioned
+    for i in range(30):                                                                     # more than the old cap
+        (out / "scratch" / f"fixture-{i:02d}.log").write_text("f" * 500, encoding="utf-8")
+    (out / "evidence" / "selftest.txt").write_text("SelfTest 13/13 PASS exit 0", encoding="utf-8")
+    (out / "QA-REPORT.md").write_text("# QA report\nverdict PASS", encoding="utf-8")
+    text = checks.read_output(str(out), mentions="See evidence\\selftest.txt and QA-REPORT.md")
+    assert text.index("--- evidence/selftest.txt") < text.index("--- scratch/harness.ps1")
+    assert "SelfTest 13/13 PASS" in text and "--- QA-REPORT.md" in text
+    assert "do not report this part as missing" in checks.excerpt("y" * 50, 20)
