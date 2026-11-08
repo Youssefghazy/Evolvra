@@ -22,18 +22,18 @@
 
 ## Results so far
 
-Measured from the system's own records (`dashboard/public/data/`), first 4 days of operation.
+Measured from the system's own records (`dashboard/public/data/`), first 7 days of operation.
 
 | | |
 |---|---|
-| Real missions run | 15 (30 tasks, every one independently QA-checked) |
+| Real missions run | 18 (36 tasks, every one independently QA-checked) |
 | QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
-| Evolution generations | 8 |
-| Promotions | 1 (Evidence Collector v1 → v2) |
-| Generations correctly refused | 7 (no candidate beat its parent by the margin, or the arena was unfair) |
+| Evolution generations | 12 |
+| Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2, +5.75 points, still being confirmed on real missions) |
+| Generations correctly refused | 10 (no candidate beat its parent by the margin, or the arena was unfair) |
 | Free-tier model calls | ~560 (Gemini, Groq, OpenRouter) |
 | Money spent | **$0.00** |
-| Scheduled cycles that ran unattended | 9, including overnight |
+| Scheduled cycles that ran unattended | 20+, including a whole weekend |
 
 **The promotion.** The judges kept flagging Evidence Collector, the QA agent, for claims it could not prove.
 Evolution read those failures, wrote three persona variants, and played each against the original on four
@@ -150,7 +150,7 @@ Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 - [x] **Phase 3 — Evolution.** Diagnose → mutate (K variants) → lint → proxy tournament on held-out banks → promote only if it beats the parent. `evolvra evolve`. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
 - [x] **Phase 4 — Dashboard.** Static Vite + React site on GitHub Pages: overview, roster, genealogy, fitness by version, version diffs, missions with per-judge scores, evolutions. `evolvra export`. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 - [x] **Phase 4b — Autonomy.** `evolvra cycle`, Windows scheduler, operator/reviewer protocol over git (`CLAUDE.md`, STATUS/REVIEW).
-- [ ] **Phase 5 — Proof and polish.** A second promotion on another agent, a recorded QA-failure retry, demo video, upstream contribution to agency-agents.
+- [ ] **Phase 5 — Proof and polish.** ~~A second promotion on another agent~~ (DevOps Automator v2, 8 Nov; confirming on real missions), ~~a recorded QA-failure retry~~, demo video, upstream contribution to agency-agents.
 
 ## Credits
 

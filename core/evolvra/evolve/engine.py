@@ -125,7 +125,7 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
     best_i, best_delta, best_cov = None, None, 0
     need = max(1, round(opts.min_coverage * len(held_out)))
     for c in cands:
-        entry = {"index": c.index, "target": c.target, "path": str(c.path) if c.path else None,
+        entry = {"index": c.index, "target": c.target, "author": c.author, "path": str(c.path) if c.path else None,
                  "lint_ok": c.lint_ok, "problems": c.problems or [], "sha": c.sha, "fitness": None,
                  "paired_delta": None, "shared_tasks": 0, "per_task": []}
         if c.lint_ok and c.content:

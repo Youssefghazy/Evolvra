@@ -54,26 +54,32 @@ def excerpt(text: str, limit: int) -> str:
             " verified from the excerpt ...]\n\n" + text[-tail:])
 
 
-LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "work", "build", "dist"}
+LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "work", "build", "dist", "copy", "copies"}
+EVIDENCE_DIRS = {"evidence", "proof", "proofs", "results", "logs", "captures", "outputs"}
 
 
 def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16000,
                 primary_chars: int = PRIMARY_CHARS, mentions: str = "") -> str:
     """Concatenate text files under output_dir for the judge prompt, each labelled with its path in the folder.
 
-    Order: files the agent's evidence statement or the criteria mention (by path or name), then the rest, with
-    scratch/fixture folders last; largest first within each group. The first file may use `primary_chars`, the
-    others `per_file`; backups (*.attempt*, *.bak) are skipped.
-    2026-11-08: QA agents put their proof in evidence/*.txt next to a large harness script. Largest-first plus a
-    20-file cap pushed the proof out of the prompt, and judges scored it "missing evidence".
+    Order (each group largest first):
+      1. the main deliverable: the largest non-scratch file the evidence statement or criteria mention (else the
+         largest non-scratch file); it may use `primary_chars`;
+      2. proof files: anything under an evidence/proof/results/logs folder, or mentioned by its relative path;
+      3. other files the agent mentions by name; 4. everything else; 5. scratch/work/fixture folders last.
+    Empty files and backups (*.attempt*, *.bak) are skipped.
+    2026-11-08: QA agents keep their proof in evidence/*.txt beside a copy of the builder's code in work/ and a
+    large check script. Largest-first (then name matching, which picked the work/ copy) pushed the proof out of
+    the prompt, and listing three empty capture files made a judge report "all evidence files are empty".
     """
     if not output_dir:
         return ""
     root = Path(output_dir)
-    files = [p for p in output_files(output_dir, max_files=400) if not is_backup(p)]
     m = mentions.lower().replace("\\", "/")
-    texts, binaries = [], []
-    for path in files:
+    entries, binaries = [], []
+    for path in output_files(output_dir, max_files=400):
+        if is_backup(path):
+            continue
         rel = path.relative_to(root).as_posix()
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
             binaries.append(f"--- {rel} (binary, {path.stat().st_size} bytes) ---")
@@ -82,18 +88,35 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-        mentioned = bool(m) and (rel.lower() in m or path.name.lower() in m)
-        low = any(part in LOW_PRIORITY_DIRS for part in rel.lower().split("/")[:-1])
-        texts.append((not mentioned, low, -len(text), rel, text))
-    texts.sort()
+        if not text.strip():
+            continue
+        dirs = rel.lower().split("/")[:-1]
+        low = any(d in LOW_PRIORITY_DIRS for d in dirs)
+        by_path = "/" in rel and rel.lower() in m
+        by_name = bool(m) and path.name.lower() in m
+        proof = by_path or any(d in EVIDENCE_DIRS for d in dirs)
+        entries.append({"rel": rel, "text": text, "low": low, "proof": proof, "named": by_name or by_path})
+    if not entries:
+        return "\n".join(binaries[:20])
+    pool = [e for e in entries if not e["low"] and not e["proof"]] or [e for e in entries if not e["low"]] or entries
+    primary = max(pool, key=lambda e: (e["named"], len(e["text"])))
+
+    def group(e) -> int:
+        if e is primary:
+            return 0
+        if e["low"]:
+            return 4
+        return 1 if e["proof"] else 2 if e["named"] else 3
+
+    ordered = sorted(entries, key=lambda e: (group(e), -len(e["text"])))
     chunks, used = [], 0
-    for i, (_, _, _, rel, text) in enumerate(texts):
+    for i, e in enumerate(ordered):
         limit = primary_chars if i == 0 else per_file
-        body = excerpt(text, min(limit, max(0, total - used)))
+        body = excerpt(e["text"], min(limit, max(0, total - used)))
         if used + len(body) >= total and i > 0:
-            chunks.append(f"--- [{len(texts) - i} more file(s) omitted to fit the prompt] ---")
+            chunks.append(f"--- [{len(ordered) - i} more file(s) omitted to fit the prompt] ---")
             break
-        chunks.append(f"--- {rel} ({len(text)} chars) ---\n{body}")
+        chunks.append(f"--- {e['rel']} ({len(e['text'])} chars) ---\n{body}")
         used += len(body)
     return "\n".join(chunks + binaries[:20])
 

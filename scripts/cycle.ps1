@@ -20,5 +20,8 @@ $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 git pull -q --rebase --autostash origin main 2>&1 | Write-Log
 if ($Evolve) { uv run evolvra cycle --evolve 2>&1 | Write-Log }
 else         { uv run evolvra cycle          2>&1 | Write-Log }
-"[$((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))] cycle end" | Write-Log
+$code = $LASTEXITCODE
+"[$((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))] cycle end (exit $code)" | Write-Log
 Pop-Location
+# a failed push (or any failure) now shows as a non-zero last result in Task Scheduler
+exit $code

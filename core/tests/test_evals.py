@@ -415,3 +415,20 @@ def test_judges_see_the_files_the_agent_cites_first_with_their_paths(tmp_path):
     assert text.index("--- evidence/selftest.txt") < text.index("--- scratch/harness.ps1")
     assert "SelfTest 13/13 PASS" in text and "--- QA-REPORT.md" in text
     assert "do not report this part as missing" in checks.excerpt("y" * 50, 20)
+
+
+def test_qa_proof_beats_a_copy_of_the_builders_code(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    for d in ("work", "evidence"):
+        (out / d).mkdir(parents=True)
+    (out / "work" / "notes_api.py").write_text("code " * 4000, encoding="utf-8")         # copy of the builder's file
+    (out / "independent_check.py").write_text("check " * 1500, encoding="utf-8")
+    for i in range(11):
+        (out / "evidence" / f"check-{i:02d}.txt").write_text(f"check {i}: PASS " * 20, encoding="utf-8")
+    for name in ("stdout.txt", "stderr.txt", "exit.txt"):
+        (out / "evidence" / name).write_text("", encoding="utf-8")                          # empty captures
+    text = checks.read_output(str(out), mentions="ran independent_check.py against notes_api.py; see evidence/")
+    assert text.startswith("--- independent_check.py")                 # main deliverable: the QA's own script
+    assert all(f"--- evidence/check-{i:02d}.txt" in text for i in range(11))
+    assert "stderr.txt" not in text                                    # empty files are not listed
+    assert "work/notes_api.py" not in text or text.index("work/notes_api.py") > text.index("evidence/check-10.txt")

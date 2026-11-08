@@ -389,10 +389,13 @@ def cmd_cycle(args) -> int:
     counts = export_mod.export_all(conn, out)
     log.append("export: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
 
+    push_failed = False
     if not args.no_push:
         paths = ["dashboard/public/data"]
         if evolved:
-            paths.append("plugin/agents")
+            # a promotion also bumps the plugin version (so `claude plugin update` delivers the new persona);
+            # 8 Nov: those two files were left uncommitted, blocked the next pull and hid devops v2 from the plugin
+            paths += ["plugin/agents", "plugin/.claude-plugin/plugin.json", ".claude-plugin/marketplace.json"]
         _git(repo, "add", *paths)
         code, status = _git(repo, "status", "--porcelain", *paths)
         if status:
@@ -407,11 +410,13 @@ def cmd_cycle(args) -> int:
                 _git(repo, "pull", "-q", "--rebase", "--autostash", "origin", "main")
                 code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
             log.append("push: ok" if code == 0 else f"push failed: {pushed}")
+            push_failed = code != 0
         else:
             log.append("push: nothing changed")
     for line in log:
         print(line)
-    return 0
+    # 8 Nov: a rejected push still exited 0, so the scheduled task looked successful while a promotion sat unpushed
+    return 1 if push_failed else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
