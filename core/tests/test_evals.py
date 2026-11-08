@@ -449,3 +449,17 @@ def test_a_long_qa_report_leaves_room_for_its_proof(tmp_path):
     assert len(text) < 17500                             # still inside the judge budget
     if shown < 20:
         assert "they exist; do not report them as missing" in text
+
+
+def test_thousands_of_fixtures_cannot_hide_the_report(tmp_path):
+    out = tmp_path / "01-reality-checker"
+    (out / "fx").mkdir(parents=True)
+    (out / "evidence").mkdir()
+    for i in range(1200):                                                # an unrecognised bulk folder
+        (out / "fx" / f"file-{i:04d}.txt").write_text("fixture data " * 10, encoding="utf-8")
+    (out / "evidence" / "stress.txt").write_text("2000 files in 12 s; flip detected", encoding="utf-8")
+    (out / "REALITY-CHECK.md").write_text("Verdict: NEEDS WORK\n" + "detail " * 300, encoding="utf-8")
+    text = checks.read_output(str(out), mentions="wrote REALITY-CHECK.md; evidence/ holds the ledger")
+    assert text.startswith("--- REALITY-CHECK.md") and "--- evidence/stress.txt" in text
+    assert "fx/ (" in text and "fx/file-0001.txt (" not in text.split("not shown")[0]   # summarised, not listed
+    assert len(text) <= 16000 + 200                                     # headers now count toward the budget

@@ -43,7 +43,10 @@ discarded because the same shape caught fabricated evidence on 2026-11-03. Conte
 which failures the rewrites should target, and appear in the diagnosis with the per-criterion vote
 ("unmet per X; 2 other judges marked it met") so the coach can check them against the output.
 
-**What the judge is shown.** Up to 16,000 characters of the output folder, each file labelled with its path.
+**What the judge is shown.** Up to 16,000 characters of the output folder (headers included), each file labelled
+with its path. Every file is ranked on metadata before anything is cut, so thousands of fixtures cannot hide the
+report; folders of scratch, copies or more than 50 unrecognised files go last and are summarised as one line.
+Proof files that the main report cites by path come before other proof files.
 Order: the main deliverable (the largest non-scratch file the agent mentions), then proof files (`evidence/`,
 `results/`, `logs/`… or anything mentioned by path), then other named files, then the rest, with `scratch/`,
 `work/` and `fixtures/` last. When proof files exist, the main file is capped at ~35% of the budget and the proof

@@ -63,6 +63,10 @@ End your reply with a section titled "## Evidence" listing exactly what proves e
 When the agent returns, decide the verdict:
 - **For QA agents** (`evidence-collector`, `reality-checker`): their verdict is the verdict. Default is NEEDS_WORK;
   do not argue them into a PASS.
+- **A standalone review task** (a QA agent reviewing something finished, with no builder task in this mission to
+  reopen): the task's verdict is whether the *review* met its own criteria. Record PASS for a complete, evidenced
+  review even when its finding about the subject is NEEDS WORK, and put that finding first in the evidence text
+  (e.g. `Subject verdict: NEEDS WORK, 4 reproduced gaps ...`). Record FAIL only if the review itself is incomplete.
 - **For builder agents**: PASS only if the output exists under `output_dir` and the `## Evidence` section
   addresses every acceptance criterion. Otherwise FAIL with specific feedback.
 

@@ -54,89 +54,129 @@ def excerpt(text: str, limit: int) -> str:
             " verified from the excerpt ...]\n\n" + text[-tail:])
 
 
-LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "work", "build", "dist", "copy", "copies"}
+LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "fx", "work", "build", "dist", "copy", "copies"}
 EVIDENCE_DIRS = {"evidence", "proof", "proofs", "results", "logs", "captures", "outputs"}
+BULK_DIR_FILES = 50        # an unrecognised folder with more files than this is treated like scratch
+WALK_LIMIT = 20000         # metadata only; contents are read just for the files that make it into the prompt
+NAMED_OMITTED = 25
+
+
+def _walk_all(root: Path) -> list[Path]:
+    files = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        here = Path(dirpath)
+        dirnames[:] = [d for d in dirnames if d not in JUNK_DIRS and not (here / d / "pyvenv.cfg").is_file()]
+        files += [here / f for f in filenames if not f.startswith(".")]
+        if len(files) >= WALK_LIMIT:
+            break
+    return files
 
 
 def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16000,
                 primary_chars: int = PRIMARY_CHARS, mentions: str = "") -> str:
-    """Concatenate text files under output_dir for the judge prompt, each labelled with its path in the folder.
+    """Build the judge's view of an output folder within `total` characters (headers included).
 
-    Order (each group largest first):
-      1. the main deliverable: the largest non-scratch file the evidence statement or criteria mention (else the
-         largest non-scratch file); it may use `primary_chars`;
-      2. proof files: anything under an evidence/proof/results/logs folder, or mentioned by its relative path;
-      3. other files the agent mentions by name; 4. everything else; 5. scratch/work/fixture folders last.
-    Empty files and backups (*.attempt*, *.bak) are skipped.
-    2026-11-08: QA agents keep their proof in evidence/*.txt beside a copy of the builder's code in work/ and a
-    large check script. Largest-first (then name matching, which picked the work/ copy) pushed the proof out of
-    the prompt, and listing three empty capture files made a judge report "all evidence files are empty".
+    Ranking happens on metadata for every file before anything is cut (8 Nov: a folder of 6,458 fixtures hid the
+    agent's report behind a 400-file cap). Groups, each largest first:
+      0. the main deliverable: the largest non-scratch, non-proof file the agent mentions (else the largest);
+      1. proof files the main deliverable or the agent's statement cite by path, then the other proof files
+         (anything under evidence/, proof/, results/, logs/...);
+      2. other files the agent names; 3. everything else;
+      4. scratch, work, fixtures, copies, and any unrecognised folder holding more than 50 files.
+    With proof files present the main file gets ~35% of the budget and cited proofs come first, each at least
+    ~800 characters; what does not fit is named (proof first) with a note that it exists. Empty files are skipped.
     """
     if not output_dir:
         return ""
     root = Path(output_dir)
+    if not root.is_dir():
+        return ""
+    paths = [p for p in _walk_all(root) if not is_backup(p)]
+    top_counts: dict[str, int] = {}
+    for p in paths:
+        parts = p.relative_to(root).parts
+        if len(parts) > 1:
+            top_counts[parts[0].lower()] = top_counts.get(parts[0].lower(), 0) + 1
     m = mentions.lower().replace("\\", "/")
     entries, binaries = [], []
-    for path in output_files(output_dir, max_files=400):
-        if is_backup(path):
+    for path in paths:
+        try:
+            size = path.stat().st_size
+        except OSError:
             continue
+        if size == 0:
+            continue  # empty captures (any suffix) say nothing and read as "the evidence is empty"
         rel = path.relative_to(root).as_posix()
-        try:
-            if path.stat().st_size == 0:
-                continue  # empty captures (any suffix) say nothing and read as "the evidence is empty"
-        except OSError:
-            continue
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
-            binaries.append(f"--- {rel} (binary, {path.stat().st_size} bytes) ---")
-            continue
-        try:
-            text = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
-        if not text.strip():
+            binaries.append(f"--- {rel} (binary, {size} bytes) ---")
             continue
         dirs = rel.lower().split("/")[:-1]
-        low = any(d in LOW_PRIORITY_DIRS for d in dirs)
+        proof = any(d in EVIDENCE_DIRS for d in dirs)
+        bulk = bool(dirs) and dirs[0] not in EVIDENCE_DIRS and top_counts.get(dirs[0], 0) > BULK_DIR_FILES
+        low = not proof and (bulk or any(d in LOW_PRIORITY_DIRS for d in dirs))
         by_path = "/" in rel and rel.lower() in m
-        by_name = bool(m) and path.name.lower() in m
-        proof = by_path or any(d in EVIDENCE_DIRS for d in dirs)
-        entries.append({"rel": rel, "text": text, "low": low, "proof": proof, "named": by_name or by_path})
+        named = by_path or (bool(m) and path.name.lower() in m)
+        entries.append({"path": path, "rel": rel, "size": size, "low": low, "proof": proof or by_path,
+                        "named": named, "cited": by_path})
     if not entries:
         return "\n".join(binaries[:20])
     pool = [e for e in entries if not e["low"] and not e["proof"]] or [e for e in entries if not e["low"]] or entries
-    primary = max(pool, key=lambda e: (e["named"], len(e["text"])))
+    primary = max(pool, key=lambda e: (e["named"], e["size"]))
 
-    def group(e) -> int:
+    def text_of(e) -> str:
+        if "text" not in e:
+            try:
+                e["text"] = e["path"].read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                e["text"] = ""
+        return e["text"]
+
+    cited_by_primary = text_of(primary).lower().replace("\\", "/")
+    for e in entries:  # proofs the main report points at (by path) are the ones a judge needs to check it
+        if e["proof"] and "/" in e["rel"] and e["rel"].lower() in cited_by_primary:
+            e["cited"] = True
+
+    def rank(e):
         if e is primary:
-            return 0
+            return (0, 0, 0)
         if e["low"]:
-            return 4
-        return 1 if e["proof"] else 2 if e["named"] else 3
+            return (4, 0, -e["size"])
+        if e["proof"]:
+            return (1, 0 if e["cited"] else 1, -e["size"])
+        return (2 if e["named"] else 3, 0, -e["size"])
 
-    ordered = sorted(entries, key=lambda e: (group(e), -len(e["text"])))
-    proofs = [e for e in ordered if group(e) == 1]
-    # With proof files present, the main file gets at most ~35% of the budget and the proof files share most of
-    # the rest, so a long QA report can no longer crowd out its own evidence (8 Nov: 73 of 75 files omitted).
+    ordered = sorted(entries, key=rank)
+    proofs = [e for e in ordered if rank(e)[0] == 1]
     first_limit = min(primary_chars, int(total * 0.35)) if proofs else primary_chars
-    first_used = min(len(primary["text"]), first_limit)
-    per_proof = per_file
-    if proofs:
-        per_proof = max(500, min(per_file, int((total - first_used) * 0.8) // len(proofs)))
-    chunks, used, shown = [], 0, 0
+    proof_room = int((total - min(primary["size"], first_limit)) * 0.8)
+    # small proofs cost only their size; large ones share the room, never below ~800 characters each
+    per_proof = max(800, min(per_file, proof_room // len(proofs))) if proofs else per_file
+    chunks, used, rest = [], 0, []
     for i, e in enumerate(ordered):
+        is_proof = rank(e)[0] == 1
         room = total - used
-        if room < 300 and i > 0:
-            break
-        limit = first_limit if i == 0 else per_proof if group(e) == 1 else per_file
-        body = excerpt(e["text"], min(limit, room))   # a file that does not fit whole still gets an excerpt
-        chunks.append(f"--- {e['rel']} ({len(e['text'])} chars) ---\n{body}")
-        used += len(body)
-        shown += 1
-    rest = ordered[shown:]
-    if rest:  # name what was left out, so the judge knows it exists instead of concluding it is missing
-        names = ", ".join(f"{e['rel']} ({len(e['text'])} chars)" for e in rest[:15])
-        more = f" and {len(rest) - 15} more" if len(rest) > 15 else ""
-        chunks.append(f"--- not shown to fit the prompt (they exist; do not report them as missing): {names}{more} ---")
+        if room < 400 and i > 0:
+            rest.append(e)
+            continue
+        header = f"--- {e['rel']} ({e['size']} bytes) ---\n"
+        limit = first_limit if i == 0 else per_proof if is_proof else per_file
+        body = excerpt(text_of(e), max(0, min(limit, room - len(header))))
+        chunks.append(header + body)
+        used += len(header) + len(body)
+    if rest:  # name what was left out (proof first), so the judge knows it exists instead of calling it missing
+        named = [e for e in rest if not e["low"]][:NAMED_OMITTED]
+        low_dirs: dict[str, int] = {}
+        for e in rest:
+            if e["low"]:
+                top = e["rel"].split("/")[0] + "/"
+                low_dirs[top] = low_dirs.get(top, 0) + 1
+        parts = [f"{e['rel']} ({e['size']} bytes)" for e in named]
+        hidden = len([e for e in rest if not e["low"]]) - len(named)
+        if hidden > 0:
+            parts.append(f"{hidden} more")
+        parts += [f"{d} ({n} files)" for d, n in sorted(low_dirs.items(), key=lambda kv: -kv[1])]
+        chunks.append("--- not shown to fit the prompt (they exist; do not report them as missing): "
+                      + ", ".join(parts) + " ---")
     return "\n".join(chunks + binaries[:20])
 
 
