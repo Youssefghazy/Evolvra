@@ -59,6 +59,7 @@ EVIDENCE_DIRS = {"evidence", "proof", "proofs", "results", "logs", "captures", "
 BULK_DIR_FILES = 50        # an unrecognised folder with more files than this is treated like scratch
 WALK_LIMIT = 20000         # metadata only; contents are read just for the files that make it into the prompt
 NAMED_OMITTED = 25
+LOW_SAMPLES = 3            # scratch/fixture files shown with content, as examples only
 
 
 def _walk_all(root: Path) -> list[Path]:
@@ -138,12 +139,12 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
 
     def rank(e):
         if e is primary:
-            return (0, 0, 0)
+            return (0, 0, 0, "")
         if e["low"]:
-            return (4, 0, -e["size"])
+            return (4, 0, -e["size"], e["rel"])
         if e["proof"]:
-            return (1, 0 if e["cited"] else 1, -e["size"])
-        return (2 if e["named"] else 3, 0, -e["size"])
+            return (1, 0 if e["cited"] else 1, -e["size"], e["rel"])
+        return (2 if e["named"] else 3, 0, -e["size"], e["rel"])
 
     ordered = sorted(entries, key=rank)
     proofs = [e for e in ordered if rank(e)[0] == 1]
@@ -151,13 +152,17 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
     proof_room = int((total - min(primary["size"], first_limit)) * 0.8)
     # small proofs cost only their size; large ones share the room, never below ~800 characters each
     per_proof = max(800, min(per_file, proof_room // len(proofs))) if proofs else per_file
-    chunks, used, rest = [], 0, []
+    chunks, used, rest, low_shown = [], 0, [], 0
     for i, e in enumerate(ordered):
         is_proof = rank(e)[0] == 1
         room = total - used
-        if room < 400 and i > 0:
+        # scratch/fixture files are noise: at most LOW_SAMPLES of them as examples, the rest summarised by folder
+        # (8 Nov, Windows: spare room filled with ~81 fixture files because NTFS lists them first)
+        if (room < 400 and i > 0) or (e["low"] and e is not primary and low_shown >= LOW_SAMPLES):
             rest.append(e)
             continue
+        if e["low"] and e is not primary:
+            low_shown += 1
         header = f"--- {e['rel']} ({e['size']} bytes) ---\n"
         limit = first_limit if i == 0 else per_proof if is_proof else per_file
         body = excerpt(text_of(e), max(0, min(limit, room - len(header))))

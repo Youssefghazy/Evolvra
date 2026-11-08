@@ -461,5 +461,6 @@ def test_thousands_of_fixtures_cannot_hide_the_report(tmp_path):
     (out / "REALITY-CHECK.md").write_text("Verdict: NEEDS WORK\n" + "detail " * 300, encoding="utf-8")
     text = checks.read_output(str(out), mentions="wrote REALITY-CHECK.md; evidence/ holds the ledger")
     assert text.startswith("--- REALITY-CHECK.md") and "--- evidence/stress.txt" in text
-    assert "fx/ (" in text and "fx/file-0001.txt (" not in text.split("not shown")[0]   # summarised, not listed
+    shown_fx = [line for line in text.splitlines() if line.startswith("--- fx/")]
+    assert len(shown_fx) <= checks.LOW_SAMPLES and "fx/ (" in text       # a few examples, the rest summarised
     assert len(text) <= 16000 + 200                                     # headers now count toward the budget
