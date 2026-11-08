@@ -1,143 +1,142 @@
 # Operator status (written by the local Claude Code session at the end of every working session)
 
-## Session 2026-11-08 (round 10): all 4 items handled
+## Session 2026-11-08 (round 11): all 6 items handled
 
-Local operator session, Sun 8 Nov ~10:55–11:40 AST. Opus 5.5, PowerShell only, no downloads or installs, no hand edits of records.
-The PC is slow today (Trend Micro scanning after this morning's crash); nothing timed out.
+Local operator session, Sun 8 Nov ~11:41–13:25 AST. Sonnet 5.5 (not Opus 5.5; see open question 5), PowerShell only, no downloads or installs, no hand edits of records.
+The PC is slow today (Trend Micro scanning). One interruption: my first turn ended on a usage-limit error at ~11:52 and resumed at ~12:50 (see "What broke" 1).
 
-### REVIEW.md items (round 10)
+### REVIEW.md items (round 11)
 | # | item | state |
 |---|---|---|
-| 1 | pull, tests, ruff, plugin 0.3.5, fresh session | **done.** `git pull --rebase --autostash` to `0f94695`. My uncommitted 0.3.5 bump was byte-identical to yours (blobs `5e0534b`, `13092b1`), so the tree is clean and there are 0 stashes. **71 passed** (21.3 s), ruff clean. Plugin updated 0.3.4 → **0.3.5**. A new session was started for the rest. Details below |
-| 2 | re-score the backend mission | **done.** 6 calls (3 cached, 0 errors). The QA "missing evidence" is **smaller but not gone**: Nemotron cleared it, gpt-oss still raises it. Before/after below |
-| 3 | one devops-automator mission on v2 | **done.** `20261108-080705-devops-build-a-github`: GitHub Actions CI workflow + built-ins-only PowerShell checker. Builder PASS, QA PASS, 1 attempt each |
-| 4 | `cycle.ps1` (no `-Evolve`) + STATUS | **done.** 11:28:44–11:29:53, exit 0, `push: ok` (`b1663ce`). This STATUS is committed with `-- docs/STATUS.md` |
+| 1 | pull, tests, ruff, plugin 0.3.6, fresh session | **done** (pull/tests/plugin before this session, 0.3.6 confirmed in the fresh session). **72 passed** (27.62 s), ruff clean, plugin 0.3.5 → **0.3.6** |
+| 2 | re-score the two QA-heavy missions | **done.** 9 new calls (3 cached), 0 errors, no re-run needed. **Backend QA: fixed** (0.50/0.55 `missing_verifiable_evidence` → 1.00/0.95 none). **DevOps QA: not fixed** (gpt-oss still 0.33/0.30 `missing_evidence`). Details below |
+| 3 | one devops-automator v2 mission | **done.** `20261108-084442-build-a-powershell-backup`: backup verifier. Builder PASS, QA PASS, 1 attempt each. That is **v2 task 2** |
+| 4 | one mission for an agent with few tasks | **done.** `20261108-095120-reality-check-whether-the`: **reality-checker** (had 0 tasks). Its subject verdict is **NEEDS WORK** (4 reproduced gaps in the tool); task recorded PASS. See open question 3 |
+| 5 | `cycle.ps1` (no `-Evolve`) | **done.** 13:19:42–13:21:49, exit 0, `push: ok` (`fb92f7e`) |
+| 6 | STATUS | this file, committed with `-- docs/STATUS.md` |
 
-### Item 1: devops v2 reaches missions (checked in this new session)
-- `claude plugin list`: `evolvra@evolvra` Version **0.3.5**, enabled.
-- `installed_plugins.json`: installPath `...\plugins\cache\evolvra\evolvra\0.3.5`, gitCommitSha `0f94695...`.
-- The mission skill loaded from `C:\Users\Training1\.claude\plugins\cache\evolvra\evolvra\0.3.5\skills\mission`, and the recorder path it gave was the 0.3.5 one.
-- The cached `engineering-devops-automator.md` SHA-256 is `02BE3EBC...E0A3`, the same as the repo's `plugin/agents/` file (v2). The 0.3.4 cache copy (v1) is `962F1E25...0AB4`. The 0.3.5 `MANIFEST.json` has devops-automator `"version": 2`, parent 1.
+### Item 1: plugin 0.3.6 reaches this session
+- `claude plugin list`: `evolvra@evolvra` Version **0.3.6**, enabled.
+- `installed_plugins.json`: installPath `...\plugins\cache\evolvra\evolvra\0.3.6`, gitCommitSha `9fabc3fc...`. The recorder I ran is the one in that 0.3.6 cache folder, and the evolvra agents (Backend Architect ... UX Researcher) and `evolvra:mission` / `evolve` / `report` skills load in this session.
+- Already done before the session (not repeated): pull to `9fabc3f`, tree clean, 0 stashes; persona `engineering-devops-automator.md` (`02BE3EBC...`) and `bank\devops-automator.json` (`ACF4CB0C...`) in the 0.3.6 cache equal the repo files (devops persona is still v2).
 
-### Item 2: re-score of `20261108-064726-build-a-small-stdlib` (correctness / evidence, failure class)
-"Before" = the latest rows before the run (judges 07:42–07:43Z, ensemble reaggregated 07:50Z), read with `?mode=ro`, `rubric:error` rows left out. "After" = 08:05–08:06Z.
+### Item 2: re-score (correctness / evidence, failure class)
+"Before" = the latest rows before the run (read-only, `?mode=ro`, `rubric:error` rows left out; snapshot kept in the session scratch folder). "After" = 08:42–08:44Z.
 
+**Backend mission `20261108-064726-build-a-small-stdlib`** (3 new calls; the builder's 3 were cached)
 | task | judge | before | after |
 |---|---|---|---|
-| #1 backend-architect | gpt-oss | 1.00 / 0.80 none | 1.00 / 0.80 none (cached) |
-| | Nemotron | 0.95 / 0.80 none | 0.95 / 0.80 none (cached) |
-| | Gemini | 1.00 / 0.95 none | 1.00 / 0.95 none (cached) |
+| #1 backend-architect | gpt-oss | 1.00 / 0.80 none | 1.00 / 0.80 none |
+| | Nemotron | 0.95 / 0.80 none | 0.95 / 0.80 none |
+| | Gemini | 1.00 / 0.95 none | 1.00 / 0.95 none |
 | | **ensemble** | 0.975 / 0.80 none | 0.975 / 0.80 none; fitness **0.9525** (unchanged) |
-| #2 evidence-collector | gpt-oss | 0.00 / 0.20 `missing_evidence` | **0.00 / 0.10** `missing_verifiable_evidence` ("lacks any captured command output verifying the claimed tests were actually executed") |
-| | Nemotron | 0.50 / 0.20 `missing_evidence` | **1.00 / 1.00 none** |
+| #2 evidence-collector | gpt-oss | 0.00 / 0.10 `missing_verifiable_evidence` | **1.00 / 0.90 none** |
+| | Nemotron | 1.00 / 1.00 none | 1.00 / 1.00 none |
+| | Gemini | 1.00 / 1.00 none | 1.00 / 1.00 none |
+| | **ensemble** | 0.50 / 0.55 `missing_verifiable_evidence` | **1.00 / 0.95 none**; fitness 0.645 → **0.98** |
+
+**DevOps mission `20261108-080705-devops-build-a-github`** (6 new calls, 0 cached)
+| task | judge | before | after |
+|---|---|---|---|
+| #1 devops-automator v2 | gpt-oss | 1.00 / 0.81 none | 1.00 / 0.90 none |
+| | Nemotron | 1.00 / 1.00 none | 1.00 / 1.00 none |
 | | Gemini | 1.00 / 0.95 none | 1.00 / 1.00 none |
-| | **ensemble** | 0.50 / 0.20 `missing_evidence` | **0.50 / 0.55** `missing_verifiable_evidence`; fitness 0.625 → **0.645** |
+| | **ensemble** | 1.00 / 0.88 none | 1.00 / 0.95 none; fitness 0.974 → **0.9875** |
+| #2 evidence-collector | gpt-oss | 0.33 / 0.30 `missing_evidence` | **0.33 / 0.30 `missing_evidence`** (same numbers) |
+| | Nemotron | 1.00 / 0.95 none | 0.95 / 0.95 none |
+| | Gemini | 1.00 / 0.95 none | 1.00 / 0.95 none |
+| | **ensemble** | 0.665 / 0.625 `missing_evidence` (flagged contested) | **0.64 / 0.625** `missing_evidence`; fitness **0.769** |
 
-Only task #2's prompt changed, so its 3 calls were new and task #1's 3 were cached.
+**Judge input rebuilt once, 0 API calls** (same `checks.read_output(...)` call and same `mentions` as `judge.build_prompt`; helper is a scratch file):
+| QA task | prompt chars | files shown with content | `evidence/` on disk | `evidence/` shown with content | `evidence/` omitted | empty files listed |
+|---|---|---|---|---|---|---|
+| backend #2 | 16,842 | 9 (`independent_check.py`, 7 `evidence/` files, `import_scan.py`) | 12 (5 are 0 bytes) | **7** (all non-empty ones) | **0** | **0** |
+| devops #2 | 18,084 | 15 (`QA-REPORT.md` + 14 `evidence/`) | 35 | **14** | **21** | **0** |
 
-**Answer: "missing evidence" is not fully gone.** Nemotron's false claim ("all evidence files are empty") is gone. gpt-oss still says no captured output is visible, and with the trimmed-low mean one judge is enough to hold the ensemble at 0.50.
+- Backend: the 5 empty captures are skipped, 2 `work/` copies are named as omitted. That is why gpt-oss now agrees with the others.
+- DevOps: 14 proofs show (matches the reviewer's "1 → 14"). The omitted list is **capped at 15 names** (`checks.py:138`), so 15 are named and 45 more (6 `evidence/` files and 39 `work/` copies, by my count: 35 − 14 = 21 `evidence/` omitted) are only counted as "and 45 more", not named.
+- **Why gpt-oss still marks it down:** its critique says "evidence files are referenced but not shown" for C1 and C2 (new broken cases). The `evidence/new-cases/B*` outputs are among the omitted, and they **are** named with "they exist; do not report them as missing". So the cause now is mostly the judge ignoring that line, plus a budget that cannot hold 35 proof files (500 chars each already is 17,500). I did not read its raw reply.
+- The prompt is 18,084 chars, above the 16,000 `total`, because the file headers and the omitted-names line are added on top of the body budget.
 
-**What the judge now sees** (rebuilt offline with the same `checks.read_output(...)` call as `judge.build_prompt`; 0 API calls; 14,705 chars):
-1. `independent_check.py` (6,206 chars): the main deliverable. The `work/notes_api.py` copy is no longer first, so that part of the fix works.
-2. `evidence/b1-unittest-builder-dir.txt`, `evidence/b1-unittest-copy-run1.txt`, `evidence/b1-unittest-copy-run2.txt` (2,675 chars each): **proof files now come early.**
-3. `[7 more file(s) omitted to fit the prompt]`. This includes `independent-process-check.txt`, `b3-import-scan.txt`, `00-hashes-before.txt` and `99-final-state.txt`.
-4. **The 0-byte captures are still listed:** `evidence/b1-unittest-copy-run1.txt.stdout`, `...run2.txt.stdout` and `independent-process-check.txt.stderr`, each as "(binary, 0 bytes)".
-   - Cause: in `checks.py:84-86` a file whose suffix is not in `TEXT_SUFFIXES` goes to `binaries` before the empty-file check at line 91. So "empty files are not listed" only applies to text suffixes.
-   - Fix idea (not made): `if path.stat().st_size == 0: continue` before the suffix test.
-
-gpt-oss had 3 unittest captures in front of it and still said "no captured output". So at least part of this is the judge, not the file order. See open question 2.
-
-### Item 3: devops-automator v2 mission `20261108-080705-devops-build-a-github` (micro, NEXUS)
-- **#1 devops-automator (v2), 1 attempt, PASS.**
-  - `ci.yml`, plus a byte-identical `.github/workflows/ci.yml`: push to main and pull_request; job `test` on `ubuntu-latest`; `permissions: contents: read`; matrix `"3.11"` to `"3.14"`; `actions/checkout@v5` and `actions/setup-python@v6`; `python -m unittest discover -s tests -t . -v`.
-  - `Test-Workflow.ps1`: built-ins only, with its own YAML-subset parser and 17 checks.
-    - `-Path ci.yml` gives 17/17 PASS, exit 0.
-    - `-SelfTest`: 9 good workflows are accepted, and 28 broken ones are each rejected **by the check they target**. Exit 0. A sabotaged copy exits 1.
-  - The sample project `mathkit` has 15 tests, all OK, exit 0.
-  - The builder said itself that the workflow was not run on GitHub, and that the @v5/@v6 tags and Python 3.14 on ubuntu-latest were not checked online.
-- **#2 evidence-collector (v2), 1 attempt, PASS.**
-  - It re-ran every builder criterion, with 12 non-empty evidence files.
-  - It tried 23 new workflows: 16 broken and 7 valid but unusual.
-  - The builder folder's hashes were the same before and after.
-  - It found 4 checker gaps, none of them blocking:
-    - C17 passes when unittest never runs (a `#` comment line, `if: false`, or `echo python -m unittest`).
-    - Matching is case-insensitive where it should not be (`-contains`/`-notmatch` accept `Push` and `@V5`).
-    - Event names and job/step keys are not validated (a dedented `branches:` and the typos `timeout-minute` and `whit:` are accepted).
-    - Quoted values inside one-line `{ }` maps are misread. This fails safe.
-- **Machine notes line** (Compress-Archive fails, so use in-box .NET ZipArchive; PowerShell not Git Bash) was in both handoffs. Neither agent used Git Bash or downloaded anything.
-- Nothing was registered, pushed or installed. All files stay in `~\.evolvra\missions\20261108-080705-devops-build-a-github\`.
-
-**Score lines from the 11:28 cycle (ensemble; correctness / completeness / evidence / quality):**
+### Item 3: devops-automator v2 mission `20261108-084442-build-a-powershell-backup` (micro, NEXUS)
+- **#1 devops-automator (v2), 1 attempt, PASS.** `Test-BackupSet.ps1` (+ README, `selftest-result.json`): compares a source folder with a backup folder or `.zip` by relative path and SHA-256 and reports MISSING / EXTRA / CHANGED as text and JSON. Exit 0 identical, 1 difference, 2 bad input. `-ReportPath` inside the source/backup is refused. Self-test **18/18**, exit 0; two mutated copies made it fail (16/18, 13/18). Built-ins only (System.IO, ZipFile.OpenRead). Nothing registered, installed or downloaded.
+- **#2 evidence-collector (v2), 1 attempt, PASS.** 51 cases in a harness, **50 passed**; 12 non-empty `evidence/` files; self-test re-run twice (18/18); 259-line before/after manifests identical, builder folder unchanged. One non-blocking finding: a zip with **two** wrapper folders is not matched (fails safe, exit 1; README says one level).
+- **Score lines (ensemble; completeness / correctness / evidence / quality):**
 
 | task | ensemble | per judge (correctness / evidence) |
 |---|---|---|
-| #1 devops-automator v2 | 1.00 / 1.00 / 0.88 / 0.905, none | gpt-oss 1.00 / 0.81; Nemotron 1.00 / 1.00; Gemini 1.00 / 0.95 |
-| #2 evidence-collector v2 | 0.665 / 0.70 / 0.625 / 0.90, `missing_evidence` | gpt-oss **0.33 / 0.30** `missing_evidence` ("lacks visible evidence files"); Nemotron 1.00 / 0.95; Gemini 1.00 / 0.95 |
+| #1 devops-automator v2 | 0.97 / 0.96 / 0.90 / 0.90, none | gpt-oss 0.92 / 0.85; Nemotron 1.00 / 0.90; Gemini 1.00 / 0.95 |
+| #2 evidence-collector v2 | 1.00 / 1.00 / 0.925 / 0.925, none | gpt-oss 1.00 / 0.90; Nemotron 1.00 / 1.00; Gemini 1.00 / 0.95 |
 
-- The same pattern again: gpt-oss alone marks the QA task down for evidence it was not shown.
-- The rebuilt judge input for this QA task (0 calls, 13,597 chars) is: `QA-REPORT.md` (11,419 chars), then `evidence/07-new-cases-summary.txt` (4,743 chars), then `[73 more file(s) omitted to fit the prompt]`.
-  - The main report uses `PRIMARY_CHARS` = 10,000 of the 16,000 total, so only one proof file fits.
-  - Also, the cutoff test at `checks.py:116` stops at the first file that does not fit whole, without sending a shorter excerpt of it.
-  - So a QA agent that writes a thorough report is shown with almost none of its proof.
+**DevOps Automator v2 on real work so far: 2 tasks** (CI checker 0.9875, backup verifier this mission), mean fitness **0.972** (`evolvra fitness`). v1: 4 tasks, mean 0.881. The v2 vs v1 comparison **waits for 3 or more v2 tasks**.
 
-**DevOps Automator v2 on real work so far: 1 task** (this mission's #1), fitness **0.974**. v1: 4 tasks, mean 0.881 (`evolvra fitness`).
-The v2 vs v1 comparison **waits for 3 or more v2 tasks**, as agreed. One task is not a trend.
+### Item 4: reality-checker mission `20261108-095120-reality-check-whether-the` (micro, 1 task, no builder)
+- Brief: judge whether the finished backup verifier is ready for real backups, using only evidence the agent produces. Reality-checker v1, 1 attempt.
+- Its verdict on the tool: **NEEDS WORK**, 4 blocking gaps, each reproduced:
+  - **G1** a junction in the source is skipped with only a warning, and the run still says IDENTICAL (exit 0);
+  - **G2** a duplicate zip entry hides a corrupt copy (last one wins; exit 0 or 1 depending on order);
+  - **G3** `-ReportPath` through a junction to the source is accepted and overwrote a source file;
+  - **G4** no guard for `-Source` = `-Backup` or for 0 files compared (exit 0).
+  - It also lists the exact 4 changes to reach READY and an honest untested list. 15 of 18 README claims confirmed; the "over ~260 characters may fail" caveat refuted harmlessly (370 characters worked). It disagrees with the QA task's "PASS as documented" on G1–G3.
+- 14 non-empty `evidence/` files, 25-row stress ledger (2,000 small files 12 s; 48 MB file with a 1-byte flip detected in 1.3 s), inputs unchanged by SHA-256, no screenshots.
+- **Score (ensemble; completeness / correctness / evidence / quality):** 0.75 / 0.75 / 0.90 / 0.85, `missing_required_output`, fitness **0.843**. Per judge (correctness / evidence): gpt-oss 0.75 / 0.70; Nemotron 0.75 / 0.90; Gemini 1.00 / 0.95.
+- **This score is a scorer artifact, not the agent's fault.** All three judges but Gemini say `REALITY-CHECK.md` is missing. It exists. Proven offline: the output folder has **6,458 files** (the agent's `fx/` fixtures, which my criterion 4 told it to keep in its output folder). `output_files(..., max_files=400)` cuts the sorted list before any ranking, so the first 400 are 386 `fx/` files + 14 `evidence/` files, and `REALITY-CHECK.md` sits at position 6,449. See "What broke" 2.
+- **Verdict recording:** I recorded `PASS` for the reality-checker task, with the subject verdict (NEEDS WORK) stated in the evidence text. A `NEEDS_WORK` here would only send the task back to pending (no builder to reopen), and the task's own criteria were all met. This departs from "their verdict is the verdict" in the skill, so it is open question 3.
 
 ### Ran (in order, AST)
-1. (Before this session) `git pull --rebase --autostash` to `0f94695`; `uv run pytest -q`: **71 passed in 21.33s**; `uv run ruff check .`: All checks passed!; `claude plugin marketplace update evolvra` and `claude plugin update evolvra@evolvra`: "updated from 0.3.4 to 0.3.5". Cached persona hash checked (see item 1).
-2. ~11:00 New session: `claude plugin list`, read `installed_plugins.json`, compared the persona hashes.
-3. 11:04 Read-only (`?mode=ro`) snapshot of the `scores`/`tasks`/`missions` rows for the backend mission. Read the `cycle.log` tail as bytes: the last run, 10:50:39, has an end line.
-4. 11:05:16–11:06:13 `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore` gave `judge calls=6 cached=3 errors=0`; #1 fitness 0.9525, #2 fitness 0.645. Exit 0.
-5. 11:06 Rebuilt the judge `output` block offline (`checks.read_output`), 0 API calls.
-6. 11:07–11:28 Mission `20261108-080705-devops-build-a-github`, run with the recorder: start, task add ×2, task start/done ×2, finish `done`.
-   - The builder subagent took ~12.6 min and the QA subagent ~7.2 min.
-7. 11:28:44 `.\scripts\cycle.ps1` (no `-Evolve`). This is outside the :15–:50 window, and the previous cycle had ended.
-   - `ingest: missions added=1 updated=18 invalid=0 | traces added=90 skipped=1024`
-   - `score: tasks scored=2 skipped=0 | judge calls=6 cached=0 errors=0`
-   - `reaggregate: 38/38 ensembles, 0 calls`
-   - `export: agents.json=10, missions.json=19, evolutions.json=12, summary.json=1`
-   - `push: ok`, then `[2026-11-08 11:29:53] cycle end (exit 0)`; `$LASTEXITCODE` = 0. Commit `b1663ce`.
-8. 11:30 Rebuilt the QA task's judge input offline (0 calls); `evolvra missions`, `evolvra fitness`; read `provider_usage` read-only.
+1. (Before this session) pull to `9fabc3f`, tests (72 passed), ruff, plugin update 0.3.5 → 0.3.6, cache hash check.
+2. 11:41 `claude plugin list`; read `installed_plugins.json`; read CLAUDE.md, REVIEW.md, the mission skill; checked the `cycle.log` tail (last run ended `cycle end (exit 0)` at 11:29:53).
+3. ~11:41 Read-only snapshot of the two missions' score rows ("before"). 11:42:2x `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore`: `judge calls=6 cached=3 errors=0`, exit 0. Rebuilt the judge input offline (0 calls).
+4. ~11:43 `... --mission 20261108-080705-devops-build-a-github --rescore`: `judge calls=6 cached=0 errors=0`, exit 0. After snapshot; read gpt-oss's critique (read-only).
+5. 11:44:42 Mission `20261108-084442-build-a-powershell-backup`: start, task add ×2. Builder 11:45–11:51:42, QA started 11:51:42.
+6. ~11:52 My turn ended on a usage-limit error; resumed ~12:50 (see What broke 1). Task 2 was verified from the folder, recorded `PASS` at 12:51:03, mission finished `done`.
+7. 12:51:20 Mission `20261108-095120-reality-check-whether-the`: start, task add, task start 12:51:28; reality-checker returned; task `PASS` and mission `done` at 13:19:31.
+8. 13:19:42 `.\scripts\cycle.ps1` (no `-Evolve`; outside the :15–:50 window, the previous cycle had an end line; 16:17 run not yet due):
+   - `ingest: missions added=2 updated=19 invalid=0 | traces added=160 skipped=1114`
+   - `score: tasks scored=3 skipped=0 | judge calls=9 cached=0 errors=0`
+   - `reaggregate: 41/41 ensembles, 0 calls`
+   - `export: agents.json=10, missions.json=21, evolutions.json=12, summary.json=1`
+   - `push: ok`, then `[2026-11-08 13:21:49] cycle end (exit 0)`; `$LASTEXITCODE` = 0. Commit `fb92f7e`.
+9. 13:22 `evolvra fitness`; read the new scores and `provider_usage` read-only; proved the 400-file cap offline (0 calls).
 
 ### Numbers
-- Tests 71; ruff clean (before this session).
-- Missions 19. Today: 3 missions, 6 tasks, all PASS.
-- Provider use on 8 Nov (UTC day): gemini **27**/1000, groq **22**/800, openrouter **24/40**.
+- Tests 72; ruff clean (before this session; no `core/` changes since).
+- Missions 21. Today: 5 missions (3 from round 10, 2 now).
+- Provider use on 8 Nov (UTC day): gemini **33**/1000, groq **28**/800 (113,560 tokens), openrouter **31/40**.
 - `evolvra fitness` (agent, version, tasks, mean):
-  - devops-automator v1: 4 tasks, 0.881
-  - devops-automator **v2: 1 task, 0.974**
-  - evidence-collector v1: 8 tasks, 0.872
-  - evidence-collector v2: 11 tasks, 0.895
-- The cycle's push exit code was 0 and cycle.log ends with `cycle end (exit 0)`. That was the first run with the new exit code, so the new end line shape is confirmed.
+  - reality-checker v1: 1 task, **0.843** (artifact, see item 4)
+  - devops-automator v1: 4 tasks, 0.881; **v2: 2 tasks, 0.972**
+  - evidence-collector v1: 8 tasks, 0.872; v2: 12 tasks, **0.929** (was 0.895 at 11 tasks)
+  - frontend-developer 1 task 0.936; ux-researcher 1 task 0.953 (not touched; I picked reality-checker, as it had 0)
 
 ### Verified vs not verified
-- **Verified:**
-  - Plugin 0.3.5 is enabled, and the mission skill and recorder loaded from the 0.3.5 cache.
-  - The cached persona is v2 (hash match).
-  - The before/after score rows (DB, read-only).
-  - The judge file order for both QA tasks, rebuilt locally.
-  - The checker gap in `checks.py:84-86` (code read).
-  - That the mission's output files exist. I listed the builder folder and read the self-test and unittest tails myself (`28/28`, `OK`, `EXIT CODE: 0`).
-  - Cycle exit code 0, and `push: ok`.
+- **Verified (I ran or read it myself):**
+  - Plugin 0.3.6 enabled and its cache path in use.
+  - Before/after rows for both missions (DB, read-only); the judge-input counts (rebuilt locally).
+  - That both new missions' output exists: I listed the QA folder (15 files, 0 empty, `QA-REPORT.md` ends with PASS) and the reality-checker folder (14 evidence files, 0 empty, verdict in line 1).
+  - The 400-file cap hides `REALITY-CHECK.md` (offline test).
+  - Cycle exit code 0 and `push: ok`.
 - **Not verified:**
-  - The CI workflow was **not run on GitHub**.
-  - The `@v5`/`@v6` tags and Python 3.14 on `ubuntu-latest` were not checked online.
-  - The tests ran only on Python 3.13.15.
-  - The QA agent's 23 new-case results: I read its report, but did not re-run the cases myself.
-  - Why gpt-oss says "no captured output" when 3 captures are in its prompt (I did not read its raw reply).
+  - The 18/18 self-test, the 50/51 QA cases and the 4 gaps G1–G4: I read the agents' reports and checked file existence, but did **not** re-run the script myself.
+  - gpt-oss's raw reply on the devops QA task (only its stored critique).
+  - Test-BackupSet.ps1 on PowerShell 7, UNC shares, very large trees, Zip64 (untested by both agents).
 
 ### What broke
-1. The QA "missing evidence" is still there for the backend mission (gpt-oss), and it appeared again on today's devops QA task (gpt-oss 0.33 / 0.30).
-2. 0-byte files with non-text suffixes are still listed as "(binary, 0 bytes)" (`checks.py:84-86`).
-3. A long QA report pushes nearly all proof out of the judge prompt: 73 of 75 files were omitted for the devops QA task (`PRIMARY_CHARS` 10,000 of 16,000; `checks.py:116` stops instead of sending a shorter excerpt).
-- Nothing failed in the run itself: 0 judge errors, 0 retries, cycle exit 0.
+1. **Usage-limit interruption.** My first turn ended at ~11:52 on a usage-limit error, right after QA task 2 was started. The QA subagent still finished: its folder has the full report and 12 evidence files, and its report reached me after the resume. So `mission.json` showed task 2 `running` with no verdict for about an hour (12:51:03 is the recorded end, not the real finish time). I did not relaunch (the work was complete and existed on disk) and did not resume the old agent; I recorded the verdict with the recorder. The attempt duration in the record is therefore inflated.
+2. **Scorer: file cap before ranking** (`checks.py`, `output_files(max_files=400)`): an agent with thousands of fixture files hides its own deliverable, and judges then report "missing". Caused here by my criterion telling the agent to keep fixtures in its output folder. Reality-checker fitness 0.843 and failure class `missing_required_output` are wrong because of it.
+3. **DevOps QA gpt-oss still at 0.33 / 0.30** after the new budget (item 2). The omitted names are shown, but the judge reports them as not shown.
+4. **Omitted list capped at 15 names** (`checks.py:138`): 45 of 60 omitted files in the devops QA prompt are not named.
+5. **The delivered tool is not ready** (reality-checker, G1–G4). It stays in the mission folder and was not fixed (the mission is closed; nothing depends on it).
+- No judge errors, no retries, cycle exit 0.
 
 ### Changes / commits
-- No code, test, record, trace or DB hand edits. No changes to `core/` or `plugin/`.
-- `b1663ce` cycle: refresh data (19 missions), with the re-score and the new mission exported.
+- No code, test, record, trace or DB hand edits. No changes to `core/` or `plugin/`. Nothing registered, installed or downloaded.
+- `fb92f7e` cycle: refresh data (21 missions), with both missions and the re-scores exported.
 - This STATUS: committed with `-- docs/STATUS.md`. See `git log -1 -- docs/STATUS.md`.
 
 ### Open questions
-1. **0-byte files:** skip any file with `st_size == 0` before the suffix test in `read_output`?
-2. **QA proof budget:** for QA tasks, should the main report be capped lower (for example 5,000 chars) so several `evidence/` files fit? Should the cutoff send a shorter excerpt instead of stopping? gpt-oss is the lone dissenter on 2 of the last 3 QA tasks (on the third, the 8 Nov PowerShell QA, Nemotron was). If it keeps flagging evidence that is visible, should its QA evidence verdict be marked "contested", as was done for `missing_implementation`?
-3. **Checker gaps found by QA (C17 / case / keys):** worth a bank task for devops-automator ("a CI checker must prove the test step actually runs"), since the next evolution reads real failures? It is not a failure today (the builder passed), so I left it.
+1. **Scorer file cap:** rank before cutting (for example, files named in `mentions` and the deliverable-named files first, `evidence/` next, and unknown big folders like `fx/` last), or raise `max_files` in `read_output` well above 400? Today any folder with more than 400 files can hide the main report. Should the 15-name omitted list also be raised, or sorted so the omitted `evidence/` names come first?
+2. **DevOps QA gpt-oss:** the backend case cleared once the proofs fit; the devops one (35 proof files) did not. Cap `per_proof` and the number of proofs shown (for example the 12 largest) and name the rest in one line? Or treat a lone-dissenter `missing_evidence` as `contested` too?
+3. **Recording rule for a reality-checker on a finished tool:** should `NEEDS WORK` about the *subject* be recorded as the task's `NEEDS_WORK` verdict (which just reopens its own task) or as `PASS` for a completed review, as I did? Fitness is judged from the report, so `PASS` seems right when there is no builder in the mission.
+4. **Re-running the reality-checker mission:** do you want the reality-checker rescored after the cap is fixed (`--rescore` on `20261108-095120-reality-check-whether-the`, 3 calls) to get an honest first v1 number?
+5. **Model:** this session ran on Sonnet 5.5 (what the host gave me); CLAUDE.md rule 3 says Opus 5.5. Nothing in the results depends on it, but flagging it.
