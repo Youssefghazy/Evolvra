@@ -249,3 +249,63 @@ def test_unchanged_generation_is_refused_as_replay(tmp_path, evolvra_home, monke
     with pytest.raises(engine.ReplayError):
         engine.evolve(conn, "reality-checker", plugin, opts, home=evolvra_home, _transport=transport)
     assert conn.execute("SELECT COUNT(*) FROM evolutions").fetchone()[0] == 1
+
+
+def test_rewrite_too_large_for_groq_falls_back_to_gemini(monkeypatch):
+    import os
+
+    from evolvra.evolve import diagnose, mutate
+    from evolvra.router import client
+    from evolvra.store import db
+    os.environ.setdefault("GROQ_API_KEY", "k")
+    os.environ.setdefault("GEMINI_API_KEY", "k")
+    persona = (AGENTS_DIR / "engineering-devops-automator.md").read_text(encoding="utf-8")
+    calls = []
+
+    def t(url, body, api_key, timeout):
+        calls.append(body["model"])
+        if body["model"] == "openai/gpt-oss-120b":
+            raise client.ProviderError('HTTP 413 from provider: {"error":{"message":"Request too large for model"}}')
+        return {"choices": [{"message": {"content": persona}, "finish_reason": "stop"}], "usage": {"total_tokens": 9}}
+
+    diag = diagnose.Diagnosis("devops-automator", 1, 3, 0.87, [("invalid_yaml_syntax", 1)], [])
+    cands = mutate.propose(db.connect(":memory:"), persona, diag, k=1, _transport=t)
+    assert calls == ["openai/gpt-oss-120b", "gemini-3.5-flash-lite"]
+    assert cands[0].content and cands[0].author == "gemini/gemini-3.5-flash-lite" and not cands[0].problems
+
+    def other(url, body, api_key, timeout):            # any other provider error is not retried elsewhere
+        raise client.ProviderError("HTTP 500 from provider: boom")
+    c2 = mutate.propose(db.connect(":memory:"), persona, diag, k=1, _transport=other)
+    assert c2[0].problems and "HTTP 500" in c2[0].problems[0]
+
+
+def test_plugin_hook_runs_without_a_shell():
+    import json
+    hooks = json.loads((AGENTS_DIR.parent / "hooks" / "hooks.json").read_text(encoding="utf-8"))["hooks"]
+    for event in hooks.values():
+        for h in event[0]["hooks"]:
+            assert h["command"] == "python" and h["args"] == ["${CLAUDE_PLUGIN_ROOT}/hooks/log_event.py"]
+            assert not any(tok in h["command"] for tok in ("if ", "then", ";", "&&", "|"))
+
+
+def test_generation_that_lost_rewrites_to_errors_may_run_again(tmp_path, evolvra_home, monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    plugin = _plugin_copy(tmp_path)
+    conn = db.connect(":memory:")
+    personas.import_dir(conn, plugin)
+    base = (plugin / "testing-reality-checker.md").read_text(encoding="utf-8")
+    inner = make_transport({"parent": 0.8, "c1": 0.81}, {1: _variant(base, "c1"), 2: _variant(base, "c1")})
+    state = {"failed": False}
+
+    def flaky(url, body, api_key, timeout):            # the first rewrite request fails at the provider
+        if not state["failed"] and "prompt engineer" in json.dumps(body["messages"][0]):
+            state["failed"] = True
+            raise client.ProviderError("HTTP 503 from provider: overloaded")
+        return inner(url, body, api_key, timeout)
+
+    opts = engine.EvolveOptions(candidates=1, bank_size=1, margin=0.03, actor=ACTOR, judges=JUDGES, mutator=ACTOR)
+    first = engine.evolve(conn, "reality-checker", plugin, opts, home=evolvra_home, _transport=flaky)
+    assert "mutator error" in first.candidates[0]["problems"][0]
+    engine.evolve(conn, "reality-checker", plugin, opts, home=evolvra_home, _transport=flaky)   # not a replay
+    assert conn.execute("SELECT COUNT(*) FROM evolutions").fetchone()[0] == 2

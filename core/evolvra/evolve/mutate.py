@@ -13,6 +13,10 @@ from .diagnose import Diagnosis
 
 # The mutator needs to write long, careful Markdown. gpt-oss-120b on Groq is the strongest free writer.
 DEFAULT_MUTATOR = ("groq", "openai/gpt-oss-120b")
+# Groq's free tier rejects any single request whose prompt plus requested output exceeds ~8k tokens (HTTP 413).
+# Larger personas (devops-automator, rapid-prototyper: 13-16 KB) cannot fit, so those rewrites go to Gemini,
+# whose free tier allows 250k tokens per minute. On 2026-11-06 two of three devops rewrites died this way.
+FALLBACK_MUTATOR = ("gemini", "gemini-3.5-flash-lite")
 
 SYSTEM = (
     "You are a senior prompt engineer improving one AI agent persona file. You make ONE targeted, "
@@ -54,6 +58,12 @@ class Candidate:
     lint_ok: bool = False
     problems: list[str] | None = None
     sha: str = ""
+    author: str = ""          # provider/model that wrote it (shows when the fallback was used)
+
+
+def _too_large(err: Exception) -> bool:
+    text = str(err).lower()
+    return "http 413" in text or "request too large" in text
 
 
 def mutator_from_env() -> tuple[str, str]:
@@ -82,15 +92,24 @@ def propose(conn: sqlite3.Connection, persona_text: str, diag: Diagnosis, *, k: 
     for i, target in enumerate(pick_targets(diag, k), start=1):
         prompt = PROMPT.format(persona=persona_text, diagnosis=diag.to_markdown(), target=target,
                                hint=HINTS.get(target, ""))
+        messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}]
+        author = f"{provider}/{model}"
         try:
-            res = client.chat(conn, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}],
-                              provider=provider, model=model, max_tokens=6000, temperature=0.4,
-                              _transport=_transport)
+            try:
+                res = client.chat(conn, messages, provider=provider, model=model, max_tokens=6000, temperature=0.4,
+                                  _transport=_transport)
+            except client.ProviderError as e:
+                if not _too_large(e) or (provider, model) == FALLBACK_MUTATOR:
+                    raise
+                fp, fm = FALLBACK_MUTATOR
+                author = f"{fp}/{fm}"
+                res = client.chat(conn, messages, provider=fp, model=fm, max_tokens=6000, temperature=0.4,
+                                  _transport=_transport)
             content = _clean(res.text)
         except (client.ProviderError, quota.QuotaExceeded) as e:
-            cands.append(Candidate(i, target, "", problems=[f"mutator error: {e}"]))
+            cands.append(Candidate(i, target, "", problems=[f"mutator error: {e}"], author=author))
             continue
-        cand = Candidate(i, target, content)
+        cand = Candidate(i, target, content, author=author)
         if out_dir:
             out_dir.mkdir(parents=True, exist_ok=True)
             cand.path = out_dir / f"candidate-{i}-{re.sub(r'[^a-z0-9]+', '-', target)[:40]}.md"

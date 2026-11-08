@@ -399,7 +399,9 @@ def cmd_cycle(args) -> int:
             msg = f"cycle: refresh data ({counts['missions.json']} missions)"
             if evolved:
                 msg = f"evolve({evolved.slug}): v{evolved.new_version} +{evolved.delta} | {msg}"
-            _git(repo, "commit", "-q", "-m", msg)
+            # pathspec: commit only the cycle's own files, never something another session left staged
+            # (2026-11-06: a half-finished headless STATUS.md rode along in a data commit)
+            _git(repo, "commit", "-q", "-m", msg, "--", *paths)
             code, pushed = _git(repo, "push", "-q", "origin", "HEAD")
             if code != 0:  # remote moved on (e.g. new code pushed meanwhile): rebase our commit and retry once
                 _git(repo, "pull", "-q", "--rebase", "origin", "main")

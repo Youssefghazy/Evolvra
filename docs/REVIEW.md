@@ -1,70 +1,65 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-05 ~13:30Z, after STATUS `69bfdb5` (round 6)._
+_Updated 2026-11-08, after STATUS `523bcc5` (round 7, headless run stopped early) and the weekend cycles._
 
 ## Verdict
-Round 6 was careful work. I re-checked the key numbers against the export and they hold: 16 missions, 32 tasks;
-devops-automator 0.856 over 3 tasks, still the weakest; v2 0.933 vs v1 0.872 for Evidence Collector.
-- The per-judge table (verdicts, sd, who was strictest) is exactly the evidence I needed to decide the judge questions.
-- Correcting your own "all 12 were cap errors" claim to "2 proven" before committing was right. Keep doing that.
-- The `Compress-Archive` deviation was disclosed by the builder, reproduced by QA, and the unproven cause was
-  labelled as unproven. That is the honest-records rule working.
+The weekend ran unattended and safely: 10 cycles, all pushed, no alerts reported. Stopping the headless run at the
+first denied tool call was exactly the stop rule. The reaggregate output (6 contested of 32, 0 calls) matches my preview.
 
-## Decisions on your open questions (implemented: tests 66, ruff clean, plugin 0.3.3)
-1. **Criterion rewriting: fixed at the source, and lone dissent is now labelled.**
-   - The judge prompt numbers the criteria (`C1. ...`). Judges answer per id, and are told to read each
-     criterion literally (the "exactly two features" example is in the prompt).
-   - `normalize_acceptance` maps answers back to the criteria as written. An entry that matches none is kept but
-     marked `rewritten` and left out of the evolution diagnosis.
-   - **Your second question: should one judge's class win when the other two gave correctness 1.0?** For the
-     score, yes (unchanged). That is exactly the 3 Nov fabricated-evidence shape (1.0/1.0/0.4), where the lone
-     strict judge was right, so I will not discard it automatically.
-   - Instead, the ensemble now records **`contested_by`** when the failure class comes from a single judge, no other
-     judge raised any failure, and at least two others put correctness at the ceiling.
-   - A contested class:
-     - shows as `(contested)` in `evolvra fitness`;
-     - loses ties to uncontested classes;
-     - is **not counted** when the diagnosis ranks which failures the rewrites target;
-     - appears in the diagnosis with the vote ("unmet per X; 2 other judges marked it met"), so the coach checks
-       it against the output.
-   - Preview on the exported data: **6 of 32** ensembles become contested, including the announcement task
-     (gpt-oss 0.4 vs 1.0/1.0). One of them (rank-a-12-item #2, gpt-oss 0.2 vs 0.95/1.0) may be a real catch. That is
-     why the label is informational and the score is untouched.
-2. **Nemotron's budget:** it now gets 2400 output tokens on the first try, with no 900-token attempt to throw away.
-   OpenRouter's free tier counts requests, not tokens, so this should bring it to about 1 request per verdict
-   (about 35–38 verdicts a day instead of about 20). Please confirm from the cache (`finish=length` count).
-3. **Do NOT run a full `score --rescore`.** The judge prompt changed, so the cache no longer matches and every task
-   would be a fresh call: about 96 calls and about 190k Groq tokens, more than a day's budget.
-   - The 11 Qwen-era ensembles are valid 3-judge verdicts; leave them.
-   - Rule changes now reach old verdicts through **`evolvra reaggregate`** (0 API calls), which `cycle` also runs
-     on every run.
-4. **Leniency mix:** keep it for now. The ceiling rule was built for exactly two lenient judges plus one strict one.
-   Point 1 stops the strict judge from steering evolution alone when both others found nothing.
-   - Revisit after a week of data. If gpt-oss is still the strictest on about 90% of tasks, the next step is
-     per-judge calibration (subtract each judge's mean offset), not dropping it.
-5. **Zips:** yes. The mission skill now has a **Machine notes** line in every handoff. Current notes:
-   - `Compress-Archive` fails on this PC; in-box .NET `System.IO.Compression.ZipArchive`/`ZipFile` is allowed.
-   - PowerShell, not Git Bash.
+Three generations ran, all refused, all honest:
 
-Also fixed from your report:
-- Error rows are now stored even when the coverage guard keeps an older ensemble, so a missing verdict's cause is
-  never lost again. A judge that answers later clears its stale error row.
-- `scripts/cycle.ps1` sets `PYTHONIOENCODING=utf-8`, so the cp1252 crash you hit cannot happen inside the cycle.
+| gen | agent | best paired delta | candidates that played |
+|---|---|---|---|
+| 9 | devops-automator v1 | +0.6% | **1 of 3**: 2 lost to HTTP 413 |
+| 10 | backend-architect v1 | +1.5% | 3 of 3 |
+| 11 | growth-hacker v1 | +0.5% | 3 of 3 |
 
-## Requested now (short round)
-1. `git pull`; refresh the plugin to **0.3.3** (`claude plugin marketplace update evolvra`,
-   `claude plugin update evolvra@evolvra`, restart); tests: **expect 66**; ruff clean.
-2. `cd core; uv run evolvra reaggregate`. Report the contested list it prints, then run `uv run evolvra fitness`.
-   - Expect content-creator's top failure to show `(contested)` or to change.
-   - Commit nothing by hand; the next cycle exports it.
-3. Let the scheduled **6 Nov 04:17 AST** run evolve devops-automator. It pulls first, so it uses this code. Next
-   session, report:
-   - the result: promoted or refused, the delta, and the 4 candidate targets;
-   - verdicts and errors per judge in the tournament;
-   - OpenRouter requests vs Nemotron verdicts (expect about 1:1);
-   - whether the diagnosis file shows any `contested` lines.
-4. After that, if OpenRouter has at least 8 requests left: `uv run evolvra score --mission
-   20261105-072406-write-a-product-announcement --rescore` (6 fresh calls). Report whether gpt-oss now answers
-   by id and whether the "each paragraph" misread is gone.
-5. One mission for **backend-architect** (second weakest, 0.863, only 2 tasks), using the Machine notes line in
-   the handoff. Then `.\scripts\cycle.ps1`. STATUS as usual.
+Generations 10 and 11 were fair: the parents already score 0.90–0.94 on their banks, so the +3-point gate has
+little room. Generation 9 was **not** fair. Two problems surfaced, and I fixed both (see below).
+
+## Fixed this round (tests 69, ruff clean, plugin 0.3.4)
+1. **Rewrites too large for Groq.**
+   - Groq's free tier rejects a single request whose prompt plus requested output exceeds ~8k tokens (HTTP 413).
+     The devops persona is 13.7 KB, and the rewrite asks for 6,000 output tokens.
+   - On a 413 the mutator now falls back to Gemini Flash-Lite and records the author of each candidate.
+   - rapid-prototyper (15.8 KB) would have hit the same wall.
+2. **Replay guard vs. lost rewrites.** A generation that lost rewrites to provider errors no longer counts as a
+   finished test, so devops-automator may run again even though its diagnosis is unchanged.
+3. **Cycle committed someone else's staged file.** The headless run had staged `docs/STATUS.md` when it stopped, and
+   the 10:17 cycle's commit carried it (`523bcc5` is titled "cycle: refresh data" but contains your STATUS).
+   The cycle now commits only its own paths.
+4. **Git Bash from the plugin hook (your round-7 finding).** The trace hook was a bash `if … then … fi` command, so
+   Claude Code started Git Bash on every tool call. It now uses the documented **exec form**
+   (`"command": "python", "args": [".../log_event.py"]`), which starts no shell at all. This is a likely source of the
+   Apex One alerts, but that is still unproven; please verify (item 2).
+
+## Decisions on your open questions (round 7)
+1. **Headless permissions:** don't widen them. The denial worked as intended. For future unattended runs,
+   redirect slow commands to a file inside the repo's own scratch path that is already readable (for example
+   `... *> .evolvra-out.txt`, gitignored), rather than allowing Read on the temp folder.
+2. **`fitness` over 120 s:** on this machine pytest also took 47 s (it takes 1 s on Linux), so the likely cause is
+   on-access scanning of Python processes, not the database. Please measure it once (item 3) so we know.
+3. **The rest (fitness check, the 04:17 report, the announcement re-score):** they are folded into today's list.
+
+## Requested now (Youssef is present)
+1. `git pull`; refresh the plugin to **0.3.4** (`claude plugin marketplace update evolvra`,
+   `claude plugin update evolvra@evolvra`), then **restart Claude Code**. Tests: **expect 69**; ruff clean.
+2. **Verify the hook change** (important for the network admin):
+   - In PowerShell, run `Get-Process bash -ErrorAction SilentlyContinue | Measure-Object` and note the count.
+   - In the restarted Claude Code, run any 3 tool calls (e.g. read 3 files).
+   - Run the bash count again: it should not have risen.
+   - `~\.evolvra\traces.jsonl` should have grown by about 3 lines.
+   - If traces did **not** grow, Claude Code may be too old for exec form. Report the version
+     (`claude --version`) and do not run missions until we fix it, because missions need traces.
+3. Measure once: `Measure-Command { uv run evolvra fitness }` (in `core`). Report the seconds and the table,
+   including whether content-creator shows `(contested)`.
+4. From the DB and `~\.evolvra\evolutions\`, report generations 9–11:
+   - verdicts and errors per judge in each tournament;
+   - OpenRouter requests vs Nemotron verdicts (expect about 1:1 now);
+   - whether any diagnosis contains "contested".
+5. **One devops-automator mission** (it is the weakest, and gen 9 never got a fair test): a PowerShell 5.1 script
+   with `-WhatIf` and `-SelfTest`, and the Machine notes line in the handoff. Then **one backend-architect mission**
+   if time allows. Then `.\scripts\cycle.ps1` (no `-Evolve`: the scheduled run handles evolution).
+6. If OpenRouter has at least 8 requests left: `uv run evolvra score --mission
+   20261105-072406-write-a-product-announcement --rescore`, and say whether gpt-oss now answers by id.
+7. STATUS as usual. Commit it with `git commit -m '...' -- docs/STATUS.md` (pathspec, so nothing else rides along).

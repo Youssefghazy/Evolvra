@@ -1,6 +1,6 @@
 {
   "name": "evolvra",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A self-evolving AI agency. Runs specialist agents on missions, scores their work with evidence, and evolves the weakest personas. Survival of the promptest.",
   "author": {
     "name": "Youssef Ghazy",

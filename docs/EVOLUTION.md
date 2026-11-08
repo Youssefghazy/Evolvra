@@ -52,7 +52,14 @@ missions plus one generation fits, two generations do not.
 
 **Replay guard.** If the target's persona version and diagnosis are identical to its last generation, the
 cached proposals would replay that generation byte for byte (it happened on 2026-11-05). The engine refuses it
-and the cycle moves to the next weakest agent. Only current persona versions are eligible targets.
+and the cycle moves to the next weakest agent. Only current persona versions are eligible targets. Exception: if
+the last generation lost rewrites to provider errors (errors are not cached), it was an unfinished test, not a
+result, so the same agent may run again.
+
+**Large personas.** Groq's free tier rejects a single request whose prompt plus requested output exceeds ~8k tokens
+(HTTP 413). A rewrite of a 13–16 KB persona (devops-automator, rapid-prototyper) cannot fit, so on a 413 the
+mutator falls back to Gemini `gemini-3.5-flash-lite` (250k tokens per minute on the free tier) and records which
+model wrote each candidate. On 2026-11-06 two of three devops-automator rewrites were lost this way.
 
 ## Budget
 Calls per generation ≈ K + (1 + K_valid) × bank_size × (1 + judges). Defaults (K=3, bank 4, 3 judges)

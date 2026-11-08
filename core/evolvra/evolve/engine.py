@@ -18,6 +18,17 @@ class ReplayError(ValueError):
     """Same persona version and same diagnosis as the last generation: the cached proposals would replay it."""
 
 
+def _lost_candidates(last) -> bool:
+    """True when the last generation lost rewrites to provider errors (not to their own content). Errors are not
+    cached, so a retry gets those rewrites for real instead of replaying; it is not a replay but an unfinished test.
+    2026-11-06: two of three devops-automator rewrites never existed (HTTP 413 on Groq)."""
+    try:
+        cands = json.loads(last["candidate_versions_json"] or "[]")
+    except (TypeError, ValueError):
+        return False
+    return any(any("mutator error" in str(p) for p in (c.get("problems") or [])) for c in cands if isinstance(c, dict))
+
+
 @dataclass
 class EvolveOptions:
     candidates: int = 3
@@ -83,9 +94,9 @@ def evolve(conn: sqlite3.Connection, slug: str, plugin_agents_dir: Path, opts: E
     diag = diagnose_mod.diagnose(conn, slug)
     agent_row = conn.execute("SELECT id FROM agents WHERE slug = ?", (slug,)).fetchone()
     last = conn.execute(
-        "SELECT diagnosis_md FROM evolutions WHERE agent_id = ? AND parent_version = ? ORDER BY id DESC LIMIT 1",
-        (agent_row["id"], diag.version)).fetchone()
-    if last and last["diagnosis_md"] == diag.to_markdown() and not opts.dry_run:
+        "SELECT diagnosis_md, candidate_versions_json FROM evolutions WHERE agent_id = ? AND parent_version = ?"
+        " ORDER BY id DESC LIMIT 1", (agent_row["id"], diag.version)).fetchone()
+    if last and last["diagnosis_md"] == diag.to_markdown() and not opts.dry_run and not _lost_candidates(last):
         raise ReplayError(f"{slug} v{diag.version}: nothing changed since its last generation (same persona, same"
                           " diagnosis); it would replay from cache")
     stamp = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
