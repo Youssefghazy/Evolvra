@@ -1,158 +1,143 @@
 # Operator status (written by the local Claude Code session at the end of every working session)
 
-## Session 2026-11-08 (round 9): all 5 items handled
+## Session 2026-11-08 (round 10): all 4 items handled
 
-Interactive session, Sun 8 Nov ~10:28–11:00 AST, Youssef present. Opus 5.5, PowerShell only, no downloads or installs.
+Local operator session, Sun 8 Nov ~10:55–11:40 AST. Opus 5.5, PowerShell only, no downloads or installs, no hand edits of records.
+The PC is slow today (Trend Micro scanning after this morning's crash); nothing timed out.
 
-**Before the round (Youssef's request):** the PC was slow, so I checked it read-only.
-- RAM: 1.8 of 15.8 GB free. Disk: 344% busy, queue 7. CPU: 40%.
-- The main load was Trend Micro scanning: `TMBMSRV` 47–67% CPU and up to 150 MB/s I/O, probably after this morning's crash and restart.
-- There were no leftovers from our sessions: no uv, no Evolvra python, no bash/sh, no `claude -p`.
-- WSL is running the Wasl monitoring containers (Prometheus, n8n, Grafana), so `wsl --shutdown` was not run.
-- Nothing was stopped.
-
-### REVIEW.md items (round 9)
+### REVIEW.md items (round 10)
 | # | item | state |
 |---|---|---|
-| 1 | pull, tests, ruff | **done.** The pull first failed on 2 uncommitted version files (see the 10:17 cycle section), so I pulled with `--autostash`. **70 passed** (10.3 s), ruff clean |
-| 2 | re-score the two 8 Nov missions | **done.** 12 judge calls, 1 Nemotron error ("unparseable judge output"). A second re-score of the devops mission fixed it: 1 fresh call, 5 cached. Before/after below. `missing_implementation` and the devops QA "missing evidence" are **gone**. The backend QA "missing evidence" **remains**, and the cause is the scorer, not the agent (below) |
-| 3 | generation 12 | **done**: devops-automator v1 → **v2 PROMOTED** (+0.0575). See below. The 10:17 cycle's commit was **not pushed**; the cause is below |
-| 4 | `cycle.ps1` (no `-Evolve`) | **done.** Started at 10:50:31, after the :15–:50 window. `push: ok`. It pushed the rebased 10:17 commit `40d17ef` and its own `fbaa029` |
-| 5 | `stash@{0}` | **already gone.** It was dropped earlier today with Youssef's OK, at the end of round 8. `git stash list` is empty |
+| 1 | pull, tests, ruff, plugin 0.3.5, fresh session | **done.** `git pull --rebase --autostash` to `0f94695`. My uncommitted 0.3.5 bump was byte-identical to yours (blobs `5e0534b`, `13092b1`), so the tree is clean and there are 0 stashes. **71 passed** (21.3 s), ruff clean. Plugin updated 0.3.4 → **0.3.5**. A new session was started for the rest. Details below |
+| 2 | re-score the backend mission | **done.** 6 calls (3 cached, 0 errors). The QA "missing evidence" is **smaller but not gone**: Nemotron cleared it, gpt-oss still raises it. Before/after below |
+| 3 | one devops-automator mission on v2 | **done.** `20261108-080705-devops-build-a-github`: GitHub Actions CI workflow + built-ins-only PowerShell checker. Builder PASS, QA PASS, 1 attempt each |
+| 4 | `cycle.ps1` (no `-Evolve`) + STATUS | **done.** 11:28:44–11:29:53, exit 0, `push: ok` (`b1663ce`). This STATUS is committed with `-- docs/STATUS.md` |
 
-### The 10:17 scheduled cycle: why nothing reached GitHub
-The facts, all from `cycle.log`, `git log` and reflog:
-- `10:17:59` cycle start (evolve=True). It pulled first, when origin was at `9c2719f`.
-- `10:26:02` evolve: `PROMOTED devops-automator v1 -> v2 (candidate 1, paired delta +0.0575 on 2 shared task(s), fitness 0.875 -> 0.9325)`.
-- `10:26:14` the reviewer pushed `17d5b34` while the cycle was still running.
-- `10:27:04` the cycle committed `7e01312` "evolve(devops-automator): v2 +0.0575 | cycle: refresh data (18 missions)".
-  - It contains the dashboard data, `plugin/agents/MANIFEST.json` and `engineering-devops-automator.md`.
-- The push was then **rejected**: `! [rejected] HEAD -> main (fetch first)`.
-- `10:28:05` cycle end. The task result is still 0, because `cycle.ps1` exits 0 when the push fails. **A result of 0 does not mean it was pushed.**
-- I rebased it onto `17d5b34` (now `40d17ef`). My own cycle (item 4) pushed it.
+### Item 1: devops v2 reaches missions (checked in this new session)
+- `claude plugin list`: `evolvra@evolvra` Version **0.3.5**, enabled.
+- `installed_plugins.json`: installPath `...\plugins\cache\evolvra\evolvra\0.3.5`, gitCommitSha `0f94695...`.
+- The mission skill loaded from `C:\Users\Training1\.claude\plugins\cache\evolvra\evolvra\0.3.5\skills\mission`, and the recorder path it gave was the 0.3.5 one.
+- The cached `engineering-devops-automator.md` SHA-256 is `02BE3EBC...E0A3`, the same as the repo's `plugin/agents/` file (v2). The 0.3.4 cache copy (v1) is `962F1E25...0AB4`. The 0.3.5 `MANIFEST.json` has devops-automator `"version": 2`, parent 1.
 
-**Engine bug found (not fixed, see open question 1):**
-- On a promotion, `evolve/engine.py` `bump_plugin_version` writes the plugin version to 0.3.5 in two files: `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`.
-- But `cmd_cycle` stages only `dashboard/public/data` and `plugin/agents` (`cli.py:393-396`).
-- So the version bump was left uncommitted. That is what blocked my first `git pull --rebase`.
-- Effects:
-  - GitHub still says 0.3.4, so `claude plugin update` will not deliver devops-automator v2 to installed copies.
-  - The next promotion would bump the local file again, to 0.3.6, while GitHub stays at 0.3.4.
-- This came in with round 8's "cycle commits only its own paths" change.
-- The two files are still uncommitted in the working tree.
-
-### Generation 12 (devops-automator v1, `~\.evolvra\evolutions\20261108-071913-devops-automator`, DB `evolutions.id=12`)
-- **Outcome:** PROMOTED v1 → v2. Winner: candidate 1. Paired delta **+0.0575** on 2 shared tasks; the margin is 0.03.
-- **Bank** (2 seed tasks): a Vite GitHub Pages workflow, and a crash-loop runbook.
-
-| candidate | target | author | fitness | paired delta |
-|---|---|---|---|---|
-| parent v1 | - | - | 0.875 | - |
-| 1 (winner) | invalid_yaml_syntax | **Groq** gpt-oss-120b | 0.9325 | +0.0575 |
-| 2 | weak_evidence | **Gemini** Flash-Lite (fallback) | 0.895 | +0.02 |
-| 3 | missing_acceptance_criteria_check | **Gemini** Flash-Lite (fallback) | 0.9025 | +0.0275 |
-
-- **All 3 rewrites played this time** (gen 9: 1 of 3).
-- **Authors are inferred, not recorded.** `mutate.Candidate.author` exists, but it is written neither to `result.json` nor to the DB.
-  - I matched each candidate file to its cached rewrite by size: file size = cached text + 437/438 header bytes. Groq 13,897 chars at 07:19:24Z; Gemini 14,122 at 07:19:33Z; Gemini 13,995 at 07:21:03Z.
-  - The Groq 413s that triggered the fallback are not visible, because errors are not cached.
-- **LLM calls during the run** (llm_cache, 07:17–07:29Z): 28 in total.
-  - 3 rewrites.
-  - 6 plays, all made by **Gemini**. The parent's 2 plays came from the cache.
-  - 19 judge verdicts: gpt-oss **6**, Gemini **6**, Nemotron **7**.
-    - Nemotron's extra call (07:22:53Z) came before any new play. I think it re-judged the parent; not verified.
-  - **0 judge errors:** every persona has scores for both tasks.
-- **OpenRouter today:** 20 requests by the end of my re-scores (14 at the start of the session).
-- **"contested" in the diagnosis:** one line, line 104 of `diagnosis.md`, for `missing_implementation` on the 8 Nov script. It reads: "raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met".
-
-### Re-score before → after (fixed scorer; correctness / evidence, failure class)
-"Before" = the 06:54–06:56Z judge rows, plus the ensemble reaggregated at 07:19Z. "After" = 07:41–07:44Z.
+### Item 2: re-score of `20261108-064726-build-a-small-stdlib` (correctness / evidence, failure class)
+"Before" = the latest rows before the run (judges 07:42–07:43Z, ensemble reaggregated 07:50Z), read with `?mode=ro`, `rubric:error` rows left out. "After" = 08:05–08:06Z.
 
 | task | judge | before | after |
 |---|---|---|---|
-| devops #1 devops-automator | gpt-oss | 0.50 / 0.40 `missing_implementation` | 0.75 / 0.60 `missing_selftest_verification` ("cannot be verified from the provided excerpt") |
-| | Nemotron | 0.95 / 0.80 none | 1.00 / 0.80 none |
-| | Gemini | 1.00 / 0.90 none | 1.00 / 0.90 none |
-| | **ensemble** | 0.725 / 0.80 `missing_implementation` (contested) | **0.875 / 0.80** `missing_selftest_verification` (contested by gpt-oss); fitness 0.9025 |
-| devops #2 evidence-collector | gpt-oss | 0.90 / 0.90 none | 1.00 / 0.92 none |
-| | Nemotron | 0.30 / 0.20 `missing_evidence_output` | 0.90 / 0.85 none (1st try: unparseable; retry OK) |
-| | Gemini | 1.00 / 1.00 none | 1.00 / 1.00 none |
-| | **ensemble** | 0.90 / 0.90 `missing_evidence_output` | **0.95 / 0.92 none**; fitness 0.9595 |
-| backend #1 backend-architect | gpt-oss | 1.00 / 0.70 none | 1.00 / 0.80 none |
-| | Nemotron | 0.95 / 0.80 none | 0.95 / 0.80 none |
-| | Gemini | 1.00 / 0.90 none | 1.00 / 0.95 none |
-| | **ensemble** | 0.975 / 0.80 none | 0.975 / 0.80 none; fitness 0.9525 |
-| backend #2 evidence-collector | gpt-oss | 0.00 / 0.00 `missing_verifiable_evidence` | 0.00 / 0.20 `missing_evidence` |
-| | Nemotron | 0.50 / 0.10 `missing_evidence` | 0.50 / 0.20 `missing_evidence` ("all evidence files are empty (0 bytes)": **false**) |
-| | Gemini | 1.00 / 0.90 none | 1.00 / 0.95 none |
-| | **ensemble** | 0.50 / 0.10 `missing_verifiable_evidence` | 0.50 / 0.20 `missing_evidence`; fitness 0.625 |
+| #1 backend-architect | gpt-oss | 1.00 / 0.80 none | 1.00 / 0.80 none (cached) |
+| | Nemotron | 0.95 / 0.80 none | 0.95 / 0.80 none (cached) |
+| | Gemini | 1.00 / 0.95 none | 1.00 / 0.95 none (cached) |
+| | **ensemble** | 0.975 / 0.80 none | 0.975 / 0.80 none; fitness **0.9525** (unchanged) |
+| #2 evidence-collector | gpt-oss | 0.00 / 0.20 `missing_evidence` | **0.00 / 0.10** `missing_verifiable_evidence` ("lacks any captured command output verifying the claimed tests were actually executed") |
+| | Nemotron | 0.50 / 0.20 `missing_evidence` | **1.00 / 1.00 none** |
+| | Gemini | 1.00 / 0.95 none | 1.00 / 1.00 none |
+| | **ensemble** | 0.50 / 0.20 `missing_evidence` | **0.50 / 0.55** `missing_verifiable_evidence`; fitness 0.625 → **0.645** |
 
-**Answers:**
-- `missing_implementation`: **gone.** gpt-oss now says it "cannot be verified from the excerpt", as the new marker asks.
-- The devops QA "missing evidence": **gone.**
-- The backend QA "missing evidence": **not gone, and it is still the scorer.**
-  - I rebuilt the judge's `output` block with the same `read_output(...)` call `judge.build_prompt` makes. That costs 0 API calls.
-  - It sends `work/notes_api.py` first. That file is a 13,872-char copy of the builder's file. It counts as "mentioned" by its bare name from the criteria, which beats its low-priority `work/` folder.
-  - Then it sends `independent_check.py`, and then `[11 more file(s) omitted to fit the prompt]`.
-  - Every real proof file is in that omitted group: `evidence/b1-unittest-*.txt` (2,705 B each), `independent-process-check.txt` (2,702 B), `b3-import-scan.txt`, `00-hashes-before.txt` and `99-final-state.txt`.
-  - The block also lists three 0-byte capture files (`*.stdout`, `*.stderr`) as "binary, 0 bytes". Their suffix is not in `TEXT_SUFFIXES`. That is where Nemotron's "all evidence files are empty" came from.
-  - The devops QA task only partly escaped: `check-independent-run.ps1` and `evidence/03-b3-selftest-runs.txt` were sent, and 8 more files were omitted.
+Only task #2's prompt changed, so its 3 calls were new and task #1's 3 were cached.
+
+**Answer: "missing evidence" is not fully gone.** Nemotron's false claim ("all evidence files are empty") is gone. gpt-oss still says no captured output is visible, and with the trimmed-low mean one judge is enough to hold the ensemble at 0.50.
+
+**What the judge now sees** (rebuilt offline with the same `checks.read_output(...)` call as `judge.build_prompt`; 0 API calls; 14,705 chars):
+1. `independent_check.py` (6,206 chars): the main deliverable. The `work/notes_api.py` copy is no longer first, so that part of the fix works.
+2. `evidence/b1-unittest-builder-dir.txt`, `evidence/b1-unittest-copy-run1.txt`, `evidence/b1-unittest-copy-run2.txt` (2,675 chars each): **proof files now come early.**
+3. `[7 more file(s) omitted to fit the prompt]`. This includes `independent-process-check.txt`, `b3-import-scan.txt`, `00-hashes-before.txt` and `99-final-state.txt`.
+4. **The 0-byte captures are still listed:** `evidence/b1-unittest-copy-run1.txt.stdout`, `...run2.txt.stdout` and `independent-process-check.txt.stderr`, each as "(binary, 0 bytes)".
+   - Cause: in `checks.py:84-86` a file whose suffix is not in `TEXT_SUFFIXES` goes to `binaries` before the empty-file check at line 91. So "empty files are not listed" only applies to text suffixes.
+   - Fix idea (not made): `if path.stat().st_size == 0: continue` before the suffix test.
+
+gpt-oss had 3 unittest captures in front of it and still said "no captured output". So at least part of this is the judge, not the file order. See open question 2.
+
+### Item 3: devops-automator v2 mission `20261108-080705-devops-build-a-github` (micro, NEXUS)
+- **#1 devops-automator (v2), 1 attempt, PASS.**
+  - `ci.yml`, plus a byte-identical `.github/workflows/ci.yml`: push to main and pull_request; job `test` on `ubuntu-latest`; `permissions: contents: read`; matrix `"3.11"` to `"3.14"`; `actions/checkout@v5` and `actions/setup-python@v6`; `python -m unittest discover -s tests -t . -v`.
+  - `Test-Workflow.ps1`: built-ins only, with its own YAML-subset parser and 17 checks.
+    - `-Path ci.yml` gives 17/17 PASS, exit 0.
+    - `-SelfTest`: 9 good workflows are accepted, and 28 broken ones are each rejected **by the check they target**. Exit 0. A sabotaged copy exits 1.
+  - The sample project `mathkit` has 15 tests, all OK, exit 0.
+  - The builder said itself that the workflow was not run on GitHub, and that the @v5/@v6 tags and Python 3.14 on ubuntu-latest were not checked online.
+- **#2 evidence-collector (v2), 1 attempt, PASS.**
+  - It re-ran every builder criterion, with 12 non-empty evidence files.
+  - It tried 23 new workflows: 16 broken and 7 valid but unusual.
+  - The builder folder's hashes were the same before and after.
+  - It found 4 checker gaps, none of them blocking:
+    - C17 passes when unittest never runs (a `#` comment line, `if: false`, or `echo python -m unittest`).
+    - Matching is case-insensitive where it should not be (`-contains`/`-notmatch` accept `Push` and `@V5`).
+    - Event names and job/step keys are not validated (a dedented `branches:` and the typos `timeout-minute` and `whit:` are accepted).
+    - Quoted values inside one-line `{ }` maps are misread. This fails safe.
+- **Machine notes line** (Compress-Archive fails, so use in-box .NET ZipArchive; PowerShell not Git Bash) was in both handoffs. Neither agent used Git Bash or downloaded anything.
+- Nothing was registered, pushed or installed. All files stay in `~\.evolvra\missions\20261108-080705-devops-build-a-github\`.
+
+**Score lines from the 11:28 cycle (ensemble; correctness / completeness / evidence / quality):**
+
+| task | ensemble | per judge (correctness / evidence) |
+|---|---|---|
+| #1 devops-automator v2 | 1.00 / 1.00 / 0.88 / 0.905, none | gpt-oss 1.00 / 0.81; Nemotron 1.00 / 1.00; Gemini 1.00 / 0.95 |
+| #2 evidence-collector v2 | 0.665 / 0.70 / 0.625 / 0.90, `missing_evidence` | gpt-oss **0.33 / 0.30** `missing_evidence` ("lacks visible evidence files"); Nemotron 1.00 / 0.95; Gemini 1.00 / 0.95 |
+
+- The same pattern again: gpt-oss alone marks the QA task down for evidence it was not shown.
+- The rebuilt judge input for this QA task (0 calls, 13,597 chars) is: `QA-REPORT.md` (11,419 chars), then `evidence/07-new-cases-summary.txt` (4,743 chars), then `[73 more file(s) omitted to fit the prompt]`.
+  - The main report uses `PRIMARY_CHARS` = 10,000 of the 16,000 total, so only one proof file fits.
+  - Also, the cutoff test at `checks.py:116` stops at the first file that does not fit whole, without sending a shorter excerpt of it.
+  - So a QA agent that writes a thorough report is shown with almost none of its proof.
+
+**DevOps Automator v2 on real work so far: 1 task** (this mission's #1), fitness **0.974**. v1: 4 tasks, mean 0.881 (`evolvra fitness`).
+The v2 vs v1 comparison **waits for 3 or more v2 tasks**, as agreed. One task is not a trend.
 
 ### Ran (in order, AST)
-1. Read-only PC check (processes, disk, `wsl -l -v`, podman ps, cycle.log). Nothing was stopped.
-2. `git pull --rebase`. Refused because of 2 unstaged files. `git fetch` + diff + cycle.log showed why. Then `git pull --rebase --autostash`: `7e01312` rebased to `40d17ef` on top of `17d5b34`, and the autostash was re-applied.
-3. 10:38 `uv run pytest -q` → `70 passed in 10.27s`. `uv run ruff check .` → `All checks passed!`
-4. Read-only (`?mode=ro`) queries: `evolutions`, `llm_cache`, `provider_usage`, `scores`. Also read the gen-12 folder.
-5. 10:40 `uv run evolvra score --mission 20261108-063451-write-a-powershell-5 --rescore` → 6 calls, 1 error.
-   10:42 `... 20261108-064726-build-a-small-stdlib --rescore` → 6 calls, 0 errors.
-   10:44 devops again → 6 calls, 5 cached, 0 errors.
-6. Rebuilt the judge input with `checks.read_output` (0 API calls).
-7. 10:50:30 `.\scripts\cycle.ps1` (no `-Evolve`), in 8 s:
-   - The pull used autostash. PowerShell 5.1 printed the "Applied autostash." stderr line as a red `NativeCommandError`, which is only display.
-   - `ingest: missions added=0 updated=18 | traces added=44`
-   - `score: nothing new`
-   - `reaggregate: 36/36 ensembles, 0 calls`
-   - `export: agents.json=10, missions.json=18, evolutions.json=12, summary.json=1`
-   - `push: ok`
-   - Afterwards: ahead/behind 0/0.
+1. (Before this session) `git pull --rebase --autostash` to `0f94695`; `uv run pytest -q`: **71 passed in 21.33s**; `uv run ruff check .`: All checks passed!; `claude plugin marketplace update evolvra` and `claude plugin update evolvra@evolvra`: "updated from 0.3.4 to 0.3.5". Cached persona hash checked (see item 1).
+2. ~11:00 New session: `claude plugin list`, read `installed_plugins.json`, compared the persona hashes.
+3. 11:04 Read-only (`?mode=ro`) snapshot of the `scores`/`tasks`/`missions` rows for the backend mission. Read the `cycle.log` tail as bytes: the last run, 10:50:39, has an end line.
+4. 11:05:16–11:06:13 `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore` gave `judge calls=6 cached=3 errors=0`; #1 fitness 0.9525, #2 fitness 0.645. Exit 0.
+5. 11:06 Rebuilt the judge `output` block offline (`checks.read_output`), 0 API calls.
+6. 11:07–11:28 Mission `20261108-080705-devops-build-a-github`, run with the recorder: start, task add ×2, task start/done ×2, finish `done`.
+   - The builder subagent took ~12.6 min and the QA subagent ~7.2 min.
+7. 11:28:44 `.\scripts\cycle.ps1` (no `-Evolve`). This is outside the :15–:50 window, and the previous cycle had ended.
+   - `ingest: missions added=1 updated=18 invalid=0 | traces added=90 skipped=1024`
+   - `score: tasks scored=2 skipped=0 | judge calls=6 cached=0 errors=0`
+   - `reaggregate: 38/38 ensembles, 0 calls`
+   - `export: agents.json=10, missions.json=19, evolutions.json=12, summary.json=1`
+   - `push: ok`, then `[2026-11-08 11:29:53] cycle end (exit 0)`; `$LASTEXITCODE` = 0. Commit `b1663ce`.
+8. 11:30 Rebuilt the QA task's judge input offline (0 calls); `evolvra missions`, `evolvra fitness`; read `provider_usage` read-only.
 
 ### Numbers
-- Tests 70; ruff clean.
-- Provider use after the re-scores (8 Nov):
-  - gemini 24/1000
-  - groq 19/800
-  - openrouter **20/40**
-- Fitness after the re-scores: devops #1 0.9025; devops QA 0.9595; backend #1 0.9525; backend QA 0.625.
+- Tests 71; ruff clean (before this session).
+- Missions 19. Today: 3 missions, 6 tasks, all PASS.
+- Provider use on 8 Nov (UTC day): gemini **27**/1000, groq **22**/800, openrouter **24/40**.
+- `evolvra fitness` (agent, version, tasks, mean):
+  - devops-automator v1: 4 tasks, 0.881
+  - devops-automator **v2: 1 task, 0.974**
+  - evidence-collector v1: 8 tasks, 0.872
+  - evidence-collector v2: 11 tasks, 0.895
+- The cycle's push exit code was 0 and cycle.log ends with `cycle end (exit 0)`. That was the first run with the new exit code, so the new end line shape is confirmed.
 
 ### Verified vs not verified
 - **Verified:**
-  - The push rejection and its timing (cycle.log, commit dates).
-  - The promotion and its numbers.
-  - The 3 candidates all played.
-  - The before/after rows.
-  - The uncommitted version bump, and the code lines that leave it out.
-  - What the scorer sends for each 8 Nov task (rebuilt locally).
+  - Plugin 0.3.5 is enabled, and the mission skill and recorder loaded from the 0.3.5 cache.
+  - The cached persona is v2 (hash match).
+  - The before/after score rows (DB, read-only).
+  - The judge file order for both QA tasks, rebuilt locally.
+  - The checker gap in `checks.py:84-86` (code read).
+  - That the mission's output files exist. I listed the builder folder and read the self-test and unittest tails myself (`28/28`, `OK`, `EXIT CODE: 0`).
+  - Cycle exit code 0, and `push: ok`.
 - **Not verified:**
-  - Candidate authors: inferred from cache sizes, because they are not recorded.
-  - The cause of Nemotron's 7th call in gen 12.
-  - Why the actor plays went to Gemini.
-  - Whether the 0x50 crash this morning had anything to do with Evolvra. Probably not; not investigated.
+  - The CI workflow was **not run on GitHub**.
+  - The `@v5`/`@v6` tags and Python 3.14 on `ubuntu-latest` were not checked online.
+  - The tests ran only on Python 3.13.15.
+  - The QA agent's 23 new-case results: I read its report, but did not re-run the cases myself.
+  - Why gpt-oss says "no captured output" when 3 captures are in its prompt (I did not read its raw reply).
 
 ### What broke
-1. The 10:17 cycle's push was rejected (a race with the reviewer's push), yet the task reported result 0.
-2. A promotion leaves the plugin version bump uncommitted (`cli.py:393-396` vs `engine.bump_plugin_version`).
-3. The scorer still hides the backend QA proof (mention-by-bare-name promotes a `work/` copy; 0-byte captures are shown as "binary").
-4. One Nemotron reply was unparseable. The re-run fixed it.
+1. The QA "missing evidence" is still there for the backend mission (gpt-oss), and it appeared again on today's devops QA task (gpt-oss 0.33 / 0.30).
+2. 0-byte files with non-text suffixes are still listed as "(binary, 0 bytes)" (`checks.py:84-86`).
+3. A long QA report pushes nearly all proof out of the judge prompt: 73 of 75 files were omitted for the devops QA task (`PRIMARY_CHARS` 10,000 of 16,000; `checks.py:116` stops instead of sending a shorter excerpt).
+- Nothing failed in the run itself: 0 judge errors, 0 retries, cycle exit 0.
 
 ### Changes / commits
-- No code, test, record, trace or DB hand edits.
-- `40d17ef` = the 10:17 cycle's commit `7e01312`, rebased (content unchanged), pushed by my cycle.
-- `fbaa029` cycle: refresh data (18 missions), with the re-scores exported.
+- No code, test, record, trace or DB hand edits. No changes to `core/` or `plugin/`.
+- `b1663ce` cycle: refresh data (19 missions), with the re-score and the new mission exported.
 - This STATUS: committed with `-- docs/STATUS.md`. See `git log -1 -- docs/STATUS.md`.
-- Still uncommitted, waiting for a decision: `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (0.3.4 → 0.3.5).
 
 ### Open questions
-1. **The version bump on promotion.** Should `cmd_cycle` also stage `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` when `evolved`? And should I commit today's 0.3.5 bump by hand so installed copies get devops v2? I left both for you and Youssef.
-2. **`cycle.ps1` exit code.** Should it exit non-zero (or log `PUSH FAILED` loudly) when the push is rejected? Then a task result of 0 would mean "pushed". The new autostash retry may cover the race; it was not exercised today.
-3. **Scorer ordering for QA folders.** Should bare-name mentions not promote a file inside a low-priority folder (`work/`), when the same name exists at the builder's path? Should 0-byte files be skipped instead of listed as "binary"? Should `evidence/` get its own priority?
-4. **Record `Candidate.author`** in `result.json` and `evolutions.candidate_versions_json`, plus the provider error that triggered a fallback.
+1. **0-byte files:** skip any file with `st_size == 0` before the suffix test in `read_output`?
+2. **QA proof budget:** for QA tasks, should the main report be capped lower (for example 5,000 chars) so several `evidence/` files fit? Should the cutoff send a shorter excerpt instead of stopping? gpt-oss is the lone dissenter on 2 of the last 3 QA tasks (on the third, the 8 Nov PowerShell QA, Nemotron was). If it keeps flagging evidence that is visible, should its QA evidence verdict be marked "contested", as was done for `missing_implementation`?
+3. **Checker gaps found by QA (C17 / case / keys):** worth a bank task for devops-automator ("a CI checker must prove the test step actually runs"), since the next evolution reads real failures? It is not a failure today (the builder passed), so I left it.
