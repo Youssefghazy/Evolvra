@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-08T10:21:44Z",
+ "generated_at": "2026-11-08T10:45:54Z",
  "evolvra_version": "0.1.0",
  "agents": 10,
  "versions": 12,
@@ -10,18 +10,18 @@
  "providers": [
   {
    "provider": "gemini",
-   "requests": 363,
-   "tokens": 1129976
+   "requests": 366,
+   "tokens": 1151389
   },
   {
    "provider": "groq",
-   "requests": 395,
-   "tokens": 1041303
+   "requests": 398,
+   "tokens": 1060383
   },
   {
    "provider": "openrouter",
-   "requests": 99,
-   "tokens": 420541
+   "requests": 102,
+   "tokens": 444682
   }
  ]
 }

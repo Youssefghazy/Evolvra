@@ -32,7 +32,7 @@
      }
     ],
     "traces": 59,
-    "fitness": 0.8425,
+    "fitness": 0.9437,
     "provisional": false,
     "scores": [
      {
@@ -83,11 +83,11 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.75,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_output",
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
+       "failure_class": "none",
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -97,11 +97,11 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.75,
+      "value": 0.925,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_output",
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
+       "failure_class": "none",
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -111,11 +111,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.9,
+      "value": 0.925,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_output",
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
+       "failure_class": "none",
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -125,11 +125,11 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.85,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_required_output",
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
+       "failure_class": "none",
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -142,30 +142,30 @@
       "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "Thorough and well-documented reality check of the backup verifier script with comprehensive evidence files.",
+       "critique": "Thorough and rigorous reality-check with comprehensive evidence files and clear blocking gaps identified.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Tested multiple claims from the README with output saved in evidence files containing quoted claims and CONFIRMED/REFUTED results.",
+         "reason": "Tested at least 6 README claims with output saved under evidence/ with quoted claims and results.",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "Ran realistic stress and misuse cases not mentioned in the README with exit codes and timing recorded.",
+         "reason": "Ran stress/misuse cases not in README with exit codes and timings recorded.",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
          "met": true,
-         "reason": "Verdict stated as NEEDS WORK with blocking gaps, untested scope, and exact changes needed, using text evidence only.",
+         "reason": "Verdict stated in first 5 lines of REALITY-CHECK.md with blocking gaps, untested scope, and exact changes needed.",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input files shown unchanged by SHA-256 before and after, and fixtures kept under the output folder.",
+         "reason": "Input files shown unchanged by SHA-256 before and after, all fixtures under output folder.",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -178,30 +178,30 @@
       "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "Thorough and well-documented reality check of the backup verifier script with comprehensive evidence files.",
+       "critique": "Thorough and rigorous reality-check with comprehensive evidence files and clear blocking gaps identified.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Tested multiple claims from the README with output saved in evidence files containing quoted claims and CONFIRMED/REFUTED results.",
+         "reason": "Tested at least 6 README claims with output saved under evidence/ with quoted claims and results.",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "Ran realistic stress and misuse cases not mentioned in the README with exit codes and timing recorded.",
+         "reason": "Ran stress/misuse cases not in README with exit codes and timings recorded.",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
          "met": true,
-         "reason": "Verdict stated as NEEDS WORK with blocking gaps, untested scope, and exact changes needed, using text evidence only.",
+         "reason": "Verdict stated in first 5 lines of REALITY-CHECK.md with blocking gaps, untested scope, and exact changes needed.",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input files shown unchanged by SHA-256 before and after, and fixtures kept under the output folder.",
+         "reason": "Input files shown unchanged by SHA-256 before and after, all fixtures under output folder.",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -214,30 +214,30 @@
       "value": 0.95,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "Thorough and well-documented reality check of the backup verifier script with comprehensive evidence files.",
+       "critique": "Thorough and rigorous reality-check with comprehensive evidence files and clear blocking gaps identified.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Tested multiple claims from the README with output saved in evidence files containing quoted claims and CONFIRMED/REFUTED results.",
+         "reason": "Tested at least 6 README claims with output saved under evidence/ with quoted claims and results.",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "Ran realistic stress and misuse cases not mentioned in the README with exit codes and timing recorded.",
+         "reason": "Ran stress/misuse cases not in README with exit codes and timings recorded.",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
          "met": true,
-         "reason": "Verdict stated as NEEDS WORK with blocking gaps, untested scope, and exact changes needed, using text evidence only.",
+         "reason": "Verdict stated in first 5 lines of REALITY-CHECK.md with blocking gaps, untested scope, and exact changes needed.",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input files shown unchanged by SHA-256 before and after, and fixtures kept under the output folder.",
+         "reason": "Input files shown unchanged by SHA-256 before and after, all fixtures under output folder.",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -247,33 +247,33 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.95,
+      "value": 0.9,
       "judge": "gemini/gemini-3.5-flash-lite",
       "evidence": {
-       "critique": "Thorough and well-documented reality check of the backup verifier script with comprehensive evidence files.",
+       "critique": "Thorough and rigorous reality-check with comprehensive evidence files and clear blocking gaps identified.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Tested multiple claims from the README with output saved in evidence files containing quoted claims and CONFIRMED/REFUTED results.",
+         "reason": "Tested at least 6 README claims with output saved under evidence/ with quoted claims and results.",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "Ran realistic stress and misuse cases not mentioned in the README with exit codes and timing recorded.",
+         "reason": "Ran stress/misuse cases not in README with exit codes and timings recorded.",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
          "met": true,
-         "reason": "Verdict stated as NEEDS WORK with blocking gaps, untested scope, and exact changes needed, using text evidence only.",
+         "reason": "Verdict stated in first 5 lines of REALITY-CHECK.md with blocking gaps, untested scope, and exact changes needed.",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input files shown unchanged by SHA-256 before and after, and fixtures kept under the output folder.",
+         "reason": "Input files shown unchanged by SHA-256 before and after, all fixtures under output folder.",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -283,33 +283,33 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.75,
+      "value": 0.9,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
-       "failure_class": "missing_required_output",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence files for ≥6 README claims present",
+         "reason": "Evidence files with claim tests are present and non-empty",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "≥3 stress/misuse cases with exit code and timing recorded",
+         "reason": "Multiple stress/misuse cases are documented with exit codes and timings",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
-         "met": false,
-         "reason": "REALITY-CHECK.md with verdict not provided",
+         "met": true,
+         "reason": "VERDICT line and required lists appear in the first five lines of REALITY-CHECK.md",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input SHA-256 hashes before/after are shown",
+         "reason": "SHA‑256 hashes before and after are recorded for all inputs",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -319,177 +319,33 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.75,
+      "value": 0.9,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
-       "failure_class": "missing_required_output",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence files for ≥6 README claims present",
+         "reason": "Evidence files with claim tests are present and non-empty",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "≥3 stress/misuse cases with exit code and timing recorded",
+         "reason": "Multiple stress/misuse cases are documented with exit codes and timings",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
-         "met": false,
-         "reason": "REALITY-CHECK.md with verdict not provided",
+         "met": true,
+         "reason": "VERDICT line and required lists appear in the first five lines of REALITY-CHECK.md",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "Input SHA-256 hashes before/after are shown",
-         "id": "C4",
-         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.7,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
-       "failure_class": "missing_required_output",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence files for ≥6 README claims present",
-         "id": "C1",
-         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
-        },
-        {
-         "met": true,
-         "reason": "≥3 stress/misuse cases with exit code and timing recorded",
-         "id": "C2",
-         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
-        },
-        {
-         "met": false,
-         "reason": "REALITY-CHECK.md with verdict not provided",
-         "id": "C3",
-         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
-        },
-        {
-         "met": true,
-         "reason": "Input SHA-256 hashes before/after are shown",
-         "id": "C4",
-         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 0.7,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The required REALITY-CHECK.md file with the verdict and remediation list is missing.",
-       "failure_class": "missing_required_output",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence files for ≥6 README claims present",
-         "id": "C1",
-         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
-        },
-        {
-         "met": true,
-         "reason": "≥3 stress/misuse cases with exit code and timing recorded",
-         "id": "C2",
-         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
-        },
-        {
-         "met": false,
-         "reason": "REALITY-CHECK.md with verdict not provided",
-         "id": "C3",
-         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
-        },
-        {
-         "met": true,
-         "reason": "Input SHA-256 hashes before/after are shown",
-         "id": "C4",
-         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 0.75,
-      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-      "evidence": {
-       "critique": "Missing required REALITY-CHECK.md deliverable with verdict, blocking gaps, untested scope, and exact changes needed",
-       "failure_class": "missing_deliverable",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "18 README claims tested with CONFIRMED/REFUTED results across 3 non-empty evidence files (01, 02, 03) and summarized in claims ledger (10)",
-         "id": "C1",
-         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
-        },
-        {
-         "met": true,
-         "reason": "25 stress/misuse cases (S1a-S2c, X1-X8) with exit codes and timing recorded in evidence/04, 05, 11",
-         "id": "C2",
-         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
-        },
-        {
-         "met": false,
-         "reason": "REALITY-CHECK.md not produced or shown in output files; verdict only appears in agent's evidence statement, not as required deliverable",
-         "id": "C3",
-         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
-        },
-        {
-         "met": true,
-         "reason": "SHA-256 before/after shown in evidence/00 and evidence/12 (ALL THREE INPUTS UNCHANGED: True); fixtures under fx/ output folder",
-         "id": "C4",
-         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 0.75,
-      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-      "evidence": {
-       "critique": "Missing required REALITY-CHECK.md deliverable with verdict, blocking gaps, untested scope, and exact changes needed",
-       "failure_class": "missing_deliverable",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "18 README claims tested with CONFIRMED/REFUTED results across 3 non-empty evidence files (01, 02, 03) and summarized in claims ledger (10)",
-         "id": "C1",
-         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
-        },
-        {
-         "met": true,
-         "reason": "25 stress/misuse cases (S1a-S2c, X1-X8) with exit codes and timing recorded in evidence/04, 05, 11",
-         "id": "C2",
-         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
-        },
-        {
-         "met": false,
-         "reason": "REALITY-CHECK.md not produced or shown in output files; verdict only appears in agent's evidence statement, not as required deliverable",
-         "id": "C3",
-         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
-        },
-        {
-         "met": true,
-         "reason": "SHA-256 before/after shown in evidence/00 and evidence/12 (ALL THREE INPUTS UNCHANGED: True); fixtures under fx/ output folder",
+         "reason": "SHA‑256 hashes before and after are recorded for all inputs",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -500,32 +356,32 @@
      {
       "metric": "rubric:evidence",
       "value": 0.9,
-      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Missing required REALITY-CHECK.md deliverable with verdict, blocking gaps, untested scope, and exact changes needed",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "18 README claims tested with CONFIRMED/REFUTED results across 3 non-empty evidence files (01, 02, 03) and summarized in claims ledger (10)",
+         "reason": "Evidence files with claim tests are present and non-empty",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "25 stress/misuse cases (S1a-S2c, X1-X8) with exit codes and timing recorded in evidence/04, 05, 11",
+         "reason": "Multiple stress/misuse cases are documented with exit codes and timings",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
-         "met": false,
-         "reason": "REALITY-CHECK.md not produced or shown in output files; verdict only appears in agent's evidence statement, not as required deliverable",
+         "met": true,
+         "reason": "VERDICT line and required lists appear in the first five lines of REALITY-CHECK.md",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "SHA-256 before/after shown in evidence/00 and evidence/12 (ALL THREE INPUTS UNCHANGED: True); fixtures under fx/ output folder",
+         "reason": "SHA‑256 hashes before and after are recorded for all inputs",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -536,32 +392,176 @@
      {
       "metric": "rubric:quality",
       "value": 0.85,
-      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Missing required REALITY-CHECK.md deliverable with verdict, blocking gaps, untested scope, and exact changes needed",
-       "failure_class": "missing_deliverable",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "18 README claims tested with CONFIRMED/REFUTED results across 3 non-empty evidence files (01, 02, 03) and summarized in claims ledger (10)",
+         "reason": "Evidence files with claim tests are present and non-empty",
          "id": "C1",
          "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
         },
         {
          "met": true,
-         "reason": "25 stress/misuse cases (S1a-S2c, X1-X8) with exit codes and timing recorded in evidence/04, 05, 11",
+         "reason": "Multiple stress/misuse cases are documented with exit codes and timings",
          "id": "C2",
          "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
         },
         {
-         "met": false,
-         "reason": "REALITY-CHECK.md not produced or shown in output files; verdict only appears in agent's evidence statement, not as required deliverable",
+         "met": true,
+         "reason": "VERDICT line and required lists appear in the first five lines of REALITY-CHECK.md",
          "id": "C3",
          "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
         },
         {
          "met": true,
-         "reason": "SHA-256 before/after shown in evidence/00 and evidence/12 (ALL THREE INPUTS UNCHANGED: True); fixtures under fx/ output folder",
+         "reason": "SHA‑256 hashes before and after are recorded for all inputs",
+         "id": "C4",
+         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "18 README claims tested (evidence/10-claims-ledger.txt), each with quoted claim, command evidence reference, and CONFIRMED/REFUTED result; 6+ requirement exceeded",
+         "id": "C1",
+         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
+        },
+        {
+         "met": true,
+         "reason": "25 stress/misuse cases recorded in evidence/11-stress-ledger.txt (S1a-S5b, X1-X8b) including 2000 small files, backup inside source, junction in source, duplicate zip entries, wrapper folders; exit codes and wall-clock times captured",
+         "id": "C2",
+         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
+        },
+        {
+         "met": true,
+         "reason": "REALITY-CHECK.md line 1 states 'VERDICT: NEEDS WORK'; blocking gaps (G1-G4), untested scope, and exact code changes needed are all documented in text; no screenshots used",
+         "id": "C3",
+         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
+        },
+        {
+         "met": true,
+         "reason": "evidence/00-environment-and-input-hashes.txt and evidence/12-input-integrity-after.txt show identical SHA-256 for all three input files before/after; fixtures confined to fx/ (196 MB) under output folder",
+         "id": "C4",
+         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "18 README claims tested (evidence/10-claims-ledger.txt), each with quoted claim, command evidence reference, and CONFIRMED/REFUTED result; 6+ requirement exceeded",
+         "id": "C1",
+         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
+        },
+        {
+         "met": true,
+         "reason": "25 stress/misuse cases recorded in evidence/11-stress-ledger.txt (S1a-S5b, X1-X8b) including 2000 small files, backup inside source, junction in source, duplicate zip entries, wrapper folders; exit codes and wall-clock times captured",
+         "id": "C2",
+         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
+        },
+        {
+         "met": true,
+         "reason": "REALITY-CHECK.md line 1 states 'VERDICT: NEEDS WORK'; blocking gaps (G1-G4), untested scope, and exact code changes needed are all documented in text; no screenshots used",
+         "id": "C3",
+         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
+        },
+        {
+         "met": true,
+         "reason": "evidence/00-environment-and-input-hashes.txt and evidence/12-input-integrity-after.txt show identical SHA-256 for all three input files before/after; fixtures confined to fx/ (196 MB) under output folder",
+         "id": "C4",
+         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "18 README claims tested (evidence/10-claims-ledger.txt), each with quoted claim, command evidence reference, and CONFIRMED/REFUTED result; 6+ requirement exceeded",
+         "id": "C1",
+         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
+        },
+        {
+         "met": true,
+         "reason": "25 stress/misuse cases recorded in evidence/11-stress-ledger.txt (S1a-S5b, X1-X8b) including 2000 small files, backup inside source, junction in source, duplicate zip entries, wrapper folders; exit codes and wall-clock times captured",
+         "id": "C2",
+         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
+        },
+        {
+         "met": true,
+         "reason": "REALITY-CHECK.md line 1 states 'VERDICT: NEEDS WORK'; blocking gaps (G1-G4), untested scope, and exact code changes needed are all documented in text; no screenshots used",
+         "id": "C3",
+         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
+        },
+        {
+         "met": true,
+         "reason": "evidence/00-environment-and-input-hashes.txt and evidence/12-input-integrity-after.txt show identical SHA-256 for all three input files before/after; fixtures confined to fx/ (196 MB) under output folder",
+         "id": "C4",
+         "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "18 README claims tested (evidence/10-claims-ledger.txt), each with quoted claim, command evidence reference, and CONFIRMED/REFUTED result; 6+ requirement exceeded",
+         "id": "C1",
+         "criterion": "At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each"
+        },
+        {
+         "met": true,
+         "reason": "25 stress/misuse cases recorded in evidence/11-stress-ledger.txt (S1a-S5b, X1-X8b) including 2000 small files, backup inside source, junction in source, duplicate zip entries, wrapper folders; exit codes and wall-clock times captured",
+         "id": "C2",
+         "criterion": "At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded"
+        },
+        {
+         "met": true,
+         "reason": "REALITY-CHECK.md line 1 states 'VERDICT: NEEDS WORK'; blocking gaps (G1-G4), untested scope, and exact code changes needed are all documented in text; no screenshots used",
+         "id": "C3",
+         "criterion": "The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only"
+        },
+        {
+         "met": true,
+         "reason": "evidence/00-environment-and-input-hashes.txt and evidence/12-input-integrity-after.txt show identical SHA-256 for all three input files before/after; fixtures confined to fx/ (196 MB) under output folder",
          "id": "C4",
          "criterion": "Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder"
         }
@@ -1737,7 +1737,7 @@
      }
     ],
     "traces": 26,
-    "fitness": 0.9875,
+    "fitness": 0.98,
     "provisional": false,
     "scores": [
      {
@@ -1792,7 +1792,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1806,7 +1806,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1820,7 +1820,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1830,11 +1830,11 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.95,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1852,31 +1852,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "ci.yml triggers on push and pull_request, has runs-on, a matrix of 3 python versions, pinned checkout/setup-python, and runs python -m unittest.",
+         "reason": "ci.yml triggers on push and pull_request, has runs-on, strategy.matrix python-version with 3+ versions, pinned actions/checkout and actions/setup-python, and python -m unittest step.",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL per check as shown in evidence.",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL line per check.",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -SelfTest tests multiple broken workflows and exits 0.",
+         "reason": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows and exits 0 only if every broken one is rejected.",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests pass locally with unittest and output is saved under evidence/.",
+         "reason": "Sample project tests pass locally with the expected unittest command, with output saved under evidence/.",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Uses only PowerShell built-ins and installed Python without external downloads/installs.",
+         "reason": "Only PowerShell built-ins and installed Python used; no downloads, installs, or registrations.",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -1894,31 +1894,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "ci.yml triggers on push and pull_request, has runs-on, a matrix of 3 python versions, pinned checkout/setup-python, and runs python -m unittest.",
+         "reason": "ci.yml triggers on push and pull_request, has runs-on, strategy.matrix python-version with 3+ versions, pinned actions/checkout and actions/setup-python, and python -m unittest step.",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL per check as shown in evidence.",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL line per check.",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -SelfTest tests multiple broken workflows and exits 0.",
+         "reason": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows and exits 0 only if every broken one is rejected.",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests pass locally with unittest and output is saved under evidence/.",
+         "reason": "Sample project tests pass locally with the expected unittest command, with output saved under evidence/.",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Uses only PowerShell built-ins and installed Python without external downloads/installs.",
+         "reason": "Only PowerShell built-ins and installed Python used; no downloads, installs, or registrations.",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -1936,31 +1936,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "ci.yml triggers on push and pull_request, has runs-on, a matrix of 3 python versions, pinned checkout/setup-python, and runs python -m unittest.",
+         "reason": "ci.yml triggers on push and pull_request, has runs-on, strategy.matrix python-version with 3+ versions, pinned actions/checkout and actions/setup-python, and python -m unittest step.",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL per check as shown in evidence.",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL line per check.",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -SelfTest tests multiple broken workflows and exits 0.",
+         "reason": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows and exits 0 only if every broken one is rejected.",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests pass locally with unittest and output is saved under evidence/.",
+         "reason": "Sample project tests pass locally with the expected unittest command, with output saved under evidence/.",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Uses only PowerShell built-ins and installed Python without external downloads/installs.",
+         "reason": "Only PowerShell built-ins and installed Python used; no downloads, installs, or registrations.",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -1978,31 +1978,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "ci.yml triggers on push and pull_request, has runs-on, a matrix of 3 python versions, pinned checkout/setup-python, and runs python -m unittest.",
+         "reason": "ci.yml triggers on push and pull_request, has runs-on, strategy.matrix python-version with 3+ versions, pinned actions/checkout and actions/setup-python, and python -m unittest step.",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL per check as shown in evidence.",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0 and prints one PASS or FAIL line per check.",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "Test-Workflow.ps1 -SelfTest tests multiple broken workflows and exits 0.",
+         "reason": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows and exits 0 only if every broken one is rejected.",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests pass locally with unittest and output is saved under evidence/.",
+         "reason": "Sample project tests pass locally with the expected unittest command, with output saved under evidence/.",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Uses only PowerShell built-ins and installed Python without external downloads/installs.",
+         "reason": "Only PowerShell built-ins and installed Python used; no downloads, installs, or registrations.",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2020,31 +2020,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Workflow includes required triggers, matrix with ≥3 Python versions, pinned actions, and unittest step.",
+         "reason": "Workflow triggers, matrix, pinned actions, unittest step present",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Checker runs on ci.yml, exits 0, and outputs PASS/FAIL lines.",
+         "reason": "Checker exits 0 and prints PASS/FAIL lines",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "SelfTest exercises ≥5 broken workflows and exits 0 only when all are rejected.",
+         "reason": "Self‑test feeds ≥5 broken workflows and exits 0 only when all are rejected",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests run locally with the same command and results are saved in evidence/.",
+         "reason": "Sample project unittest run shows 15 tests OK, output saved under evidence/",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Only PowerShell built‑ins and the pre‑installed Python are used; no downloads or installations.",
+         "reason": "Only PowerShell built‑ins and the installed Python are used",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2062,31 +2062,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Workflow includes required triggers, matrix with ≥3 Python versions, pinned actions, and unittest step.",
+         "reason": "Workflow triggers, matrix, pinned actions, unittest step present",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Checker runs on ci.yml, exits 0, and outputs PASS/FAIL lines.",
+         "reason": "Checker exits 0 and prints PASS/FAIL lines",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "SelfTest exercises ≥5 broken workflows and exits 0 only when all are rejected.",
+         "reason": "Self‑test feeds ≥5 broken workflows and exits 0 only when all are rejected",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests run locally with the same command and results are saved in evidence/.",
+         "reason": "Sample project unittest run shows 15 tests OK, output saved under evidence/",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Only PowerShell built‑ins and the pre‑installed Python are used; no downloads or installations.",
+         "reason": "Only PowerShell built‑ins and the installed Python are used",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2104,31 +2104,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Workflow includes required triggers, matrix with ≥3 Python versions, pinned actions, and unittest step.",
+         "reason": "Workflow triggers, matrix, pinned actions, unittest step present",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Checker runs on ci.yml, exits 0, and outputs PASS/FAIL lines.",
+         "reason": "Checker exits 0 and prints PASS/FAIL lines",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "SelfTest exercises ≥5 broken workflows and exits 0 only when all are rejected.",
+         "reason": "Self‑test feeds ≥5 broken workflows and exits 0 only when all are rejected",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests run locally with the same command and results are saved in evidence/.",
+         "reason": "Sample project unittest run shows 15 tests OK, output saved under evidence/",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Only PowerShell built‑ins and the pre‑installed Python are used; no downloads or installations.",
+         "reason": "Only PowerShell built‑ins and the installed Python are used",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2138,7 +2138,7 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.9,
+      "value": 0.85,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
        "critique": "none",
@@ -2146,31 +2146,31 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Workflow includes required triggers, matrix with ≥3 Python versions, pinned actions, and unittest step.",
+         "reason": "Workflow triggers, matrix, pinned actions, unittest step present",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "Checker runs on ci.yml, exits 0, and outputs PASS/FAIL lines.",
+         "reason": "Checker exits 0 and prints PASS/FAIL lines",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "SelfTest exercises ≥5 broken workflows and exits 0 only when all are rejected.",
+         "reason": "Self‑test feeds ≥5 broken workflows and exits 0 only when all are rejected",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "Sample project tests run locally with the same command and results are saved in evidence/.",
+         "reason": "Sample project unittest run shows 15 tests OK, output saved under evidence/",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "Only PowerShell built‑ins and the pre‑installed Python are used; no downloads or installations.",
+         "reason": "Only PowerShell built‑ins and the installed Python are used",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2183,36 +2183,36 @@
       "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "checker-run.txt shows PASS for C04 (on with push/pull_request), C05 (jobs mapping), C06 (runs-on), C07 (matrix with 3+ python versions), C08 (actions/checkout@v5), C09 (actions/setup-python@v6), C17 (python -m unittest step); 17/17 checks passed",
+         "reason": "ci.yml has on: push/pull_request, jobs with runs-on, strategy.matrix python-version with 4 versions (3.10-3.13), pinned actions/checkout@v5 and actions/setup-python@v6, and step running python -m unittest discover -s tests -t . -v",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "checker-run.txt shows 17 PASS lines (C01-C17), SUMMARY 17/17 passed, EXIT CODE 0",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0, prints 17 PASS lines (C01-C17), SUMMARY shows 17/17 checks passed",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "selftest-run.txt shows 9 known-good accepted, 28 broken rejected by target check, SUMMARY PASSED, EXIT CODE 0; sabotage run proves self-test detects weakened checker",
+         "reason": "SelfTest runs 9 known-good and 28 broken workflows; all 28 broken rejected by target check, exit 0; sabotage test proves it fails when checker weakened",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "unittest-run.txt shows python -m unittest discover -s tests -t . -v ran 15 tests OK, EXIT CODE 0, output saved under evidence/",
+         "reason": "python -m unittest discover -s tests -t . -v runs 15 tests OK, exit 0, output saved to evidence/unittest-run.txt",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "MANIFEST-sha256.txt confirms no forbidden folders (__pycache__, .venv, venv, node_modules); checker uses only PowerShell built-ins per script header; no downloads/installs in evidence",
+         "reason": "MANIFEST shows no venv/__pycache__/node_modules; checker uses only PowerShell built-ins; sample project uses only Python stdlib",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2225,36 +2225,36 @@
       "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "checker-run.txt shows PASS for C04 (on with push/pull_request), C05 (jobs mapping), C06 (runs-on), C07 (matrix with 3+ python versions), C08 (actions/checkout@v5), C09 (actions/setup-python@v6), C17 (python -m unittest step); 17/17 checks passed",
+         "reason": "ci.yml has on: push/pull_request, jobs with runs-on, strategy.matrix python-version with 4 versions (3.10-3.13), pinned actions/checkout@v5 and actions/setup-python@v6, and step running python -m unittest discover -s tests -t . -v",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "checker-run.txt shows 17 PASS lines (C01-C17), SUMMARY 17/17 passed, EXIT CODE 0",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0, prints 17 PASS lines (C01-C17), SUMMARY shows 17/17 checks passed",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "selftest-run.txt shows 9 known-good accepted, 28 broken rejected by target check, SUMMARY PASSED, EXIT CODE 0; sabotage run proves self-test detects weakened checker",
+         "reason": "SelfTest runs 9 known-good and 28 broken workflows; all 28 broken rejected by target check, exit 0; sabotage test proves it fails when checker weakened",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "unittest-run.txt shows python -m unittest discover -s tests -t . -v ran 15 tests OK, EXIT CODE 0, output saved under evidence/",
+         "reason": "python -m unittest discover -s tests -t . -v runs 15 tests OK, exit 0, output saved to evidence/unittest-run.txt",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "MANIFEST-sha256.txt confirms no forbidden folders (__pycache__, .venv, venv, node_modules); checker uses only PowerShell built-ins per script header; no downloads/installs in evidence",
+         "reason": "MANIFEST shows no venv/__pycache__/node_modules; checker uses only PowerShell built-ins; sample project uses only Python stdlib",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2267,36 +2267,36 @@
       "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "checker-run.txt shows PASS for C04 (on with push/pull_request), C05 (jobs mapping), C06 (runs-on), C07 (matrix with 3+ python versions), C08 (actions/checkout@v5), C09 (actions/setup-python@v6), C17 (python -m unittest step); 17/17 checks passed",
+         "reason": "ci.yml has on: push/pull_request, jobs with runs-on, strategy.matrix python-version with 4 versions (3.10-3.13), pinned actions/checkout@v5 and actions/setup-python@v6, and step running python -m unittest discover -s tests -t . -v",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "checker-run.txt shows 17 PASS lines (C01-C17), SUMMARY 17/17 passed, EXIT CODE 0",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0, prints 17 PASS lines (C01-C17), SUMMARY shows 17/17 checks passed",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "selftest-run.txt shows 9 known-good accepted, 28 broken rejected by target check, SUMMARY PASSED, EXIT CODE 0; sabotage run proves self-test detects weakened checker",
+         "reason": "SelfTest runs 9 known-good and 28 broken workflows; all 28 broken rejected by target check, exit 0; sabotage test proves it fails when checker weakened",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "unittest-run.txt shows python -m unittest discover -s tests -t . -v ran 15 tests OK, EXIT CODE 0, output saved under evidence/",
+         "reason": "python -m unittest discover -s tests -t . -v runs 15 tests OK, exit 0, output saved to evidence/unittest-run.txt",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "MANIFEST-sha256.txt confirms no forbidden folders (__pycache__, .venv, venv, node_modules); checker uses only PowerShell built-ins per script header; no downloads/installs in evidence",
+         "reason": "MANIFEST shows no venv/__pycache__/node_modules; checker uses only PowerShell built-ins; sample project uses only Python stdlib",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2306,39 +2306,39 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 1.0,
+      "value": 0.95,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
-       "critique": "none",
+       "critique": "Exemplary delivery: custom strict YAML parser in pure PowerShell, comprehensive 17-check validation, 37 self-test cases (9 good + 28 broken), sabotage test proving SelfTest detects weakened checks, full evidence trail with manifests.",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "checker-run.txt shows PASS for C04 (on with push/pull_request), C05 (jobs mapping), C06 (runs-on), C07 (matrix with 3+ python versions), C08 (actions/checkout@v5), C09 (actions/setup-python@v6), C17 (python -m unittest step); 17/17 checks passed",
+         "reason": "ci.yml has on: push/pull_request, jobs with runs-on, strategy.matrix python-version with 4 versions (3.10-3.13), pinned actions/checkout@v5 and actions/setup-python@v6, and step running python -m unittest discover -s tests -t . -v",
          "id": "C1",
          "criterion": "ci.yml triggers on push and pull_request, has a job with runs-on, a strategy.matrix python-version list of 3 or more versions, uses actions/checkout and actions/setup-python pinned to a version tag, and has a step running python -m unittest"
         },
         {
          "met": true,
-         "reason": "checker-run.txt shows 17 PASS lines (C01-C17), SUMMARY 17/17 passed, EXIT CODE 0",
+         "reason": "Test-Workflow.ps1 -Path ci.yml exits 0, prints 17 PASS lines (C01-C17), SUMMARY shows 17/17 checks passed",
          "id": "C2",
          "criterion": "Test-Workflow.ps1 -Path ci.yml exits 0 on the delivered workflow and prints one PASS or FAIL line per check"
         },
         {
          "met": true,
-         "reason": "selftest-run.txt shows 9 known-good accepted, 28 broken rejected by target check, SUMMARY PASSED, EXIT CODE 0; sabotage run proves self-test detects weakened checker",
+         "reason": "SelfTest runs 9 known-good and 28 broken workflows; all 28 broken rejected by target check, exit 0; sabotage test proves it fails when checker weakened",
          "id": "C3",
          "criterion": "Test-Workflow.ps1 -SelfTest feeds at least 5 broken workflows (for example missing on, missing jobs, tab indentation, job without runs-on, unpinned action) and exits 0 only if every broken one is rejected"
         },
         {
          "met": true,
-         "reason": "unittest-run.txt shows python -m unittest discover -s tests -t . -v ran 15 tests OK, EXIT CODE 0, output saved under evidence/",
+         "reason": "python -m unittest discover -s tests -t . -v runs 15 tests OK, exit 0, output saved to evidence/unittest-run.txt",
          "id": "C4",
          "criterion": "The sample project tests pass locally with the same unittest command the workflow runs, with the output saved under evidence/"
         },
         {
          "met": true,
-         "reason": "MANIFEST-sha256.txt confirms no forbidden folders (__pycache__, .venv, venv, node_modules); checker uses only PowerShell built-ins per script header; no downloads/installs in evidence",
+         "reason": "MANIFEST shows no venv/__pycache__/node_modules; checker uses only PowerShell built-ins; sample project uses only Python stdlib",
          "id": "C5",
          "criterion": "Only PowerShell built-ins and the installed Python are used; nothing is downloaded, installed, registered or pushed"
         }
@@ -2371,7 +2371,7 @@
      }
     ],
     "traces": 21,
-    "fitness": 0.769,
+    "fitness": 0.9875,
     "provisional": false,
     "scores": [
      {
@@ -2422,297 +2422,293 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.65,
+      "value": 1.0,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_evidence",
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.64,
+      "value": 1.0,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_evidence",
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.625,
+      "value": 0.95,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_evidence",
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 acceptance criteria re-checked with evidence files saved under evidence/.",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Tested 23 new broken/unusual workflows with exit codes recorded.",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope stated honestly and report ends with PASS.",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
        ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 acceptance criteria re-checked with evidence files saved under evidence/.",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Tested 23 new broken/unusual workflows with exit codes recorded.",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope stated honestly and report ends with PASS.",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 acceptance criteria re-checked with evidence files saved under evidence/.",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Tested 23 new broken/unusual workflows with exit codes recorded.",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope stated honestly and report ends with PASS.",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 acceptance criteria re-checked with evidence files saved under evidence/.",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Tested 23 new broken/unusual workflows with exit codes recorded.",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope stated honestly and report ends with PASS.",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 criteria re-checked with listed non-empty evidence files",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Report includes 16 broken and 7 valid new workflows with exit codes",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope is honestly described and report ends with PASS",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 criteria re-checked with listed non-empty evidence files",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Report includes 16 broken and 7 valid new workflows with exit codes",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope is honestly described and report ends with PASS",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All task 1 criteria re-checked with listed non-empty evidence files",
+         "id": "C1",
+         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
+        },
+        {
+         "met": true,
+         "reason": "Report includes 16 broken and 7 valid new workflows with exit codes",
+         "id": "C2",
+         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
+        },
+        {
+         "met": true,
+         "reason": "Untested scope is honestly described and report ends with PASS",
+         "id": "C3",
+         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
+        }
+       ],
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
       "value": 0.9,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "missing_evidence",
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
        "critique": "none",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "All task 1 criteria re-checked with output saved under evidence/.",
+         "reason": "All task 1 criteria re-checked with listed non-empty evidence files",
          "id": "C1",
          "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
         },
         {
          "met": true,
-         "reason": "At least 3 new broken workflows tried with exit codes recorded.",
+         "reason": "Report includes 16 broken and 7 valid new workflows with exit codes",
          "id": "C2",
          "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
         },
         {
          "met": true,
-         "reason": "Untested scope stated honestly and report ends with PASS.",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "All task 1 criteria re-checked with output saved under evidence/.",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": true,
-         "reason": "At least 3 new broken workflows tried with exit codes recorded.",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Untested scope stated honestly and report ends with PASS.",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.95,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "All task 1 criteria re-checked with output saved under evidence/.",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": true,
-         "reason": "At least 3 new broken workflows tried with exit codes recorded.",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Untested scope stated honestly and report ends with PASS.",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 0.9,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "All task 1 criteria re-checked with output saved under evidence/.",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": true,
-         "reason": "At least 3 new broken workflows tried with exit codes recorded.",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Untested scope stated honestly and report ends with PASS.",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 0.3,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
-       "failure_class": "missing_evidence",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence files are referenced but not shown, so verification is impossible",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": false,
-         "reason": "New broken workflow cases are claimed but their outputs are not visible",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Report honestly states untested scope and ends with PASS",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 0.33,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
-       "failure_class": "missing_evidence",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence files are referenced but not shown, so verification is impossible",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": false,
-         "reason": "New broken workflow cases are claimed but their outputs are not visible",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Report honestly states untested scope and ends with PASS",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.3,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
-       "failure_class": "missing_evidence",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence files are referenced but not shown, so verification is impossible",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": false,
-         "reason": "New broken workflow cases are claimed but their outputs are not visible",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Report honestly states untested scope and ends with PASS",
-         "id": "C3",
-         "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 0.6,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The report lacks visible evidence, making most claims unverifiable.",
-       "failure_class": "missing_evidence",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence files are referenced but not shown, so verification is impossible",
-         "id": "C1",
-         "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
-        },
-        {
-         "met": false,
-         "reason": "New broken workflow cases are claimed but their outputs are not visible",
-         "id": "C2",
-         "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
-        },
-        {
-         "met": true,
-         "reason": "Report honestly states untested scope and ends with PASS",
+         "reason": "Untested scope is honestly described and report ends with PASS",
          "id": "C3",
          "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
         }
@@ -2730,19 +2726,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; 12 evidence files (00-11) plus 23 new-case outputs saved under evidence/, all non-empty and shown in excerpts.",
+         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; outputs saved as non-empty files under evidence/ (01-11, new-cases/)",
          "id": "C1",
          "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
         },
         {
          "met": true,
-         "reason": "23 new workflow fixtures (16 broken, 7 valid-but-unusual) exercised through the checker; each has its own evidence file with exit code and failing checks recorded (evidence/07-new-cases-summary.txt and evidence/new-cases/*.txt).",
+         "reason": "23 new workflow fixtures tested (16 broken, 7 valid-but-unusual), each with checker exit code recorded in evidence/07-new-cases-summary.txt and individual files",
          "id": "C2",
          "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
         },
         {
          "met": true,
-         "reason": "Report section 5 explicitly lists untested scope (no GitHub run, no actionlint/PyYAML, single Python version, execution policy not fully verified, parser not exhaustively reviewed) and ends with 'VERDICT: PASS'.",
+         "reason": "Report section 5 explicitly states untested scope (did not run on GitHub, only Python 3.13 locally, no actionlint/PyYAML, etc.) and ends with VERDICT: PASS",
          "id": "C3",
          "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
         }
@@ -2752,7 +2748,7 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.95,
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
@@ -2760,19 +2756,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; 12 evidence files (00-11) plus 23 new-case outputs saved under evidence/, all non-empty and shown in excerpts.",
+         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; outputs saved as non-empty files under evidence/ (01-11, new-cases/)",
          "id": "C1",
          "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
         },
         {
          "met": true,
-         "reason": "23 new workflow fixtures (16 broken, 7 valid-but-unusual) exercised through the checker; each has its own evidence file with exit code and failing checks recorded (evidence/07-new-cases-summary.txt and evidence/new-cases/*.txt).",
+         "reason": "23 new workflow fixtures tested (16 broken, 7 valid-but-unusual), each with checker exit code recorded in evidence/07-new-cases-summary.txt and individual files",
          "id": "C2",
          "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
         },
         {
          "met": true,
-         "reason": "Report section 5 explicitly lists untested scope (no GitHub run, no actionlint/PyYAML, single Python version, execution policy not fully verified, parser not exhaustively reviewed) and ends with 'VERDICT: PASS'.",
+         "reason": "Report section 5 explicitly states untested scope (did not run on GitHub, only Python 3.13 locally, no actionlint/PyYAML, etc.) and ends with VERDICT: PASS",
          "id": "C3",
          "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
         }
@@ -2782,7 +2778,7 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.95,
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
@@ -2790,19 +2786,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; 12 evidence files (00-11) plus 23 new-case outputs saved under evidence/, all non-empty and shown in excerpts.",
+         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; outputs saved as non-empty files under evidence/ (01-11, new-cases/)",
          "id": "C1",
          "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
         },
         {
          "met": true,
-         "reason": "23 new workflow fixtures (16 broken, 7 valid-but-unusual) exercised through the checker; each has its own evidence file with exit code and failing checks recorded (evidence/07-new-cases-summary.txt and evidence/new-cases/*.txt).",
+         "reason": "23 new workflow fixtures tested (16 broken, 7 valid-but-unusual), each with checker exit code recorded in evidence/07-new-cases-summary.txt and individual files",
          "id": "C2",
          "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
         },
         {
          "met": true,
-         "reason": "Report section 5 explicitly lists untested scope (no GitHub run, no actionlint/PyYAML, single Python version, execution policy not fully verified, parser not exhaustively reviewed) and ends with 'VERDICT: PASS'.",
+         "reason": "Report section 5 explicitly states untested scope (did not run on GitHub, only Python 3.13 locally, no actionlint/PyYAML, etc.) and ends with VERDICT: PASS",
          "id": "C3",
          "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
         }
@@ -2812,7 +2808,7 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.95,
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
@@ -2820,19 +2816,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; 12 evidence files (00-11) plus 23 new-case outputs saved under evidence/, all non-empty and shown in excerpts.",
+         "reason": "All task 1 criteria (a-e) re-checked with fresh command runs; outputs saved as non-empty files under evidence/ (01-11, new-cases/)",
          "id": "C1",
          "criterion": "Every task 1 acceptance criterion is re-checked with command output saved under evidence/ as non-empty files"
         },
         {
          "met": true,
-         "reason": "23 new workflow fixtures (16 broken, 7 valid-but-unusual) exercised through the checker; each has its own evidence file with exit code and failing checks recorded (evidence/07-new-cases-summary.txt and evidence/new-cases/*.txt).",
+         "reason": "23 new workflow fixtures tested (16 broken, 7 valid-but-unusual), each with checker exit code recorded in evidence/07-new-cases-summary.txt and individual files",
          "id": "C2",
          "criterion": "At least 3 new broken workflows not in the builder self-test are tried, with the checker exit code recorded for each"
         },
         {
          "met": true,
-         "reason": "Report section 5 explicitly lists untested scope (no GitHub run, no actionlint/PyYAML, single Python version, execution policy not fully verified, parser not exhaustively reviewed) and ends with 'VERDICT: PASS'.",
+         "reason": "Report section 5 explicitly states untested scope (did not run on GitHub, only Python 3.13 locally, no actionlint/PyYAML, etc.) and ends with VERDICT: PASS",
          "id": "C3",
          "criterion": "The report states untested scope honestly (for example that the workflow was not run on GitHub) and ends with PASS or NEEDS_WORK"
         }
