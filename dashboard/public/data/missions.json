@@ -1,5 +1,1901 @@
 [
  {
+  "id": "20261108-064726-build-a-small-stdlib",
+  "brief": "Build a small stdlib-only Python 3 JSON HTTP API for a notes service backed by SQLite (create, list, get, delete, with input validation and correct status codes), plus a unittest suite that starts the server in-process on a free port and exercises every endpoint. No pip installs or downloads.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Stdlib-only notes JSON API with SQLite and 24 unittest tests built and independently verified against a separate server process.",
+  "started_at": "2026-11-08T06:47:26Z",
+  "finished_at": "2026-11-08T06:53:50Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "backend-architect",
+    "task": "Write notes_api.py (http.server + sqlite3, stdlib only) and test_notes_api.py (unittest, in-process server on a free port) covering create, list, get, delete and validation",
+    "acceptance": [
+     "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass",
+     "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id",
+     "Only standard-library imports (checked by listing imports); no pip install or download"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-08T06:47:27Z",
+      "finished_at": "2026-11-08T06:50:46Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "notes_api.py + test_notes_api.py written; unittest 24 tests OK on 3 runs (first run had 1 failure, 413 reset, fixed); subprocess smoke 201/200/400/404/204; ast import scan stdlib only."
+     }
+    ],
+    "traces": 16,
+    "fitness": 0.9563,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 184
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "notes_api.py",
+        "test_notes_api.py"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261108-064726-build-a-small-stdlib\\01-backend-architect"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Unittest suite starts in-process and runs successfully, with at least 8 tests covering the API.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API handles validation correctly, returning 400 for bad input/non-JSON, 404 for unknown IDs, and 201 with new ID for successful creation.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "Only standard library imports are used (http.server, sqlite3, json, etc.).",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Unittest suite starts in-process and runs successfully, with at least 8 tests covering the API.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API handles validation correctly, returning 400 for bad input/non-JSON, 404 for unknown IDs, and 201 with new ID for successful creation.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "Only standard library imports are used (http.server, sqlite3, json, etc.).",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Unittest suite starts in-process and runs successfully, with at least 8 tests covering the API.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API handles validation correctly, returning 400 for bad input/non-JSON, 404 for unknown IDs, and 201 with new ID for successful creation.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "Only standard library imports are used (http.server, sqlite3, json, etc.).",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Unittest suite starts in-process and runs successfully, with at least 8 tests covering the API.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API handles validation correctly, returning 400 for bad input/non-JSON, 404 for unknown IDs, and 201 with new ID for successful creation.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "Only standard library imports are used (http.server, sqlite3, json, etc.).",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test suite contains many tests (well over 8) and appears to run without errors.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API returns 400 for invalid input, 404 for unknown IDs, and 201 with new ID on success.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports are from the Python standard library.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test suite contains many tests (well over 8) and appears to run without errors.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API returns 400 for invalid input, 404 for unknown IDs, and 201 with new ID on success.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports are from the Python standard library.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.7,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test suite contains many tests (well over 8) and appears to run without errors.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API returns 400 for invalid input, 404 for unknown IDs, and 201 with new ID on success.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports are from the Python standard library.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test suite contains many tests (well over 8) and appears to run without errors.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "API returns 400 for invalid input, 404 for unknown IDs, and 201 with new ID on success.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports are from the Python standard library.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test file defines 22+ test methods covering all endpoints; in-process server on free port is implemented in setUpClass.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "validate_note rejects missing/empty title and non-JSON bodies with 400 JSON errors; parse_id and store.get yield 404 for unknown IDs; create returns 201 with new id and Location header.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports in both files are from Python standard library (argparse, json, re, signal, sqlite3, sys, threading, datetime, http, urllib, unittest, tempfile, etc.); no third-party dependencies.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test file defines 22+ test methods covering all endpoints; in-process server on free port is implemented in setUpClass.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "validate_note rejects missing/empty title and non-JSON bodies with 400 JSON errors; parse_id and store.get yield 404 for unknown IDs; create returns 201 with new id and Location header.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports in both files are from Python standard library (argparse, json, re, signal, sqlite3, sys, threading, datetime, http, urllib, unittest, tempfile, etc.); no third-party dependencies.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test file defines 22+ test methods covering all endpoints; in-process server on free port is implemented in setUpClass.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "validate_note rejects missing/empty title and non-JSON bodies with 400 JSON errors; parse_id and store.get yield 404 for unknown IDs; create returns 201 with new id and Location header.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports in both files are from Python standard library (argparse, json, re, signal, sqlite3, sys, threading, datetime, http, urllib, unittest, tempfile, etc.); no third-party dependencies.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Evidence score reduced because agent's claim of '24 tests OK on 3 runs' and 'subprocess smoke 201/200/400/404/204' cannot be verified from shown code alone.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Test file defines 22+ test methods covering all endpoints; in-process server on free port is implemented in setUpClass.",
+         "id": "C1",
+         "criterion": "python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass"
+        },
+        {
+         "met": true,
+         "reason": "validate_note rejects missing/empty title and non-JSON bodies with 400 JSON errors; parse_id and store.get yield 404 for unknown IDs; create returns 201 with new id and Location header.",
+         "id": "C2",
+         "criterion": "POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id"
+        },
+        {
+         "met": true,
+         "reason": "All imports in both files are from Python standard library (argparse, json, re, signal, sqlite3, sys, threading, datetime, http, urllib, unittest, tempfile, etc.); no third-party dependencies.",
+         "id": "C3",
+         "criterion": "Only standard-library imports (checked by listing imports); no pip install or download"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Independently verify the notes API against every builder criterion with real command output",
+    "acceptance": [
+     "Each builder criterion has a PASS or FAIL backed by a command run and its captured output",
+     "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-08T06:50:47Z",
+      "finished_at": "2026-11-08T06:53:50Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "EvidenceQA PASS: unittest 24 OK x3; separate process 15/15 checks (201, 200 list/get, four 400s, 404 GET/DELETE, 204), clean Ctrl+Break exit 0; import scan stdlib only; builder hashes unchanged."
+     }
+    ],
+    "traces": 15,
+    "fitness": 0.615,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 194
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "00-hashes-before.txt",
+        "99-final-state.txt",
+        "b1-unittest-builder-dir.stdout.txt",
+        "b1-unittest-builder-dir.txt",
+        "b1-unittest-copy-run1.txt",
+        "b1-unittest-copy-run1.txt.stdout",
+        "b1-unittest-copy-run2.txt",
+        "b1-unittest-copy-run2.txt.stdout",
+        "b3-import-scan.stderr.txt",
+        "b3-import-scan.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261108-064726-build-a-small-stdlib\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.5,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_verifiable_evidence",
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_verifiable_evidence",
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.1,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_verifiable_evidence",
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.7,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_verifiable_evidence",
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "C1 is addressed by the evidence provided, including unittest and integration outputs.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "C2 is met by the separate process test checking at least 5 requests with urllib and stopping cleanly.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "C1 is addressed by the evidence provided, including unittest and integration outputs.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "C2 is met by the separate process test checking at least 5 requests with urllib and stopping cleanly.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "C1 is addressed by the evidence provided, including unittest and integration outputs.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "C2 is met by the separate process test checking at least 5 requests with urllib and stopping cleanly.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "C1 is addressed by the evidence provided, including unittest and integration outputs.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "C2 is met by the separate process test checking at least 5 requests with urllib and stopping cleanly.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "failure_class": "missing_verifiable_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output evidence is provided to demonstrate each builder criterion passing or failing.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent process run and its captured request results are not shown; only file names are listed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "failure_class": "missing_verifiable_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output evidence is provided to demonstrate each builder criterion passing or failing.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent process run and its captured request results are not shown; only file names are listed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "failure_class": "missing_verifiable_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output evidence is provided to demonstrate each builder criterion passing or failing.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent process run and its captured request results are not shown; only file names are listed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.2,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks any verifiable command output or logs to prove the API and tests actually work as claimed.",
+       "failure_class": "missing_verifiable_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output evidence is provided to demonstrate each builder criterion passing or failing.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent process run and its captured request results are not shown; only file names are listed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.5,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The code implementation appears correct and complete, but the acceptance criteria require verifiable command output which is entirely missing (all output files are empty).",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output captured and shown. The referenced output files (b1-unittest-copy-run1.txt.stdout, b1-unittest-copy-run2.txt.stdout) are 0 bytes. The claim 'unittest 24 OK x3' is not backed by any visible test run output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "No captured output from the independent process run. The file independent-process-check.txt.stderr is 0 bytes. While test_notes_api.py contains a test_separate_process method, there is no evidence it was actually executed and passed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The code implementation appears correct and complete, but the acceptance criteria require verifiable command output which is entirely missing (all output files are empty).",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output captured and shown. The referenced output files (b1-unittest-copy-run1.txt.stdout, b1-unittest-copy-run2.txt.stdout) are 0 bytes. The claim 'unittest 24 OK x3' is not backed by any visible test run output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "No captured output from the independent process run. The file independent-process-check.txt.stderr is 0 bytes. While test_notes_api.py contains a test_separate_process method, there is no evidence it was actually executed and passed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.1,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The code implementation appears correct and complete, but the acceptance criteria require verifiable command output which is entirely missing (all output files are empty).",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output captured and shown. The referenced output files (b1-unittest-copy-run1.txt.stdout, b1-unittest-copy-run2.txt.stdout) are 0 bytes. The claim 'unittest 24 OK x3' is not backed by any visible test run output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "No captured output from the independent process run. The file independent-process-check.txt.stderr is 0 bytes. While test_notes_api.py contains a test_separate_process method, there is no evidence it was actually executed and passed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.7,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The code implementation appears correct and complete, but the acceptance criteria require verifiable command output which is entirely missing (all output files are empty).",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No command output captured and shown. The referenced output files (b1-unittest-copy-run1.txt.stdout, b1-unittest-copy-run2.txt.stdout) are 0 bytes. The claim 'unittest 24 OK x3' is not backed by any visible test run output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "No captured output from the independent process run. The file independent-process-check.txt.stderr is 0 bytes. While test_notes_api.py contains a test_separate_process method, there is no evidence it was actually executed and passed.",
+         "id": "C2",
+         "criterion": "Includes an independent run that starts notes_api.py as a separate process and checks at least 5 requests (201, 200 list, 200 get, 400, 404) with urllib, then stops the process"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261108-063451-write-a-powershell-5",
+  "brief": "Write a PowerShell 5.1 script Rotate-Logs.ps1 that archives .log files older than N days from a folder into one dated .zip using the in-box .NET System.IO.Compression classes (not Compress-Archive), deletes each original only after its entry is verified in the zip, supports -WhatIf via SupportsShouldProcess, and has a -SelfTest switch that builds a temp folder with sample old and new logs, runs the rotation, checks the results and cleans up. No downloads or installs.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Rotate-Logs.ps1 for PowerShell 5.1 built and independently verified: in-box zip, verify-then-delete, -WhatIf and -SelfTest all pass.",
+  "started_at": "2026-11-08T06:34:51Z",
+  "finished_at": "2026-11-08T06:47:09Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "devops-automator",
+    "task": "Write Rotate-Logs.ps1 (PowerShell 5.1) that zips .log files older than N days into one dated zip with System.IO.Compression, deletes originals only after verifying each entry, supports -WhatIf and -SelfTest",
+    "acceptance": [
+     "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)",
+     "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file",
+     "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed",
+     "Does not call Compress-Archive and downloads or installs nothing"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-08T06:35:07Z",
+      "finished_at": "2026-11-08T06:42:18Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Rotate-Logs.ps1 written (20674 B); PS 5.1 parser 0 errors; -WhatIf left 3 old logs and made 0 zips; -SelfTest 14/14 exit 0 (8 repeat runs exit 0); 0 Compress-Archive and 0 web/install calls."
+     }
+    ],
+    "traces": 23,
+    "fitness": 0.8125,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 190
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "Rotate-Logs.ps1"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261108-063451-write-a-powershell-5\\01-devops-automator"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_implementation",
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.725,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_implementation",
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_implementation",
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.775,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_implementation",
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script parses correctly under PowerShell 5.1 parser despite output truncation.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "Uses SupportsShouldProcess and handles WhatIf logic appropriately.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest implementation is comprehensive and includes exit code handling.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses System.IO.Compression classes, no Compress-Archive or downloads used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script parses correctly under PowerShell 5.1 parser despite output truncation.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "Uses SupportsShouldProcess and handles WhatIf logic appropriately.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest implementation is comprehensive and includes exit code handling.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses System.IO.Compression classes, no Compress-Archive or downloads used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script parses correctly under PowerShell 5.1 parser despite output truncation.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "Uses SupportsShouldProcess and handles WhatIf logic appropriately.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest implementation is comprehensive and includes exit code handling.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses System.IO.Compression classes, no Compress-Archive or downloads used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "None",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script parses correctly under PowerShell 5.1 parser despite output truncation.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "Uses SupportsShouldProcess and handles WhatIf logic appropriately.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest implementation is comprehensive and includes exit code handling.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses System.IO.Compression classes, no Compress-Archive or downloads used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "failure_class": "missing_implementation",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Script appears truncated (e.g., '[System.IO.Path]::Ge') likely causing parse errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding with SupportsShouldProcess is present and -WhatIf logic is referenced.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": false,
+         "reason": "SelfTest function is never defined; cannot verify exit code behavior.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "No Compress-Archive or external downloads are used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "failure_class": "missing_implementation",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Script appears truncated (e.g., '[System.IO.Path]::Ge') likely causing parse errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding with SupportsShouldProcess is present and -WhatIf logic is referenced.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": false,
+         "reason": "SelfTest function is never defined; cannot verify exit code behavior.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "No Compress-Archive or external downloads are used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.4,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "failure_class": "missing_implementation",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Script appears truncated (e.g., '[System.IO.Path]::Ge') likely causing parse errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding with SupportsShouldProcess is present and -WhatIf logic is referenced.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": false,
+         "reason": "SelfTest function is never defined; cannot verify exit code behavior.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "No Compress-Archive or external downloads are used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.6,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.",
+       "failure_class": "missing_implementation",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Script appears truncated (e.g., '[System.IO.Path]::Ge') likely causing parse errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding with SupportsShouldProcess is present and -WhatIf logic is referenced.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": false,
+         "reason": "SelfTest function is never defined; cannot verify exit code behavior.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "No Compress-Archive or external downloads are used.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the script is thorough, well-structured, and meets all acceptance criteria with robust error handling and verification.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script uses #Requires -Version 5.1 and valid PS 5.1 syntax; agent reports parser returns zero errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding(SupportsShouldProcess) present on script and core function; WhatIf logic guards zip creation and deletion; agent confirms -WhatIf created no zip and deleted no files.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest parameter and Invoke-SelfTest function implement full temp-folder test with WhatIf and real passes, verification, and cleanup; agent reports 14/14 checks pass and exit 0 over repeated runs.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses Add-Type for System.IO.Compression assemblies and ZipFile/ZipArchive classes; no Compress-Archive calls; no download/install code.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the script is thorough, well-structured, and meets all acceptance criteria with robust error handling and verification.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script uses #Requires -Version 5.1 and valid PS 5.1 syntax; agent reports parser returns zero errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding(SupportsShouldProcess) present on script and core function; WhatIf logic guards zip creation and deletion; agent confirms -WhatIf created no zip and deleted no files.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest parameter and Invoke-SelfTest function implement full temp-folder test with WhatIf and real passes, verification, and cleanup; agent reports 14/14 checks pass and exit 0 over repeated runs.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses Add-Type for System.IO.Compression assemblies and ZipFile/ZipArchive classes; no Compress-Archive calls; no download/install code.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the script is thorough, well-structured, and meets all acceptance criteria with robust error handling and verification.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script uses #Requires -Version 5.1 and valid PS 5.1 syntax; agent reports parser returns zero errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding(SupportsShouldProcess) present on script and core function; WhatIf logic guards zip creation and deletion; agent confirms -WhatIf created no zip and deleted no files.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest parameter and Invoke-SelfTest function implement full temp-folder test with WhatIf and real passes, verification, and cleanup; agent reports 14/14 checks pass and exit 0 over repeated runs.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses Add-Type for System.IO.Compression assemblies and ZipFile/ZipArchive classes; no Compress-Archive calls; no download/install code.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the script is thorough, well-structured, and meets all acceptance criteria with robust error handling and verification.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script uses #Requires -Version 5.1 and valid PS 5.1 syntax; agent reports parser returns zero errors.",
+         "id": "C1",
+         "criterion": "Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile)"
+        },
+        {
+         "met": true,
+         "reason": "CmdletBinding(SupportsShouldProcess) present on script and core function; WhatIf logic guards zip creation and deletion; agent confirms -WhatIf created no zip and deleted no files.",
+         "id": "C2",
+         "criterion": "Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest parameter and Invoke-SelfTest function implement full temp-folder test with WhatIf and real passes, verification, and cleanup; agent reports 14/14 checks pass and exit 0 over repeated runs.",
+         "id": "C3",
+         "criterion": "powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed"
+        },
+        {
+         "met": true,
+         "reason": "Uses Add-Type for System.IO.Compression assemblies and ZipFile/ZipArchive classes; no Compress-Archive calls; no download/install code.",
+         "id": "C4",
+         "criterion": "Does not call Compress-Archive and downloads or installs nothing"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Independently verify Rotate-Logs.ps1 against every acceptance criterion with real command output",
+    "acceptance": [
+     "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output",
+     "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-08T06:42:18Z",
+      "finished_at": "2026-11-08T06:47:08Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "EvidenceQA PASS: B1-B4 each backed by PS 5.1 output files; independent run 37/37 (6 old entries match name+size+SHA-256, newer/.txt/.logx/subfolder files kept); SelfTest 5/5 exit 0."
+     }
+    ],
+    "traces": 16,
+    "fitness": 0.8875,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 181
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "check-b1-b4.ps1",
+        "check-b2-whatif.ps1",
+        "check-independent-run.ps1",
+        "00-script-hash.txt",
+        "01-b1-b4-parse-and-scan.txt",
+        "02-b2-whatif.txt",
+        "03-b3-selftest-runs.txt",
+        "04-independent-run.txt",
+        "04a-independent-run-attempt1-harness-abort.txt",
+        "05-final-state.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261108-063451-write-a-powershell-5\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.7,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence_output",
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence_output",
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence_output",
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence_output",
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Builder criteria are backed by captured Windows PowerShell 5.1 command execution output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "An independent run on a fresh temp folder explicitly validates zip entry names, sizes, hashes, and ensures newer files remain.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Builder criteria are backed by captured Windows PowerShell 5.1 command execution output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "An independent run on a fresh temp folder explicitly validates zip entry names, sizes, hashes, and ensures newer files remain.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Builder criteria are backed by captured Windows PowerShell 5.1 command execution output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "An independent run on a fresh temp folder explicitly validates zip entry names, sizes, hashes, and ensures newer files remain.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Builder criteria are backed by captured Windows PowerShell 5.1 command execution output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "An independent run on a fresh temp folder explicitly validates zip entry names, sizes, hashes, and ensures newer files remain.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All PASS/FAIL results are shown with PowerShell command output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "Independent run on a fresh temp folder verifies zip entries, sizes, hashes and retention of newer files.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All PASS/FAIL results are shown with PowerShell command output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "Independent run on a fresh temp folder verifies zip entries, sizes, hashes and retention of newer files.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All PASS/FAIL results are shown with PowerShell command output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "Independent run on a fresh temp folder verifies zip entries, sizes, hashes and retention of newer files.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All PASS/FAIL results are shown with PowerShell command output.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": true,
+         "reason": "Independent run on a fresh temp folder verifies zip entries, sizes, hashes and retention of newer files.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.4,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "failure_class": "missing_evidence_output",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Builder criteria B1-B4 output files are referenced but not shown (marked as omitted); only SelfTest output is visible, not the captured command output for each builder criterion.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent test script is shown but its actual run output is not captured in the evidence; only the agent's claim of 37/37 passes appears without the command output.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.3,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "failure_class": "missing_evidence_output",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Builder criteria B1-B4 output files are referenced but not shown (marked as omitted); only SelfTest output is visible, not the captured command output for each builder criterion.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent test script is shown but its actual run output is not captured in the evidence; only the agent's claim of 37/37 passes appears without the command output.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.2,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "failure_class": "missing_evidence_output",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Builder criteria B1-B4 output files are referenced but not shown (marked as omitted); only SelfTest output is visible, not the captured command output for each builder criterion.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent test script is shown but its actual run output is not captured in the evidence; only the agent's claim of 37/37 passes appears without the command output.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.7,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Required command outputs for both acceptance criteria are omitted from the evidence, making claims unverifiable from what is shown.",
+       "failure_class": "missing_evidence_output",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Builder criteria B1-B4 output files are referenced but not shown (marked as omitted); only SelfTest output is visible, not the captured command output for each builder criterion.",
+         "id": "C1",
+         "criterion": "Each builder criterion has a PASS or FAIL backed by a command run in Windows PowerShell 5.1 and its captured output"
+        },
+        {
+         "met": false,
+         "reason": "The independent test script is shown but its actual run output is not captured in the evidence; only the agent's claim of 37/37 passes appears without the command output.",
+         "id": "C2",
+         "criterion": "Includes one independent run on a fresh temp folder (not the script SelfTest) that checks zip entry names and sizes against the originals, and that files newer than N days remain"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261105-084006-write-a-powershell-5",
   "brief": "Write a PowerShell 5.1 log-archive script with a -WhatIf mode and a built-in -SelfTest switch: it zips log files older than N days into a dated archive and removes the originals, using only built-in cmdlets and no downloads",
   "mode": "micro",
