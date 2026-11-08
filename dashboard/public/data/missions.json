@@ -6269,7 +6269,7 @@
      }
     ],
     "traces": 9,
-    "fitness": 0.8325,
+    "fitness": 0.975,
     "provisional": false,
     "scores": [
      {
@@ -6311,32 +6311,30 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.75,
+      "value": 1.0,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_feature_mentions",
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.7,
+      "value": 1.0,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_feature_mentions",
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
@@ -6344,14 +6342,13 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_feature_mentions",
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
@@ -6359,14 +6356,13 @@
       "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_feature_mentions",
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
+       "failure_class": "none",
+       "critique": "none",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
+       ]
       }
      },
      {
@@ -6378,27 +6374,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "File contains exactly 3 prose paragraphs with no headings or lists."
+         "reason": "announcement.md contains exactly 3 paragraphs of body text with no headings, lists, or other blocks.",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Measured word counts are 101, 104, and 104 words, all within the 90-110 range."
+         "reason": "Measured paragraph word counts are 101, 104, and 104, all within the 90-110 word range.",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentence 1: 'Today we launch Quillo.' (No adjectives). First sentence 2: 'Now let us show you what Quillo does.' (No adjectives). First sentence 3: 'You can download Quillo today.' (No adjectives)."
+         "reason": "First sentence of paragraph 1 ('Today we launch Quillo.'), paragraph 2 ('Now let us show you what Quillo does.'), and paragraph 3 ('You can download Quillo today.') contain no adjectives.",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "The text names 'Flow Sync' and 'Recall Search' as the two features."
+         "reason": "The text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6410,27 +6410,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "File contains exactly 3 prose paragraphs with no headings or lists."
+         "reason": "announcement.md contains exactly 3 paragraphs of body text with no headings, lists, or other blocks.",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Measured word counts are 101, 104, and 104 words, all within the 90-110 range."
+         "reason": "Measured paragraph word counts are 101, 104, and 104, all within the 90-110 word range.",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentence 1: 'Today we launch Quillo.' (No adjectives). First sentence 2: 'Now let us show you what Quillo does.' (No adjectives). First sentence 3: 'You can download Quillo today.' (No adjectives)."
+         "reason": "First sentence of paragraph 1 ('Today we launch Quillo.'), paragraph 2 ('Now let us show you what Quillo does.'), and paragraph 3 ('You can download Quillo today.') contain no adjectives.",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "The text names 'Flow Sync' and 'Recall Search' as the two features."
+         "reason": "The text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6442,27 +6446,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "File contains exactly 3 prose paragraphs with no headings or lists."
+         "reason": "announcement.md contains exactly 3 paragraphs of body text with no headings, lists, or other blocks.",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Measured word counts are 101, 104, and 104 words, all within the 90-110 range."
+         "reason": "Measured paragraph word counts are 101, 104, and 104, all within the 90-110 word range.",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentence 1: 'Today we launch Quillo.' (No adjectives). First sentence 2: 'Now let us show you what Quillo does.' (No adjectives). First sentence 3: 'You can download Quillo today.' (No adjectives)."
+         "reason": "First sentence of paragraph 1 ('Today we launch Quillo.'), paragraph 2 ('Now let us show you what Quillo does.'), and paragraph 3 ('You can download Quillo today.') contain no adjectives.",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "The text names 'Flow Sync' and 'Recall Search' as the two features."
+         "reason": "The text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6474,91 +6482,103 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "File contains exactly 3 prose paragraphs with no headings or lists."
+         "reason": "announcement.md contains exactly 3 paragraphs of body text with no headings, lists, or other blocks.",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Measured word counts are 101, 104, and 104 words, all within the 90-110 range."
+         "reason": "Measured paragraph word counts are 101, 104, and 104, all within the 90-110 word range.",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentence 1: 'Today we launch Quillo.' (No adjectives). First sentence 2: 'Now let us show you what Quillo does.' (No adjectives). First sentence 3: 'You can download Quillo today.' (No adjectives)."
+         "reason": "First sentence of paragraph 1 ('Today we launch Quillo.'), paragraph 2 ('Now let us show you what Quillo does.'), and paragraph 3 ('You can download Quillo today.') contain no adjectives.",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "The text names 'Flow Sync' and 'Recall Search' as the two features."
+         "reason": "The text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.5,
+      "value": 1.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
-       "failure_class": "missing_feature_mentions",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Exactly 3 paragraphs of body text",
          "met": true,
-         "reason": "Three paragraphs present"
+         "reason": "Exactly three paragraphs present",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "Each paragraph 90-110 words",
          "met": true,
-         "reason": "Word counts 101, 104, 104"
+         "reason": "Word counts 101, 104, 104 within 90-110",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences are adjective‑free"
+         "reason": "First sentences contain no adjectives",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "Each paragraph names exactly two product features",
-         "met": false,
-         "reason": "Paragraph 1 and 3 name no features; only paragraph 2 names two"
+         "met": true,
+         "reason": "Only two features (Flow Sync, Recall Search) are named",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.4,
+      "value": 1.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
-       "failure_class": "missing_feature_mentions",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Exactly 3 paragraphs of body text",
          "met": true,
-         "reason": "Three paragraphs present"
+         "reason": "Exactly three paragraphs present",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "Each paragraph 90-110 words",
          "met": true,
-         "reason": "Word counts 101, 104, 104"
+         "reason": "Word counts 101, 104, 104 within 90-110",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences are adjective‑free"
+         "reason": "First sentences contain no adjectives",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "Each paragraph names exactly two product features",
-         "met": false,
-         "reason": "Paragraph 1 and 3 name no features; only paragraph 2 names two"
+         "met": true,
+         "reason": "Only two features (Flow Sync, Recall Search) are named",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6566,63 +6586,71 @@
       "value": 0.9,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
-       "failure_class": "missing_feature_mentions",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Exactly 3 paragraphs of body text",
          "met": true,
-         "reason": "Three paragraphs present"
+         "reason": "Exactly three paragraphs present",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "Each paragraph 90-110 words",
          "met": true,
-         "reason": "Word counts 101, 104, 104"
+         "reason": "Word counts 101, 104, 104 within 90-110",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences are adjective‑free"
+         "reason": "First sentences contain no adjectives",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "Each paragraph names exactly two product features",
-         "met": false,
-         "reason": "Paragraph 1 and 3 name no features; only paragraph 2 names two"
+         "met": true,
+         "reason": "Only two features (Flow Sync, Recall Search) are named",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.7,
+      "value": 0.85,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "Paragraphs 1 and 3 fail to name exactly two product features as required.",
-       "failure_class": "missing_feature_mentions",
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Exactly 3 paragraphs of body text",
          "met": true,
-         "reason": "Three paragraphs present"
+         "reason": "Exactly three paragraphs present",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "Each paragraph 90-110 words",
          "met": true,
-         "reason": "Word counts 101, 104, 104"
+         "reason": "Word counts 101, 104, 104 within 90-110",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences are adjective‑free"
+         "reason": "First sentences contain no adjectives",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "Each paragraph names exactly two product features",
-         "met": false,
-         "reason": "Paragraph 1 and 3 name no features; only paragraph 2 names two"
+         "met": true,
+         "reason": "Only two features (Flow Sync, Recall Search) are named",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6762,27 +6790,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "Measured facts confirm 3 prose paragraphs with no other blocks"
+         "reason": "File contains exactly 3 prose paragraphs with no headings, lists, or other blocks",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Word counts are 101, 104, 104 — all within range"
+         "reason": "Each paragraph is 90-110 words: measured counts are 101, 104, 104",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.' — none contain adjectives"
+         "reason": "First sentences contain no adjectives: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.'",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "Only 'Flow Sync' and 'Recall Search' are named as features"
+         "reason": "Text names exactly two features: Flow Sync and Recall Search",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6794,27 +6826,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "Measured facts confirm 3 prose paragraphs with no other blocks"
+         "reason": "File contains exactly 3 prose paragraphs with no headings, lists, or other blocks",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Word counts are 101, 104, 104 — all within range"
+         "reason": "Each paragraph is 90-110 words: measured counts are 101, 104, 104",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.' — none contain adjectives"
+         "reason": "First sentences contain no adjectives: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.'",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "Only 'Flow Sync' and 'Recall Search' are named as features"
+         "reason": "Text names exactly two features: Flow Sync and Recall Search",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -6826,59 +6862,67 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "Measured facts confirm 3 prose paragraphs with no other blocks"
+         "reason": "File contains exactly 3 prose paragraphs with no headings, lists, or other blocks",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Word counts are 101, 104, 104 — all within range"
+         "reason": "Each paragraph is 90-110 words: measured counts are 101, 104, 104",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.' — none contain adjectives"
+         "reason": "First sentences contain no adjectives: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.'",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "Only 'Flow Sync' and 'Recall Search' are named as features"
+         "reason": "Text names exactly two features: Flow Sync and Recall Search",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.95,
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)",
          "met": true,
-         "reason": "Measured facts confirm 3 prose paragraphs with no other blocks"
+         "reason": "File contains exactly 3 prose paragraphs with no headings, lists, or other blocks",
+         "id": "C1",
+         "criterion": "announcement.md contains exactly 3 paragraphs of body text (no headings, lists or other blocks)"
         },
         {
-         "criterion": "each paragraph is 90-110 words",
          "met": true,
-         "reason": "Word counts are 101, 104, 104 — all within range"
+         "reason": "Each paragraph is 90-110 words: measured counts are 101, 104, 104",
+         "id": "C2",
+         "criterion": "each paragraph is 90-110 words"
         },
         {
-         "criterion": "the first sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "First sentences: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.' — none contain adjectives"
+         "reason": "First sentences contain no adjectives: 'Today we launch Quillo.', 'Now let us show you what Quillo does.', 'You can download Quillo today.'",
+         "id": "C3",
+         "criterion": "the first sentence of each paragraph contains no adjectives"
         },
         {
-         "criterion": "the text names exactly two product features",
          "met": true,
-         "reason": "Only 'Flow Sync' and 'Recall Search' are named as features"
+         "reason": "Text names exactly two features: Flow Sync and Recall Search",
+         "id": "C4",
+         "criterion": "the text names exactly two product features"
         }
        ],
-       "cached": true
+       "cached": false
       }
      }
     ]
@@ -6907,7 +6951,7 @@
      }
     ],
     "traces": 13,
-    "fitness": 0.9838,
+    "fitness": 0.9775,
     "provisional": false,
     "scores": [
      {
@@ -6984,20 +7028,6 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.95,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "none",
-       "critique": "none",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ]
-      }
-     },
-     {
-      "metric": "rubric:quality",
       "value": 0.925,
       "judge": "ensemble",
       "evidence": {
@@ -7011,6 +7041,20 @@
       }
      },
      {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
       "metric": "rubric:completeness",
       "value": 1.0,
       "judge": "gemini/gemini-3.5-flash-lite",
@@ -7019,27 +7063,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)",
          "met": true,
-         "reason": "Script executed and reported counts: 101, 104, 104, and 3 paragraphs."
+         "reason": "Script reports exactly 3 paragraphs with 101, 104, and 104 words.",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure",
          "met": true,
-         "reason": "POS judgement provided for all first sentences with zero adjectives found."
+         "reason": "First sentences analyzed and contain 0 adjectives.",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "list each named feature; the count must be exactly 2",
          "met": true,
-         "reason": "Listed Flow Sync and Recall Search, exactly 2 features."
+         "reason": "Text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
         },
         {
-         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes",
          "met": true,
-         "reason": "All criteria met, verdict correctly set to PASS."
+         "reason": "All criteria met, verdict is PASS.",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -7051,27 +7099,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)",
          "met": true,
-         "reason": "Script executed and reported counts: 101, 104, 104, and 3 paragraphs."
+         "reason": "Script reports exactly 3 paragraphs with 101, 104, and 104 words.",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure",
          "met": true,
-         "reason": "POS judgement provided for all first sentences with zero adjectives found."
+         "reason": "First sentences analyzed and contain 0 adjectives.",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "list each named feature; the count must be exactly 2",
          "met": true,
-         "reason": "Listed Flow Sync and Recall Search, exactly 2 features."
+         "reason": "Text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
         },
         {
-         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes",
          "met": true,
-         "reason": "All criteria met, verdict correctly set to PASS."
+         "reason": "All criteria met, verdict is PASS.",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -7083,155 +7135,157 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)",
          "met": true,
-         "reason": "Script executed and reported counts: 101, 104, 104, and 3 paragraphs."
+         "reason": "Script reports exactly 3 paragraphs with 101, 104, and 104 words.",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure",
          "met": true,
-         "reason": "POS judgement provided for all first sentences with zero adjectives found."
+         "reason": "First sentences analyzed and contain 0 adjectives.",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "list each named feature; the count must be exactly 2",
          "met": true,
-         "reason": "Listed Flow Sync and Recall Search, exactly 2 features."
+         "reason": "Text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
         },
         {
-         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes",
          "met": true,
-         "reason": "All criteria met, verdict correctly set to PASS."
+         "reason": "All criteria met, verdict is PASS.",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Script reports exactly 3 paragraphs with 101, 104, and 104 words.",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
+        },
+        {
+         "met": true,
+         "reason": "First sentences analyzed and contain 0 adjectives.",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
+        },
+        {
+         "met": true,
+         "reason": "Text names exactly two features: Flow Sync and Recall Search.",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        },
+        {
+         "met": true,
+         "reason": "All criteria met, verdict is PASS.",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Word counts 101/104/104 and 3 paragraphs satisfy range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
+        },
+        {
+         "met": true,
+         "reason": "First sentences listed with POS tags show zero adjectives",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
+        },
+        {
+         "met": true,
+         "reason": "Exactly two named features (Flow Sync, Recall Search) identified",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Word counts 101/104/104 and 3 paragraphs satisfy range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
+        },
+        {
+         "met": true,
+         "reason": "First sentences listed with POS tags show zero adjectives",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
+        },
+        {
+         "met": true,
+         "reason": "Exactly two named features (Flow Sync, Recall Search) identified",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
       "value": 0.95,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)",
-         "met": true,
-         "reason": "Script executed and reported counts: 101, 104, 104, and 3 paragraphs."
-        },
-        {
-         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure",
-         "met": true,
-         "reason": "POS judgement provided for all first sentences with zero adjectives found."
-        },
-        {
-         "criterion": "list each named feature; the count must be exactly 2",
-         "met": true,
-         "reason": "Listed Flow Sync and Recall Search, exactly 2 features."
-        },
-        {
-         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes",
-         "met": true,
-         "reason": "All criteria met, verdict correctly set to PASS."
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 1.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
        "critique": "none",
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Paragraph count is 3",
          "met": true,
-         "reason": "wordcount-output shows PARAGRAPH COUNT: 3"
+         "reason": "Word counts 101/104/104 and 3 paragraphs satisfy range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "Each paragraph has 90-110 words",
          "met": true,
-         "reason": "Paragraph word counts are 101, 104, 104"
+         "reason": "First sentences listed with POS tags show zero adjectives",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "pos-judgement.txt lists zero adjectives for all three first sentences"
-        },
-        {
-         "criterion": "Exactly two named features are present",
-         "met": true,
-         "reason": "CAPITALISED MULTI-WORD NAMES shows Flow Sync and Recall Search only"
+         "reason": "Exactly two named features (Flow Sync, Recall Search) identified",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
         }
        ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 1.0,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "criterion": "Paragraph count is 3",
-         "met": true,
-         "reason": "wordcount-output shows PARAGRAPH COUNT: 3"
-        },
-        {
-         "criterion": "Each paragraph has 90-110 words",
-         "met": true,
-         "reason": "Paragraph word counts are 101, 104, 104"
-        },
-        {
-         "criterion": "First sentence of each paragraph contains no adjectives",
-         "met": true,
-         "reason": "pos-judgement.txt lists zero adjectives for all three first sentences"
-        },
-        {
-         "criterion": "Exactly two named features are present",
-         "met": true,
-         "reason": "CAPITALISED MULTI-WORD NAMES shows Flow Sync and Recall Search only"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.9,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "criterion": "Paragraph count is 3",
-         "met": true,
-         "reason": "wordcount-output shows PARAGRAPH COUNT: 3"
-        },
-        {
-         "criterion": "Each paragraph has 90-110 words",
-         "met": true,
-         "reason": "Paragraph word counts are 101, 104, 104"
-        },
-        {
-         "criterion": "First sentence of each paragraph contains no adjectives",
-         "met": true,
-         "reason": "pos-judgement.txt lists zero adjectives for all three first sentences"
-        },
-        {
-         "criterion": "Exactly two named features are present",
-         "met": true,
-         "reason": "CAPITALISED MULTI-WORD NAMES shows Flow Sync and Recall Search only"
-        }
-       ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -7243,27 +7297,25 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Paragraph count is 3",
          "met": true,
-         "reason": "wordcount-output shows PARAGRAPH COUNT: 3"
+         "reason": "Word counts 101/104/104 and 3 paragraphs satisfy range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "Each paragraph has 90-110 words",
          "met": true,
-         "reason": "Paragraph word counts are 101, 104, 104"
+         "reason": "First sentences listed with POS tags show zero adjectives",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "pos-judgement.txt lists zero adjectives for all three first sentences"
-        },
-        {
-         "criterion": "Exactly two named features are present",
-         "met": true,
-         "reason": "CAPITALISED MULTI-WORD NAMES shows Flow Sync and Recall Search only"
+         "reason": "Exactly two named features (Flow Sync, Recall Search) identified",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -7403,22 +7455,31 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Word count per paragraph 90-110 and exactly 3 paragraphs",
          "met": true,
-         "reason": "Script and awk crosscheck show 3 paragraphs with 101, 104, 104 words (both whitespace and regex counts), all within 90-110 range"
+         "reason": "Word counts 101/104/104 (three methods agree), paragraph count 3, all within 90-110 range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "Manual POS judgement of each first sentence tokens shows 0 adjectives across all three paragraphs; no POS tagger available but human analysis is documented"
+         "reason": "Manual POS judgement shows zero adjectives in all three first sentences; no tagger available but reasoning is sound",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "Exactly two named features",
          "met": true,
-         "reason": "Feature audit and capitalized multi-word scan identify exactly two named features: 'Flow Sync' and 'Recall Search', each occurring once and explicitly introduced as features"
+         "reason": "Exactly two named features identified: Flow Sync and Recall Search; audit confirms no other capitalised multi-word names or feature mentions",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        },
+        {
+         "met": true,
+         "reason": "All criteria hold; orchestrator recorded PASS; builder file hash unchanged",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -7430,76 +7491,103 @@
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Word count per paragraph 90-110 and exactly 3 paragraphs",
          "met": true,
-         "reason": "Script and awk crosscheck show 3 paragraphs with 101, 104, 104 words (both whitespace and regex counts), all within 90-110 range"
+         "reason": "Word counts 101/104/104 (three methods agree), paragraph count 3, all within 90-110 range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "Manual POS judgement of each first sentence tokens shows 0 adjectives across all three paragraphs; no POS tagger available but human analysis is documented"
+         "reason": "Manual POS judgement shows zero adjectives in all three first sentences; no tagger available but reasoning is sound",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "Exactly two named features",
          "met": true,
-         "reason": "Feature audit and capitalized multi-word scan identify exactly two named features: 'Flow Sync' and 'Recall Search', each occurring once and explicitly introduced as features"
+         "reason": "Exactly two named features identified: Flow Sync and Recall Search; audit confirms no other capitalised multi-word names or feature mentions",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        },
+        {
+         "met": true,
+         "reason": "All criteria hold; orchestrator recorded PASS; builder file hash unchanged",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:evidence",
-      "value": 1.0,
+      "value": 0.9,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Word count per paragraph 90-110 and exactly 3 paragraphs",
          "met": true,
-         "reason": "Script and awk crosscheck show 3 paragraphs with 101, 104, 104 words (both whitespace and regex counts), all within 90-110 range"
+         "reason": "Word counts 101/104/104 (three methods agree), paragraph count 3, all within 90-110 range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "Manual POS judgement of each first sentence tokens shows 0 adjectives across all three paragraphs; no POS tagger available but human analysis is documented"
+         "reason": "Manual POS judgement shows zero adjectives in all three first sentences; no tagger available but reasoning is sound",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "Exactly two named features",
          "met": true,
-         "reason": "Feature audit and capitalized multi-word scan identify exactly two named features: 'Flow Sync' and 'Recall Search', each occurring once and explicitly introduced as features"
+         "reason": "Exactly two named features identified: Flow Sync and Recall Search; audit confirms no other capitalised multi-word names or feature mentions",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        },
+        {
+         "met": true,
+         "reason": "All criteria hold; orchestrator recorded PASS; builder file hash unchanged",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 1.0,
+      "value": 0.9,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
        "failure_class": "none",
        "acceptance": [
         {
-         "criterion": "Word count per paragraph 90-110 and exactly 3 paragraphs",
          "met": true,
-         "reason": "Script and awk crosscheck show 3 paragraphs with 101, 104, 104 words (both whitespace and regex counts), all within 90-110 range"
+         "reason": "Word counts 101/104/104 (three methods agree), paragraph count 3, all within 90-110 range",
+         "id": "C1",
+         "criterion": "run a word-count script per paragraph and report the 3 counts (each must be 90-110) and the paragraph count (must be 3)"
         },
         {
-         "criterion": "First sentence of each paragraph contains no adjectives",
          "met": true,
-         "reason": "Manual POS judgement of each first sentence tokens shows 0 adjectives across all three paragraphs; no POS tagger available but human analysis is documented"
+         "reason": "Manual POS judgement shows zero adjectives in all three first sentences; no tagger available but reasoning is sound",
+         "id": "C2",
+         "criterion": "list every word of each paragraph's first sentence with a part-of-speech judgement; any adjective is a failure"
         },
         {
-         "criterion": "Exactly two named features",
          "met": true,
-         "reason": "Feature audit and capitalized multi-word scan identify exactly two named features: 'Flow Sync' and 'Recall Search', each occurring once and explicitly introduced as features"
+         "reason": "Exactly two named features identified: Flow Sync and Recall Search; audit confirms no other capitalised multi-word names or feature mentions",
+         "id": "C3",
+         "criterion": "list each named feature; the count must be exactly 2"
+        },
+        {
+         "met": true,
+         "reason": "All criteria hold; orchestrator recorded PASS; builder file hash unchanged",
+         "id": "C4",
+         "criterion": "verdict PASS only if all criteria hold, otherwise NEEDS_WORK with exact fixes"
         }
        ],
-       "cached": true
+       "cached": false
       }
      }
     ]

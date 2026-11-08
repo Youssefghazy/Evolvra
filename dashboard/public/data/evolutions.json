@@ -1782,5 +1782,152 @@
    }
   ],
   "diagnosis": "# Diagnosis: growth-hacker v1\n\nTasks scored: 2. Mean fitness: 0.9104.\n\n## Worst tasks\n### 20261105-074515-design-a-referral-loop #1 (fitness 0.8912)\n- Task: Write REFERRAL-LOOP.md: a referral loop design for a note-taking app with a fraud-risk section\n- Acceptance: describes the loop step by step: trigger, invite, reward for referrer and for invitee, and the action that re-enters the loop; defines a viral coefficient (K) formula with assumed inputs and shows the arithmetic; has a section headed 'Fraud risk' listing at least 4 distinct abuse vectors, each with a concrete mitigation; lists at least 3 metrics to track, each with a target number; any assumed number is labelled as an assumption\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `none`\n- Critique: none\n- QA feedback on failed attempts: C1-C4 met (K arithmetic 0.10/0.2625 matches; 7 vectors; 7 metrics). C5 NOT MET: 6 assumed numbers have no [A#] tag, no Assumptions row and no inline label, contradicting lines 4-5 ('Each one is tagged ... and listed'). Fixes: A15 prompt cap 1 per 7 days (L49); A16 storage trigger 80% of free limit (L46: '80% [A16] of the free storage limit [A1]'); A17 bot alert >10 signups per code in 24h (L163, replace '(threshold is an assumption)' with [A17]); A18 collusion low-activity window after day 7 (L168); A19 M1 window 30 days (L180; optionally add the window to A4); A20 experiment arms day 2 vs day 7 and 3+ people (L198-199) and fix L203-205 'no numbers assumed here'. Optional: tag inline repeats of '1 month' (L43, L45, L74, L94, L96) with [A8]/[A9]. Re-check lines 4-5 so the claim is true.\n- Output excerpt:\n```\n--- REFERRAL-LOOP.md (17344 chars) ---\n# REFERRAL-LOOP.md: Referral Loop Design for \"Inkwell\" (fictional note-taking app)\n\n> **Read this first.** \"Inkwell\" is a made-up name for a generic freemium note-taking app.\n> No real company data exists for this design. **Every assumed number in this document is\n> tagged `[A1]` to `[A27]` where it appears, and each tag has a row in the Assumptions table\n> (section 1).** None of them is a measured fact or an industry benchmark. Replace them with\n> real numbers once the loop is live.\n>\n> Numbers that carry **no** tag are not assumptions. They are only: section, step, trigger,\n> metric or assumption IDs (for example \"Step 1\", \"M4\", \"A3\"); the count of items in a list or\n> formula (for example \"four inputs\", \"2 x\" rewards per referral); fixed math in a formula (the\n> `1` in `1 / (1 - K)` and the K = 1.0 self-growth threshold); and results computed from tagged\n> inputs (for example K = 0.10, 1.111, $12).\n\n---\n\n## 1. Assumptions table\n\n| ID | Assumption | Value | W\n\n[... 15844 characters omitted from the middle of this file ...]\n\n vs a generic signup page | Higher M2 |\n| a | Pre-save the shared note + onboarding checklist vs empty account | Higher M3 |\n\nEach experiment runs until it reaches a pre-set sample size and is judged by a pre-set\nsignificance level. This document does **not** set values for sample size or significance\nlevel; they will be chosen (and added to the Assumptions table) once real traffic volumes are\nknown. The only number\n```\n\n### 20261103-080434-propose-three-zero-budget #1 (fitness 0.9297)\n- Task: Write EXPERIMENTS.md proposing three zero-budget growth experiments for a free developer tool with 500 users\n- Acceptance: Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form; Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window; Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software; Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown); Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The statistical verification claims are not directly observable in the document, but the overall structure meets the brief.\n- Output excerpt:\n```\n--- EXPERIMENTS.md (26234 chars) ---\n# Zero-Budget Growth Experiments: Free Developer Tool (~500 users)\n\n## 0. Assumptions (stated explicitly because the product is unspecified)\n\n| # | Assumption | Value used in the math |\n|---|---|---|\n| A1 | Product | Open-source CLI with an optional free account / API key (freemium). Hosted on GitHub, installed via a package manager (npm/pip/brew). |\n| A2 | Total users | 500 registered accounts (an account = an email plus an install ID). |\n| A3 | New-user inflow | About 15 new accounts/week (about 60 per 4 weeks), roughly steady in non-holiday weeks. |\n| A4 | Activation baseline | 30% of new accounts complete a \"first successful core run\" within 7 days of signup. |\n| A5 | Dormant users | About 300 of the 500 accounts have had no successful run in 30+ days and have agreed to product emails. |\n| A6 | Natural reactivation | 5% of dormant users come back on their own within any 30-day window. |\n| A7 | Instrumentation | The tool's own backend already logs `signup` a\n\n[... 24734 characters omitted from the middle of this file ...]\n\n5 |\n| 8 | C5: E3 uses 100% of the dormant pool | Explicitly acknowledged, with the justification that no other experiment uses this pool, the 90-day re-use cost, and an instruction to recompute if the pool is under 300. | 151, 184 |\n| 9 | Optional: CAN-SPAM | Added the maintainer's existing postal address to the email (no paid P.O. box, so it stays $0). | 157 |\n| 10 | Housekeeping | Removed the unpooled constant 7.849\n```\n"
+ },
+ {
+  "id": 12,
+  "agent": "devops-automator",
+  "parent_version": 1,
+  "winner_version": 2,
+  "delta": 0.0575,
+  "created_at": "2026-11-08T07:26:02.194Z",
+  "parent_fitness": 0.875,
+  "bank": [
+   {
+    "task": "Write a GitHub Pages deploy workflow for a Vite site",
+    "source": "seed",
+    "parent_fitness": 0.95,
+    "parent_failure": "none",
+    "parent_critique": "No major issues; the workflow is correct and meets all criteria.",
+    "parent_output_excerpt": "# Vite Static Site Deployment Workflow for GitHub Pages\n\nHere is the production-ready GitHub Actions workflow designed to build and deploy a Vite static site to GitHub Pages upon every merge to the `main` branch, adhering to the principle of least privilege and utilizing official GitHub Pages actions.\n\n## 🚀 GitHub Actions Workflow (`.github/workflows/deploy.yml`)\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Set minimal necessary permissions for the GITHUB_TOKEN\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.\nconcurrency:\n  g"
+   },
+   {
+    "task": "Write a runbook to diagnose a crash-looping container",
+    "source": "seed",
+    "parent_fitness": 0.8,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The runbook lists commands and steps but provides no verifiable output or real evidence of their correctness.",
+    "parent_output_excerpt": "# Production Container Crash-Loop Runbook\n\n## 1. Objective\nProvide a systematic, ordered procedure to diagnose and remediate a production container that is periodically restarting (crash-looping) every few hours.\n\n---\n\n## 2. Diagnostic Steps\n\n### Step 1: Identify Pod Status and Restart Count\nVerify the current lifecycle state of the workload and confirm the restart frequency.\n\n* **Command (Kubernetes)**:\n  ```bash\n  kubectl get pods -l app=<app-name> -n <namespace> -o wide\n  ```\n* **Command (Docker / Swarm)**:\n  ```bash\n  docker ps -a --filter \"name=<container-name>\"\n  ```\n* **Pass Criteria**: Pod status shows `CrashLoopBackOff` or `Error`, and the `RESTARTS` counter is incrementing over tim"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "invalid_yaml_syntax",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261108-071913-devops-automator\\candidate-1-invalid-yaml-syntax.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "da13a71db9749c8ce8065f786a50dbb87f59c4e7da95449cae35a794a3db4ffc",
+    "fitness": 0.9325,
+    "paired_delta": 0.0575,
+    "shared_tasks": 2,
+    "per_task": [
+     {
+      "task": "Write a GitHub Pages deploy workflow for a Vite site",
+      "fitness": 0.96,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Vite Static Site GitHub Pages Deployment Workflow\n\nHere is the production-ready GitHub Actions workflow designed to build and deploy a Vite static site exclusively on merges to the `main` branch, adhering to the principle of least privilege and utilizing official GitHub Pages deployment actions.\n\n## 🚀 GitHub Actions Workflow (`.github/workflows/deploy.yml`)\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Set minimal necessary permissions for the GITHUB_TOKEN\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.\n# However, do NOT ca"
+     },
+     {
+      "task": "Write a runbook to diagnose a crash-looping container",
+      "fitness": 0.905,
+      "failure": "fabricated_evidence",
+      "critique": "The runbook fabricates verification outcomes without observable evidence.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.975,
+       "quality": 0.9,
+       "evidence": 0.85
+      },
+      "output_excerpt": "# Production Container Crash-Loop Runbook\n\nThis runbook provides a systematic, step-by-step procedure to diagnose and remediate a production container that is periodically crashing and restarting (crash-looping) every few hours.\n\n---\n\n## Prerequisites\n- Access to the target cluster via `kubectl` or direct container host access via `docker`/`nerdctl`.\n- Appropriate read permissions to view pod specs, logs, and metrics.\n\n---\n\n## Step 1: Inspect Current Container Status and Exit Code\nBefore looking at logs, determine *why* the container terminated by checking its exit code and termination reason.\n\n**Command (Kubernetes):**\n```bash\nkubectl get pod <pod-name> -n <namespace> -o jsonpath='{.status."
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "weak_evidence",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261108-071913-devops-automator\\candidate-2-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "a94d518de7cea0a2bcfa5d044aac1b9bcb19e635299a4a08898f011ea9f98551",
+    "fitness": 0.895,
+    "paired_delta": 0.02,
+    "shared_tasks": 2,
+    "per_task": [
+     {
+      "task": "Write a GitHub Pages deploy workflow for a Vite site",
+      "fitness": 0.94,
+      "failure": "none",
+      "critique": "Evidence is only descriptive; no actual run results are shown.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Vite Static Site Deployment Workflow\n\n## 🏗️ Infrastructure Architecture & Pipeline Design\n\nThis workflow automates the deployment of a Vite-based static site to GitHub Pages whenever code is merged into the `main` branch. It adheres to the principle of least privilege by scoping GITHUB_TOKEN permissions strictly to what is required for publishing.\n\n## 🚀 GitHub Actions Workflow Configuration\n\nSave the following file as `.github/workflows/deploy.yml`:\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Set permissions at the workflow level for security hardening\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent "
+     },
+     {
+      "task": "Write a runbook to diagnose a crash-looping container",
+      "fitness": 0.85,
+      "failure": "fabricated_evidence",
+      "critique": "The runbook presents command outputs and verification criteria that cannot be verified in this sandbox.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 0.975,
+       "quality": 0.9,
+       "evidence": 0.575
+      },
+      "output_excerpt": "# Runbook: Diagnosing a Crash-Looping Production Container\n\n## 1. Objective\nProvide a systematic, ordered procedure to diagnose and resolve a production container that enters a crash loop every few hours, minimizing downtime and maintaining cluster stability.\n\n---\n\n## 2. Diagnostic Steps\n\n### Step 1: Inspect Container Exit Status and Termination Reason\nIdentify *why* the container stopped (e.g., OOMKilled, application panic, segmentation fault, or signal termination).\n\n* **Command (Kubernetes):**\n  ```bash\n  kubectl get pod <pod-name> -o jsonpath='{.status.containerStatuses[*].state.terminated}'\n  ```\n* **Command (Docker / Non-K8s):**\n  ```bash\n  docker inspect <container-name> --format='{{."
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "missing_acceptance_criteria_check",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261108-071913-devops-automator\\candidate-3-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "1c0d61ff3ad98dde66f73ee5dda0e390e17ab6cd79968cb769305c25ea2563dd",
+    "fitness": 0.9025,
+    "paired_delta": 0.0275,
+    "shared_tasks": 2,
+    "per_task": [
+     {
+      "task": "Write a GitHub Pages deploy workflow for a Vite site",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Vite Static Site GitHub Pages Deployment Workflow\n\nHere is the complete, production-ready GitHub Actions workflow designed to build and deploy a Vite static site on every merge to the `main` branch, adhering to the principle of least privilege and utilizing official GitHub Pages actions.\n\n## 🚀 GitHub Actions Workflow (`.github/workflows/deploy.yml`)\n\n```yaml\nname: Deploy Vite Site to GitHub Pages\n\non:\n  push:\n    branches:\n      - main\n\n# Set minimal necessary permissions for the GITHUB_TOKEN\npermissions:\n  contents: read\n  pages: write\n  id-token: write\n\n# Allow only one concurrent deployment, skipping intermediate runs between the queue and latest\nconcurrency:\n  group: \"pages\"\n  cancel-i"
+     },
+     {
+      "task": "Write a runbook to diagnose a crash-looping container",
+      "fitness": 0.885,
+      "failure": "insufficient_evidence",
+      "critique": "The runbook does not provide concrete methods for tracking resource usage trends over time, which limits diagnostic depth.",
+      "scores": {
+       "correctness": 0.825,
+       "completeness": 0.975,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Runbook: Diagnosing a Crash-Looping Production Container\n\n## Objective\nProvide a systematic, ordered procedure to identify the root cause of a container that restarts every few hours in a production environment, and define clear rollback criteria.\n\n---\n\n## Step 1: Inspect Container Status and Exit Codes\n\nBefore examining logs, determine *why* the container terminated. The exit code and termination reason dictate whether the failure is application-level (e.g., unhandled exception, missing config) or infrastructure-level (e.g., OOMKilled, liveness probe failure).\n\n*   **Kubernetes Command:**\n    ```bash\n    kubectl describe pod <pod-name> -n <namespace>\n    ```\n*   **Docker Command:**\n    ``"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: devops-automator v1\n\nTasks scored: 4. Mean fitness: 0.8581.\n\n## Failure classes (ensemble majority, most frequent first)\n- `invalid_yaml_syntax` x1\n\n## Worst tasks\n### 20261103-075105-write-a-github-actions #1 (fitness 0.716)\n- Task: Write a GitHub Actions workflow (.github/workflows/ci.yml) that lints and tests a Python package on every push\n- Acceptance: ci.yml parses as valid YAML and has name, on, jobs keys; Trigger is 'on: push' (all branches); Has a lint step (ruff or flake8) and a test step (pytest) after actions/checkout and actions/setup-python with pinned major versions; Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors; Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `invalid_yaml_syntax`\n- Critique: The provided ci.yml file contains invalid YAML syntax ('\"on\": push') which contradicts the agent's claim that it passes actionlint with zero errors.\n- Unmet criteria:\n  - Workflow passes actionlint (or the GitHub workflow JSON schema) with zero errors: Pass claim is not verifiable from the provided files [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n  - Ships a minimal sample Python package with one passing test, and the lint and test commands run locally with exit code 0: Test file is not placed in the expected tests/ directory and src layout is unclear, so package may not be importable [unmet per groq/openai/gpt-oss-120b; 3 other judge(s) marked it met]\n  - ci.yml parses as valid YAML and has name, on, jobs keys: The provided ci.yml content is not valid YAML; the line '\"on\": push' is syntactically incorrect (should be 'on: push' without quotes around the key or value in this context, or simply 'on: push'). Additionally, the key is quoted as a string \"on\" which is valid YAML but the value 'push' is a string, whereas GitHub Actions expects a mapping or list for the trigger. More critically, the formatting suggests a copy-paste error or invalid structure that would fail standard YAML parsers or actionlint. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n  - Trigger is 'on: push' (all branches): The trigger is written as '\"on\": push'. While semantically close, the quoting and structure are non-standard and likely invalid for GitHub Actions parsing. Standard syntax is 'on: push'. [unmet per groq/qwen/qwen3.8-27b; 3 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ci.yml (709 chars) ---\nname: CI\n\n\"on\": push\n\npermissions:\n  contents: read\n\njobs:\n  lint-and-test:\n    runs-on: ubuntu-latest\n    strategy:\n      fail-fast: false\n      matrix:\n        python-version: [\"3.10\", \"3.11\", \"3.12\"]\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v4\n\n      - name: Set up Python ${{ matrix.python-version }}\n        uses: actions/setup-python@v5\n        with:\n          python-version: ${{ matrix.python-version }}\n\n      - name: Install package and dev tools\n        run: |\n          python -m pip install --upgrade pip\n          python -m pip install -e \".[dev]\"\n\n      - name: Lint with ruff\n        run: ruff check .\n\n      - name: Test with pytest\n        run: pytest -q\n\n--- pyproject.toml (436 chars) ---\n[build-system]\nrequires = [\"setuptools>=61\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"samplepkg\"\nversion = \"0.1.0\"\ndescription = \"Minimal sample package exercised by the CI workflow.\"\nrequires-python = \">=3.10\"\n\n[project.optional-dependencies]\ndev = [\"ruff\", \"pytest\"]\n\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npythonpath = [\"src\"]\n\n[tool.ruff]\nline-length = 88\n\n--- __init__.py (141 chars) ---\n\"\"\"Minimal sample package.\"\"\"\n\n__version__ = \"0.1.0\"\n\n\ndef add(a: int, b: int) -> int:\n    \"\"\"Return the sum of a and b.\"\"\"\n    return a + b\n\n--- test_add.py (78 chars) ---\nfrom samplepkg import add\n\n\ndef test_add() -> None:\n    assert add(2, 3) == 5\n\n```\n\n### 20261108-063451-write-a-powershell-5 #1 (fitness 0.8125)\n- Task: Write Rotate-Logs.ps1 (PowerShell 5.1) that zips .log files older than N days into one dated zip with System.IO.Compression, deletes originals only after verifying each entry, supports -WhatIf and -SelfTest\n- Acceptance: Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile); Uses CmdletBinding(SupportsShouldProcess) and running with -WhatIf against a folder of old logs creates no zip and deletes no file; powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed; Does not call Compress-Archive and downloads or installs nothing\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_implementation` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: The script is incomplete/truncated, missing essential parts like the self‑test implementation and causing parse errors.\n- Unmet criteria:\n  - Rotate-Logs.ps1 parses with zero errors under the PowerShell 5.1 parser ([System.Management.Automation.Language.Parser]::ParseFile): Script appears truncated (e.g., '[System.IO.Path]::Ge') likely causing parse errors. [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n  - powershell.exe -Version 5.1 -File Rotate-Logs.ps1 -SelfTest exits 0 and reports old logs archived and removed, new logs kept, zip entries verified, temp folder removed: SelfTest function is never defined; cannot verify exit code behavior. [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n- Output excerpt:\n```\n--- Rotate-Logs.ps1 (20674 chars) ---\n#Requires -Version 5.1\n<#\n.SYNOPSIS\n    Archives .log files older than N days into one dated .zip, then deletes each\n    original only after its entry has been verified inside the zip.\n\n.DESCRIPTION\n    - Uses the in-box .NET classes System.IO.Compression.ZipFile / ZipArchive\n      (not the Microsoft.PowerShell.Archive module cmdlets; nothing downloaded or installed).\n    - Only files directly in -Path whose extension is exactly \".log\" and whose\n      LastWriteTime is older than (now - Days) are archived. Sub-folders are not scanned.\n    - The archive is named logs-yyyyMMdd.zip (logs-yyyyMMdd-1.zip, -2, ... if that\n      name already exists) and is written to -DestinationPath (default: -Path).\n    - Verification: after the zip is closed it is reopened read-only and, for every\n      file, the entry must exist, its uncompressed Length must equal the file size,\n      and the SHA-256 of the entry content must equal the SHA-256 of the file.\n    - Deletion: each veri\n\n[... 19174 characters omitted from the middle of this file ...]\n\n'SelfTest') {\n    $code = Invoke-SelfTest\n    exit $code\n}\n\ntry {\n    $pass = @{}\n    if ($PSBoundParameters.ContainsKey('WhatIf'))  { $pass['WhatIf']  = $PSBoundParameters['WhatIf'] }\n    if ($PSBoundParameters.ContainsKey('Confirm')) { $pass['Confirm'] = $PSBoundParameters['Confirm'] }\n    $result = Invoke-LogRotation -Path $Path -Days $Days -DestinationPath $DestinationPath @pass\n}\ncatch {\n    Write-Error -ErrorRe\n```\n\n### 20261103-122908-write-a-backup-rotation #1 (fitness 0.9477)\n- Task: Write Rotate-Backups.ps1 (Windows PowerShell 5.1 compatible) plus Test-Rotate.ps1 self-test and README.md\n- Acceptance: Rotate-Backups.ps1 takes -Path, -KeepDaily (default 7), -KeepWeekly (default 4) and -DryRun; dates come from file names like backup-YYYY-MM-DD.zip, never from timestamps; files not matching the pattern are never deleted; Weekly = newest backup of each ISO week beyond the daily set; with -DryRun nothing is deleted and every would-delete file is printed; Test-Rotate.ps1 builds a temp folder with 60 consecutive daily backups plus 2 non-matching files, runs the script in dry-run and real mode, asserts the exact kept set, cleans up, and exits 0 on success under powershell.exe (5.1); README.md explains usage and how to schedule it with Task Scheduler\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The evidence statement claims the self-test passed, but the actual output of the test run is not provided in the prompt, so the success is inferred from the code logic rather than verified by execution logs.\n- Output excerpt:\n```\n--- Test-Rotate.ps1 (8783 chars) ---\n<#\n.SYNOPSIS\n    Self-test for Rotate-Backups.ps1. Exits 0 on success, 1 on failure.\n\n.DESCRIPTION\n    1. Creates a fresh folder under $env:TEMP (rotate-test-<guid>).\n    2. Fills it with 60 consecutive daily backups, 2025-12-01 .. 2026-01-29,\n       plus 2 files that do not match the pattern. File timestamps are set in\n       REVERSE order (newest name = oldest timestamp) so the test fails if the\n       script ever uses timestamps instead of names.\n    3. Runs Rotate-Backups.ps1 -DryRun in a child process and asserts:\n       exit 0, nothing deleted, and the WOULD DELETE lines are exactly the\n       expected 49 files.\n    4. Runs Rotate-Backups.ps1 for real and asserts the folder contains\n       exactly the expected kept set (11 backups + 2 non-matching files).\n    5. Runs it a second time and asserts nothing more is deleted (idempotent).\n    6. Deletes the temp folder (only that folder) in a finally block.\n\n    Expected kept set (worked out by hand, not by re-\n\n[... 7283 characters omitted from the middle of this file ...]\n\n (Test-Path -LiteralPath $full) {\n            Remove-Item -LiteralPath $full -Recurse -Force\n        }\n        Assert-True (-not (Test-Path -LiteralPath $full)) 'temp folder removed'\n    } else {\n        Write-Host \"Refusing to clean up unexpected path: $full\" -ForegroundColor Red\n        $script:failures++\n    }\n}\n\nWrite-Host ''\nif ($script:failures -eq 0) {\n    Write-Host 'ALL TESTS PASSED' -ForegroundColor Green\n   \n```\n"
  }
 ]

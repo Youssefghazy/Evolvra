@@ -38,13 +38,21 @@
       "file": "engineering-devops-automator.md",
       "emoji": "⚙️",
       "color": "orange",
-      "version": 1,
-      "parent": null,
+      "version": 2,
+      "parent": 1,
       "source": {
         "repo": "msitarzewski/agency-agents",
         "commit": "b37b5bb",
         "path": "engineering/engineering-devops-automator.md"
-      }
+      },
+      "history": [
+        {
+          "version": 2,
+          "parent": 1,
+          "rationale": "evolved from v1: targeted 'invalid_yaml_syntax'; paired delta +0.0575 on 2 shared held-out task(s) (parent 0.875)",
+          "at": "2026-11-08T07:26:01Z"
+        }
+      ]
     },
     {
       "slug": "frontend-developer",
