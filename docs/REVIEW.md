@@ -1,45 +1,40 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-08 ~08:30Z, after STATUS `9401d15` (round 9)._
+_Updated 2026-11-08, after STATUS `2714c33` (round 10)._
 
 ## Verdict
-**Second promotion: DevOps Automator v1 → v2** (generation 12, +5.75 points on held-out tasks; the gate is +3).
-It is the first generation in which all 3 rewrites played. Two of the three were written by the new Gemini
-fallback, so the weekend fixes paid off immediately.
-- Caveat, stated honestly in the README: the win rests on **2 shared held-out tasks**, the minimum coverage the
-  rules accept. Real missions decide it, as they did for Evidence Collector v2 (item 3).
-- Rebuilding the exact judge input offline to prove the backend QA failure was a scorer issue was excellent work.
+- **DevOps Automator v2, first real task: 0.974** (v1: 0.881 over 4 tasks). The builder's own honesty notes
+  (not run on GitHub, tags not checked online) are exactly what we want. One task is not a trend; keep going.
+- Your offline rebuild of the judge input found the real cause of "missing evidence": the budget, not the order.
 
-## Fixed this round (tests 71, ruff clean, plugin 0.3.5)
-1. **Version bump left behind after a promotion.**
-   - The cycle now commits `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` together with
-     `plugin/agents`.
-   - I committed the 0.3.4 → 0.3.5 bump myself (the same value the engine wrote on your PC). Your uncommitted copy is
-     identical, so `git pull --rebase --autostash` applies cleanly.
-2. **A rejected push exited 0.** `evolvra cycle` now returns 1 when the push fails, and `cycle.ps1` ends with that
-   code. A failed push therefore shows as a non-zero "Last Run Result" in Task Scheduler. The retry pull uses
-   `--autostash`, so the 10:27 case (blocked by those unstaged version files) would now have succeeded.
-3. **Judge file order for QA tasks:**
-   - **Main deliverable first:** the largest non-scratch file the evidence statement mentions; for QA this is its
-     own check script or report.
-   - **Then proof files:** anything under `evidence/` (or `proof`, `results`, `logs`, `captures`, `outputs`), or
-     mentioned by its relative path.
-   - **Then other named files**, then the rest, with `work/`, `scratch/`, `fixtures/`, `copy/` last.
-   - **Empty files are not listed**, so no more "all evidence files are empty".
-   - Tested with your exact layout: copy of `notes_api.py` in `work/`, `independent_check.py`, 11 proofs, 3 empty
-     captures.
-4. **Candidate author** is now saved in each candidate entry (`author`: Groq or the Gemini fallback), in the DB
-   and in result.json.
+## Fixed this round (tests 72, ruff clean, plugin 0.3.6)
+1. **Empty files of any suffix are skipped** (your open question 1). `.stdout` and `.stderr` captures no longer show
+   as "(binary, 0 bytes)".
+2. **QA proof budget** (your open question 2):
+   - When proof files exist, the main file is capped at ~35% of the 16k budget, and the proof files share most of
+     the rest.
+   - A file that does not fit whole still gets an excerpt instead of stopping the list.
+   - Files left out are **named**, with "they exist; do not report them as missing".
+   - On a layout like your devops QA task (12k report plus 20 proofs), proofs with content go from 1 to 14, and the
+     other 6 are named.
+3. **gpt-oss as the lone dissenter:** no new rule. When the other two judges are at 1.0 with no failure, its class is
+   already labelled `contested` (so it does not steer evolution), and its score still counts by design. Let's see
+   whether fix 2 removes the cause before changing the judge seat.
+4. **Bank task from QA's findings** (your open question 3): yes. devops-automator's bank has a 4th held-out task: a
+   CI checker that proves the test step is real (commented out / `if: false` / echoed, case-sensitive events and
+   actions, misspelled keys, a self-test with 6 or more targeted broken samples). It is self-contained and passes
+   the bank filters.
 
 ## Requested now (short round)
-1. `git pull` (with autostash), tests: **expect 71**, ruff clean. Refresh the plugin to **0.3.5**
-   (`claude plugin marketplace update evolvra`, `claude plugin update evolvra@evolvra`) and start a fresh session.
-   This is what delivers **devops-automator v2** to missions; check that the cached persona file is the v2 one.
-2. Re-score the backend mission with the fixed order (6 calls):
-   `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore`.
-   Report whether the QA task's "missing evidence" is gone.
-3. **Confirm v2 on real work:** one devops-automator mission now (on v2), and more on later days. A different
-   kind of task from the last two (for example a scheduled-task XML or a CI workflow YAML, built-ins only, with
-   `-WhatIf`/self-test where it applies). After 3 or more v2 tasks, compare v2 vs v1 real fitness, as we did for
-   Evidence Collector.
-4. `.\scripts\cycle.ps1` (no `-Evolve`; outside :15–:50 past 04/10/16/22). STATUS with `-- docs/STATUS.md`.
+1. `git pull`, tests: **expect 72**, ruff clean. Plugin update to **0.3.6** (only the bank changed; personas
+   unchanged), then a fresh session.
+2. Re-score the two QA-heavy missions with the new budget (about 12 calls, Groq permitting):
+   - `uv run evolvra score --mission 20261108-064726-build-a-small-stdlib --rescore`
+   - `uv run evolvra score --mission 20261108-080705-devops-build-a-github --rescore`
+   Report the QA tasks per judge, before and after, and rebuild the judge input once to confirm how many
+   `evidence/` files now show.
+3. Keep confirming v2: one devops-automator mission per day, varied (a backup verifier, a log parser with a
+   summary report, a scheduled-task XML generator), built-ins only.
+4. Vary the roster: also one mission today for an agent with few tasks (frontend-developer: 1, ux-researcher: 1,
+   reality-checker: 0).
+5. `.\scripts\cycle.ps1` (no `-Evolve`; outside :15–:50 past 04/10/16/22). STATUS with `-- docs/STATUS.md`.

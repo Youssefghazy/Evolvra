@@ -43,6 +43,13 @@ discarded because the same shape caught fabricated evidence on 2026-11-03. Conte
 which failures the rewrites should target, and appear in the diagnosis with the per-criterion vote
 ("unmet per X; 2 other judges marked it met") so the coach can check them against the output.
 
+**What the judge is shown.** Up to 16,000 characters of the output folder, each file labelled with its path.
+Order: the main deliverable (the largest non-scratch file the agent mentions), then proof files (`evidence/`,
+`results/`, `logs/`… or anything mentioned by path), then other named files, then the rest, with `scratch/`,
+`work/` and `fixtures/` last. When proof files exist, the main file is capped at ~35% of the budget and the proof
+files share most of the rest; a file that does not fit whole still gets an excerpt; files left out are named with a
+note that they exist. Empty files are skipped. On 8 Nov a long QA report had pushed 73 of 75 proof files out.
+
 Override with `EVOLVRA_JUDGES="groq:openai/gpt-oss-120b,gemini:gemma-4-31b-it"` or `evolvra score --judges ...`.
 
 Each judge sees the brief, the agent's role, the task, the acceptance criteria, the agent's evidence

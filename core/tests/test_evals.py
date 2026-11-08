@@ -432,3 +432,20 @@ def test_qa_proof_beats_a_copy_of_the_builders_code(tmp_path):
     assert all(f"--- evidence/check-{i:02d}.txt" in text for i in range(11))
     assert "stderr.txt" not in text                                    # empty files are not listed
     assert "work/notes_api.py" not in text or text.index("work/notes_api.py") > text.index("evidence/check-10.txt")
+
+
+def test_a_long_qa_report_leaves_room_for_its_proof(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    (out / "evidence").mkdir(parents=True)
+    (out / "QA-REPORT.md").write_text("finding " * 1500, encoding="utf-8")                  # ~12k chars
+    for i in range(20):
+        (out / "evidence" / f"{i:02d}-check.txt").write_text(f"check {i}: PASS exit 0 " * 60, encoding="utf-8")
+    (out / "evidence" / "run1.txt.stdout").write_bytes(b"")                                 # empty, odd suffix
+    text = checks.read_output(str(out), mentions="see QA-REPORT.md and evidence/")
+    assert text.startswith("--- QA-REPORT.md")
+    shown = sum(f"--- evidence/{i:02d}-check.txt" in text for i in range(20))
+    assert shown >= 10                                   # most proof files get an excerpt (was 1 of 20)
+    assert "run1.txt.stdout" not in text                 # 0-byte files are skipped whatever their suffix
+    assert len(text) < 17500                             # still inside the judge budget
+    if shown < 20:
+        assert "they exist; do not report them as missing" in text

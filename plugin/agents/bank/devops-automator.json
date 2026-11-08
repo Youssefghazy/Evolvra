@@ -28,6 +28,17 @@
         "Commands included for each step",
         "Defines when to roll back"
       ]
+    },
+    {
+      "brief": "A team wants a local guard that catches CI workflows which look complete but would never test anything",
+      "task": "Write a PowerShell 5.1 checker for a GitHub Actions workflow file that proves the test step is real, not just present",
+      "acceptance": [
+        "Rejects a workflow whose test command is commented out, disabled with 'if: false', or only echoed",
+        "Treats event names and action references as case-sensitive: 'Push' and 'actions/Checkout@V4' are rejected",
+        "Flags unknown or misspelled job and step keys such as 'whit:' or 'timeout-minute:'",
+        "Ships a -SelfTest switch with at least 6 broken sample workflows, each named after the single check it should trip",
+        "Uses only built-in PowerShell 5.1 cmdlets and .NET classes; no modules to install"
+      ]
     }
   ]
 }

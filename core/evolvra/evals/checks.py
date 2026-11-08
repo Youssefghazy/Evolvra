@@ -81,6 +81,11 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
         if is_backup(path):
             continue
         rel = path.relative_to(root).as_posix()
+        try:
+            if path.stat().st_size == 0:
+                continue  # empty captures (any suffix) say nothing and read as "the evidence is empty"
+        except OSError:
+            continue
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
             binaries.append(f"--- {rel} (binary, {path.stat().st_size} bytes) ---")
             continue
@@ -109,15 +114,29 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
         return 1 if e["proof"] else 2 if e["named"] else 3
 
     ordered = sorted(entries, key=lambda e: (group(e), -len(e["text"])))
-    chunks, used = [], 0
+    proofs = [e for e in ordered if group(e) == 1]
+    # With proof files present, the main file gets at most ~35% of the budget and the proof files share most of
+    # the rest, so a long QA report can no longer crowd out its own evidence (8 Nov: 73 of 75 files omitted).
+    first_limit = min(primary_chars, int(total * 0.35)) if proofs else primary_chars
+    first_used = min(len(primary["text"]), first_limit)
+    per_proof = per_file
+    if proofs:
+        per_proof = max(500, min(per_file, int((total - first_used) * 0.8) // len(proofs)))
+    chunks, used, shown = [], 0, 0
     for i, e in enumerate(ordered):
-        limit = primary_chars if i == 0 else per_file
-        body = excerpt(e["text"], min(limit, max(0, total - used)))
-        if used + len(body) >= total and i > 0:
-            chunks.append(f"--- [{len(ordered) - i} more file(s) omitted to fit the prompt] ---")
+        room = total - used
+        if room < 300 and i > 0:
             break
+        limit = first_limit if i == 0 else per_proof if group(e) == 1 else per_file
+        body = excerpt(e["text"], min(limit, room))   # a file that does not fit whole still gets an excerpt
         chunks.append(f"--- {e['rel']} ({len(e['text'])} chars) ---\n{body}")
         used += len(body)
+        shown += 1
+    rest = ordered[shown:]
+    if rest:  # name what was left out, so the judge knows it exists instead of concluding it is missing
+        names = ", ".join(f"{e['rel']} ({len(e['text'])} chars)" for e in rest[:15])
+        more = f" and {len(rest) - 15} more" if len(rest) > 15 else ""
+        chunks.append(f"--- not shown to fit the prompt (they exist; do not report them as missing): {names}{more} ---")
     return "\n".join(chunks + binaries[:20])
 
 
