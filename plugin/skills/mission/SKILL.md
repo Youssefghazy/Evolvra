@@ -58,6 +58,8 @@ Previous feedback (if retry): <QA feedback verbatim>
 Write all output files under: <output_dir from the recorder>
 End your reply with a section titled "## Evidence" listing exactly what proves each criterion is met
 (commands run, files written, checks passed). A reply without "## Evidence" is incomplete.
+QA agents only: also write QA-REPORT.md at the top of your output folder: the verdict on line 1, then one line per
+acceptance criterion (verified / not verified / failed) with the path of the file that proves it.
 ```
 
 When the agent returns, decide the verdict:

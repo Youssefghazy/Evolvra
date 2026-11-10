@@ -480,3 +480,21 @@ def test_a_qa_mutant_is_never_shown_as_the_subject(tmp_path):
     assert text.index("--- evidence/exitcodes.txt") < text.index("mutants/")
     assert "--- logs/app.log" in text and "(binary" not in text        # .log is text now
     assert "notes.env" not in text and "should-never" not in text      # secret-like files are never read or listed
+
+
+def test_qa_transcript_outranks_the_driver_script_and_first_runs(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    out.mkdir()
+    (out / "qa_cdp.js").write_text("// headless driver\n" * 330, encoding="utf-8")            # ~6k, the harness
+    (out / "03_cdp_transcript.txt").write_text("A4 one-open: PASS\n" * 350, encoding="utf-8")  # ~6.3k, the proof
+    for i in range(4):
+        (out / f"03a_run1_part{i}.txt").write_text("stale first run\n" * 70, encoding="utf-8")
+    (out / "QA-REPORT.md").write_text("PASS\nC1 verified: 03_cdp_transcript.txt\n", encoding="utf-8")
+    text = checks.read_output(str(out), mentions="ran qa_cdp.js; transcript in 03_cdp_transcript.txt")
+    assert text.startswith("--- QA-REPORT.md")                       # the report is the QA deliverable
+    assert text.index("--- 03_cdp_transcript.txt") < text.index("qa_cdp.js")
+    assert "A4 one-open: PASS" in text
+    stale = [i for i, line in enumerate(text.splitlines()) if line.startswith("--- 03a_run1")]
+    assert len(stale) <= checks.LOW_SAMPLES                           # superseded first runs: a few examples, last
+    assert all(text.index("--- 03_cdp_transcript.txt") < text.index(f"--- 03a_run1_part{i}") for i in range(len(stale)))
+    assert ".txt/ (" not in text                                      # a top-level file is named, not shown as a folder

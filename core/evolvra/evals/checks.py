@@ -62,6 +62,12 @@ LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "fx", "wor
                      "mutants", "mutant", "mutations", "sabotage", "sabotaged", "broken", "negative"}
 # deliberately broken copies a QA agent makes to prove its checks bite (10 Nov: a judge graded one as the subject)
 DECOY_MARKERS = ("mutant", "sabotage", "broken-copy")
+# superseded first runs a QA agent keeps next to the final one
+STALE_MARKERS = ("run1", "run-1", "run_1", "first-run", "old-")
+# a QA agent's own report is the deliverable of a QA task; its results and transcripts are its proof
+REPORT_RE = re.compile(r"(report|verdict|findings)", re.IGNORECASE)
+RESULT_RE = re.compile(r"(transcript|results?|outputs?|expected-vs-actual|exitcodes)", re.IGNORECASE)
+REPORT_SUFFIXES = {".md", ".txt", ".html", ".htm"}
 EVIDENCE_DIRS = {"evidence", "proof", "proofs", "results", "logs", "captures", "outputs"}
 BULK_DIR_FILES = 50        # an unrecognised folder with more files than this is treated like scratch
 WALK_LIMIT = 20000         # metadata only; contents are read just for the files that make it into the prompt
@@ -123,16 +129,20 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
         dirs = rel.lower().split("/")[:-1]
         proof = any(d in EVIDENCE_DIRS for d in dirs)
         bulk = bool(dirs) and dirs[0] not in EVIDENCE_DIRS and top_counts.get(dirs[0], 0) > BULK_DIR_FILES
-        decoy = any(mk in path.name.lower() for mk in DECOY_MARKERS)
+        name = path.name.lower()
+        decoy = any(mk in name for mk in DECOY_MARKERS) or any(mk in name for mk in STALE_MARKERS)
         low = decoy or (not proof and (bulk or any(d in LOW_PRIORITY_DIRS for d in dirs)))
+        report = bool(REPORT_RE.search(name)) and path.suffix.lower() in REPORT_SUFFIXES
+        proof = proof or (not report and bool(RESULT_RE.search(name)) and path.suffix.lower() in TEXT_SUFFIXES)
         by_path = "/" in rel and rel.lower() in m
         named = by_path or (bool(m) and path.name.lower() in m)
         entries.append({"path": path, "rel": rel, "size": size, "low": low, "proof": (proof or by_path) and not decoy,
-                        "named": named, "cited": by_path, "top": not dirs})
+                        "named": named, "cited": by_path, "top": not dirs, "report": report})
     if not entries:
         return "\n".join(binaries[:20])
     pool = [e for e in entries if not e["low"] and not e["proof"]] or [e for e in entries if not e["low"]] or entries
-    primary = max(pool, key=lambda e: (e["named"], e["top"], e["size"]))   # a named top-level file is the deliverable
+    # a report file beats the script that produced it; otherwise a named top-level file is the deliverable
+    primary = max(pool, key=lambda e: (e["report"] and e["top"], e["named"], e["top"], e["size"]))
 
     def text_of(e) -> str:
         if "text" not in e:
@@ -179,14 +189,14 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
         chunks.append(header + body)
         used += len(header) + len(body)
     if rest:  # name what was left out (proof first), so the judge knows it exists instead of calling it missing
-        named = [e for e in rest if not e["low"]][:NAMED_OMITTED]
+        named = [e for e in rest if not e["low"] or "/" not in e["rel"]][:NAMED_OMITTED]
         low_dirs: dict[str, int] = {}
         for e in rest:
-            if e["low"]:
+            if e["low"] and "/" in e["rel"]:
                 top = e["rel"].split("/")[0] + "/"
                 low_dirs[top] = low_dirs.get(top, 0) + 1
         parts = [f"{e['rel']} ({e['size']} bytes)" for e in named]
-        hidden = len([e for e in rest if not e["low"]]) - len(named)
+        hidden = len([e for e in rest if not e["low"] or "/" not in e["rel"]]) - len(named)
         if hidden > 0:
             parts.append(f"{hidden} more")
         parts += [f"{d} ({n} files)" for d, n in sorted(low_dirs.items(), key=lambda kv: -kv[1])]

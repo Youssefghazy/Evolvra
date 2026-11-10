@@ -26,7 +26,7 @@ Measured from the system's own records (`dashboard/public/data/`), first 9 days 
 
 | | |
 |---|---|
-| Real missions run | 23 (46 tasks, every one independently QA-checked) |
+| Real missions run | 24 (48 tasks, every one independently QA-checked) |
 | QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
 | Evolution generations | 13 |
 | Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2), both confirmed on real missions |
