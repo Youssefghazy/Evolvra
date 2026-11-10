@@ -29,6 +29,7 @@ DEFAULT_JUDGES: tuple[tuple[str, str], ...] = (
 # Ask it not to reason; if the provider rejects the value, the router remembers and retries without it.
 JUDGE_REASONING: dict[str, str | None] = {"qwen/qwen3.8-27b": "none"}
 RUBRIC = ("correctness", "completeness", "quality", "evidence")
+QA_AGENTS = {"evidence-collector", "reality-checker"}   # their deliverable is findings backed by proof
 MAX_TOKENS = 900
 # Qwen on Groq can spend all 900 tokens on hidden reasoning and return empty content.
 RETRY_MAX_TOKENS = 2400
@@ -142,7 +143,8 @@ def build_prompt(task: sqlite3.Row, brief: str, agent_description: str) -> str:
         criteria=criteria, attempts=task["attempts"],
         verdict=task["verdict"], evidence=last.get("evidence"),
         output=checks.read_output(task["output_dir"],
-                                  mentions="\n".join([last.get("evidence") or "", task["task"] or "", *criteria])),
+                                  mentions="\n".join([last.get("evidence") or "", task["task"] or "", *criteria]),
+                                  qa=task["agent_slug"] in QA_AGENTS),
         facts=checks.measured_facts(task["output_dir"], criteria),
     )
 

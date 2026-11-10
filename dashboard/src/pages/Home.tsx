@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import FilmModal, { FILM_POSTER } from "../components/FilmModal";
 import { motion } from "motion/react";
-import { ArrowRight, ArrowUpRight, Dna, Gavel, LayoutDashboard, Laptop, Rocket, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Dna, Gavel, LayoutDashboard, Laptop, Play, Rocket, Sparkles, Trophy } from "lucide-react";
 import {
   addedLines, grade, humanize, latestPromotion, pct, relTime, signedPct, toneVar, type Agent, type Data,
 } from "../data";
@@ -51,6 +52,7 @@ export default function Home({ data }: { data: Data }) {
 /* ---------------------------------------------------------------- hero */
 
 function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
+  const [film, setFilm] = useState(false);
   return (
     <section className="relative grid items-center gap-6 pt-2 md:gap-10 md:pt-14 lg:grid-cols-[1.1fr_1fr]">
       <div className="pointer-events-none absolute -top-24 bottom-[-4rem] left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
@@ -88,6 +90,18 @@ function Hero({ data, promotedSlug }: { data: Data; promotedSlug?: string }) {
             <LayoutDashboard size={15} /> Control room
           </a>
         </motion.div>
+        <motion.button initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.5 }}
+          onClick={() => setFilm(true)}
+          className="group mt-5 flex w-full items-center gap-3 rounded-2xl border border-line bg-card p-2 pr-4 text-left transition-colors hover:border-line-strong hover:bg-card-hover active:scale-[0.99] sm:w-auto">
+          <span className="relative h-12 w-20 shrink-0 overflow-hidden rounded-xl border border-line">
+            <img src={FILM_POSTER} alt="" className="h-full w-full object-cover" loading="lazy" />
+            <span className="absolute inset-0 grid place-items-center bg-black/35 transition-colors group-hover:bg-black/20">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-white/90 text-black"><Play size={13} className="translate-x-px" fill="currentColor" /></span>
+            </span>
+          </span>
+          <span><span className="block text-sm font-medium text-ink">Watch the film</span><span className="block text-xs text-muted">42 seconds, no sound needed</span></span>
+        </motion.button>
+        <FilmModal open={film} onClose={() => setFilm(false)} />
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-6 flex flex-wrap gap-2 md:mt-8">
           <Chip tone="var(--good)">$0 budget, free tiers only</Chip>
           <Chip tone="var(--accent)">Runs every 6 hours, unattended</Chip>

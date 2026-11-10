@@ -498,3 +498,17 @@ def test_qa_transcript_outranks_the_driver_script_and_first_runs(tmp_path):
     assert len(stale) <= checks.LOW_SAMPLES                           # superseded first runs: a few examples, last
     assert all(text.index("--- 03_cdp_transcript.txt") < text.index(f"--- 03a_run1_part{i}") for i in range(len(stale)))
     assert ".txt/ (" not in text                                      # a top-level file is named, not shown as a folder
+
+
+def test_qa_without_a_report_leads_with_its_transcript(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    out.mkdir()
+    (out / "qa_cdp.js").write_text("// driver\n" * 1500, encoding="utf-8")                   # 15 KB driver script
+    (out / "03_cdp_transcript.txt").write_text("A4 one-open: PASS\nA11 one-open: PASS\n" * 170, encoding="utf-8")
+    (out / "results.json").write_text('{"failed": 0, "passed": 38}', encoding="utf-8")
+    text = checks.read_output(str(out), mentions="qa_cdp.js; 03_cdp_transcript.txt", qa=True)
+    assert text.startswith("--- 03_cdp_transcript.txt")
+    assert text.count("A11 one-open: PASS") >= 150                     # the whole 6 KB transcript is visible
+    driver = text.split("--- qa_cdp.js")[1].split("\n--- ")[0]
+    assert len(driver) < 2500                                          # the driver gets a small share
+    assert checks.read_output(str(out), mentions="qa_cdp.js", qa=False).startswith("--- qa_cdp.js")  # builders unchanged

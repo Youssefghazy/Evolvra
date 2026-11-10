@@ -10,10 +10,17 @@
 
 <p align="center">
   <img alt="status" src="https://img.shields.io/badge/status-running%20autonomously-brightgreen">
-  <img alt="tests" src="https://img.shields.io/badge/tests-60%20passing-brightgreen">
+  <img alt="tests" src="https://img.shields.io/badge/tests-76%20passing-brightgreen">
   <img alt="cost" src="https://img.shields.io/badge/total%20cost-%240.00-brightgreen">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow">
   <img alt="runtime" src="https://img.shields.io/badge/runtime-Claude%20Code%20plugin-8A2BE2">
+</p>
+
+<p align="center">
+  <a href="https://youssefghazy.github.io/Evolvra/media/evolvra-demo.mp4">
+    <img src="dashboard/public/media/evolvra-demo-poster.jpg" width="720" alt="Watch the 42-second Evolvra film">
+  </a>
+  <br><sub>▶ <a href="https://youssefghazy.github.io/Evolvra/media/evolvra-demo.mp4">Watch the 42-second film</a> (no sound needed)</sub>
 </p>
 
 ---
@@ -26,7 +33,7 @@ Measured from the system's own records (`dashboard/public/data/`), first 9 days 
 
 | | |
 |---|---|
-| Real missions run | 24 (48 tasks, every one independently QA-checked) |
+| Real missions run | 25 (49 tasks, every one independently QA-checked) |
 | QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
 | Evolution generations | 13 |
 | Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2), both confirmed on real missions |

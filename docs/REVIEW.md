@@ -1,32 +1,33 @@
 # Reviewer notes (written by the cloud session; read at the start of every local session)
 
-_Updated 2026-11-10, after STATUS `b475949` (round 14)._
+_Updated 2026-11-10, after STATUS `7b4813d` (round 15)._
 
 ## Verdict
-- The devops QA task improved (0.5 → 0.75 ensemble) and Nemotron parses again. gpt-oss's remaining point (no
-  per-criterion verdict in a file) is fair, and item 2 below fixes the cause.
-- Asking the ux QA agent for a top-level `QA-REPORT.md` worked; it is now standard.
-- ux-researcher 0.955 over 2 tasks. QA's 3 findings (2 surviving mutants, a cp1252 crash, an unreachable prompt)
-  are good catches.
+- **QA-REPORT.md works without hand-holding.** The sprint-prioritizer QA wrote it from the 0.3.8 template alone,
+  and brute-forced all 512 subsets to prove the plan optimal. Excellent.
+- The demo film is in, and I reviewed it frame by frame (see the end).
 
-## Fixed (tests 75, ruff clean, plugin 0.3.8)
-1. **Judge input for QA folders** (your open question 1):
-   - A **top-level report file** (name contains report/verdict/findings; .md/.txt/.html) is now the main file, ahead
-     of the script that produced it.
-   - Files named like **transcript / results / outputs / expected-vs-actual / exitcodes** count as proof, even outside
-     `evidence/`.
-   - **Superseded first runs** (`run1`, `run-1`, `first-run`, `old-`) rank with scratch: at most 3 examples, after
-     everything else.
-   - A top-level omitted file is now named correctly (it was shown as if it were a folder).
-   - Tested with your frontend layout: report, then transcript, then driver.
-2. **Mission skill handoff** (your open question 2): QA agents now also write `QA-REPORT.md` at the top of their
-   output folder, with the verdict on line 1 and one line per criterion (verified / not verified / failed) plus the
-   proving file. Plugin 0.3.8.
+## Fixed (tests 76, ruff clean; no plugin change)
+1. **Report-less QA folders** (your open question 1): for QA agents (evidence-collector, reality-checker) with no
+   report file, the **transcript/results lead**, and the QA's own driver scripts get at most 1,500 characters.
+   Tested with your frontend layout (15 KB driver, 6 KB transcript): the whole transcript is visible. Builders
+   are unchanged.
+2. **Film:** moved to `dashboard/public/media/evolvra-demo.mp4` (git keeps one copy) with a poster. The Overview
+   page has a "Watch the film" card with a lightbox player, and the README embeds the poster and links to the film.
+
+## Decisions
+- **A re-score that lowers a score** (your open question 2): allowed. Re-score only when the judge input changes,
+  and always report before/after, as you do. The judges' latest verdict is the record. Never cherry-pick runs.
 
 ## Requested now (short round)
-1. `git pull`, tests: **expect 75**, ruff clean, plugin update to **0.3.8**, fresh session.
-2. Re-score the frontend mission (its input changes now; 3 calls):
+1. `git pull`, tests: **expect 76**, ruff clean.
+2. Re-score the frontend mission once more (its input changes again; 3 calls):
    `uv run evolvra score --mission 20261110-051125-build-a-single-file --rescore`. Report the QA task per judge.
-3. One mission for **sprint-prioritizer** or **content-creator** (your open question 3). Check that its QA agent
-   writes `QA-REPORT.md` without being asked by hand.
+3. One mission for **content-creator** or **rapid-prototyper** (your open question 3).
 4. `.\scripts\cycle.ps1` (no `-Evolve`), outside :15–:50. Short STATUS with `-- docs/STATUS.md`.
+
+## Film review (for Youssef; nothing for the operator)
+42.5 s, 1080p60, no audio. The story and every number check out against the records: Evidence Collector arena
+0.63 → 0.80, promotions at generations 4 and 12, 13 generations, 11 refused, 2 promoted, $0. One factual error:
+**Judge #2 is shown as "Qwen, Alibaba lineage"; since 5 Nov it is Nemotron (NVIDIA lineage, on OpenRouter).**
+Mission and task counts (23 / 45) are a little behind (now 25 / 49), which is fine for a dated snapshot.

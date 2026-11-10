@@ -66,6 +66,7 @@ and `.claude-plugin/marketplace.json` so the update is picked up.
 | `core/evolvra/{store,registry,router,missions,evals,evolve,export}.py` | the engine |
 | `~/.evolvra/` | DB, traces, mission outputs, evolution reports and arena outputs (never committed) |
 | `dashboard/public/data/*.json` | exported snapshots the site renders (committed by the cycle) |
+| `dashboard/public/media/` | the demo film and its poster (served by GitHub Pages; replace, don't add new copies) |
 
 ## Things that bit us already (don't repeat)
 - Groq free tier: 8k tokens/minute. Honor "try again in Ns". The actor role runs on Gemini Flash-Lite.

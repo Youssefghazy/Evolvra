@@ -86,8 +86,12 @@ def _walk_all(root: Path) -> list[Path]:
     return files
 
 
+SCRIPT_SUFFIXES = {".js", ".ts", ".py", ".ps1", ".psm1", ".sh", ".bat", ".cmd"}
+QA_SCRIPT_CHARS = 1500     # a QA agent's own driver script: enough to show what it checks, not the whole budget
+
+
 def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16000,
-                primary_chars: int = PRIMARY_CHARS, mentions: str = "") -> str:
+                primary_chars: int = PRIMARY_CHARS, mentions: str = "", qa: bool = False) -> str:
     """Build the judge's view of an output folder within `total` characters (headers included).
 
     Ranking happens on metadata for every file before anything is cut (8 Nov: a folder of 6,458 fixtures hid the
@@ -141,7 +145,14 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
     if not entries:
         return "\n".join(binaries[:20])
     pool = [e for e in entries if not e["low"] and not e["proof"]] or [e for e in entries if not e["low"]] or entries
-    # a report file beats the script that produced it; otherwise a named top-level file is the deliverable
+    # a report file beats the script that produced it; otherwise a named top-level file is the deliverable.
+    # A QA task's deliverable is its findings: with no report file, its results/transcript lead, not its driver
+    # script (10 Nov: a 15 KB driver left 18% of a 6 KB transcript visible and the judge saw no one-open checks).
+    reports = [e for e in entries if e["report"] and e["top"] and not e["low"]]
+    if qa and not reports:
+        results = [e for e in entries if e["proof"] and not e["low"]]
+        if results:
+            pool = results
     primary = max(pool, key=lambda e: (e["report"] and e["top"], e["named"], e["top"], e["size"]))
 
     def text_of(e) -> str:
@@ -185,6 +196,8 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
             low_shown += 1
         header = f"--- {e['rel']} ({e['size']} bytes) ---\n"
         limit = first_limit if i == 0 else per_proof if is_proof else per_file
+        if qa and i > 0 and e["path"].suffix.lower() in SCRIPT_SUFFIXES:
+            limit = min(limit, QA_SCRIPT_CHARS)
         body = excerpt(text_of(e), max(0, min(limit, room - len(header))))
         chunks.append(header + body)
         used += len(header) + len(body)
