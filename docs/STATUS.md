@@ -1,38 +1,28 @@
-# STATUS - round 16 (10 Nov 2026, local operator, model: Sonnet 5.5 throughout, no switch to Opus)
+# STATUS - round 17, steady state (10 Nov 2026, local operator, model: Sonnet 5.5 throughout, no switch to Opus)
 
-Reply to REVIEW.md "Requested now" (after STATUS 7b4813d). Verified = a command ran and I read its output.
+Reply to REVIEW.md "Steady state" (after STATUS d59426d). Verified = a command ran and I read its output.
 
-## Items
-| # | item | result |
+## Routine
+| step | result |
+|---|---|
+| pull, tests | pulled `09d9d85`; **76 passed** (27 s), ruff clean; plugin unchanged (0.3.8, mission skill read from the 0.3.8 cache) |
+| mission 1: growth-hacker (2 tasks before) | `20261110-100838-design-a-2-week`: activation experiment plan + `samplesize.py` + `events.csv`. PASS/PASS first try; builder had no shell, I ran `samplesize.py --selftest` myself (exit 0, 1,374 per arm / 2,748 total) |
+| mission 2: reality-checker (1 task before) | `20261110-101339-independent-production-readiness-review`: standalone review of the round-16 expense splitter. Review PASS first try; **subject verdict NEEDS WORK** |
+| cycle | `cycle.ps1` no `-Evolve`, 13:23 AST, exit 0, `push: ok` (`e15f27b`); 3 tasks scored, 9 calls, 0 errors |
+
+Both QA/review agents wrote `QA-REPORT.md` alone (verdict on line 1). The growth QA (4,450 bytes) recomputed n independently (1,374 unpooled / 1,377 pooled), ran 7 other inputs, 3 mutants all caught, Monte Carlo power 79.7%; 0 blocking, 4 minor notes (plan text, guardrail power).
+
+## Scores (ensemble corr / compl / qual / evid)
+| task | ensemble | gpt-oss alone |
 |---|---|---|
-| 1 | pull, tests, ruff | DONE - pulled `af603a4`; **76 passed** (64 s - the PC was busy with the mission session), ruff clean; plugin unchanged (0.3.8) |
-| 2 | re-score frontend mission, QA per judge | DONE - QA task **0.655 -> 0.855** (table below), 6 calls (3 cached), 0 errors |
-| 3 | content-creator or rapid-prototyper mission | DONE - rapid-prototyper expense splitter, PASS/PASS first try, QA wrote `QA-REPORT.md` alone again |
-| cycle | `cycle.ps1`, no `-Evolve`, outside :15-:50 | DONE 12:55 AST, exit 0, `push: ok` (`38dd677`) |
-| 4 | this STATUS | DONE |
+| growth-hacker plan | 0.96 / 0.97 / 0.915 / 0.9 | 0.92 / 0.94 / 0.88 / 0.85 |
+| growth QA | 0.93 / 0.94 / 0.895 / 0.935 | 0.86 / 0.88 / 0.84 / 0.87 |
+| reality-checker review | 0.9 / 1.0 / 0.875 / 0.875 | 0.8 / 1.0 / 0.8 / 0.8 |
+No judge failure class on any of the three; Nemotron and Gemini 0.95-1.0.
+Now: growth-hacker 3 tasks 0.926 (was 0.910), reality-checker 2 tasks 0.939 (min 0.93), evidence-collector v2 18 tasks 0.939, devops v2 3 tasks 0.974.
+Free tier: OpenRouter 28/40 (12 left until 03:00 AST), Groq 29/800, Gemini 35/1000.
 
-## Frontend QA re-score, per judge (corr / compl / qual / evid)
-| judge | before (round 15) | after |
-|---|---|---|
-| gpt-oss | 0.0 / 0.0 / 0.2 / 0.3 "missing_one_open_test" | 0.5 / 0.5 / 0.8 / 0.9 "missing_c2_details" |
-| Nemotron | 1.0 / 1.0 / 1.0 / 1.0 | 1.0 / 1.0 / 0.9 / 1.0 |
-| Gemini | 1.0 / 1.0 / 1.0 / 1.0 | 1.0 / 1.0 / 1.0 / 1.0 |
-| **ensemble** | 0.5 / 0.5 / 0.6 / 0.65 (task 0.655) | **0.75 / 0.75 / 0.9 / 0.95 (task 0.855)** |
-gpt-oss now accepts the evidence ("DOM/script tests for one-open-at-a-time ... present") and its only point is that no per-criterion verdict section exists - true: this QA ran under 0.3.7 and wrote no report file.
-Judge input rebuilt (0 calls; I had to pass `qa=True` to `read_output` as `judge.py` does - my old script did not): the **results.json now leads with 5.8k chars and shows 6 one-open check lines (was 0)**, the driver `qa_cdp.js` drops to 1.7k chars. But `03_cdp_transcript.txt` still shows only ~1.6k of 6.4k chars, so your test's "whole transcript is visible" does not hold for this folder (three other files, `04_nojs_dump_dom.html` etc., take the same ~1.6k each).
+## One real finding (not a problem with the system)
+The reality-checker found **4 MEDIUM + 8 LOW issues in the rapid-prototyper's expense splitter** that the earlier QA (PASS, 1 LOW) missed: two tabs overwrite each other's data silently, every Delete button is named "x" for screen readers, Delete is instant with no undo, dark-mode balances fail contrast (3.3-3.7:1 against 4.5:1), one bad stored record wipes all saved data. The money engine itself held (250,360 scenarios, 0 mismatches). The evidence collector verifies the brief's criteria; the extra issues only came out when a reality-checker was asked to look wider. Nothing to fix in Evolvra; the fitness table counts the builder at 0.964 (its brief was met). If you want builders judged on this kind of breadth, that is a scoring decision for you.
 
-## Rapid-prototyper mission `20261110-094717-prototype-a-single-file` (plugin 0.3.8, fresh session)
-- Brief: single-file expense splitter for 4 friends (integer cents, minimal settle-up transfers, localStorage, `?selftest` with 3 scenarios, under 12 KB).
-- Builder: `index.html` 7,185 bytes. PASS, ensemble 1.0 / 1.0 / 0.9 / 0.9 (Nemotron evidence 0.7 is the lowest).
-- QA wrote **`QA-REPORT.md` alone** (3,234 bytes, line 1 `VERDICT: PASS (all 5 builder criteria verified ...)`, one line per criterion with the proving file; I read it). Checks: 5,198 randomized + adversarial scenarios, 0 failures, transfers equal the brute-force minimum (max 3), negative control proves the checker can fail; 35 browser checks in headless Edge, 0 failed (reload persistence, `localStorage` throwing in two ways). PASS, ensemble 0.975 / 1.0 / 0.9 / 0.925; gpt-oss alone "low_priority_ui_bug".
-- One LOW finding: the red validation message stays after a later delete (not a spec requirement).
-- Housekeeping: the QA agent saved page screenshots of the *app* (headless Edge, not my screen). I found no leftover headless Edge or node process from the agents (the 6 Edge processes are the PC's own, started 11:44) and no temp profile folder.
-
-## Numbers now (`evolvra fitness`)
-rapid-prototyper 3 tasks 0.964 (was 0.959, 2) - evidence-collector v2 17 tasks 0.939 (was 0.924, min 0.85) - devops v2 3 tasks 0.974 - sprint-prioritizer 3 tasks 0.964 - content-creator 3 tasks 0.971.
-Free tier today: OpenRouter 25/40 (resets 03:00 AST), Groq 26/800, Gemini 32/1000.
-
-## Open questions for the reviewer
-1. The per-file cap still cuts a 6 KB transcript to ~25% when several files compete (the frontend folder). Should a QA transcript/results file get a larger per-file share (for example 6,000 chars) when it is the lead?
-2. Re-scores are now done for every QA folder that changed; I will not re-score again unless the judge input changes.
-3. Next missions: content-creator (3 tasks), a 4th devops v2 task, or backend-architect (3 tasks, gen 13 parent).
+No open questions.
