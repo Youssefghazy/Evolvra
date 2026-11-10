@@ -1,5 +1,1203 @@
 [
  {
+  "id": "20261110-092831-plan-a-6-week",
+  "brief": "Plan a 6-week sprint for a note-taking app. Capacity: 3 people x 25 working days = 75 person-days, with a 20 percent buffer, so 60 usable person-days. Nine candidates as name, reach per quarter, impact (0.25-3), confidence, effort in person-days: Offline mode 4000, 2, 80%, 30; Tag autocomplete 6000, 1, 90%, 6; Markdown export 2500, 1, 100%, 5; Shared notebooks 3000, 3, 50%, 40 (depends on Sync conflict fixes); Dark mode 7000, 0.5, 100%, 8; Voice notes 1500, 1, 50%, 20; Sync conflict fixes 3500, 2, 80%, 12; Web clipper 2000, 2, 70%, 18; Search filters 5000, 1, 80%, 10. Deliver sprint-plan.md (RICE formula shown, a score table, the chosen set that fits the 60 usable days with the total effort, dependencies respected, a not-now list with a reason each, and top 3 risks) and sprint-plan.csv with the same scores.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Sprint-prioritizer plan (6 of 9 features, 59/60 person-days) passed independent QA on attempt 1 with 0 RICE mismatches.",
+  "started_at": "2026-11-10T09:28:31Z",
+  "finished_at": "2026-11-10T09:33:08Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "sprint-prioritizer",
+    "task": "Write sprint-plan.md and sprint-plan.csv: RICE-ranked 6-week sprint plan for 9 note-taking app candidates within 60 usable person-days",
+    "acceptance": [
+     "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table",
+     "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md",
+     "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)",
+     "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed",
+     "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T09:28:58Z",
+      "finished_at": "2026-11-10T09:29:57Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "sprint-plan.md and sprint-plan.csv written; RICE for all 9 shown; chosen set 6 features, 59 of 60 person-days; Shared notebooks not chosen so dependency rule holds; not-now list and top 3 risks present; Evidence section addresses all 5 criteria (no shell, hand arithmetic)."
+     }
+    ],
+    "traces": 8,
+    "fitness": 0.9925,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 273
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "sprint-plan.csv",
+        "sprint-plan.md"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-092831-plan-a-6-week\\01-sprint-prioritizer"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in the score table.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort is 59 person-days (<= 60) and explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen, so its dependency on Sync conflict fixes does not violate the rule.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "Every unchosen feature is in the not-now list with a reason, and top 3 risks are listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and scores/chosen status match the markdown table.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in the score table.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort is 59 person-days (<= 60) and explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen, so its dependency on Sync conflict fixes does not violate the rule.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "Every unchosen feature is in the not-now list with a reason, and top 3 risks are listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and scores/chosen status match the markdown table.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in the score table.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort is 59 person-days (<= 60) and explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen, so its dependency on Sync conflict fixes does not violate the rule.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "Every unchosen feature is in the not-now list with a reason, and top 3 risks are listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and scores/chosen status match the markdown table.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in the score table.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort is 59 person-days (<= 60) and explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen, so its dependency on Sync conflict fixes does not violate the rule.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "Every unchosen feature is in the not-now list with a reason, and top 3 risks are listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and scores/chosen status match the markdown table.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Total effort 59 ≤ 60 stated",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Dependency respected",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All unchosen features listed with reasons and top 3 risks provided",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "CSV matches markdown table",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Total effort 59 ≤ 60 stated",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Dependency respected",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All unchosen features listed with reasons and top 3 risks provided",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "CSV matches markdown table",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Total effort 59 ≤ 60 stated",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Dependency respected",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All unchosen features listed with reasons and top 3 risks provided",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "CSV matches markdown table",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Total effort 59 ≤ 60 stated",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Dependency respected",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All unchosen features listed with reasons and top 3 risks provided",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "CSV matches markdown table",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in score table; worked divisions provided.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set totals 59 person-days (<=60) and total is explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen; Sync conflict fixes is chosen, so no chosen feature misses its dependency.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All three unchosen features appear in not-now list with one-line reasons; top 3 risks listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and its scores, ranks, and chosen status match the markdown table exactly.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in score table; worked divisions provided.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set totals 59 person-days (<=60) and total is explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen; Sync conflict fixes is chosen, so no chosen feature misses its dependency.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All three unchosen features appear in not-now list with one-line reasons; top 3 risks listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and its scores, ranks, and chosen status match the markdown table exactly.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in score table; worked divisions provided.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set totals 59 person-days (<=60) and total is explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen; Sync conflict fixes is chosen, so no chosen feature misses its dependency.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All three unchosen features appear in not-now list with one-line reasons; top 3 risks listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and its scores, ranks, and chosen status match the markdown table exactly.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "RICE formula shown and computed for all 9 candidates with input values in score table; worked divisions provided.",
+         "id": "C1",
+         "criterion": "RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set totals 59 person-days (<=60) and total is explicitly stated in sprint-plan.md.",
+         "id": "C2",
+         "criterion": "The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md"
+        },
+        {
+         "met": true,
+         "reason": "Shared notebooks is not chosen; Sync conflict fixes is chosen, so no chosen feature misses its dependency.",
+         "id": "C3",
+         "criterion": "No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen)"
+        },
+        {
+         "met": true,
+         "reason": "All three unchosen features appear in not-now list with one-line reasons; top 3 risks listed.",
+         "id": "C4",
+         "criterion": "Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv exists and its scores, ranks, and chosen status match the markdown table exactly.",
+         "id": "C5",
+         "criterion": "sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Independently verify sprint-plan.md and sprint-plan.csv: recompute RICE, capacity sum, dependency rule, CSV vs markdown",
+    "acceptance": [
+     "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch",
+     "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds",
+     "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason",
+     "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T09:29:57Z",
+      "finished_at": "2026-11-10T09:33:08Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "QA recomputed all 9 RICE scores with a PowerShell script before reading builder files: 0 mismatches; chosen set 59 of 60 person-days; dependency rule holds; CSV matches markdown 9/9 rows; all 5 builder criteria verified; brute force of 512 subsets confirms the set is optimal. QA-REPORT.md written at top of output folder."
+     }
+    ],
+    "traces": 24,
+    "fitness": 0.9838,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 322
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "depends-recheck.txt",
+        "QA-REPORT.md",
+        "recompute-output.txt",
+        "recompute.ps1",
+        "verify-output.txt",
+        "verify.ps1"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-092831-plan-a-6-week\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.925,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores were recomputed independently and compared to the builder table with zero mismatches.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort equals 59 (<= 60 person-days) and dependency rule for Shared notebooks / Sync conflict fixes is respected.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv matches the markdown score table row by row, and all unchosen features have a documented reason.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "A clear verdict (verified/not verified/failed) is provided per criterion of the builder task.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores were recomputed independently and compared to the builder table with zero mismatches.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort equals 59 (<= 60 person-days) and dependency rule for Shared notebooks / Sync conflict fixes is respected.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv matches the markdown score table row by row, and all unchosen features have a documented reason.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "A clear verdict (verified/not verified/failed) is provided per criterion of the builder task.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores were recomputed independently and compared to the builder table with zero mismatches.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort equals 59 (<= 60 person-days) and dependency rule for Shared notebooks / Sync conflict fixes is respected.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv matches the markdown score table row by row, and all unchosen features have a documented reason.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "A clear verdict (verified/not verified/failed) is provided per criterion of the builder task.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores were recomputed independently and compared to the builder table with zero mismatches.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set total effort equals 59 (<= 60 person-days) and dependency rule for Shared notebooks / Sync conflict fixes is respected.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "sprint-plan.csv matches the markdown score table row by row, and all unchosen features have a documented reason.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "A clear verdict (verified/not verified/failed) is provided per criterion of the builder task.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores recomputed and matched builder table",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set effort 59 ≤ 60 and dependency satisfied",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "CSV rows match markdown and every unchosen feature has a reason",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Verdicts provided for each criterion",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores recomputed and matched builder table",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set effort 59 ≤ 60 and dependency satisfied",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "CSV rows match markdown and every unchosen feature has a reason",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Verdicts provided for each criterion",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores recomputed and matched builder table",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set effort 59 ≤ 60 and dependency satisfied",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "CSV rows match markdown and every unchosen feature has a reason",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Verdicts provided for each criterion",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All 9 RICE scores recomputed and matched builder table",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Chosen set effort 59 ≤ 60 and dependency satisfied",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "CSV rows match markdown and every unchosen feature has a reason",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Verdicts provided for each criterion",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Agent independently recomputed all 9 RICE scores from brief inputs (recompute-output.txt) and compared to builder's markdown table; verify-output.txt section A shows 0 mismatches across all 9 features.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified chosen set effort = 59 person-days (matches builder's stated 59), ≤ 60 usable days, and dependency rule holds (Shared notebooks not chosen; its prerequisite Sync conflict fixes is chosen). verify-output.txt section B confirms all checks PASS.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified CSV matches markdown row-by-row (9/9 rows identical on rank, reach, impact, confidence, effort, RICE, chosen, depends_on) and every unchosen feature has a not-now reason. verify-output.txt sections C and D confirm PASS.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Agent gave explicit verdict per criterion (a through e in QA-REPORT.md) mapping to all five builder criteria, all marked verified. SUMMARY shows 0 failures.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Agent independently recomputed all 9 RICE scores from brief inputs (recompute-output.txt) and compared to builder's markdown table; verify-output.txt section A shows 0 mismatches across all 9 features.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified chosen set effort = 59 person-days (matches builder's stated 59), ≤ 60 usable days, and dependency rule holds (Shared notebooks not chosen; its prerequisite Sync conflict fixes is chosen). verify-output.txt section B confirms all checks PASS.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified CSV matches markdown row-by-row (9/9 rows identical on rank, reach, impact, confidence, effort, RICE, chosen, depends_on) and every unchosen feature has a not-now reason. verify-output.txt sections C and D confirm PASS.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Agent gave explicit verdict per criterion (a through e in QA-REPORT.md) mapping to all five builder criteria, all marked verified. SUMMARY shows 0 failures.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Agent independently recomputed all 9 RICE scores from brief inputs (recompute-output.txt) and compared to builder's markdown table; verify-output.txt section A shows 0 mismatches across all 9 features.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified chosen set effort = 59 person-days (matches builder's stated 59), ≤ 60 usable days, and dependency rule holds (Shared notebooks not chosen; its prerequisite Sync conflict fixes is chosen). verify-output.txt section B confirms all checks PASS.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified CSV matches markdown row-by-row (9/9 rows identical on rank, reach, impact, confidence, effort, RICE, chosen, depends_on) and every unchosen feature has a not-now reason. verify-output.txt sections C and D confirm PASS.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Agent gave explicit verdict per criterion (a through e in QA-REPORT.md) mapping to all five builder criteria, all marked verified. SUMMARY shows 0 failures.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Agent independently recomputed all 9 RICE scores from brief inputs (recompute-output.txt) and compared to builder's markdown table; verify-output.txt section A shows 0 mismatches across all 9 features.",
+         "id": "C1",
+         "criterion": "Before reading the builder numbers, recompute all 9 RICE scores by hand (or with a stdlib script) from the brief inputs and record them; then compare each to the builder score table and report any mismatch"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified chosen set effort = 59 person-days (matches builder's stated 59), ≤ 60 usable days, and dependency rule holds (Shared notebooks not chosen; its prerequisite Sync conflict fixes is chosen). verify-output.txt section B confirms all checks PASS.",
+         "id": "C2",
+         "criterion": "Verify the chosen set total effort equals the stated total and is <= 60 person-days, and that the dependency rule (Shared notebooks requires Sync conflict fixes) holds"
+        },
+        {
+         "met": true,
+         "reason": "Agent verified CSV matches markdown row-by-row (9/9 rows identical on rank, reach, impact, confidence, effort, RICE, chosen, depends_on) and every unchosen feature has a not-now reason. verify-output.txt sections C and D confirm PASS.",
+         "id": "C3",
+         "criterion": "Verify sprint-plan.csv matches the markdown score table row by row and that every unchosen feature has a reason"
+        },
+        {
+         "met": true,
+         "reason": "Agent gave explicit verdict per criterion (a through e in QA-REPORT.md) mapping to all five builder criteria, all marked verified. SUMMARY shows 0 failures.",
+         "id": "C4",
+         "criterion": "Give a verdict (verified / not verified / failed) per criterion of the builder task"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261110-083646-create-a-usability-test",
   "brief": "Create a usability-test kit for the search-and-tag flow of a note-taking app, for 5 participants: a moderator script with 4 tasks (each with a success criterion and a time limit), a post-task question (SEQ) and the 10 standard SUS items, a findings template with a severity scale, and a stdlib-only Python script score_sus.py that reads a CSV of participant answers, computes each SUS score (0-100) and the mean, flags participants who gave identical answers to every item, and has a --selftest with a hand-checked example.",
   "mode": "micro",
@@ -1439,7 +2637,7 @@
      }
     ],
     "traces": 13,
-    "fitness": 0.8362,
+    "fitness": 0.655,
     "provisional": false,
     "scores": [
      {
@@ -1490,11 +2688,11 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.75,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "missing_one_open_test",
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1505,11 +2703,11 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.75,
+      "value": 0.5,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "missing_one_open_test",
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1520,11 +2718,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.8,
+      "value": 0.65,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "missing_one_open_test",
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1535,209 +2733,209 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.875,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "missing_one_open_test",
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": true,
-         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": true,
-         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": true,
-         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
-       "acceptance": [
-        {
-         "met": true,
-         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": true,
-         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 0.5,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "No evidence shown that only one accordion panel can be open at a time",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": false,
-         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 0.5,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "No evidence shown that only one accordion panel can be open at a time",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": false,
-         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": true
-      }
-     },
-     {
-      "metric": "rubric:evidence",
       "value": 0.6,
-      "judge": "groq/openai/gpt-oss-120b",
+      "judge": "ensemble",
       "evidence": {
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
        "failure_class": "missing_one_open_test",
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
        "acceptance": [
         {
-         "met": false,
-         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "met": true,
+         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
-         "met": false,
-         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "met": true,
+         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.8,
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
        "failure_class": "missing_one_open_test",
        "acceptance": [
         {
          "met": false,
-         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": false,
-         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.3,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.2,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
       }
      },
      {
@@ -1750,18 +2948,18 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -1774,18 +2972,18 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
@@ -1798,23 +2996,23 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.95,
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
@@ -1822,18 +3020,18 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": true
+       "cached": false
       }
      }
     ]
