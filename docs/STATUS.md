@@ -1,69 +1,55 @@
-# STATUS - round 12 (8 Nov 2026, local operator, model: Sonnet 5.5, no switch to Opus)
+# STATUS - round 13 (10 Nov 2026, local operator, model: Sonnet 5.5 throughout, no switch to Opus)
 
-Reply to REVIEW.md "Requested now" (after STATUS 4857005). Verified = a command ran and I read its output.
+Reply to REVIEW.md "Requested next session" (after STATUS dd815ac). Verified = a command ran and I read its output.
 
 ## Items
 | # | item | result |
 |---|---|---|
-| 1 | pull, tests, ruff, plugin 0.3.7 | DONE, but tests 72 passed / **1 FAILED** (reviewer expects 73) - see "What broke" |
-| 2 | re-score reality-checker + devops, per judge before -> after, rebuild judge input | DONE, 9 calls, 0 errors |
-| 3 | stop after item 2 and the cycle | stopped as the reviewer asked: no missions, no `-Evolve` |
-| cycle | `.\scripts\cycle.ps1`, no `-Evolve` | DONE 13:45 AST, exit 0, `push: ok`, outside :15-:50 |
+| 0 | read-only: why no push since Sun 8 Nov 13:45 | DONE - **PC was asleep** (details below), nothing changed on the PC |
+| 1 | pull, tests, ruff | DONE - `2c3a6b4`; **73 passed** on Windows (25.5 s), ruff clean; no plugin change (cache 0.3.7) |
+| 2 | devops-automator v2 mission, new kind, v2 vs v1 | DONE - log parser `Parse-AppLog.ps1`, PASS/PASS first try |
+| 3 | frontend-developer mission | DONE - accessible FAQ accordion `faq.html`, PASS/PASS first try |
+| cycle | `cycle.ps1 -Evolve` outside :15-:50 | DONE 08:17 AST, exit 0, `push: ok` (`0ad64ed`); evolve **skipped** (see below) |
 | 4 | this STATUS | DONE |
 
-Setup (before this session, verified): `git pull --rebase --autostash` to `e993f51`, tree clean, 0 stashes.
-Plugin updated 0.3.6 -> 0.3.7; cache SHA-256 of `agents\engineering-devops-automator.md` and `skills\mission\SKILL.md` equal the repo files. Ruff: all checks passed.
+## Why no push since Sunday 13:45 (asked first, read-only)
+**Asleep, not failing.** Evidence:
+- System log: Kernel-Power 42 "entering sleep" Sun 8 Nov 15:41:54; resume Mon 10 Nov 07:43:45. Uptime at resume 167,064 s (~46 h), so no reboot. No shutdown/restart events (no 41, 1074, 6006) since Sun 14:00. Only an earlier 11-minute sleep at 14:08.
+- `cycle.log`: no cycle start at all between 8 Nov 13:45 and 10 Nov 07:50 (so nothing failed, and no push failed). Missed slots: Sun 16:17, 22:17, Mon 04:17.
+- Task "Evolvra Cycle": StartWhenAvailable = True, WakeToRun = False. After the wake it ran a catch-up at 07:49:48 (state Running, result 267009 while running, then 0); NumberOfMissedRuns 0. That run was evolve=True and pushed (`e7117c8`).
+- Not changed: WakeToRun stays off and the PC's 15-min idle sleep is untouched (managed PC; Youssef decides).
 
-## What broke
-**`tests/test_evals.py::test_thousands_of_fixtures_cannot_hide_the_report` (line 464) FAILS here**, same result alone and in a full run (deterministic on this PC). I changed no code or test.
-- Failing assert: `"fx/ (" in text and "fx/file-0001.txt (" not in text.split("not shown")[0]` - it expects the fixtures to be only summarised.
-- Actual: the report and `evidence/stress.txt` come first (the main point of 4dc5b1c works), then about 81 of the 1,200 fixture files are listed *with content*; the other ~1,119 are summarised as `fx/ (1119 files)`.
-- My reading of `checks.py` `read_output` (lines ~154-165): low-priority files still fill whatever budget is left after the report and proofs. A 2 KB report leaves ~13 KB, which fits ~81 small fixtures. **Unverified**: why your run passed (73). Possible, not checked: a different fixture size, or the test relying on a larger report.
-- The real missions are not affected by this (see re-scores): the report is first and proofs follow.
+## Generation 13 (the catch-up cycle, 07:50)
+`evolve: no promotion: parent backend-architect v1 fitness=0.935; best paired delta -0.0083 on 3 shared task(s) is below the margin`. Because it ran 0.4 h before mine, my `-Evolve` correctly printed "skipped, last generation ran 0.4h ago (interval 12.0h)".
 
-## Quota (`evolvra providers`)
-Before: gemini 33/1000, groq 28/800, openrouter 31/40 (9 left, needed >=4). After: gemini 36, groq 31, openrouter **34/40 (6 left)**. Exactly 3 calls each; none cached (judge prompt changed).
+## Missions (both 1 attempt per task, recorded with the recorder)
+| mission | task | verdict | ensemble (fitness view) |
+|---|---|---|---|
+| `20261110-045922-write-a-powershell-5` | devops-automator v2: Parse-AppLog.ps1 (levels, top-5 normalised errors, first/last ts, errors/hour, malformed/empty/missing-file exit 2, -SelfTest) | PASS | all three judges 0.9-1.0 |
+| same | evidence-collector: -SelfTest + edge cases + 4 mutants | PASS | **0.5-0.65, see "Scorer findings"** |
+| `20261110-051125-build-a-single-file` | frontend-developer: faq.html, 4,998 B, 6-question accordion, filter, dark mode | PASS | 0.90-1.0 |
+| same | evidence-collector: headless Edge over DevTools, 38 checks 0 failed | PASS | gpt-oss 0.5-0.8, others 1.0 |
+No downloads or installs: agents used PowerShell, node and Edge already on the PC; the QA agent deleted its temp Edge profiles.
 
-## Re-score, per task and judge (correctness / evidence, failure class)
-**Reality-checker, task 1** (`20261108-095120-reality-check-whether-the`)
-| judge | before | after |
-|---|---|---|
-| gpt-oss-120b | 0.75 / 0.70 `missing_required_output` | 0.90 / 0.90 `none` |
-| Nemotron | 0.75 / 0.90 `missing_deliverable` | 0.95 / 0.95 `none` |
-| Gemini | 1.00 / 0.95 `none` | 1.00 / 0.95 `none` |
-| **ensemble** | 0.75 / 0.90 `missing_required_output` | **0.925 / 0.925 `none`** |
-| fitness | 0.843 | **0.9437** |
-
-**Devops v2 task 1, builder** (devops-automator): all three judges 1.00 correctness, `none` before and after (gpt-oss evidence 0.90, Nemotron 1.00, Gemini 1.00 both times). Ensemble 1.00 / 0.95 -> 1.00 / 0.95. Fitness 0.9875 -> 0.98.
-
-**Devops v2 task 2, QA** (evidence-collector)
-| judge | before | after |
-|---|---|---|
-| gpt-oss-120b | 0.33 / 0.30 `missing_evidence` | **1.00 / 0.90 `none`** |
-| Nemotron | 0.95 / 0.95 `none` | 1.00 / 1.00 `none` |
-| Gemini | 1.00 / 0.95 `none` | 1.00 / 1.00 `none` |
-| **ensemble** | 0.64 / 0.625 `missing_evidence` (contested by gpt-oss) | **1.00 / 0.95 `none`** (not contested) |
-| fitness | 0.769 | **0.9875** |
-
-**Plain answers:** (1) the reality-checker's false `missing_required_output` is **gone** - all three judges now say `none`. (2) gpt-oss **no longer marks the devops QA down** (0.33 -> 1.00). Caveat: one re-score each, free-tier judges vary a little between runs.
-Agent fitness after the cycle: reality-checker 0.944 (1 task), evidence-collector v2 0.929 -> 0.947, devops-automator v2 0.972 -> 0.968.
-
-## Judge input rebuilt, 0 API calls
-Same `checks.read_output(...)` call and same `mentions` as `judge.build_prompt`, read-only DB. Script: scratch `judge_input.py` (not committed).
-| task | prompt chars | files with content | `evidence/` files | report first? | omitted line |
+## devops-automator v2 vs v1 (real work, `evolvra fitness`)
+| | tasks | mean | min | max | top failure |
 |---|---|---|---|---|---|
-| reality-checker 1 | 21,187 (read_output 17,076) | 10 | 9 | yes: `REALITY-CHECK.md` is #1 | 5 named, no "more"; folders `fx/ (395 files)`, `work/ (8 files)` |
-| devops 1 builder | 20,649 (16,587) | 10 | 9 | n/a: `Test-Workflow.ps1` first (main deliverable) | 7 named (ci.yml, README.md, sample_project files); no folders |
-| devops 2 QA | 20,286 (17,360) | 10 | 9 | yes: `QA-REPORT.md` is #1 | 25 named + "1 more"; folder `work/ (39 files)` |
-Note: read_output alone is about 17k chars, a little above the 16k `total`, (the omitted line is appended after the budget check; not investigated further). The prompt wrapper adds about 3-4k.
-The reality-checker output now shows `fx/ (395 files)`, not 6,458 (unverified why the count differs from the earlier 6,458; likely the folder-walk limit).
+| v1 | 4 | 0.881 | 0.72 | 0.96 | invalid_yaml_syntax |
+| **v2** | **3** | **0.973** | **0.96** | 0.98 | none |
+v2 is ahead by 0.092 and has no task under 0.96, but the three v2 tasks (CI YAML + checker, backup verifier, log parser) are not the same tasks as v1's, and n=3. Treat it as consistent with the +0.0575 held-out result, not as proof.
+Other agents now: frontend-developer 2 tasks 0.960 (min 0.94); evidence-collector v2 14 tasks 0.919 (was 0.947, min 0.66, from the two QA scores below).
+
+## Scorer findings (judge input rebuilt offline, 0 API calls)
+1. **Devops QA task: probably a false low from gpt-oss** (0.0/0.0/0.3/0.4: "wrong exit code for missing files"; Gemini 1.0; Nemotron returned unparseable output, the 1 error of this cycle). The input shown to judges starts with `mutants/m2-missing-exit-5.ps1` (the QA agent's deliberately broken copy, exit code 5), then the other mutant outputs; the real proofs (`case-missing.stderr.txt`, `exitcodes.txt`, `expected-vs-actual.txt`) are in the "not shown" list. So gpt-oss most likely read a mutant as the subject. Unverified: that is my reading of its critique plus the file order; I did not re-score it.
+2. **Frontend QA task:** gpt-oss alone says "missing_one_open_test" (0.5-0.8). The QA report lists one-open checks (A4-A6, A11, A12) in `03_cdp_transcript.txt`, which is in the judge input; I did not open that file myself, so I cannot say whether it was cut.
+3. **Frontend builder:** gpt-oss flagged `incorrect_initial_aria_state` (static markup has `aria-expanded="true"` because with JS off all answers are visible; the script resets it). It is a deliberate choice, scored 0.9-1.0 anyway.
+4. Also in that devops QA input: `logs/big.log` (5.9 MB) is listed as "binary" and the "binary" label is also used for the plain-text `.log` files.
+
+## Housekeeping
+- The devops builder left a runaway PowerShell (PID 10644, 155 s CPU, from its own test loop). It was denied killing it; I did not either. It was gone by the end of QA.
+- Free-tier use today: OpenRouter 15/40 (resets 03:00 AST), Groq 16/800, Gemini 22/1000.
 
 ## Open questions for the reviewer
-1. Why does `test_thousands_of_fixtures_cannot_hide_the_report` pass for you and fail here (81 fixtures shown)? Should low-priority files be capped when proofs exist, or is the test too strict?
-2. Both fixes look good on real data; do you want gpt-oss's old 0.33 kept as a regression fixture?
-3. Tomorrow per REVIEW: devops v2 mission #3 and frontend-developer or ux-researcher. OpenRouter will have 40 new calls; today 6 are left.
-
-## Commits
-- Cycle: `e555a5a` "cycle: refresh data (21 missions)" (pushed by cycle.ps1).
-- STATUS: see git log (this file's commit is the newest on `main`).
-- No code, test or plugin file changed this round.
+1. Should QA output folders like `mutants/` (or files whose name repeats the primary script's) rank low in the judge input, so a deliberate broken copy is never shown first?
+2. gpt-oss is the lone low judge on 3 of 4 new tasks (2 QA verdicts, 1 aria note). Same pattern as last round; do you want a re-score of the two QA tasks once item 1 is decided?
+3. Next missions? Suggestions: another devops-automator v2 task (4th), ux-researcher or rapid-prototyper.
