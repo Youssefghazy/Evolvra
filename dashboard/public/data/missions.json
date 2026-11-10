@@ -1,5 +1,1137 @@
 [
  {
+  "id": "20261110-094717-prototype-a-single-file",
+  "brief": "Prototype a single-file HTML expense splitter for 4 friends: add an expense (who paid, amount, which friends share it), show each friend net balance, and show the minimal set of settle-up transfers that clears all balances. State persists in localStorage (wrapped in try/catch). Under 12 KB, zero external requests, works offline. Add a ?selftest mode that runs three built-in scenarios (even split, uneven shares, one person owes nothing) and shows PASS/FAIL per scenario. Money is handled in whole cents, never floats.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Single-file 7185-byte expense splitter built (1 attempt) and independently verified by QA (1 attempt): integer cents, 3 PASS selftest, persistence and localStorage-throws OK.",
+  "started_at": "2026-11-10T09:47:17Z",
+  "finished_at": "2026-11-10T09:54:53Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "rapid-prototyper",
+    "task": "Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence",
+    "acceptance": [
+     "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)",
+     "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0",
+     "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends",
+     "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)",
+     "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T09:47:41Z",
+      "finished_at": "2026-11-10T09:51:22Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "index.html 7185 bytes, 0 URL matches; headless Edge run: 3 PASS selftest lines, reload persistence, localStorage-throws OK; node fuzz 20000 cases sum=0, max 2 transfers (builder-reported)"
+     }
+    ],
+    "traces": 20,
+    "fitness": 0.975,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 187
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "index.html"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-094717-prototype-a-single-file\\01-rapid-prototyper"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file, 7185 bytes (under 12KB), zero external resources.",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "Money computed in integer cents, split function handles remainders precisely, net balances sum to 0.",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle-up uses grouping algorithm ensuring minimal transfers, <=3 for 4 friends.",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self-test mode runs the 3 required scenarios and displays PASS lines.",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "localStorage persistence wrapped in try/catch correctly.",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file, 7185 bytes (under 12KB), zero external resources.",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "Money computed in integer cents, split function handles remainders precisely, net balances sum to 0.",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle-up uses grouping algorithm ensuring minimal transfers, <=3 for 4 friends.",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self-test mode runs the 3 required scenarios and displays PASS lines.",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "localStorage persistence wrapped in try/catch correctly.",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file, 7185 bytes (under 12KB), zero external resources.",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "Money computed in integer cents, split function handles remainders precisely, net balances sum to 0.",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle-up uses grouping algorithm ensuring minimal transfers, <=3 for 4 friends.",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self-test mode runs the 3 required scenarios and displays PASS lines.",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "localStorage persistence wrapped in try/catch correctly.",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file, 7185 bytes (under 12KB), zero external resources.",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "Money computed in integer cents, split function handles remainders precisely, net balances sum to 0.",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle-up uses grouping algorithm ensuring minimal transfers, <=3 for 4 friends.",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self-test mode runs the 3 required scenarios and displays PASS lines.",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "localStorage persistence wrapped in try/catch correctly.",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 7185 bytes, single HTML, no external URLs",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled as integer cents with exact split function",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle algorithm limits transfers to ≤3 for four friends",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self‑test runs three scenarios and reports PASS/FAIL lines",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "State loads from localStorage with try/catch and persists after reload",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 7185 bytes, single HTML, no external URLs",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled as integer cents with exact split function",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle algorithm limits transfers to ≤3 for four friends",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self‑test runs three scenarios and reports PASS/FAIL lines",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "State loads from localStorage with try/catch and persists after reload",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 7185 bytes, single HTML, no external URLs",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled as integer cents with exact split function",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle algorithm limits transfers to ≤3 for four friends",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self‑test runs three scenarios and reports PASS/FAIL lines",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "State loads from localStorage with try/catch and persists after reload",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 7185 bytes, single HTML, no external URLs",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled as integer cents with exact split function",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "Settle algorithm limits transfers to ≤3 for four friends",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "Self‑test runs three scenarios and reports PASS/FAIL lines",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "State loads from localStorage with try/catch and persists after reload",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file at 7185 bytes (<12288), no external URLs or resources, works offline",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled in integer cents via cents() and split(); remainder distributed to first sharers so sums always balance to zero",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "settle() uses grouping algorithm; for 4 friends max transfers is 3 (n-1), verified by selftest check x.length<=3",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "selftest() defines exactly 3 scenarios (even split, uneven shares, one person owes nothing) and reports PASS/FAIL for each",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "load() and save() both wrapped in try/catch; load validates schema; save shows fallback message when storage throws",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file at 7185 bytes (<12288), no external URLs or resources, works offline",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled in integer cents via cents() and split(); remainder distributed to first sharers so sums always balance to zero",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "settle() uses grouping algorithm; for 4 friends max transfers is 3 (n-1), verified by selftest check x.length<=3",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "selftest() defines exactly 3 scenarios (even split, uneven shares, one person owes nothing) and reports PASS/FAIL for each",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "load() and save() both wrapped in try/catch; load validates schema; save shows fallback message when storage throws",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.7,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file at 7185 bytes (<12288), no external URLs or resources, works offline",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled in integer cents via cents() and split(); remainder distributed to first sharers so sums always balance to zero",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "settle() uses grouping algorithm; for 4 friends max transfers is 3 (n-1), verified by selftest check x.length<=3",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "selftest() defines exactly 3 scenarios (even split, uneven shares, one person owes nothing) and reports PASS/FAIL for each",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "load() and save() both wrapped in try/catch; load validates schema; save shows fallback message when storage throws",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Single HTML file at 7185 bytes (<12288), no external URLs or resources, works offline",
+         "id": "C1",
+         "criterion": "One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline)"
+        },
+        {
+         "met": true,
+         "reason": "All money handled in integer cents via cents() and split(); remainder distributed to first sharers so sums always balance to zero",
+         "id": "C2",
+         "criterion": "All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0"
+        },
+        {
+         "met": true,
+         "reason": "settle() uses grouping algorithm; for 4 friends max transfers is 3 (n-1), verified by selftest check x.length<=3",
+         "id": "C3",
+         "criterion": "Settle-up transfers clear every balance using no more than 3 transfers for 4 friends"
+        },
+        {
+         "met": true,
+         "reason": "selftest() defines exactly 3 scenarios (even split, uneven shares, one person owes nothing) and reports PASS/FAIL for each",
+         "id": "C4",
+         "criterion": "?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing)"
+        },
+        {
+         "met": true,
+         "reason": "load() and save() both wrapped in try/catch; load validates schema; save shows fallback message when storage throws",
+         "id": "C5",
+         "criterion": "State is restored after reload, and the page still works when localStorage throws (try/catch)"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Independently verify the expense splitter against every builder criterion with reproducible checks",
+    "acceptance": [
+     "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it",
+     "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers",
+     "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T09:51:22Z",
+      "finished_at": "2026-11-10T09:54:53Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "QA-REPORT.md PASS: B1-B5 verified in headless Edge (35 browser checks, 0 failed); 5198 random+adversarial scenarios sum=0, clear, max 3 transfers; negative control mutant caught; 1 low cosmetic issue (stale #err after delete)"
+     }
+    ],
+    "traces": 15,
+    "fitness": 0.9688,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 225
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "browser-check.js",
+        "after-reload.png",
+        "after-two-expenses.png",
+        "browser-check-output.txt",
+        "browser-results.json",
+        "mobile-360.png",
+        "negative-control-output.txt",
+        "random-check-output.json",
+        "selftest.png",
+        "static-checks.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-094717-prototype-a-single-file\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "low_priority_ui_bug",
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "low_priority_ui_bug",
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.925,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "low_priority_ui_bug",
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "low_priority_ui_bug",
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Each builder criterion (B1-B5) is marked verified with command output and proof files.",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized check of 5198 scenarios confirms balances sum to 0 and settle up with at most 3 transfers.",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Page was loaded in headless Edge via DevTools; selftest PASS lines, reload persistence, and localStorage-throws behavior were observed.",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Each builder criterion (B1-B5) is marked verified with command output and proof files.",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized check of 5198 scenarios confirms balances sum to 0 and settle up with at most 3 transfers.",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Page was loaded in headless Edge via DevTools; selftest PASS lines, reload persistence, and localStorage-throws behavior were observed.",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Each builder criterion (B1-B5) is marked verified with command output and proof files.",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized check of 5198 scenarios confirms balances sum to 0 and settle up with at most 3 transfers.",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Page was loaded in headless Edge via DevTools; selftest PASS lines, reload persistence, and localStorage-throws behavior were observed.",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Each builder criterion (B1-B5) is marked verified with command output and proof files.",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized check of 5198 scenarios confirms balances sum to 0 and settle up with at most 3 transfers.",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Page was loaded in headless Edge via DevTools; selftest PASS lines, reload persistence, and localStorage-throws behavior were observed.",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "failure_class": "low_priority_ui_bug",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All builder criteria are listed with proof files and descriptions",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized test of 5198 scenarios shows sum=0 and ≤3 transfers",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Headless Edge run shows self‑test PASS, persistence and storage‑throw handling",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "failure_class": "low_priority_ui_bug",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All builder criteria are listed with proof files and descriptions",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized test of 5198 scenarios shows sum=0 and ≤3 transfers",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Headless Edge run shows self‑test PASS, persistence and storage‑throw handling",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "failure_class": "low_priority_ui_bug",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All builder criteria are listed with proof files and descriptions",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized test of 5198 scenarios shows sum=0 and ≤3 transfers",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Headless Edge run shows self‑test PASS, persistence and storage‑throw handling",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "A low‑priority UI bug leaves a stale validation message after deleting an expense",
+       "failure_class": "low_priority_ui_bug",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "All builder criteria are listed with proof files and descriptions",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "Randomized test of 5198 scenarios shows sum=0 and ≤3 transfers",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "Headless Edge run shows self‑test PASS, persistence and storage‑throw handling",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Only a low-priority cosmetic issue: the red validation message (#err) stays visible after a successful delete (not a spec requirement).",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA report marks B1-B5 each verified with specific evidence files (static-checks.txt, random-check-output.json, browser-check-output.txt, browser-results.json, screenshots); browser-results.json shows 35 individual checks with pass/fail and detail",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "random-check-output.json documents 5198 scenarios (5000 random + 198 adversarial) with sumFail=0, clearFail=0, over3=0, maxTransfers=3, notMinimal=0; negative-control-output.txt confirms checker detects defects",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "browser-check-output.txt and browser-results.json show headless Edge loaded the page: 3 PASS lines for ?selftest, reload persistence verified (after-reload.png), localStorage-throws behaviour observed for two throw styles (storage-throws-methods.png, storage-throws-getter.png), 35 browser checks with 0 failures",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Only a low-priority cosmetic issue: the red validation message (#err) stays visible after a successful delete (not a spec requirement).",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA report marks B1-B5 each verified with specific evidence files (static-checks.txt, random-check-output.json, browser-check-output.txt, browser-results.json, screenshots); browser-results.json shows 35 individual checks with pass/fail and detail",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "random-check-output.json documents 5198 scenarios (5000 random + 198 adversarial) with sumFail=0, clearFail=0, over3=0, maxTransfers=3, notMinimal=0; negative-control-output.txt confirms checker detects defects",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "browser-check-output.txt and browser-results.json show headless Edge loaded the page: 3 PASS lines for ?selftest, reload persistence verified (after-reload.png), localStorage-throws behaviour observed for two throw styles (storage-throws-methods.png, storage-throws-getter.png), 35 browser checks with 0 failures",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Only a low-priority cosmetic issue: the red validation message (#err) stays visible after a successful delete (not a spec requirement).",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA report marks B1-B5 each verified with specific evidence files (static-checks.txt, random-check-output.json, browser-check-output.txt, browser-results.json, screenshots); browser-results.json shows 35 individual checks with pass/fail and detail",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "random-check-output.json documents 5198 scenarios (5000 random + 198 adversarial) with sumFail=0, clearFail=0, over3=0, maxTransfers=3, notMinimal=0; negative-control-output.txt confirms checker detects defects",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "browser-check-output.txt and browser-results.json show headless Edge loaded the page: 3 PASS lines for ?selftest, reload persistence verified (after-reload.png), localStorage-throws behaviour observed for two throw styles (storage-throws-methods.png, storage-throws-getter.png), 35 browser checks with 0 failures",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Only a low-priority cosmetic issue: the red validation message (#err) stays visible after a successful delete (not a spec requirement).",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA report marks B1-B5 each verified with specific evidence files (static-checks.txt, random-check-output.json, browser-check-output.txt, browser-results.json, screenshots); browser-results.json shows 35 individual checks with pass/fail and detail",
+         "id": "C1",
+         "criterion": "Each builder criterion is marked verified / not verified / failed with the command and output (or file) that proves it"
+        },
+        {
+         "met": true,
+         "reason": "random-check-output.json documents 5198 scenarios (5000 random + 198 adversarial) with sumFail=0, clearFail=0, over3=0, maxTransfers=3, notMinimal=0; negative-control-output.txt confirms checker detects defects",
+         "id": "C2",
+         "criterion": "A randomized check (at least 200 random scenarios) shows balances sum to 0 and the transfers clear every balance with at most 3 transfers"
+        },
+        {
+         "met": true,
+         "reason": "browser-check-output.txt and browser-results.json show headless Edge loaded the page: 3 PASS lines for ?selftest, reload persistence verified (after-reload.png), localStorage-throws behaviour observed for two throw styles (storage-throws-methods.png, storage-throws-getter.png), 35 browser checks with 0 failures",
+         "id": "C3",
+         "criterion": "The page is actually loaded in a browser (headless Edge via DevTools or similar tool already on the PC): ?selftest PASS lines, reload persistence, and localStorage-throws behaviour are observed, not assumed"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261110-092831-plan-a-6-week",
   "brief": "Plan a 6-week sprint for a note-taking app. Capacity: 3 people x 25 working days = 75 person-days, with a 20 percent buffer, so 60 usable person-days. Nine candidates as name, reach per quarter, impact (0.25-3), confidence, effort in person-days: Offline mode 4000, 2, 80%, 30; Tag autocomplete 6000, 1, 90%, 6; Markdown export 2500, 1, 100%, 5; Shared notebooks 3000, 3, 50%, 40 (depends on Sync conflict fixes); Dark mode 7000, 0.5, 100%, 8; Voice notes 1500, 1, 50%, 20; Sync conflict fixes 3500, 2, 80%, 12; Web clipper 2000, 2, 70%, 18; Search filters 5000, 1, 80%, 10. Deliver sprint-plan.md (RICE formula shown, a score table, the chosen set that fits the 60 usable days with the total effort, dependencies respected, a not-now list with a reason each, and top 3 risks) and sprint-plan.csv with the same scores.",
   "mode": "micro",
@@ -2637,7 +3769,7 @@
      }
     ],
     "traces": 13,
-    "fitness": 0.655,
+    "fitness": 0.855,
     "provisional": false,
     "scores": [
      {
@@ -2688,81 +3820,177 @@
      },
      {
       "metric": "rubric:completeness",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_c2_details",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_c2_details",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_c2_details",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_c2_details",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder provided with byte size, grep results, CDP automation tests for one-open-at-a-time, aria attributes, filter, and no-JS readability check.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria thoroughly verified and documented via automated CDP scripts.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder provided with byte size, grep results, CDP automation tests for one-open-at-a-time, aria attributes, filter, and no-JS readability check.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria thoroughly verified and documented via automated CDP scripts.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder provided with byte size, grep results, CDP automation tests for one-open-at-a-time, aria attributes, filter, and no-JS readability check.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria thoroughly verified and documented via automated CDP scripts.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder provided with byte size, grep results, CDP automation tests for one-open-at-a-time, aria attributes, filter, and no-JS readability check.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria thoroughly verified and documented via automated CDP scripts.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
       "value": 0.5,
-      "judge": "ensemble",
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "failure_class": "missing_one_open_test",
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 0.5,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "missing_one_open_test",
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.65,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "missing_one_open_test",
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 0.6,
-      "judge": "ensemble",
-      "evidence": {
-       "failure_class": "missing_one_open_test",
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "judges": [
-        "groq/openai/gpt-oss-120b",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.5-flash-lite"
-       ],
-       "contested_by": "groq/openai/gpt-oss-120b"
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
-      "evidence": {
-       "critique": "none",
-       "failure_class": "none",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "failure_class": "missing_c2_details",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "reason": "All required evidence files are present and show byte size, no external URLs, DOM/script tests for one-open-at-a-time, aria attributes, filter behavior, and no-JS readability.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
-         "met": true,
-         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "met": false,
+         "reason": "The agent did not provide the required PASS/NEEDS_WORK verdict with per‑criterion verification details.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2772,21 +4000,21 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
-       "failure_class": "none",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "failure_class": "missing_c2_details",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "reason": "All required evidence files are present and show byte size, no external URLs, DOM/script tests for one-open-at-a-time, aria attributes, filter behavior, and no-JS readability.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
-         "met": true,
-         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "met": false,
+         "reason": "The agent did not provide the required PASS/NEEDS_WORK verdict with per‑criterion verification details.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2796,21 +4024,21 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
-       "failure_class": "none",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "failure_class": "missing_c2_details",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
+         "reason": "All required evidence files are present and show byte size, no external URLs, DOM/script tests for one-open-at-a-time, aria attributes, filter behavior, and no-JS readability.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
-         "met": true,
-         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
+         "met": false,
+         "reason": "The agent did not provide the required PASS/NEEDS_WORK verdict with per‑criterion verification details.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2820,117 +4048,21 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 1.0,
-      "judge": "gemini/gemini-3.5-flash-lite",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
-       "failure_class": "none",
+       "critique": "C2 is not satisfied because the required detailed verdict breakdown is missing.",
+       "failure_class": "missing_c2_details",
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder present with comprehensive byte size, grep, DOM/script test results, and no-JS verification.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": true,
-         "reason": "Verdict given as PASS with each criterion verified through CDP tests and static analysis.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:completeness",
-      "value": 0.0,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
+         "reason": "All required evidence files are present and show byte size, no external URLs, DOM/script tests for one-open-at-a-time, aria attributes, filter behavior, and no-JS readability.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": false,
-         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:correctness",
-      "value": 0.0,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": false,
-         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:evidence",
-      "value": 0.3,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": false,
-         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
-         "id": "C2",
-         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
-        }
-       ],
-       "cached": false
-      }
-     },
-     {
-      "metric": "rubric:quality",
-      "value": 0.2,
-      "judge": "groq/openai/gpt-oss-120b",
-      "evidence": {
-       "critique": "Missing verifiable proof of the accordion's one-open-at-a-time constraint and filter behavior.",
-       "failure_class": "missing_one_open_test",
-       "acceptance": [
-        {
-         "met": false,
-         "reason": "Evidence for one-open-at-a-time behavior and filter functionality with JS is not shown; cannot verify.",
-         "id": "C1",
-         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
-        },
-        {
-         "met": false,
-         "reason": "Final verdict claims PASS but C1 is unmet, so overall verdict should be NEEDS_WORK.",
+         "reason": "The agent did not provide the required PASS/NEEDS_WORK verdict with per‑criterion verification details.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2948,13 +4080,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), CDP-driven DOM/script tests for one-open-at-a-time (A4-A6, A11-A12), aria attributes (A2, A3, D3), filter behaviour (B1-B10), and no-JS readability (D1-D6, nojs_dump_dom.html). All checks reproducible with tools on the PC.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
+         "reason": "Verdict PASS recorded; all 38 CDP checks passed (0 failed) across two runs; every build criterion (6 questions, accessible accordion, keyboard operable, aria-expanded, one-open-at-a-time, no-JS readable, <8 KB, zero external requests, dark-mode aware, filter box) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2972,13 +4104,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), CDP-driven DOM/script tests for one-open-at-a-time (A4-A6, A11-A12), aria attributes (A2, A3, D3), filter behaviour (B1-B10), and no-JS readability (D1-D6, nojs_dump_dom.html). All checks reproducible with tools on the PC.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
+         "reason": "Verdict PASS recorded; all 38 CDP checks passed (0 failed) across two runs; every build criterion (6 questions, accessible accordion, keyboard operable, aria-expanded, one-open-at-a-time, no-JS readable, <8 KB, zero external requests, dark-mode aware, filter box) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -2996,13 +4128,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), CDP-driven DOM/script tests for one-open-at-a-time (A4-A6, A11-A12), aria attributes (A2, A3, D3), filter behaviour (B1-B10), and no-JS readability (D1-D6, nojs_dump_dom.html). All checks reproducible with tools on the PC.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
+         "reason": "Verdict PASS recorded; all 38 CDP checks passed (0 failed) across two runs; every build criterion (6 questions, accessible accordion, keyboard operable, aria-expanded, one-open-at-a-time, no-JS readable, <8 KB, zero external requests, dark-mode aware, filter box) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
@@ -3012,7 +4144,7 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 1.0,
+      "value": 0.9,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
        "critique": "none",
@@ -3020,13 +4152,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), DOM-level tests for one-open-at-a-time (B1-B6 all pass), ARIA attributes (A2 verified), filter behavior (C1-C6 all pass), and no-JS readability checks (D1-D6 all pass) using Node.js and Edge CDP — no downloads required.",
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 hits), CDP-driven DOM/script tests for one-open-at-a-time (A4-A6, A11-A12), aria attributes (A2, A3, D3), filter behaviour (B1-B10), and no-JS readability (D1-D6, nojs_dump_dom.html). All checks reproducible with tools on the PC.",
          "id": "C1",
          "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
         },
         {
          "met": true,
-         "reason": "Orchestrator recorded PASS; all 38 CDP checks passed. Every build criterion (single file, 6 questions, accessible accordion with keyboard/ARIA/one-open, no-JS readable, <8 KB, zero external requests, dark-mode aware, text filter) is verified by the evidence.",
+         "reason": "Verdict PASS recorded; all 38 CDP checks passed (0 failed) across two runs; every build criterion (6 questions, accessible accordion, keyboard operable, aria-expanded, one-open-at-a-time, no-JS readable, <8 KB, zero external requests, dark-mode aware, filter box) is verified by the evidence.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
