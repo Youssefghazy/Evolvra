@@ -464,3 +464,19 @@ def test_thousands_of_fixtures_cannot_hide_the_report(tmp_path):
     shown_fx = [line for line in text.splitlines() if line.startswith("--- fx/")]
     assert len(shown_fx) <= checks.LOW_SAMPLES and "fx/ (" in text       # a few examples, the rest summarised
     assert len(text) <= 16000 + 200                                     # headers now count toward the budget
+
+
+def test_a_qa_mutant_is_never_shown_as_the_subject(tmp_path):
+    out = tmp_path / "02-evidence-collector"
+    for d in ("mutants", "evidence", "logs"):
+        (out / d).mkdir(parents=True)
+    (out / "mutants" / "m2-missing-exit-5.ps1").write_text("exit 5 # deliberately broken\n" * 400, encoding="utf-8")
+    (out / "QA-REPORT.md").write_text("# QA\nPASS; mutant m2 was caught\n" * 20, encoding="utf-8")
+    (out / "evidence" / "exitcodes.txt").write_text("missing file -> exit 2 (expected 2)", encoding="utf-8")
+    (out / "logs" / "app.log").write_text("2026-11-10 ERROR boom\n" * 50, encoding="utf-8")
+    (out / "notes.env").write_text("GROQ_API_KEY=should-never-reach-a-judge", encoding="utf-8")
+    text = checks.read_output(str(out), mentions="see QA-REPORT.md and evidence/exitcodes.txt; mutants in mutants/")
+    assert text.startswith("--- QA-REPORT.md")
+    assert text.index("--- evidence/exitcodes.txt") < text.index("mutants/")
+    assert "--- logs/app.log" in text and "(binary" not in text        # .log is text now
+    assert "notes.env" not in text and "should-never" not in text      # secret-like files are never read or listed

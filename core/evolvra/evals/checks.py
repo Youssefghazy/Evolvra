@@ -9,7 +9,11 @@ from pathlib import Path
 
 MAX_ATTEMPTS = 3
 TEXT_SUFFIXES = {".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".py", ".js", ".ts", ".tsx", ".jsx",
-                 ".html", ".css", ".sql", ".sh", ".ps1", ".csv", ".xml", ".ini", ".cfg", ".env"}
+                 ".html", ".htm", ".css", ".sql", ".sh", ".ps1", ".psm1", ".psd1", ".bat", ".cmd", ".csv", ".tsv",
+                 ".xml", ".ini", ".cfg", ".log", ".stdout", ".stderr", ".out", ".err"}
+# never read into a judge prompt (it goes to external providers), never even listed
+SECRET_NAMES = {".env", "id_rsa", "id_ed25519", "credentials", "secrets.json"}
+SECRET_SUFFIXES = {".env", ".pem", ".key", ".pfx", ".p12"}
 # tool environments agents create while working; never part of the deliverable
 JUNK_DIRS = {"venv", "env", "node_modules", "__pycache__", "site-packages", ".venv", ".git", ".tox", ".nox",
              ".cache", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".ipynb_checkpoints"}
@@ -54,7 +58,10 @@ def excerpt(text: str, limit: int) -> str:
             " verified from the excerpt ...]\n\n" + text[-tail:])
 
 
-LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "fx", "work", "build", "dist", "copy", "copies"}
+LOW_PRIORITY_DIRS = {"scratch", "tmp", "temp", "fixture", "fixtures", "fx", "work", "build", "dist", "copy", "copies",
+                     "mutants", "mutant", "mutations", "sabotage", "sabotaged", "broken", "negative"}
+# deliberately broken copies a QA agent makes to prove its checks bite (10 Nov: a judge graded one as the subject)
+DECOY_MARKERS = ("mutant", "sabotage", "broken-copy")
 EVIDENCE_DIRS = {"evidence", "proof", "proofs", "results", "logs", "captures", "outputs"}
 BULK_DIR_FILES = 50        # an unrecognised folder with more files than this is treated like scratch
 WALK_LIMIT = 20000         # metadata only; contents are read just for the files that make it into the prompt
@@ -107,6 +114,8 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
             continue
         if size == 0:
             continue  # empty captures (any suffix) say nothing and read as "the evidence is empty"
+        if path.name.lower() in SECRET_NAMES or path.suffix.lower() in SECRET_SUFFIXES:
+            continue
         rel = path.relative_to(root).as_posix()
         if path.suffix.lower() not in TEXT_SUFFIXES and path.suffix:
             binaries.append(f"--- {rel} (binary, {size} bytes) ---")
@@ -114,15 +123,16 @@ def read_output(output_dir: str | None, *, per_file: int = 3000, total: int = 16
         dirs = rel.lower().split("/")[:-1]
         proof = any(d in EVIDENCE_DIRS for d in dirs)
         bulk = bool(dirs) and dirs[0] not in EVIDENCE_DIRS and top_counts.get(dirs[0], 0) > BULK_DIR_FILES
-        low = not proof and (bulk or any(d in LOW_PRIORITY_DIRS for d in dirs))
+        decoy = any(mk in path.name.lower() for mk in DECOY_MARKERS)
+        low = decoy or (not proof and (bulk or any(d in LOW_PRIORITY_DIRS for d in dirs)))
         by_path = "/" in rel and rel.lower() in m
         named = by_path or (bool(m) and path.name.lower() in m)
-        entries.append({"path": path, "rel": rel, "size": size, "low": low, "proof": proof or by_path,
-                        "named": named, "cited": by_path})
+        entries.append({"path": path, "rel": rel, "size": size, "low": low, "proof": (proof or by_path) and not decoy,
+                        "named": named, "cited": by_path, "top": not dirs})
     if not entries:
         return "\n".join(binaries[:20])
     pool = [e for e in entries if not e["low"] and not e["proof"]] or [e for e in entries if not e["low"]] or entries
-    primary = max(pool, key=lambda e: (e["named"], e["size"]))
+    primary = max(pool, key=lambda e: (e["named"], e["top"], e["size"]))   # a named top-level file is the deliverable
 
     def text_of(e) -> str:
         if "text" not in e:

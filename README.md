@@ -22,15 +22,15 @@
 
 ## Results so far
 
-Measured from the system's own records (`dashboard/public/data/`), first 7 days of operation.
+Measured from the system's own records (`dashboard/public/data/`), first 9 days of operation.
 
 | | |
 |---|---|
-| Real missions run | 18 (36 tasks, every one independently QA-checked) |
+| Real missions run | 23 (46 tasks, every one independently QA-checked) |
 | QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
-| Evolution generations | 12 |
-| Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2, +5.75 points, still being confirmed on real missions) |
-| Generations correctly refused | 10 (no candidate beat its parent by the margin, or the arena was unfair) |
+| Evolution generations | 13 |
+| Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2), both confirmed on real missions |
+| Generations correctly refused | 11 (no candidate beat its parent by the margin, or the arena was unfair) |
 | Free-tier model calls | ~560 (Gemini, Groq, OpenRouter) |
 | Money spent | **$0.00** |
 | Scheduled cycles that ran unattended | 20+, including a whole weekend |
@@ -48,6 +48,16 @@ report section listing those files, and an automatic-fail rule for any claim wit
 The arena predicted the improvement, and it then held on work the arena never saw: across seven real QA tasks
 after promotion, v2 scored higher than v1 did across its eight. Every v2 report saved real raw command output
 under `evidence/` and cited it per finding, which is exactly the behaviour the promotion targeted.
+
+**The second promotion.** DevOps Automator v2 beat v1 by +5.75 points in the arena (generation 12, the first
+in which all three rewrites played, two of them written by the Gemini fallback for large personas). On real work:
+
+| | v1 (original) | v2 (evolved) |
+|---|---|---|
+| Real missions, ≥2 judges | 0.881 (4 tasks, min 0.72) | **0.973** (3 tasks, min 0.96) |
+
+The v2 tasks were different kinds of work (a CI workflow with its checker, a backup verifier, a log parser), so this
+is consistent with the arena result rather than a like-for-like proof, and it is stated that way.
 
 **What three days of running taught the engine.** Each of these was found by the system's own operator
 session, fixed test-first, and is now enforced in code:
@@ -150,7 +160,7 @@ Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 - [x] **Phase 3 — Evolution.** Diagnose → mutate (K variants) → lint → proxy tournament on held-out banks → promote only if it beats the parent. `evolvra evolve`. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
 - [x] **Phase 4 — Dashboard.** Static Vite + React site on GitHub Pages: overview, roster, genealogy, fitness by version, version diffs, missions with per-judge scores, evolutions. `evolvra export`. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 - [x] **Phase 4b — Autonomy.** `evolvra cycle`, Windows scheduler, operator/reviewer protocol over git (`CLAUDE.md`, STATUS/REVIEW).
-- [ ] **Phase 5 — Proof and polish.** ~~A second promotion on another agent~~ (DevOps Automator v2, 8 Nov; confirming on real missions), ~~a recorded QA-failure retry~~, demo video, upstream contribution to agency-agents.
+- [ ] **Phase 5 — Proof and polish.** ~~A second promotion on another agent~~ (DevOps Automator v2, 8 Nov, confirmed on 3 real tasks), ~~a recorded QA-failure retry~~, demo video, upstream contribution to agency-agents.
 
 ## Credits
 
