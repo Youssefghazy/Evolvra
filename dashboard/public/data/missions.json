@@ -1,5 +1,1754 @@
 [
  {
+  "id": "20261110-051125-build-a-single-file",
+  "brief": "Build a single-file HTML FAQ page for a note app: 6 questions as an accessible accordion (keyboard operable, aria-expanded, one open at a time), works readable with JavaScript disabled, under 8 KB, zero external requests, dark-mode aware, with a text filter box that hides non-matching questions.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "faq.html built by frontend-developer, QA PASS on first attempt",
+  "started_at": "2026-11-10T05:11:25Z",
+  "finished_at": "2026-11-10T05:17:31Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "frontend-developer",
+    "task": "Build faq.html: single-file accessible FAQ accordion with filter box",
+    "acceptance": [
+     "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images",
+     "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers",
+     "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T05:11:33Z",
+      "finished_at": "2026-11-10T05:13:56Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "faq.html 4998 bytes, 0 external URLs, 6 buttons with aria-expanded/aria-controls; node stand-in DOM test 30/30; headless Edge probe click/arrow/filter OK; Enter/Space and JS-off not browser-tested"
+     }
+    ],
+    "traces": 11,
+    "fitness": 0.9838,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 196
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "behaviour_test.js",
+        "behaviour_test_output.txt",
+        "check_static.ps1",
+        "edge_dump.txt",
+        "faq_with_browser_probe.html",
+        "static_checks.txt",
+        "faq.html"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-051125-build-a-single-file\\01-frontend-developer"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incorrect_initial_aria_state",
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incorrect_initial_aria_state",
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incorrect_initial_aria_state",
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.925,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "incorrect_initial_aria_state",
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (under 8192), contains no external URLs, scripts, styles, fonts, or images.",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 questions, each header is a button with aria-expanded and aria-controls, accordion behavior works, keyboard navigation (Enter, Space, arrow keys) is fully implemented.",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers readable with JS disabled, prefers-color-scheme: dark rule exists, filter box hides non-matching questions and shows no-results message.",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (under 8192), contains no external URLs, scripts, styles, fonts, or images.",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 questions, each header is a button with aria-expanded and aria-controls, accordion behavior works, keyboard navigation (Enter, Space, arrow keys) is fully implemented.",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers readable with JS disabled, prefers-color-scheme: dark rule exists, filter box hides non-matching questions and shows no-results message.",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (under 8192), contains no external URLs, scripts, styles, fonts, or images.",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 questions, each header is a button with aria-expanded and aria-controls, accordion behavior works, keyboard navigation (Enter, Space, arrow keys) is fully implemented.",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers readable with JS disabled, prefers-color-scheme: dark rule exists, filter box hides non-matching questions and shows no-results message.",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (under 8192), contains no external URLs, scripts, styles, fonts, or images.",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 questions, each header is a button with aria-expanded and aria-controls, accordion behavior works, keyboard navigation (Enter, Space, arrow keys) is fully implemented.",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers readable with JS disabled, prefers-color-scheme: dark rule exists, filter box hides non-matching questions and shows no-results message.",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "failure_class": "incorrect_initial_aria_state",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 B, no external URLs, no external resources",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Six buttons with aria‑expanded/aria‑controls, one‑open‑at‑a‑time, keyboard navigation works",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers visible without JS, dark‑mode media rule present, filter hides non‑matches and shows no‑results",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "failure_class": "incorrect_initial_aria_state",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 B, no external URLs, no external resources",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Six buttons with aria‑expanded/aria‑controls, one‑open‑at‑a‑time, keyboard navigation works",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers visible without JS, dark‑mode media rule present, filter hides non‑matches and shows no‑results",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "failure_class": "incorrect_initial_aria_state",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 B, no external URLs, no external resources",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Six buttons with aria‑expanded/aria‑controls, one‑open‑at‑a‑time, keyboard navigation works",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers visible without JS, dark‑mode media rule present, filter hides non‑matches and shows no‑results",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.",
+       "failure_class": "incorrect_initial_aria_state",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 B, no external URLs, no external resources",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Six buttons with aria‑expanded/aria‑controls, one‑open‑at‑a‑time, keyboard navigation works",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Answers visible without JS, dark‑mode media rule present, filter hides non‑matches and shows no‑results",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (<8192), zero external URLs/scripts/styles/fonts/images verified by static analysis",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 buttons with aria-expanded/aria-controls; one-open-at-a-time, arrow navigation (Home/End/Up/Down wrap), Enter/Space handled natively; 30/30 behaviour tests pass",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Static HTML has no hidden answers (JS-off readable); prefers-color-scheme:dark rule present; filter hides non-matches and shows no-results message verified by behaviour tests",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (<8192), zero external URLs/scripts/styles/fonts/images verified by static analysis",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 buttons with aria-expanded/aria-controls; one-open-at-a-time, arrow navigation (Home/End/Up/Down wrap), Enter/Space handled natively; 30/30 behaviour tests pass",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Static HTML has no hidden answers (JS-off readable); prefers-color-scheme:dark rule present; filter hides non-matches and shows no-results message verified by behaviour tests",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (<8192), zero external URLs/scripts/styles/fonts/images verified by static analysis",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 buttons with aria-expanded/aria-controls; one-open-at-a-time, arrow navigation (Home/End/Up/Down wrap), Enter/Space handled natively; 30/30 behaviour tests pass",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Static HTML has no hidden answers (JS-off readable); prefers-color-scheme:dark rule present; filter hides non-matches and shows no-results message verified by behaviour tests",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "File is 4998 bytes (<8192), zero external URLs/scripts/styles/fonts/images verified by static analysis",
+         "id": "C1",
+         "criterion": "File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images"
+        },
+        {
+         "met": true,
+         "reason": "Exactly 6 buttons with aria-expanded/aria-controls; one-open-at-a-time, arrow navigation (Home/End/Up/Down wrap), Enter/Space handled natively; 30/30 behaviour tests pass",
+         "id": "C2",
+         "criterion": "Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers"
+        },
+        {
+         "met": true,
+         "reason": "Static HTML has no hidden answers (JS-off readable); prefers-color-scheme:dark rule present; filter hides non-matches and shows no-results message verified by behaviour tests",
+         "id": "C3",
+         "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify faq.html against every criterion with reproducible checks",
+    "acceptance": [
+     "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check",
+     "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T05:13:56Z",
+      "finished_at": "2026-11-10T05:17:30Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Independent QA in headless Edge via CDP: 38 checks 0 failed (real Enter/Space/arrow input, JS-disabled render, dark-mode emulation, filter); 4998 bytes, 0 external URLs"
+     }
+    ],
+    "traces": 13,
+    "fitness": 0.8362,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 168
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "01_static_checks.txt",
+        "02_edge_launch.txt",
+        "02_edge_launch_run2.txt",
+        "03_cdp_results.json",
+        "03_cdp_transcript.txt",
+        "03a_cdp_run1_results.json",
+        "03a_cdp_run1_transcript_TEST_DRIVER_BUGS.txt",
+        "04_nojs_dump_dom.html",
+        "04_nojs_dump_dom_stderr.txt",
+        "faq_nojs_copy.html"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-051125-build-a-single-file\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_one_open_test",
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.75,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_one_open_test",
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_one_open_test",
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.875,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_one_open_test",
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size checks, external URL greps, DOM-level accordion tests, aria attribute checks, filter behaviour, and no-JS readability checks.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Verdict is PASS with build criteria comprehensively marked and verified using headless Edge CDP tests.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.6,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission lacks a verifiable test that the accordion enforces a single open panel at a time.",
+       "failure_class": "missing_one_open_test",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No evidence shown that only one accordion panel can be open at a time",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": false,
+         "reason": "Verdict should be NEEDS_WORK because C1 is not satisfied",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Evidence folder contains byte size (4998 bytes), grep for external URLs (0 matches), CDP-driven DOM-level tests for one-open-at-a-time (B1-B6), ARIA attributes (A2, B23-B26), filter behavior (B14-B18), and no-JS readability (D1-D6) — all using tools on the PC (Edge headless via CDP, PowerShell) with no downloads.",
+         "id": "C1",
+         "criterion": "Evidence folder with byte size, grep for external URLs, a DOM-level or script-level test of one-open-at-a-time, aria attributes and filter behaviour using tools already on the PC (no downloads), and a no-JS readability check"
+        },
+        {
+         "met": true,
+         "reason": "Orchestrator recorded final verdict PASS; all build criteria verified via 38 automated checks (0 failed) covering every acceptance requirement.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261110-045922-write-a-powershell-5",
+  "brief": "Write a PowerShell 5.1 script Parse-AppLog.ps1 that reads an application log (lines like '2026-11-09 14:03:22 [WARN] payment-svc: timeout after 30s') from -Path and writes a Markdown summary report to -OutFile: counts per level (INFO/WARN/ERROR), top 5 most frequent ERROR messages (numbers and ids normalised so similar errors group), first and last timestamp, errors per hour. Handle malformed lines (count and list them, never crash), an empty file, and a missing file (clear error, exit code 2). Include a -SelfTest switch that generates a sample log with known counts, runs the parser and asserts the report. Built-ins only.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Parse-AppLog.ps1 built by devops-automator v2, QA PASS on first attempt",
+  "started_at": "2026-11-10T04:59:22Z",
+  "finished_at": "2026-11-10T05:11:17Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "devops-automator",
+    "task": "Build Parse-AppLog.ps1 (PowerShell 5.1, built-ins only) with -Path, -OutFile and -SelfTest",
+    "acceptance": [
+     "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour",
+     "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2",
+     "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T04:59:30Z",
+      "finished_at": "2026-11-10T05:07:04Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Parse-AppLog.ps1 + evidence folder present; SelfTest 40/40 exit 0; missing file exit 2; empty and malformed handled; mutation check fails as it should"
+     }
+    ],
+    "traces": 21,
+    "fitness": 0.9838,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 150
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "edge-blank-report.md",
+        "edge-blankonly.err.txt",
+        "edge-blankonly.out.txt",
+        "edge-directory.err.txt",
+        "edge-directory.out.txt",
+        "edge-empty-report.md",
+        "edge-empty.err.txt",
+        "edge-empty.out.txt",
+        "edge-missing.err.txt",
+        "edge-missing.out.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-045922-write-a-powershell-5\\01-devops-automator"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.925,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "none",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "id": "C1",
+         "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
+        },
+        {
+         "met": true,
+         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "id": "C2",
+         "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
+        },
+        {
+         "met": true,
+         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "id": "C3",
+         "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Run -SelfTest and the edge cases (empty file, missing file, malformed lines, tie in top 5) and report reproducible evidence",
+    "acceptance": [
+     "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder",
+     "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T05:07:04Z",
+      "finished_at": "2026-11-10T05:11:17Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Independent QA: SelfTest 40/40 exit 0 twice; 4 mutants all fail SelfTest (exit 1); missing file exit 2; empty, malformed, tie, out-of-order, no-ERROR cases match hand-computed expectations; script hash unchanged"
+     }
+    ],
+    "traces": 18,
+    "fitness": 0.6625,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 211
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "my app.log",
+        "my report.md",
+        "builtins-grep.txt",
+        "case-big.report.md",
+        "case-big.stderr.txt",
+        "case-big.stdout.txt",
+        "case-binary.report.md",
+        "case-binary.stderr.txt",
+        "case-binary.stdout.txt",
+        "case-blankonly.report.md"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-045922-write-a-powershell-5\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.5,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.5,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.65,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.65,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_or_incorrect_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": false,
+         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_or_incorrect_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": false,
+         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.3,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_or_incorrect_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": false,
+         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.4,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_or_incorrect_evidence",
+       "acceptance": [
+        {
+         "met": false,
+         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": false,
+         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:error",
+      "value": 0.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "unparseable judge output"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261108-095120-reality-check-whether-the",
   "brief": "Reality-check whether the finished PowerShell backup verifier Test-BackupSet.ps1 is ready to be trusted for checking real backups on this PC, judging only from evidence you produce yourself.",
   "mode": "micro",
