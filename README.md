@@ -33,14 +33,14 @@ Measured from the system's own records (`dashboard/public/data/`), first 9 days 
 
 | | |
 |---|---|
-| Real missions run | 25 (49 tasks, every one independently QA-checked) |
+| Real missions run | 26 (51 tasks, every one independently QA-checked) |
 | QA rejections recorded and retried | 1 (builder reopened automatically; the retry is charged to the builder, not QA) |
 | Evolution generations | 13 |
 | Promotions | 2 (Evidence Collector v1 → v2; DevOps Automator v1 → v2), both confirmed on real missions |
 | Generations correctly refused | 11 (no candidate beat its parent by the margin, or the arena was unfair) |
-| Free-tier model calls | ~560 (Gemini, Groq, OpenRouter) |
+| Free-tier model calls | ~950 (Gemini, Groq, OpenRouter) |
 | Money spent | **$0.00** |
-| Scheduled cycles that ran unattended | 20+, including a whole weekend |
+| Scheduled cycles that ran unattended | 30+, including a whole weekend |
 
 **The promotion.** The judges kept flagging Evidence Collector, the QA agent, for claims it could not prove.
 Evolution read those failures, wrote three persona variants, and played each against the original on four
@@ -66,14 +66,20 @@ in which all three rewrites played, two of them written by the Gemini fallback f
 The v2 tasks were different kinds of work (a CI workflow with its checker, a backup verifier, a log parser), so this
 is consistent with the arena result rather than a like-for-like proof, and it is stated that way.
 
-**What three days of running taught the engine.** Each of these was found by the system's own operator
+**What nine days of running taught the engine.** Each of these was found by the system's own operator
 session, fixed test-first, and is now enforced in code:
 judges were reading only the first 4,000 characters of long deliverables; two lenient judges could outvote the
 one that caught fabricated evidence (aggregation is now ceiling-aware); a single wrong low judge could sink
 correct work (median when judges genuinely disagree); a rate-limited day could overwrite a 3-judge verdict with
 a 1-judge one; QA retries caused by a builder were charged to QA; a promoted persona was not shipped to the
 installed plugin; LLM judges miscounted words (counts are now measured by code and given to them); and an
-unchanged generation could replay from cache (now refused, the next weakest agent goes instead). Details: [docs/SCORING.md](docs/SCORING.md), [docs/EVOLUTION.md](docs/EVOLUTION.md).
+unchanged generation could replay from cache (now refused, the next weakest agent goes instead); a judge could
+narrow a criterion's wording and fail it (criteria are now graded by id, and a lone dissent is labelled
+"contested"); large personas were too big for Groq's free tier (rewrites fall back to Gemini); and judges were
+shown a QA agent's harness script, a copy of the builder's code, or a deliberately broken mutant instead of its
+proof (the judge input now ranks every file, leads with the report and its cited evidence, and summarises
+scratch). The trace hook also stopped launching a shell on every tool call, which a managed PC's security
+software had flagged. Details: [docs/SCORING.md](docs/SCORING.md), [docs/EVOLUTION.md](docs/EVOLUTION.md).
 
 ## How it runs: two Claude sessions and a timer
 
@@ -167,7 +173,7 @@ Format details: [docs/MISSION-FORMAT.md](docs/MISSION-FORMAT.md).
 - [x] **Phase 3 — Evolution.** Diagnose → mutate (K variants) → lint → proxy tournament on held-out banks → promote only if it beats the parent. `evolvra evolve`. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
 - [x] **Phase 4 — Dashboard.** Static Vite + React site on GitHub Pages: overview, roster, genealogy, fitness by version, version diffs, missions with per-judge scores, evolutions. `evolvra export`. See [docs/DASHBOARD.md](docs/DASHBOARD.md).
 - [x] **Phase 4b — Autonomy.** `evolvra cycle`, Windows scheduler, operator/reviewer protocol over git (`CLAUDE.md`, STATUS/REVIEW).
-- [ ] **Phase 5 — Proof and polish.** ~~A second promotion on another agent~~ (DevOps Automator v2, 8 Nov, confirmed on 3 real tasks), ~~a recorded QA-failure retry~~, demo video, upstream contribution to agency-agents.
+- [x] **Phase 5 — Proof and polish.** ~~A second promotion on another agent~~ (DevOps Automator v2, 8 Nov, confirmed on 3 real tasks), ~~a recorded QA-failure retry~~, ~~demo video~~ (above). Optional next: offer the evolved personas upstream to agency-agents.
 
 ## Credits
 
