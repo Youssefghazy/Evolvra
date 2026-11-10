@@ -1,5 +1,1344 @@
 [
  {
+  "id": "20261110-101339-independent-production-readiness-review",
+  "brief": "Independent production-readiness review of the finished single-file expense splitter prototype (index.html from mission 20261110-094717-prototype-a-single-file) before it is shown as a public demo: decide READY or NEEDS WORK with reproducible evidence.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Reality-checker review of the expense splitter: NEEDS WORK with 12 evidenced findings",
+  "started_at": "2026-11-10T10:13:39Z",
+  "finished_at": "2026-11-10T10:23:37Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "reality-checker",
+    "task": "Review index.html for public-demo readiness and certify READY or NEEDS WORK with evidence",
+    "acceptance": [
+     "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output",
+     "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T10:13:39Z",
+      "finished_at": "2026-11-10T10:23:37Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Subject verdict: NEEDS WORK, 4 MEDIUM + 8 LOW reproduced findings (2-tab data loss, delete buttons named x, instant delete, dark-mode contrast). Review complete: 10 check groups, scripts and outputs saved, QA-REPORT.md line 1 verdict, not-tested list"
+     }
+    ],
+    "traces": 32,
+    "fitness": 0.9337,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 250
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "00-preexisting-msedge-pids.txt",
+        "00-subject-hash-before.txt",
+        "01-static-output.txt",
+        "02-money-engine.json",
+        "02-money-engine.txt",
+        "03-ui-functional.json",
+        "03-ui-functional.txt",
+        "04-a11y-layout.json",
+        "04-a11y-layout.txt",
+        "04e-mobile-375-empty.png"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-101339-independent-production-readiness-review\\01-reality-checker"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.875,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.875,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "Thorough, evidence-backed evaluation with robust reproducible checks and comprehensive documentation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "At least 8 distinct reproducible checks run with commands/scripts and saved outputs provided.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top with verdict on line 1, findings with repro/severity, and a not-tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "Thorough, evidence-backed evaluation with robust reproducible checks and comprehensive documentation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "At least 8 distinct reproducible checks run with commands/scripts and saved outputs provided.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top with verdict on line 1, findings with repro/severity, and a not-tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "Thorough, evidence-backed evaluation with robust reproducible checks and comprehensive documentation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "At least 8 distinct reproducible checks run with commands/scripts and saved outputs provided.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top with verdict on line 1, findings with repro/severity, and a not-tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "Thorough, evidence-backed evaluation with robust reproducible checks and comprehensive documentation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "At least 8 distinct reproducible checks run with commands/scripts and saved outputs provided.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top with verdict on line 1, findings with repro/severity, and a not-tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Provided >8 distinct check scripts and their output files covering money logic, UI, accessibility, storage, offline, layout, etc.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, starts with verdict line, lists findings and a not‑tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Provided >8 distinct check scripts and their output files covering money logic, UI, accessibility, storage, offline, layout, etc.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, starts with verdict line, lists findings and a not‑tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Provided >8 distinct check scripts and their output files covering money logic, UI, accessibility, storage, offline, layout, etc.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, starts with verdict line, lists findings and a not‑tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Provided >8 distinct check scripts and their output files covering money logic, UI, accessibility, storage, offline, layout, etc.",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, starts with verdict line, lists findings and a not‑tested list.",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "10 distinct reproducible check groups executed (static, money engine, UI functional, invalid input, keyboard/a11y, contrast, 375px layout, localStorage unavailable ×4, offline/request audit, reload/data loss, selftest+mutation control), each with scripts in scripts/ and saved outputs in evidence/01-05 and mutants/",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md present at output root, line 1 reads 'NEEDS WORK', 12 findings with repro steps and severity (4 MEDIUM, 8 LOW), explicit 'Not tested' section with 10 items",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "10 distinct reproducible check groups executed (static, money engine, UI functional, invalid input, keyboard/a11y, contrast, 375px layout, localStorage unavailable ×4, offline/request audit, reload/data loss, selftest+mutation control), each with scripts in scripts/ and saved outputs in evidence/01-05 and mutants/",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md present at output root, line 1 reads 'NEEDS WORK', 12 findings with repro steps and severity (4 MEDIUM, 8 LOW), explicit 'Not tested' section with 10 items",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "10 distinct reproducible check groups executed (static, money engine, UI functional, invalid input, keyboard/a11y, contrast, 375px layout, localStorage unavailable ×4, offline/request audit, reload/data loss, selftest+mutation control), each with scripts in scripts/ and saved outputs in evidence/01-05 and mutants/",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md present at output root, line 1 reads 'NEEDS WORK', 12 findings with repro steps and severity (4 MEDIUM, 8 LOW), explicit 'Not tested' section with 10 items",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "10 distinct reproducible check groups executed (static, money engine, UI functional, invalid input, keyboard/a11y, contrast, 375px layout, localStorage unavailable ×4, offline/request audit, reload/data loss, selftest+mutation control), each with scripts in scripts/ and saved outputs in evidence/01-05 and mutants/",
+         "id": "C1",
+         "criterion": "At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output"
+        },
+        {
+         "met": true,
+         "reason": "QA-REPORT.md present at output root, line 1 reads 'NEEDS WORK', 12 findings with repro steps and severity (4 MEDIUM, 8 LOW), explicit 'Not tested' section with 10 items",
+         "id": "C2",
+         "criterion": "QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "20261110-100838-design-a-2-week",
+  "brief": "Design a 2-week activation experiment for a note-taking app: hypothesis, primary and guardrail metrics with exact definitions, sample-size calculation for a two-proportion test (baseline 30 percent activation, minimum detectable lift 5 points, alpha 0.05 two-sided, power 80 percent) with the formula and a stdlib-only Python script samplesize.py that computes it and has a --selftest, an event-tracking spec as CSV, and stopping rules.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Activation experiment plan, samplesize.py and events.csv by growth-hacker, QA PASS first attempt",
+  "started_at": "2026-11-10T10:08:38Z",
+  "finished_at": "2026-11-10T10:13:30Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "growth-hacker",
+    "task": "Write experiment-plan.md, samplesize.py and events.csv for the activation experiment",
+    "acceptance": [
+     "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)",
+     "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest",
+     "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T10:08:57Z",
+      "finished_at": "2026-11-10T10:10:55Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "experiment-plan.md, samplesize.py, events.csv present; builder states 1374 per arm (not run by builder, no shell); I ran samplesize.py and --selftest myself"
+     }
+    ],
+    "traces": 8,
+    "fitness": 0.9587,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 156
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "events.csv",
+        "experiment-plan.md",
+        "samplesize.py"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-100838-design-a-2-week\\01-growth-hacker"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.97,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.96,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.915,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md states a falsifiable hypothesis, one primary metric and three guardrails with exact definitions, the schedule, and stopping rules including no peeking.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses stdlib only, implements the two-proportion formula for the given parameters, includes the formula in a comment, prints per-arm and total sample size, and has --selftest.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required columns and events, and the plan states the per-arm sample size and evaluates whether 2 weeks of traffic is enough for 400 new users/day.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md states a falsifiable hypothesis, one primary metric and three guardrails with exact definitions, the schedule, and stopping rules including no peeking.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses stdlib only, implements the two-proportion formula for the given parameters, includes the formula in a comment, prints per-arm and total sample size, and has --selftest.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required columns and events, and the plan states the per-arm sample size and evaluates whether 2 weeks of traffic is enough for 400 new users/day.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md states a falsifiable hypothesis, one primary metric and three guardrails with exact definitions, the schedule, and stopping rules including no peeking.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses stdlib only, implements the two-proportion formula for the given parameters, includes the formula in a comment, prints per-arm and total sample size, and has --selftest.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required columns and events, and the plan states the per-arm sample size and evaluates whether 2 weeks of traffic is enough for 400 new users/day.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md states a falsifiable hypothesis, one primary metric and three guardrails with exact definitions, the schedule, and stopping rules including no peeking.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses stdlib only, implements the two-proportion formula for the given parameters, includes the formula in a comment, prints per-arm and total sample size, and has --selftest.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required columns and events, and the plan states the per-arm sample size and evaluates whether 2 weeks of traffic is enough for 400 new users/day.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.94,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Hypothesis, primary metric, three guardrails with exact definitions, 2‑week schedule and stopping rules are all present.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only the standard library, includes the formula comment, prints per‑arm and total sizes, and implements a --selftest flag.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required events with the correct columns, and the plan states the per‑arm sample size and traffic adequacy.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.92,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Hypothesis, primary metric, three guardrails with exact definitions, 2‑week schedule and stopping rules are all present.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only the standard library, includes the formula comment, prints per‑arm and total sizes, and implements a --selftest flag.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required events with the correct columns, and the plan states the per‑arm sample size and traffic adequacy.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Hypothesis, primary metric, three guardrails with exact definitions, 2‑week schedule and stopping rules are all present.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only the standard library, includes the formula comment, prints per‑arm and total sizes, and implements a --selftest flag.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required events with the correct columns, and the plan states the per‑arm sample size and traffic adequacy.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.88,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Hypothesis, primary metric, three guardrails with exact definitions, 2‑week schedule and stopping rules are all present.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only the standard library, includes the formula comment, prints per‑arm and total sizes, and implements a --selftest flag.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv lists all required events with the correct columns, and the plan states the per‑arm sample size and traffic adequacy.",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the deliverables are thorough, statistically sound, and meet all acceptance criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md contains a falsifiable hypothesis with explicit falsification criteria, one primary metric (72-hour activation rate) with exact numerator/denominator, three guardrail metrics (G1, G2, G3) each with exact definitions and harm margins, a 2-week schedule table, and detailed stopping rules including no peeking before planned analysis.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only stdlib (argparse, math, sys, statistics.NormalDist), implements the unpooled two-proportion formula with baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80, includes the formula in a comment, prints per-arm and total sample size, and has a --selftest mode.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv has the required columns (event, trigger, properties, owner) and lists all events needed for the metrics; experiment-plan.md states 1,374 users per arm and explicitly evaluates whether 2 weeks at 400 new users/day is sufficient (yes, with 72-hour window and Day 1–11 enrollment).",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the deliverables are thorough, statistically sound, and meet all acceptance criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md contains a falsifiable hypothesis with explicit falsification criteria, one primary metric (72-hour activation rate) with exact numerator/denominator, three guardrail metrics (G1, G2, G3) each with exact definitions and harm margins, a 2-week schedule table, and detailed stopping rules including no peeking before planned analysis.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only stdlib (argparse, math, sys, statistics.NormalDist), implements the unpooled two-proportion formula with baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80, includes the formula in a comment, prints per-arm and total sample size, and has a --selftest mode.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv has the required columns (event, trigger, properties, owner) and lists all events needed for the metrics; experiment-plan.md states 1,374 users per arm and explicitly evaluates whether 2 weeks at 400 new users/day is sufficient (yes, with 72-hour window and Day 1–11 enrollment).",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the deliverables are thorough, statistically sound, and meet all acceptance criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md contains a falsifiable hypothesis with explicit falsification criteria, one primary metric (72-hour activation rate) with exact numerator/denominator, three guardrail metrics (G1, G2, G3) each with exact definitions and harm margins, a 2-week schedule table, and detailed stopping rules including no peeking before planned analysis.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only stdlib (argparse, math, sys, statistics.NormalDist), implements the unpooled two-proportion formula with baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80, includes the formula in a comment, prints per-arm and total sample size, and has a --selftest mode.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv has the required columns (event, trigger, properties, owner) and lists all events needed for the metrics; experiment-plan.md states 1,374 users per arm and explicitly evaluates whether 2 weeks at 400 new users/day is sufficient (yes, with 72-hour window and Day 1–11 enrollment).",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "None; the deliverables are thorough, statistically sound, and meet all acceptance criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "experiment-plan.md contains a falsifiable hypothesis with explicit falsification criteria, one primary metric (72-hour activation rate) with exact numerator/denominator, three guardrail metrics (G1, G2, G3) each with exact definitions and harm margins, a 2-week schedule table, and detailed stopping rules including no peeking before planned analysis.",
+         "id": "C1",
+         "criterion": "experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample)"
+        },
+        {
+         "met": true,
+         "reason": "samplesize.py uses only stdlib (argparse, math, sys, statistics.NormalDist), implements the unpooled two-proportion formula with baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80, includes the formula in a comment, prints per-arm and total sample size, and has a --selftest mode.",
+         "id": "C2",
+         "criterion": "samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest"
+        },
+        {
+         "met": true,
+         "reason": "events.csv has the required columns (event, trigger, properties, owner) and lists all events needed for the metrics; experiment-plan.md states 1,374 users per arm and explicitly evaluates whether 2 weeks at 400 new users/day is sufficient (yes, with 72-hour window and Day 1–11 enrollment).",
+         "id": "C3",
+         "criterion": "events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify the plan, run samplesize.py and recompute the sample size independently",
+    "acceptance": [
+     "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code",
+     "Each builder criterion marked verified or not verified with the proving file"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T10:10:55Z",
+      "finished_at": "2026-11-10T10:13:29Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "QA-REPORT.md PASS WITH MINOR FINDINGS: independent calc 1374 unpooled / 1377 pooled matches script; selftest 13 PASS exit 0; 3 mutants caught; plan, events.csv and 400/day arithmetic verified; 4 minor findings in plan text"
+     }
+    ],
+    "traces": 12,
+    "fitness": 0.9443,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 222
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "builder_file_hashes_after.txt",
+        "check_plan.py",
+        "check_plan_output.txt",
+        "check_plan_stderr.txt",
+        "independent_calc.py",
+        "independent_calc_output.txt",
+        "m1_alpha_not_halved.stderr.txt",
+        "m1_alpha_not_halved.stdout.txt",
+        "m2_var_p2_uses_p1.stderr.txt",
+        "m2_var_p2_uses_p1.stdout.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-100838-design-a-2-week\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.94,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.93,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.935,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.895,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent script and computation performed before reading builder output, matching 1374 unpooled / 1377 pooled and confirming script execution and exit code.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "Each builder criterion (experiment plan, samplesize.py, events.csv) marked verified with the corresponding proving file and thorough evidence.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent script and computation performed before reading builder output, matching 1374 unpooled / 1377 pooled and confirming script execution and exit code.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "Each builder criterion (experiment plan, samplesize.py, events.csv) marked verified with the corresponding proving file and thorough evidence.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent script and computation performed before reading builder output, matching 1374 unpooled / 1377 pooled and confirming script execution and exit code.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "Each builder criterion (experiment plan, samplesize.py, events.csv) marked verified with the corresponding proving file and thorough evidence.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent script and computation performed before reading builder output, matching 1374 unpooled / 1377 pooled and confirming script execution and exit code.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "Each builder criterion (experiment plan, samplesize.py, events.csv) marked verified with the corresponding proving file and thorough evidence.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.88,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent calculation and script output with self‑test logs are provided and match.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All builder sub‑criteria (a, b, c) are marked verified with corresponding evidence files.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.86,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent calculation and script output with self‑test logs are provided and match.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All builder sub‑criteria (a, b, c) are marked verified with corresponding evidence files.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.87,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent calculation and script output with self‑test logs are provided and match.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All builder sub‑criteria (a, b, c) are marked verified with corresponding evidence files.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.84,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Minor inconsistencies in the plan (e.g., pooled vs unpooled n and missing diagnostic events) do not affect the required criteria.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent calculation and script output with self‑test logs are provided and match.",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All builder sub‑criteria (a, b, c) are marked verified with corresponding evidence files.",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "All verification criteria met; minor plan text issues (unpooled vs pooled discrepancy, missing onboarding_completed event, garbled falsification paragraph) and guardrail power design risk noted but non-blocking.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent computation (evidence/independent_calc.py) performed before reading builder output; matches samplesize.py default run (1374 per arm unpooled, 1377 pooled) and --selftest passes with exit code 0 (evidence/run_selftest.stdout.txt, evidence/run_selftest.exit.txt).",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All three builder criteria (a) experiment-plan.md, (b) samplesize.py, (c) events.csv verified with proving files (evidence/check_plan_output.txt, evidence/run_default.stdout.txt, evidence/run_selftest.stdout.txt, mutation tests).",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "All verification criteria met; minor plan text issues (unpooled vs pooled discrepancy, missing onboarding_completed event, garbled falsification paragraph) and guardrail power design risk noted but non-blocking.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent computation (evidence/independent_calc.py) performed before reading builder output; matches samplesize.py default run (1374 per arm unpooled, 1377 pooled) and --selftest passes with exit code 0 (evidence/run_selftest.stdout.txt, evidence/run_selftest.exit.txt).",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All three builder criteria (a) experiment-plan.md, (b) samplesize.py, (c) events.csv verified with proving files (evidence/check_plan_output.txt, evidence/run_default.stdout.txt, evidence/run_selftest.stdout.txt, mutation tests).",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "All verification criteria met; minor plan text issues (unpooled vs pooled discrepancy, missing onboarding_completed event, garbled falsification paragraph) and guardrail power design risk noted but non-blocking.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent computation (evidence/independent_calc.py) performed before reading builder output; matches samplesize.py default run (1374 per arm unpooled, 1377 pooled) and --selftest passes with exit code 0 (evidence/run_selftest.stdout.txt, evidence/run_selftest.exit.txt).",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All three builder criteria (a) experiment-plan.md, (b) samplesize.py, (c) events.csv verified with proving files (evidence/check_plan_output.txt, evidence/run_default.stdout.txt, evidence/run_selftest.stdout.txt, mutation tests).",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "All verification criteria met; minor plan text issues (unpooled vs pooled discrepancy, missing onboarding_completed event, garbled falsification paragraph) and guardrail power design risk noted but non-blocking.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Independent computation (evidence/independent_calc.py) performed before reading builder output; matches samplesize.py default run (1374 per arm unpooled, 1377 pooled) and --selftest passes with exit code 0 (evidence/run_selftest.stdout.txt, evidence/run_selftest.exit.txt).",
+         "id": "C1",
+         "criterion": "Independent hand or script computation of the per-arm sample size (done before reading the builder number) compared with samplesize.py output and its --selftest transcript with exit code"
+        },
+        {
+         "met": true,
+         "reason": "All three builder criteria (a) experiment-plan.md, (b) samplesize.py, (c) events.csv verified with proving files (evidence/check_plan_output.txt, evidence/run_default.stdout.txt, evidence/run_selftest.stdout.txt, mutation tests).",
+         "id": "C2",
+         "criterion": "Each builder criterion marked verified or not verified with the proving file"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261110-094717-prototype-a-single-file",
   "brief": "Prototype a single-file HTML expense splitter for 4 friends: add an expense (who paid, amount, which friends share it), show each friend net balance, and show the minimal set of settle-up transfers that clears all balances. State persists in localStorage (wrapped in try/catch). Under 12 KB, zero external requests, works offline. Add a ?selftest mode that runs three built-in scenarios (even split, uneven shares, one person owes nothing) and shows PASS/FAIL per scenario. Money is handled in whole cents, never floats.",
   "mode": "micro",
