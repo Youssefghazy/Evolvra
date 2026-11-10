@@ -1,5 +1,923 @@
 [
  {
+  "id": "20261110-083646-create-a-usability-test",
+  "brief": "Create a usability-test kit for the search-and-tag flow of a note-taking app, for 5 participants: a moderator script with 4 tasks (each with a success criterion and a time limit), a post-task question (SEQ) and the 10 standard SUS items, a findings template with a severity scale, and a stdlib-only Python script score_sus.py that reads a CSV of participant answers, computes each SUS score (0-100) and the mean, flags participants who gave identical answers to every item, and has a --selftest with a hand-checked example.",
+  "mode": "micro",
+  "status": "done",
+  "summary": "Usability-test kit and score_sus.py built by ux-researcher, QA PASS on first attempt",
+  "started_at": "2026-11-10T08:36:46Z",
+  "finished_at": "2026-11-10T08:46:54Z",
+  "tasks": [
+   {
+    "no": 1,
+    "agent": "ux-researcher",
+    "task": "Write the usability-test kit (moderator script, SEQ + SUS questionnaire, findings template) and score_sus.py",
+    "acceptance": [
+     "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording",
+     "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation",
+     "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T08:36:54Z",
+      "finished_at": "2026-11-10T08:41:14Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "Kit files present (moderator script 4 tasks, SEQ+10 SUS items, findings template severity 0-4), score_sus.py stdlib-only; --selftest 22 checks exit 0 (re-run by me); 3 mutation checks fail as expected"
+     }
+    ],
+    "traces": 15,
+    "fitness": 0.9575,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 200
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "01_moderator_script.md",
+        "02_questionnaire_seq_sus.md",
+        "03_findings_template.md",
+        "edge_cases.txt",
+        "sample_output.txt",
+        "sample_sus.csv",
+        "sample_sus_with_errors.csv",
+        "selftest_transcript.txt",
+        "score_sus.py",
+        "sus_responses_template.csv"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-083646-create-a-usability-test\\01-ux-researcher"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.975,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.85,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "none",
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script has 4 tasks with success criteria and time limits, plus intro and wrap-up; questionnaire contains SEQ and 10 standard SUS items with alternating wording.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template includes a severity scale with definitions (0-4) and columns for task, observation, evidence, severity, and recommendation.",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the Python stdlib, computes per-participant and mean SUS scores, flags straight-lining, and passes --selftest on a hand-checked example.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script has 4 tasks with success criteria and time limits, plus intro and wrap-up; questionnaire contains SEQ and 10 standard SUS items with alternating wording.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template includes a severity scale with definitions (0-4) and columns for task, observation, evidence, severity, and recommendation.",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the Python stdlib, computes per-participant and mean SUS scores, flags straight-lining, and passes --selftest on a hand-checked example.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script has 4 tasks with success criteria and time limits, plus intro and wrap-up; questionnaire contains SEQ and 10 standard SUS items with alternating wording.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template includes a severity scale with definitions (0-4) and columns for task, observation, evidence, severity, and recommendation.",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the Python stdlib, computes per-participant and mean SUS scores, flags straight-lining, and passes --selftest on a hand-checked example.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script has 4 tasks with success criteria and time limits, plus intro and wrap-up; questionnaire contains SEQ and 10 standard SUS items with alternating wording.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template includes a severity scale with definitions (0-4) and columns for task, observation, evidence, severity, and recommendation.",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the Python stdlib, computes per-participant and mean SUS scores, flags straight-lining, and passes --selftest on a hand-checked example.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script includes intro, wrap‑up, exactly four tasks each with success criteria and time limits; questionnaire contains SEQ and the 10 alternating SUS items.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template provides a severity scale with definitions and required columns (task, observation, evidence, severity, recommendation).",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the standard library, computes per‑participant SUS, overall mean, flags straight‑lining, and the built‑in self‑test passes.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script includes intro, wrap‑up, exactly four tasks each with success criteria and time limits; questionnaire contains SEQ and the 10 alternating SUS items.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template provides a severity scale with definitions and required columns (task, observation, evidence, severity, recommendation).",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the standard library, computes per‑participant SUS, overall mean, flags straight‑lining, and the built‑in self‑test passes.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script includes intro, wrap‑up, exactly four tasks each with success criteria and time limits; questionnaire contains SEQ and the 10 alternating SUS items.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template provides a severity scale with definitions and required columns (task, observation, evidence, severity, recommendation).",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the standard library, computes per‑participant SUS, overall mean, flags straight‑lining, and the built‑in self‑test passes.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script includes intro, wrap‑up, exactly four tasks each with success criteria and time limits; questionnaire contains SEQ and the 10 alternating SUS items.",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template provides a severity scale with definitions and required columns (task, observation, evidence, severity, recommendation).",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only the standard library, computes per‑participant SUS, overall mean, flags straight‑lining, and the built‑in self‑test passes.",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script shows 4 tasks each with success criterion and time limit, plus intro and wrap-up; questionnaire file exists (not shown but listed) and agent confirms SEQ + 10 SUS items with alternating wording",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template excerpt includes severity scale (0-4) with definitions and a findings table with columns Task, Observation, Evidence, Severity, Recommendation",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only stdlib, computes per-participant SUS and mean, flags straight-lining, and --selftest passes on hand-checked examples (transcript shows 22 checks pass)",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script shows 4 tasks each with success criterion and time limit, plus intro and wrap-up; questionnaire file exists (not shown but listed) and agent confirms SEQ + 10 SUS items with alternating wording",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template excerpt includes severity scale (0-4) with definitions and a findings table with columns Task, Observation, Evidence, Severity, Recommendation",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only stdlib, computes per-participant SUS and mean, flags straight-lining, and --selftest passes on hand-checked examples (transcript shows 22 checks pass)",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.85,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script shows 4 tasks each with success criterion and time limit, plus intro and wrap-up; questionnaire file exists (not shown but listed) and agent confirms SEQ + 10 SUS items with alternating wording",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template excerpt includes severity scale (0-4) with definitions and a findings table with columns Task, Observation, Evidence, Severity, Recommendation",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only stdlib, computes per-participant SUS and mean, flags straight-lining, and --selftest passes on hand-checked examples (transcript shows 22 checks pass)",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "Moderator script shows 4 tasks each with success criterion and time limit, plus intro and wrap-up; questionnaire file exists (not shown but listed) and agent confirms SEQ + 10 SUS items with alternating wording",
+         "id": "C1",
+         "criterion": "Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording"
+        },
+        {
+         "met": true,
+         "reason": "Findings template excerpt includes severity scale (0-4) with definitions and a findings table with columns Task, Observation, Evidence, Severity, Recommendation",
+         "id": "C2",
+         "criterion": "Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation"
+        },
+        {
+         "met": true,
+         "reason": "score_sus.py uses only stdlib, computes per-participant SUS and mean, flags straight-lining, and --selftest passes on hand-checked examples (transcript shows 22 checks pass)",
+         "id": "C3",
+         "criterion": "score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   },
+   {
+    "no": 2,
+    "agent": "evidence-collector",
+    "task": "Verify the kit: count tasks and SUS items, recompute SUS by hand for a sample CSV and compare with score_sus.py, test straight-lining and malformed CSV",
+    "acceptance": [
+     "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified",
+     "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+    ],
+    "status": "done",
+    "attempts": 1,
+    "verdict": "PASS",
+    "attempt_log": [
+     {
+      "n": 1,
+      "started_at": "2026-11-10T08:41:14Z",
+      "finished_at": "2026-11-10T08:46:54Z",
+      "verdict": "PASS",
+      "feedback": null,
+      "evidence": "QA-REPORT.md PASS: 4 tasks, 10 SUS items, severity 0-4; hand-computed SUS for 8 participants matched; selftest 22/22 exit 0; 10 mutants, selftest caught 8 (2 survived: value 0 accepted, exit code for invalid rows); no files edited"
+     }
+    ],
+    "traces": 25,
+    "fitness": 0.9375,
+    "provisional": false,
+    "scores": [
+     {
+      "metric": "det:efficiency",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "attempts": 1,
+       "builder_retries": 0,
+       "max": 3
+      }
+     },
+     {
+      "metric": "det:evidence_present",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "evidence_chars": 230
+      }
+     },
+     {
+      "metric": "det:output_exists",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "files": [
+        "00_hand_expected.md",
+        "01_document_counts.txt",
+        "02_builder_hashes_before.txt",
+        "03_console_encoding_check.txt",
+        "04_selftest_transcript.txt",
+        "05_mutation_check.txt",
+        "06_builder_hashes_after.txt",
+        "cases_BASE.txt",
+        "cases_M1.txt",
+        "cases_M10.txt"
+       ],
+       "output_dir": "C:\\Users\\Training1\\.evolvra\\missions\\20261110-083646-create-a-usability-test\\02-evidence-collector"
+      }
+     },
+     {
+      "metric": "det:verdict",
+      "value": 1.0,
+      "judge": "deterministic",
+      "evidence": {
+       "verdict": "PASS"
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence",
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence",
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.875,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence",
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "ensemble",
+      "evidence": {
+       "failure_class": "missing_evidence",
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "judges": [
+        "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "gemini/gemini-3.5-flash-lite"
+       ]
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top level with PASS verdict and all criteria marked.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expectations, script outputs, and selftest transcript with exit code.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top level with PASS verdict and all criteria marked.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expectations, script outputs, and selftest transcript with exit code.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top level with PASS verdict and all criteria marked.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expectations, script outputs, and selftest transcript with exit code.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "gemini/gemini-3.5-flash-lite",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present at the top level with PASS verdict and all criteria marked.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expectations, script outputs, and selftest transcript with exit code.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, shows PASS and marks each build criterion as VERIFIED.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder listed with hand‑computed values, script output and self‑test transcript.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.85,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, shows PASS and marks each build criterion as VERIFIED.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder listed with hand‑computed values, script output and self‑test transcript.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.75,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, shows PASS and marks each build criterion as VERIFIED.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder listed with hand‑computed values, script output and self‑test transcript.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.8,
+      "judge": "groq/openai/gpt-oss-120b",
+      "evidence": {
+       "critique": "Large sections of the evidence files are omitted from the excerpt, preventing full verification of some claims.",
+       "failure_class": "missing_evidence",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md is present, shows PASS and marks each build criterion as VERIFIED.",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder listed with hand‑computed values, script output and self‑test transcript.",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:completeness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Two mutants survived the selftest (accepting value 0 and exit code for invalid rows), though caught by independent test suite; console encoding errors for non-UTF-8 input.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md exists with verdict PASS and all three build criteria marked VERIFIED",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expected values (00_hand_expected.md), score_sus.py outputs (cases_real.txt), and --selftest transcript with exit code (04_selftest_transcript.txt)",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 0.9,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Two mutants survived the selftest (accepting value 0 and exit code for invalid rows), though caught by independent test suite; console encoding errors for non-UTF-8 input.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md exists with verdict PASS and all three build criteria marked VERIFIED",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expected values (00_hand_expected.md), score_sus.py outputs (cases_real.txt), and --selftest transcript with exit code (04_selftest_transcript.txt)",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Two mutants survived the selftest (accepting value 0 and exit code for invalid rows), though caught by independent test suite; console encoding errors for non-UTF-8 input.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md exists with verdict PASS and all three build criteria marked VERIFIED",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expected values (00_hand_expected.md), score_sus.py outputs (cases_real.txt), and --selftest transcript with exit code (04_selftest_transcript.txt)",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.9,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "Two mutants survived the selftest (accepting value 0 and exit code for invalid rows), though caught by independent test suite; console encoding errors for non-UTF-8 input.",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "QA-REPORT.md exists with verdict PASS and all three build criteria marked VERIFIED",
+         "id": "C1",
+         "criterion": "A top-level QA-REPORT.md in the output directory with verdict PASS or NEEDS_WORK and every build criterion marked verified or not verified"
+        },
+        {
+         "met": true,
+         "reason": "Evidence folder contains hand-computed expected values (00_hand_expected.md), score_sus.py outputs (cases_real.txt), and --selftest transcript with exit code (04_selftest_transcript.txt)",
+         "id": "C2",
+         "criterion": "Evidence folder with the hand-computed expected values, score_sus.py outputs, and the --selftest transcript with exit code"
+        }
+       ],
+       "cached": false
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
   "id": "20261110-051125-build-a-single-file",
   "brief": "Build a single-file HTML FAQ page for a note app: 6 questions as an accessible accordion (keyboard operable, aria-expanded, one open at a time), works readable with JavaScript disabled, under 8 KB, zero external requests, dark-mode aware, with a text filter box that hides non-matching questions.",
   "mode": "micro",
@@ -164,7 +1082,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -194,7 +1112,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -224,7 +1142,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -254,7 +1172,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -284,7 +1202,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -314,7 +1232,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -344,7 +1262,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -374,7 +1292,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -404,7 +1322,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -434,7 +1352,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -464,7 +1382,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -494,7 +1412,7 @@
          "criterion": "With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message"
         }
        ],
-       "cached": false
+       "cached": true
       }
      }
     ]
@@ -651,7 +1569,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -675,7 +1593,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -699,7 +1617,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -723,7 +1641,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -747,7 +1665,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -771,7 +1689,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -795,7 +1713,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -819,7 +1737,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -843,7 +1761,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -867,7 +1785,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -891,7 +1809,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      },
      {
@@ -915,7 +1833,7 @@
          "criterion": "Verdict PASS or NEEDS_WORK with each build criterion marked verified or not verified"
         }
        ],
-       "cached": false
+       "cached": true
       }
      }
     ]
@@ -954,7 +1872,7 @@
      }
     ],
     "traces": 21,
-    "fitness": 0.9838,
+    "fitness": 0.9863,
     "provisional": false,
     "scores": [
      {
@@ -1009,7 +1927,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1023,7 +1941,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1033,11 +1951,11 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.95,
+      "value": 0.975,
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1051,7 +1969,7 @@
       "judge": "ensemble",
       "evidence": {
        "failure_class": "none",
-       "critique": "none",
+       "critique": "None",
        "judges": [
         "groq/openai/gpt-oss-120b",
         "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -1069,19 +1987,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "reason": "Report includes level counts, top 5 errors normalized, timestamps, and errors per hour.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "reason": "Malformed lines are counted/listed without crashing, empty files handled, missing files exit with code 2.",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "reason": "-SelfTest generates sample, runs parser, asserts report and exits 0 on success.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1099,19 +2017,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "reason": "Report includes level counts, top 5 errors normalized, timestamps, and errors per hour.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "reason": "Malformed lines are counted/listed without crashing, empty files handled, missing files exit with code 2.",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "reason": "-SelfTest generates sample, runs parser, asserts report and exits 0 on success.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1129,19 +2047,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "reason": "Report includes level counts, top 5 errors normalized, timestamps, and errors per hour.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "reason": "Malformed lines are counted/listed without crashing, empty files handled, missing files exit with code 2.",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "reason": "-SelfTest generates sample, runs parser, asserts report and exits 0 on success.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1159,19 +2077,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Report has counts per level, top 5 errors normalised, first/last timestamp, and errors per hour.",
+         "reason": "Report includes level counts, top 5 errors normalized, timestamps, and errors per hour.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted/listed without crash, empty file handled, missing file exits with code 2.",
+         "reason": "Malformed lines are counted/listed without crashing, empty files handled, missing files exit with code 2.",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "-SelfTest generates sample log, runs parser, asserts report, and exits 0 on pass.",
+         "reason": "-SelfTest generates sample, runs parser, asserts report and exits 0 on success.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1184,24 +2102,24 @@
       "value": 1.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
+       "critique": "None",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "reason": "Report includes level counts, top‑5 normalized ERROR groups, first/last timestamps and errors‑per‑hour tables as shown in the sample reports.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "reason": "Malformed lines are counted and listed; empty and missing files are handled with appropriate messages and exit codes (2 for missing).",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "reason": "SelfTest creates a sample log, runs the parser, checks 40 assertions and exits 0 only when all pass.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1214,24 +2132,24 @@
       "value": 1.0,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
+       "critique": "None",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "reason": "Report includes level counts, top‑5 normalized ERROR groups, first/last timestamps and errors‑per‑hour tables as shown in the sample reports.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "reason": "Malformed lines are counted and listed; empty and missing files are handled with appropriate messages and exit codes (2 for missing).",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "reason": "SelfTest creates a sample log, runs the parser, checks 40 assertions and exits 0 only when all pass.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1241,27 +2159,27 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.9,
+      "value": 0.95,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
+       "critique": "None",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "reason": "Report includes level counts, top‑5 normalized ERROR groups, first/last timestamps and errors‑per‑hour tables as shown in the sample reports.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "reason": "Malformed lines are counted and listed; empty and missing files are handled with appropriate messages and exit codes (2 for missing).",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "reason": "SelfTest creates a sample log, runs the parser, checks 40 assertions and exits 0 only when all pass.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1274,24 +2192,24 @@
       "value": 0.9,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "none",
+       "critique": "None",
        "failure_class": "none",
        "acceptance": [
         {
          "met": true,
-         "reason": "Report includes level counts, top 5 normalized ERROR groups, first/last timestamps, and errors per hour.",
+         "reason": "Report includes level counts, top‑5 normalized ERROR groups, first/last timestamps and errors‑per‑hour tables as shown in the sample reports.",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines are counted/listed, empty and blank files produce valid reports, missing file yields clear error and exit code 2.",
+         "reason": "Malformed lines are counted and listed; empty and missing files are handled with appropriate messages and exit codes (2 for missing).",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest creates a sample log, runs parser, asserts all conditions and exits 0 on success.",
+         "reason": "SelfTest creates a sample log, runs the parser, checks 40 assertions and exits 0 only when all pass.",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1309,19 +2227,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 ERROR messages with normalization (numbers/IDs grouped), first/last timestamps, and errors per hour",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "reason": "Malformed lines counted and listed in report; garbage file test shows no crash; empty/blank files produce valid zero-count reports; missing file returns exit code 2 with clear stderr error",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "reason": "SelfTest generates sample log, runs parser in-process and via CLI, runs 40 assertions, exits 0 only when all pass (mutant test shows failure detection)",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1339,19 +2257,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 ERROR messages with normalization (numbers/IDs grouped), first/last timestamps, and errors per hour",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "reason": "Malformed lines counted and listed in report; garbage file test shows no crash; empty/blank files produce valid zero-count reports; missing file returns exit code 2 with clear stderr error",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "reason": "SelfTest generates sample log, runs parser in-process and via CLI, runs 40 assertions, exits 0 only when all pass (mutant test shows failure detection)",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1369,19 +2287,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 ERROR messages with normalization (numbers/IDs grouped), first/last timestamps, and errors per hour",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "reason": "Malformed lines counted and listed in report; garbage file test shows no crash; empty/blank files produce valid zero-count reports; missing file returns exit code 2 with clear stderr error",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "reason": "SelfTest generates sample log, runs parser in-process and via CLI, runs 40 assertions, exits 0 only when all pass (mutant test shows failure detection)",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1399,19 +2317,19 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 normalized ERROR messages, first/last timestamps, and errors per hour. Self-test confirms 6 distinct normalized ERROR groups and top-5 grouping.",
+         "reason": "Sample report shows counts per level (INFO/WARN/ERROR), top 5 ERROR messages with normalization (numbers/IDs grouped), first/last timestamps, and errors per hour",
          "id": "C1",
          "criterion": "Report has counts per level INFO/WARN/ERROR, top 5 ERROR messages grouped after normalising numbers and ids, first and last timestamp, and errors per hour"
         },
         {
          "met": true,
-         "reason": "Malformed lines counted and listed in report (sample-report.md); empty file produces valid zero-count report (edge-empty-report.md); missing file prints clear error and exits code 2 (edge-missing.err.txt, exitcodes.txt). Script never crashes on malformed input.",
+         "reason": "Malformed lines counted and listed in report; garbage file test shows no crash; empty/blank files produce valid zero-count reports; missing file returns exit code 2 with clear stderr error",
          "id": "C2",
          "criterion": "Malformed lines are counted and listed and never crash; empty file handled; missing file prints a clear error and exits with code 2"
         },
         {
          "met": true,
-         "reason": "SelfTest generates sample log, runs parser, asserts 40 checks, exits 0 only when all pass (selftest.out.txt). Mutation test shows it correctly fails when assertions break (selftest-mutant.out.txt, exit code 1).",
+         "reason": "SelfTest generates sample log, runs parser in-process and via CLI, runs 40 assertions, exits 0 only when all pass (mutant test shows failure detection)",
          "id": "C3",
          "criterion": "-SelfTest generates a sample log with known counts, runs the parser, asserts the report and exits 0 only if every assertion passes"
         }
@@ -1443,7 +2361,7 @@
      }
     ],
     "traces": 18,
-    "fitness": 0.6625,
+    "fitness": 0.8475,
     "provisional": false,
     "scores": [
      {
@@ -1494,54 +2412,62 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.5,
+      "value": 0.75,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_or_incorrect_evidence",
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_acceptance_criterion",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
        "judges": [
         "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.5,
+      "value": 0.75,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_or_incorrect_evidence",
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_acceptance_criterion",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
        "judges": [
         "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.65,
+      "value": 0.875,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_or_incorrect_evidence",
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_acceptance_criterion",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
        "judges": [
         "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
       "metric": "rubric:quality",
-      "value": 0.65,
+      "value": 0.9,
       "judge": "ensemble",
       "evidence": {
-       "failure_class": "missing_or_incorrect_evidence",
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
+       "failure_class": "missing_acceptance_criterion",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
        "judges": [
         "groq/openai/gpt-oss-120b",
+        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "gemini/gemini-3.5-flash-lite"
-       ]
+       ],
+       "contested_by": "groq/openai/gpt-oss-120b"
       }
      },
      {
@@ -1554,13 +2480,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "reason": "Transcripts for selftest, empty file, missing file (exit 2), and malformed lines are saved under the evidence folder.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": true,
-         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "reason": "Verdict is PASS with each acceptance criterion marked verified.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1578,13 +2504,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "reason": "Transcripts for selftest, empty file, missing file (exit 2), and malformed lines are saved under the evidence folder.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": true,
-         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "reason": "Verdict is PASS with each acceptance criterion marked verified.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1602,13 +2528,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "reason": "Transcripts for selftest, empty file, missing file (exit 2), and malformed lines are saved under the evidence folder.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": true,
-         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "reason": "Verdict is PASS with each acceptance criterion marked verified.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1626,13 +2552,13 @@
        "acceptance": [
         {
          "met": true,
-         "reason": "Transcripts for -SelfTest, empty file, missing file, and malformed lines are provided under the evidence folder with exit codes.",
+         "reason": "Transcripts for selftest, empty file, missing file (exit 2), and malformed lines are saved under the evidence folder.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": true,
-         "reason": "Verdict PASS with acceptance criteria of the task marked verified.",
+         "reason": "Verdict is PASS with each acceptance criterion marked verified.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1642,21 +2568,21 @@
      },
      {
       "metric": "rubric:completeness",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
-       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
+       "failure_class": "missing_acceptance_criterion",
        "acceptance": [
         {
-         "met": false,
-         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "met": true,
+         "reason": "Evidence files with SelfTest exit code and case transcripts are present.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": false,
-         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "reason": "No verdict section marking each acceptance criterion was provided.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1666,21 +2592,21 @@
      },
      {
       "metric": "rubric:correctness",
-      "value": 0.0,
+      "value": 0.5,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
-       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
+       "failure_class": "missing_acceptance_criterion",
        "acceptance": [
         {
-         "met": false,
-         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "met": true,
+         "reason": "Evidence files with SelfTest exit code and case transcripts are present.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": false,
-         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "reason": "No verdict section marking each acceptance criterion was provided.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1690,21 +2616,21 @@
      },
      {
       "metric": "rubric:evidence",
-      "value": 0.3,
+      "value": 0.8,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
-       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
+       "failure_class": "missing_acceptance_criterion",
        "acceptance": [
         {
-         "met": false,
-         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "met": true,
+         "reason": "Evidence files with SelfTest exit code and case transcripts are present.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": false,
-         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "reason": "No verdict section marking each acceptance criterion was provided.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1714,21 +2640,21 @@
      },
      {
       "metric": "rubric:quality",
-      "value": 0.4,
+      "value": 0.7,
       "judge": "groq/openai/gpt-oss-120b",
       "evidence": {
-       "critique": "The submission fails to provide the required evidence transcripts and uses the wrong exit code for missing files.",
-       "failure_class": "missing_or_incorrect_evidence",
+       "critique": "The response omitted the required C2 verdict and verification markings.",
+       "failure_class": "missing_acceptance_criterion",
        "acceptance": [
         {
-         "met": false,
-         "reason": "No clear transcript for -SelfTest with exit code, nor for empty, missing (exit code 2 expected but script uses 5), and malformed‑lines cases under the evidence folder.",
+         "met": true,
+         "reason": "Evidence files with SelfTest exit code and case transcripts are present.",
          "id": "C1",
          "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
         },
         {
          "met": false,
-         "reason": "No overall PASS/NEEDS_WORK verdict with per‑criterion verification is provided.",
+         "reason": "No verdict section marking each acceptance criterion was provided.",
          "id": "C2",
          "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
         }
@@ -1737,11 +2663,99 @@
       }
      },
      {
-      "metric": "rubric:error",
-      "value": 0.0,
+      "metric": "rubric:completeness",
+      "value": 1.0,
       "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
       "evidence": {
-       "critique": "unparseable judge output"
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "SelfTest transcripts (two runs, exit 0) in selftest.stdout.txt and selftest-run2.stdout.txt; empty file report in case-empty.report.md; missing file exit code 2 recorded in exitcodes.txt; malformed lines report in case-malformed.report.md — all saved under evidence folder",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS recorded by orchestrator; agent's evidence statement verifies each key criterion of task 1: SelfTest 40/40 twice, 4 mutants fail, missing file exit 2, edge cases (empty, malformed, tie, out-of-order, no-ERROR) match expectations, script hash unchanged",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:correctness",
+      "value": 1.0,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "SelfTest transcripts (two runs, exit 0) in selftest.stdout.txt and selftest-run2.stdout.txt; empty file report in case-empty.report.md; missing file exit code 2 recorded in exitcodes.txt; malformed lines report in case-malformed.report.md — all saved under evidence folder",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS recorded by orchestrator; agent's evidence statement verifies each key criterion of task 1: SelfTest 40/40 twice, 4 mutants fail, missing file exit 2, edge cases (empty, malformed, tie, out-of-order, no-ERROR) match expectations, script hash unchanged",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:evidence",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "SelfTest transcripts (two runs, exit 0) in selftest.stdout.txt and selftest-run2.stdout.txt; empty file report in case-empty.report.md; missing file exit code 2 recorded in exitcodes.txt; malformed lines report in case-malformed.report.md — all saved under evidence folder",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS recorded by orchestrator; agent's evidence statement verifies each key criterion of task 1: SelfTest 40/40 twice, 4 mutants fail, missing file exit 2, edge cases (empty, malformed, tie, out-of-order, no-ERROR) match expectations, script hash unchanged",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
+      }
+     },
+     {
+      "metric": "rubric:quality",
+      "value": 0.95,
+      "judge": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "evidence": {
+       "critique": "none",
+       "failure_class": "none",
+       "acceptance": [
+        {
+         "met": true,
+         "reason": "SelfTest transcripts (two runs, exit 0) in selftest.stdout.txt and selftest-run2.stdout.txt; empty file report in case-empty.report.md; missing file exit code 2 recorded in exitcodes.txt; malformed lines report in case-malformed.report.md — all saved under evidence folder",
+         "id": "C1",
+         "criterion": "Transcript of -SelfTest run with exit code; transcripts for empty file, missing file (exit code 2) and malformed-lines cases saved under an evidence folder"
+        },
+        {
+         "met": true,
+         "reason": "Verdict PASS recorded by orchestrator; agent's evidence statement verifies each key criterion of task 1: SelfTest 40/40 twice, 4 mutants fail, missing file exit 2, edge cases (empty, malformed, tie, out-of-order, no-ERROR) match expectations, script hash unchanged",
+         "id": "C2",
+         "criterion": "Verdict PASS or NEEDS_WORK with each acceptance criterion of task 1 marked verified or not"
+        }
+       ],
+       "cached": false
       }
      }
     ]
