@@ -2126,5 +2126,202 @@
    }
   ],
   "diagnosis": "# Diagnosis: backend-architect v1\n\nTasks scored: 3. Mean fitness: 0.9038.\n\n## Failure classes (ensemble majority, most frequent first)\n- `test_suite_invalid` x1\n\n## Worst tasks\n### 20261103-122155-build-a-stdlib-only #1 (fitness 0.835)\n- Task: Write ratelimit.py (stdlib-only token-bucket limiter keyed by client id, injectable clock, thread-safe) plus test_ratelimit.py and DESIGN.md\n- Acceptance: ratelimit.py imports only the Python standard library and exposes allow(client_id) -> bool and retry_after(client_id) -> float; test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest; DESIGN.md (under 400 words) states the algorithm, memory growth per client and how idle clients are evicted\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `test_suite_invalid`\n- Critique: The test suite is incomplete and contains syntax errors, preventing verification of functionality.\n- Unmet criteria:\n  - test_ratelimit.py has at least 6 tests covering burst capacity, refill over time via an injected fake clock, per-client isolation, retry_after value, and concurrent access from 8 threads; all pass with python -m unittest: Test file is truncated and contains a syntax error (\"for _ i\"), so it cannot be executed. [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n- Output excerpt:\n```\n--- ratelimit.py (5865 bytes) ---\n\"\"\"Token-bucket rate limiter keyed by client id.\n\nStandard library only. Thread-safe. The clock is injectable so tests (and\ncallers) can control time without sleeping.\n\nUsage::\n\n    limiter = TokenBucketLimiter(capacity=10, refill_rate=5.0)  # 10 burst, 5 req/s\n    if not limiter.allow(client_id):\n        wait = limiter.retry_after(client_id)   # seconds; send as Retry-After\n\nModule-level ``allow`` / ``retry_after`` use a shared default limiter\n(capacity 60, refill 1 token/s) for the simplest integrations.\n\"\"\"\n\nimport math\nimport threading\nimport time\nfrom collections import OrderedDict\n\n__all__ = [\"TokenBucketLimiter\", \"allow\", \"retry_after\", \"default_limiter\"]\n\n\nclass _Bucket(object):\n    __slots__ = (\"tokens\", \"last\")\n\n    def __init__(self, tokens, last):\n        self.tokens = tokens  # float, 0 <= tokens <= capacity\n        self.last = last      # clock time of the last refill/access\n\n\nclass TokenBucketLimiter(object):\n    \"\"\"Per-cli\n\n[... 4399 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n\n            if client_id is None:\n                self._buckets.clear()\n            else:\n                self._buckets.pop(client_id, None)\n\n\ndefault_limiter = TokenBucketLimiter(capacity=60, refill_rate=1.0)\n\n\ndef allow(client_id):\n    \"\"\"allow(client_id) -> bool, using the module de\n```\n\n### 20261103-074446-design-a-rest-api #1 (fitness 0.924)\n- Task: Design a REST API spec (OpenAPI 3.1 YAML + design notes) for a todo app with user accounts\n- Acceptance: openapi.yaml exists and validates as OpenAPI 3.1 (parsable YAML, openapi: 3.1.x, info, paths, components); Defines user account endpoints: register, login, logout/refresh, get/update/delete current user; Defines todo CRUD endpoints scoped to the authenticated user, with list pagination and filtering by completion status; Every non-auth endpoint declares bearer-token security; ownership rule (users only access their own todos) is stated; Every operation documents success and error responses (400/401/403/404/409/422 as applicable) using a shared Error schema; DESIGN.md explains auth scheme, data model, pagination, and error format\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The submission is thorough and meets all criteria, but the excerpted files prevent full independent validation of OpenAPI syntax and some details.\n- Output excerpt:\n```\n--- openapi.yaml (34353 bytes) ---\nopenapi: 3.1.0\ninfo:\n  title: Todo App API\n  version: 1.0.0\n  summary: REST API for a multi-user todo application with user accounts.\n  description: |\n    Design-only contract for a todo application.\n\n    **Authentication.** Clients obtain a short-lived JWT access token (15 min) and a\n    long-lived opaque refresh token (30 days, rotated on every use) from\n    `POST /v1/auth/register` or `POST /v1/auth/login`. Every endpoint except\n    register, login and refresh requires `Authorization: Bearer <accessToken>`\n    (security scheme `bearerAuth`).\n\n    **Ownership rule.** Every todo belongs to exactly one user (`ownerId`). A user can\n    only list, read, create, update or delete their own todos. The owner is always\n    taken from the access token's `sub` claim, never from the request body or query.\n    A todo owned by another user is treated as nonexistent and returns\n    `404 NOT_FOUND` (so todo IDs cannot be probed). `403 FORBIDDEN` is ret\n\n[... 32888 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n status: 429\n              requestId: req_01JBX3Q9T6Z1\n    InternalError:\n      description: Unexpected server error. Code INTERNAL.\n      headers:\n        X-Request-ID:\n          $ref: '#/components/headers/RequestId'\n      content:\n        application/json:\n          schema:\n       \n```\n\n### 20261108-064726-build-a-small-stdlib #1 (fitness 0.9525)\n- Task: Write notes_api.py (http.server + sqlite3, stdlib only) and test_notes_api.py (unittest, in-process server on a free port) covering create, list, get, delete and validation\n- Acceptance: python -m unittest -v test_notes_api in the output dir runs at least 8 tests and all pass; POST with missing or empty title, or non-JSON body, returns 400 with a JSON error; unknown id returns 404; successful create returns 201 with the new id; Only standard-library imports (checked by listing imports); no pip install or download\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: All acceptance criteria are satisfied by the code shown; the only gap is that actual test-run output is not included in the evidence, so the claim of 24 passing tests relies on the agent's statement rather than displayed output.\n- Output excerpt:\n```\n--- notes_api.py (13872 bytes) ---\n\"\"\"Notes service: a small JSON HTTP API backed by SQLite (standard library only).\n\nRun:\n    python notes_api.py --port 8080 --db notes.db\n\n    --host defaults to 127.0.0.1 (the server only binds to loopback addresses).\n    --port 0 picks a free port; the chosen port is printed on the first line:\n        Listening on http://127.0.0.1:<port>\n    Stop with Ctrl+C (or SIGTERM / Ctrl+Break); the socket and database are\n    closed before the process exits with status 0.\n\nEndpoints (all responses are JSON, Content-Type: application/json):\n    POST   /notes        body {\"title\": str (required, 1-200 chars after trim),\n                               \"body\": str (optional, <= 10000 chars)}\n                         -> 201 {\"id\", \"title\", \"body\", \"created_at\"}\n                            plus a Location: /notes/<id> header\n    GET    /notes        -> 200 {\"notes\": [...], \"count\": n}  (newest first)\n    GET    /notes/<id>   -> 200 note | 404\n    DELET\n\n[... 12407 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n KeyboardInterrupt\n\n    for name in (\"SIGTERM\", \"SIGBREAK\"):\n        if hasattr(signal, name):\n            signal.signal(getattr(signal, name), _stop)\n\n    host, port = server.server_address[:2]\n    print(\"Listening on http://%s:%d\" % (host, port), flush=True)\n    try:\n        server.\n```\n"
+ },
+ {
+  "id": 14,
+  "agent": "growth-hacker",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.0017,
+  "created_at": "2026-11-11T06:09:27.990Z",
+  "parent_fitness": 0.895,
+  "bank": [
+   {
+    "task": "Propose three growth experiments ranked by expected impact",
+    "source": "seed",
+    "parent_fitness": 0.925,
+    "parent_failure": "none",
+    "parent_critique": "The plan lacks concrete risk mitigation or fallback steps if the hypothesized metrics are not met.",
+    "parent_output_excerpt": "# Growth Experimentation Playbook: Breaking the 500-User Plateau\n\nYou have 500 users of a free developer tool and flat growth. At this stage, your primary bottleneck is likely a lack of **distribution loops** and **organic sharing mechanisms**. Developers hate traditional marketing, but they love sharing tools that save them time or make them look smart.\n\nHere are three high-impact growth experiments designed to reignite acquisition, ranked by expected impact.\n\n---\n\n## Experiment 1: The \"Built With / Powered By\" Open-Source Footer Loop\n* **Expected Impact:** Highest (Product-Led Viral Loop)\n* **Budget:** $0 (Zero-budget)\n\n### Overview\nIf your dev tool generates an output, artifact, UI compon"
+   },
+   {
+    "task": "Define activation precisely and propose two changes to raise it",
+    "source": "seed",
+    "parent_fitness": 0.9,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The evidence relies on fabricated queries and verification steps that were never actually run.",
+    "parent_output_excerpt": "# Growth Brief: Activation Optimization\n\n## 1. Precise Definition of Activation\n\nTo fix a 20% activation rate, we must first stop treating \"activation\" as a vague feeling of onboarding completion and tie it strictly to the **Aha! moment**—the exact behavioral milestone where a user first experiences the core value proposition of the product.\n\n*   **Measurable Event (The North Star Activation Metric):** \n    > *\"[User ID] successfully completes [Core Action X] within [Y hours/days] of signup.\"*\n*   **Operational Example (SaaS/Product-Led Growth):** \n    A user is classified as \"Activated\" when they create their first project, invite at least one collaborator, and export/publish a tangible out"
+   },
+   {
+    "task": "Design a referral loop and say how it could fail",
+    "source": "seed",
+    "parent_fitness": 0.86,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "All claims are unverified and rely on fabricated calculations.",
+    "parent_output_excerpt": "# Referral Loop Design & Risk Analysis: The \"Double-Sided Value Stack\"\n\n## 1. Product Context & Mechanics\n*Assumed Context: A B2B SaaS productivity/collaboration tool with a standard self-serve tier ($30/user/month).*\n\n### The Referral Loop Architecture\n1. **Trigger:** Inside the product, a user hits a natural collaboration wall (e.g., inviting a 6th team member or needing an advanced integration) or reaches an \"Aha!\" moment (e.g., successfully completing their first weekly project sprint).\n2. **Action:** The user generates a frictionless, personalized invite link via a native in-app modal or Slack integration.\n3. **Reward (Both Sides):** \n   * **The Inviter (Advocate):** Receives 1 month of"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261111-060059-growth-hacker\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "770b8f59914ab13b8c89c7c5b14d6c8840d283f3f655b843a82d19328a9eb5cd",
+    "fitness": 0.8967,
+    "paired_delta": 0.0017,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.87,
+      "failure": "none",
+      "critique": "The plan sets arbitrary metric targets without any empirical basis.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.65
+      },
+      "output_excerpt": "# Growth Experimentation Playbook: Breaking the Flat Growth Plateau\n\nA free developer tool sitting at 500 users with flat growth is typically suffering from one of two core issues: **leaky activation** (users arrive but don't experience the \"Aha!\" moment) or **absent distribution loops** (users get value, but the product doesn't naturally bring others along). \n\nBelow are three high-impact growth experiments designed to reignite acquisition and activation without requiring a massive budget.\n\n---\n\n## Experiment 1: The \"Built with [Tool]\" Open-Source Watermark / Footer Loop\n- **Priority:** #1 (Highest Impact / Scalable Viral Loop)\n- **Budget:** Zero-budget `[A1]`\n- **Type:** Product-Led Growth "
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.92,
+      "failure": "unverifiable_evidence",
+      "critique": "Effect size estimates are unverified assumptions rather than measured evidence",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Activation Growth Strategy: Moving from 20% to 40%\n\n## 1. Precise Definition of Activation\n\nTo optimize activation, we must first define it as a strict, measurable milestone. \n\n* **The Core Activation Metric:** A new user is officially \"activated\" when they complete the **\"Aha! Moment\" action within 7 days of sign-up**.\n* **Measurable Event Definition:** `User successfully completes [Core Action, e.g., creates their first project and invites at least 1 collaborator] within 168 hours of `user_signup_timestamp`.\n* **Current Baseline:** `[A1]` 20% of sign-ups reach this milestone within 7 days.\n\n---\n\n## 2. Proposed Changes Tied to the Definition\n\nBoth changes are directly engineered to drive "
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.9,
+      "failure": "lack_of_empirical_evidence",
+      "critique": "The deliverable lacks real empirical evidence to substantiate the fraud controls and payback calculation.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Growth Deliverable: High-Velocity B2C/Prosumer Referral Loop Design\n\n## 1. Executive Summary & Mechanism Overview\nThis document outlines a double-sided incentive referral loop designed for a SaaS/prosumer product with an average monthly subscription of **$29/month** `[A1]`. \n\n### The Loop Mechanics: \"Give 1 Month Pro, Get 1 Month Pro\"\n1. **Trigger**: User reaches their \"Aha!\" moment (e.g., successfully exports their first core project) `[A2]`.\n2. **Incentive (Double-Sided)**: \n   - **Invitee (The Friend)**: Gets 1 free month of Pro tier on top of the standard 14-day trial (Total 6 weeks free) `[A3]`.\n   - **Inviter (The Advocate)**: Gets 1 free month of Pro tier applied to their account up"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261111-060059-growth-hacker\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "4805cf02eb7ac76b8b1fae399341f3c9d46a8191d45d70d5b57942c81a4807c0",
+    "fitness": 0.825,
+    "paired_delta": -0.07,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.905,
+      "failure": "unverifiable_metrics",
+      "critique": "The plan relies on many invented conversion rates and assumptions that cannot be verified in this context.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.875,
+       "evidence": 0.85
+      },
+      "output_excerpt": "# Growth Strategy: Revving Up a Free Dev Tool (Current Base: 500 Users, Flat Growth)\n\n---\n\n## Assumptions Table\n\n| Tag | Description | Rationale / Source |\n|---|---|---|\n| `[A1]` | Current active user base is 500 developers. | Provided in mission brief. |\n| `[A2]` | Baseline weekly active users (WAU) is 30% of total users (150 WAU). | Industry benchmark for developer tools without active retention loops. |\n| `[A3]` | Zero-budget \"Made with [Tool]\" badge click-through rate to landing page is 2%. | Standard bottom-of-funnel badge conversion estimate for dev utilities. |\n| `[A4]` | Template/Config sharing participation rate is 5% of active users. | Standard community contribution rate for dev t"
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.75,
+      "failure": "none",
+      "critique": "Effect‑size estimates are unverified and rely on fabricated data.",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.3
+      },
+      "output_excerpt": "# Activation Growth Strategy: From 20% to 35%\n\n## 1. Precise Activation Definition & Metric\n\nTo optimize activation, we must define it by the **Aha! moment**—the exact user action that correlates most strongly with long-term retention (Day 30 retention). For this B2B SaaS collaboration tool, activation is defined as:\n\n> **The Activation Event:** A newly registered user who creates a workspace, invites at least one active teammate, and creates/completes their first project board within 7 days of initial signup `[A1]`.\n\n### Metric Specification\n* **Metric Name:** 7-Day Core Activation Rate `[A2]`\n* **Numerator:** Count of unique users in a cohort who complete the Activation Event within 7 days"
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.82,
+      "failure": "fabricated_evidence",
+      "critique": "The document fabricates verification results and command outputs, weakening evidential support.",
+      "scores": {
+       "correctness": 0.85,
+       "completeness": 0.95,
+       "quality": 0.85,
+       "evidence": 0.6
+      },
+      "output_excerpt": "# Growth Artifact: Two-Sided Viral Referral Loop Design\n\n## 1. Executive Summary & Core Mechanics\nThis document outlines a scalable, two-sided referral loop designed to drive user acquisition while maintaining healthy unit economics. \n\n*   **The Trigger:** A user reaches their \"Aha!\" moment (successfully completes their second core action) [A1].\n*   **The Offer:** \n    *   **Advocate (Referrer):** Receives $20 credit towards their next billing cycle [A2].\n    *   **Friend (Referee):** Receives a 30-day extended trial + $20 starting credit upon sign-up [A3].\n*   **The Share Channel:** One-click native OS sharing (SMS, WhatsApp, and personalized referral link copy).\n\n---\n\n## 2. Assumptions Tab"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261111-060059-growth-hacker\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "8a45566f77af4df6d1b6bad13740fd509dfc1639aa7490a9b25c3283aaaff8b8",
+    "fitness": 0.875,
+    "paired_delta": -0.02,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Propose three growth experiments ranked by expected impact",
+      "fitness": 0.9,
+      "failure": "unverifiable_metrics",
+      "critique": "The plan relies on many fabricated assumptions and metric values that cannot be verified.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Growth Strategy & Experiment Plan: Scaling a Free Dev Tool from 500 Users\n\n## 1. Executive Summary & Ranking Rationale\n\nOur current baseline is **500 active developers** with flat month-over-month growth. To break out of this plateau, we must shift from outbound/passive acquisition to **Product-Led Growth (PLG)** and **viral loops** native to a developer workflow. \n\n### Experiment Ranking Rationale\n1. **Rank 1: The \"Built With\" Export Watermark / Open-Source Badge (Zero-Budget)**\n   - *Rationale*: Highest expected impact because it turns every existing user into an acquisition channel without ad spend. Developers frequently share code snippets, GitHub READMEs, and deployment URLs publicly."
+     },
+     {
+      "task": "Define activation precisely and propose two changes to raise it",
+      "fitness": 0.835,
+      "failure": "insufficient_evidence",
+      "critique": "Effect size estimates are unsubstantiated and lack real evidence.",
+      "scores": {
+       "correctness": 0.85,
+       "completeness": 0.975,
+       "quality": 0.85,
+       "evidence": 0.65
+      },
+      "output_excerpt": "# Growth Strategy: Optimizing User Activation\n\n## 1. Activation Definition & Metrics\n\nTo move our current activation rate [A1], we must first establish a precise, unambiguous, and measurable definition of activation (the \"Aha! moment\").\n\n* **Activation Definition:** A newly registered user is classified as **Activated** if they complete the following sequence within 7 days of initial signup:\n  1. Create a project workspace.\n  2. Invite at least 1 team member to the workspace.\n  3. Create and mark as \"Complete\" at least 1 core task within that workspace.\n\n### Metrics Table\n\n| Metric ID | Definition | Baseline | Success Threshold | Measurement Method | Owner |\n| :--- | :--- | :--- | :--- | :--"
+     },
+     {
+      "task": "Design a referral loop and say how it could fail",
+      "fitness": 0.89,
+      "failure": "fabricated_evidence",
+      "critique": "The document fabricates measurement results and verification steps that cannot be confirmed.",
+      "scores": {
+       "correctness": 0.825,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Growth Strategy: The \"Double-Sided Growth Loop\" Referral Program\n\n## 1. Executive Summary & Core Mechanics\nThis document outlines a high-velocity, double-sided referral loop designed to lower Customer Acquisition Cost (CAC), achieve a viral coefficient ($K$-factor) $> 1.0$, and maintain healthy unit economics for a B2C SaaS or marketplace product (assuming an average product price of \\$30/month).\n\n*   **The Loop:** User A invites User B via a personalized link.\n*   **The Reward (Double-Sided):** \n    *   **Advocate (User A):** Receives 1 month of free service credit `[A1]` OR \\$15 cash payout via PayPal/Venmo `[A2]`.\n    *   **Referee (User B):** Receives 50% off their first 3 months `[A3]"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: growth-hacker v1\n\nTasks scored: 3. Mean fitness: 0.9265.\n\n## Worst tasks\n### 20261105-074515-design-a-referral-loop #1 (fitness 0.8912)\n- Task: Write REFERRAL-LOOP.md: a referral loop design for a note-taking app with a fraud-risk section\n- Acceptance: describes the loop step by step: trigger, invite, reward for referrer and for invitee, and the action that re-enters the loop; defines a viral coefficient (K) formula with assumed inputs and shows the arithmetic; has a section headed 'Fraud risk' listing at least 4 distinct abuse vectors, each with a concrete mitigation; lists at least 3 metrics to track, each with a target number; any assumed number is labelled as an assumption\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `none`\n- Critique: none\n- QA feedback on failed attempts: C1-C4 met (K arithmetic 0.10/0.2625 matches; 7 vectors; 7 metrics). C5 NOT MET: 6 assumed numbers have no [A#] tag, no Assumptions row and no inline label, contradicting lines 4-5 ('Each one is tagged ... and listed'). Fixes: A15 prompt cap 1 per 7 days (L49); A16 storage trigger 80% of free limit (L46: '80% [A16] of the free storage limit [A1]'); A17 bot alert >10 signups per code in 24h (L163, replace '(threshold is an assumption)' with [A17]); A18 collusion low-activity window after day 7 (L168); A19 M1 window 30 days (L180; optionally add the window to A4); A20 experiment arms day 2 vs day 7 and 3+ people (L198-199) and fix L203-205 'no numbers assumed here'. Optional: tag inline repeats of '1 month' (L43, L45, L74, L94, L96) with [A8]/[A9]. Re-check lines 4-5 so the claim is true.\n- Output excerpt:\n```\n--- REFERRAL-LOOP.md (17344 bytes) ---\n# REFERRAL-LOOP.md: Referral Loop Design for \"Inkwell\" (fictional note-taking app)\n\n> **Read this first.** \"Inkwell\" is a made-up name for a generic freemium note-taking app.\n> No real company data exists for this design. **Every assumed number in this document is\n> tagged `[A1]` to `[A27]` where it appears, and each tag has a row in the Assumptions table\n> (section 1).** None of them is a measured fact or an industry benchmark. Replace them with\n> real numbers once the loop is live.\n>\n> Numbers that carry **no** tag are not assumptions. They are only: section, step, trigger,\n> metric or assumption IDs (for example \"Step 1\", \"M4\", \"A3\"); the count of items in a list or\n> formula (for example \"four inputs\", \"2 x\" rewards per referral); fixed math in a formula (the\n> `1` in `1 / (1 - K)` and the K = 1.0 self-growth threshold); and results computed from tagged\n> inputs (for example K = 0.10, 1.111, $12).\n\n---\n\n## 1. Assumptions table\n\n| I\n\n[... 15883 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n signup page | Higher M2 |\n| a | Pre-save the shared note + onboarding checklist vs empty account | Higher M3 |\n\nEach experiment runs until it reaches a pre-set sample size and is judged by a pre-set\nsignificance level. This document does **not** set values for sample size or signifi\n```\n\n### 20261103-080434-propose-three-zero-budget #1 (fitness 0.9297)\n- Task: Write EXPERIMENTS.md proposing three zero-budget growth experiments for a free developer tool with 500 users\n- Acceptance: Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form; Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window; Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software; Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown); Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The statistical verification claims are not directly observable in the document, but the overall structure meets the brief.\n- Output excerpt:\n```\n--- EXPERIMENTS.md (26352 bytes) ---\n# Zero-Budget Growth Experiments: Free Developer Tool (~500 users)\n\n## 0. Assumptions (stated explicitly because the product is unspecified)\n\n| # | Assumption | Value used in the math |\n|---|---|---|\n| A1 | Product | Open-source CLI with an optional free account / API key (freemium). Hosted on GitHub, installed via a package manager (npm/pip/brew). |\n| A2 | Total users | 500 registered accounts (an account = an email plus an install ID). |\n| A3 | New-user inflow | About 15 new accounts/week (about 60 per 4 weeks), roughly steady in non-holiday weeks. |\n| A4 | Activation baseline | 30% of new accounts complete a \"first successful core run\" within 7 days of signup. |\n| A5 | Dormant users | About 300 of the 500 accounts have had no successful run in 30+ days and have agreed to product emails. |\n| A6 | Natural reactivation | 5% of dormant users come back on their own within any 30-day window. |\n| A7 | Instrumentation | The tool's own backen\n\n[... 24771 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n: E3 uses 100% of the dormant pool | Explicitly acknowledged, with the justification that no other experiment uses this pool, the 90-day re-use cost, and an instruction to recompute if the pool is under 300. | 151, 184 |\n| 9 | Optional: CAN-SPAM | Added the maintainer's existing posta\n```\n\n### 20261110-100838-design-a-2-week #1 (fitness 0.9587)\n- Task: Write experiment-plan.md, samplesize.py and events.csv for the activation experiment\n- Acceptance: experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample); samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest; events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.\n- Output excerpt:\n```\n--- experiment-plan.md (10654 bytes) ---\n# Experiment Plan: Guided First-Note Onboarding (2 weeks)\n\nExperiment id: `act_onboarding_v1`. Status: design, not yet launched. All numbers about traffic (400 new users per day) and baseline (30 percent activation) are ASSUMPTIONS supplied by the brief; confirm them from real data before launch.\n\n## 1. Hypothesis (falsifiable)\n\nChange: new users in the treatment arm see a guided first-note step (pick a template, then type in it, with a 3-step checklist: write a note, add a second note, add a third) instead of the current blank-canvas start.\n\nHypothesis: Among new users who sign up during the enrollment window, the treatment arm will have a 72-hour activation rate at least 5 percentage points higher than control (35 percent vs a 30 percent baseline).\n\nFalsification: the hypothesis is rejected if the two-sided test at alpha 0.05 on the primary metric does not show treatment higher than control, OR if the observed lift is statistically \n\n[... 9195 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n and re-run `samplesize.py --p1 <real baseline> --daily-users <real traffic>`.\n- Novelty effect: treatment may look better in the first 72 hours and fade later; the 72-hour window cannot detect that.\n- Weekday/weekend mix: Days 1 to 11 contain at least one weekend; start on a Monday \n```\n"
  }
 ]
