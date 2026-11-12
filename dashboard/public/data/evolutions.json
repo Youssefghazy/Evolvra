@@ -2323,5 +2323,202 @@
    }
   ],
   "diagnosis": "# Diagnosis: growth-hacker v1\n\nTasks scored: 3. Mean fitness: 0.9265.\n\n## Worst tasks\n### 20261105-074515-design-a-referral-loop #1 (fitness 0.8912)\n- Task: Write REFERRAL-LOOP.md: a referral loop design for a note-taking app with a fraud-risk section\n- Acceptance: describes the loop step by step: trigger, invite, reward for referrer and for invitee, and the action that re-enters the loop; defines a viral coefficient (K) formula with assumed inputs and shows the arithmetic; has a section headed 'Fraud risk' listing at least 4 distinct abuse vectors, each with a concrete mitigation; lists at least 3 metrics to track, each with a target number; any assumed number is labelled as an assumption\n- Verdict: PASS after 2 attempt(s)\n- Failure class: `none`\n- Critique: none\n- QA feedback on failed attempts: C1-C4 met (K arithmetic 0.10/0.2625 matches; 7 vectors; 7 metrics). C5 NOT MET: 6 assumed numbers have no [A#] tag, no Assumptions row and no inline label, contradicting lines 4-5 ('Each one is tagged ... and listed'). Fixes: A15 prompt cap 1 per 7 days (L49); A16 storage trigger 80% of free limit (L46: '80% [A16] of the free storage limit [A1]'); A17 bot alert >10 signups per code in 24h (L163, replace '(threshold is an assumption)' with [A17]); A18 collusion low-activity window after day 7 (L168); A19 M1 window 30 days (L180; optionally add the window to A4); A20 experiment arms day 2 vs day 7 and 3+ people (L198-199) and fix L203-205 'no numbers assumed here'. Optional: tag inline repeats of '1 month' (L43, L45, L74, L94, L96) with [A8]/[A9]. Re-check lines 4-5 so the claim is true.\n- Output excerpt:\n```\n--- REFERRAL-LOOP.md (17344 bytes) ---\n# REFERRAL-LOOP.md: Referral Loop Design for \"Inkwell\" (fictional note-taking app)\n\n> **Read this first.** \"Inkwell\" is a made-up name for a generic freemium note-taking app.\n> No real company data exists for this design. **Every assumed number in this document is\n> tagged `[A1]` to `[A27]` where it appears, and each tag has a row in the Assumptions table\n> (section 1).** None of them is a measured fact or an industry benchmark. Replace them with\n> real numbers once the loop is live.\n>\n> Numbers that carry **no** tag are not assumptions. They are only: section, step, trigger,\n> metric or assumption IDs (for example \"Step 1\", \"M4\", \"A3\"); the count of items in a list or\n> formula (for example \"four inputs\", \"2 x\" rewards per referral); fixed math in a formula (the\n> `1` in `1 / (1 - K)` and the K = 1.0 self-growth threshold); and results computed from tagged\n> inputs (for example K = 0.10, 1.111, $12).\n\n---\n\n## 1. Assumptions table\n\n| I\n\n[... 15883 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n signup page | Higher M2 |\n| a | Pre-save the shared note + onboarding checklist vs empty account | Higher M3 |\n\nEach experiment runs until it reaches a pre-set sample size and is judged by a pre-set\nsignificance level. This document does **not** set values for sample size or signifi\n```\n\n### 20261103-080434-propose-three-zero-budget #1 (fitness 0.9297)\n- Task: Write EXPERIMENTS.md proposing three zero-budget growth experiments for a free developer tool with 500 users\n- Acceptance: Exactly three experiments, each with a falsifiable hypothesis in 'If we X, then Y will change by Z because W' form; Each experiment names one primary metric with baseline/measurement method, numeric success threshold, and time window; Each experiment costs $0 in cash: only free tools/channels named, no paid ads or paid software; Each experiment's success threshold is plausibly detectable at 500-user scale (sample-size or minimum-detectable-effect reasoning shown); Each experiment lists steps to run it, a kill/stop criterion, and targets a distinct funnel stage (no two the same)\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The statistical verification claims are not directly observable in the document, but the overall structure meets the brief.\n- Output excerpt:\n```\n--- EXPERIMENTS.md (26352 bytes) ---\n# Zero-Budget Growth Experiments: Free Developer Tool (~500 users)\n\n## 0. Assumptions (stated explicitly because the product is unspecified)\n\n| # | Assumption | Value used in the math |\n|---|---|---|\n| A1 | Product | Open-source CLI with an optional free account / API key (freemium). Hosted on GitHub, installed via a package manager (npm/pip/brew). |\n| A2 | Total users | 500 registered accounts (an account = an email plus an install ID). |\n| A3 | New-user inflow | About 15 new accounts/week (about 60 per 4 weeks), roughly steady in non-holiday weeks. |\n| A4 | Activation baseline | 30% of new accounts complete a \"first successful core run\" within 7 days of signup. |\n| A5 | Dormant users | About 300 of the 500 accounts have had no successful run in 30+ days and have agreed to product emails. |\n| A6 | Natural reactivation | 5% of dormant users come back on their own within any 30-day window. |\n| A7 | Instrumentation | The tool's own backen\n\n[... 24771 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n: E3 uses 100% of the dormant pool | Explicitly acknowledged, with the justification that no other experiment uses this pool, the 90-day re-use cost, and an instruction to recompute if the pool is under 300. | 151, 184 |\n| 9 | Optional: CAN-SPAM | Added the maintainer's existing posta\n```\n\n### 20261110-100838-design-a-2-week #1 (fitness 0.9587)\n- Task: Write experiment-plan.md, samplesize.py and events.csv for the activation experiment\n- Acceptance: experiment-plan.md states a falsifiable hypothesis, one primary metric and at least two guardrail metrics with exact numerator and denominator definitions, the 2-week schedule, and written stopping rules (including no peeking before the planned sample); samplesize.py uses only the Python standard library, implements the two-proportion sample-size formula for baseline 0.30, lift 0.05, alpha 0.05 two-sided, power 0.80 with the formula written in a comment, prints the per-arm and total sample size, and has a --selftest; events.csv lists every event needed for the metrics with columns event, trigger, properties, owner; the plan states the sample size per arm and whether 2 weeks of traffic is enough for an assumed 400 new users per day\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The deliverables satisfy all criteria, though some script sections are truncated in the view, leaving a small uncertainty about the self‑test implementation.\n- Output excerpt:\n```\n--- experiment-plan.md (10654 bytes) ---\n# Experiment Plan: Guided First-Note Onboarding (2 weeks)\n\nExperiment id: `act_onboarding_v1`. Status: design, not yet launched. All numbers about traffic (400 new users per day) and baseline (30 percent activation) are ASSUMPTIONS supplied by the brief; confirm them from real data before launch.\n\n## 1. Hypothesis (falsifiable)\n\nChange: new users in the treatment arm see a guided first-note step (pick a template, then type in it, with a 3-step checklist: write a note, add a second note, add a third) instead of the current blank-canvas start.\n\nHypothesis: Among new users who sign up during the enrollment window, the treatment arm will have a 72-hour activation rate at least 5 percentage points higher than control (35 percent vs a 30 percent baseline).\n\nFalsification: the hypothesis is rejected if the two-sided test at alpha 0.05 on the primary metric does not show treatment higher than control, OR if the observed lift is statistically \n\n[... 9195 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n and re-run `samplesize.py --p1 <real baseline> --daily-users <real traffic>`.\n- Novelty effect: treatment may look better in the first 72 hours and fade later; the 72-hour window cannot detect that.\n- Weekday/weekend mix: Days 1 to 11 contain at least one weekend; start on a Monday \n```\n"
+ },
+ {
+  "id": 15,
+  "agent": "reality-checker",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.0183,
+  "created_at": "2026-11-12T05:54:23.070Z",
+  "parent_fitness": 0.905,
+  "bank": [
+   {
+    "task": "Write the launch readiness review with a default verdict of NEEDS WORK",
+    "source": "seed",
+    "parent_fitness": 0.925,
+    "parent_failure": "missing_actual_evidence",
+    "parent_critique": "The review lists required evidence but provides no actual evidence to verify readiness.",
+    "parent_output_excerpt": "# Integration Agent Reality-Based Launch Readiness Review\n\n**Reviewer:** TestingRealityChecker  \n**Status:** 🧐 **NEEDS WORK** (Default Status Applied)  \n**Date:** Current Evaluation Cycle  \n\n---\n\n## 🎯 Executive Summary\n\nThe development team has declared the MVP ready for launch. In accordance with rigorous integration standards, this assessment defaults to **NEEDS WORK**. Premature approvals, unverified \"luxury/premium\" claims, and unsupported assertions of \"zero issues found\" are categorically rejected. \n\nBecause this review operates under zero-tool-execution constraints, no live measurements, screenshots, or automated test files have been generated or inspected. Therefore, production readi"
+   },
+   {
+    "task": "List the ways a demo can hide production problems and how to check each",
+    "source": "seed",
+    "parent_fitness": 0.85,
+    "parent_failure": "lack_of_empirical_evidence",
+    "parent_critique": "No actual test results are provided; the report only describes what would be checked.",
+    "parent_output_excerpt": "# Integration Reality Report: How Demos Hide Production Failures\n\nDemos are carefully curated illusions. They showcase the happy path under optimal conditions, executed by developers who know every keystroke to avoid pitfalls. As a integration reality checker, I treat unverified demos as active warning signs. \n\nBelow are five concrete ways demos hide production problems, prioritized by risk, along with exact verification methods.\n\n---\n\n## 1. Hardcoded Datasets & Zero-Pagination Views\n* **Risk Level**: **Critical (Data Collapse)**\n* **The Demo Illusion**: The dashboard loads instantly, grids are perfectly filled, and text alignments look pristine because the backend returns exactly 5 hardcode"
+   },
+   {
+    "task": "Specify what proof you accept and what you reject",
+    "source": "seed",
+    "parent_fitness": 0.94,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Reality Checker Proof Standard: \"All Tests Pass\" Claim\n\n## Accepted Proof\nTo validate a claim that \"all tests pass,\" I require reproducible, immutable artifacts generated directly by standard testing frameworks. Specifically, I accept:\n* **Raw Execution Logs**: Complete command-line output from the test runner (e.g., Jest, PHPUnit, PyTest) showing zero failures, explicit test counts, and a confirmed exit code of `0`.\n* **Standardized Test Reports**: Machine-readable artifacts such as JUnit XML or JSON test result files generated during the execution run.\n* **Command Traceability**: The exact, unedited command string used to invoke the test suite, allowing independent reproduction in an ide"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261112-054614-reality-checker\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "91a7aa1ef6051ef01dea31a97286403ada484169cf62197fb3a176c42728a994",
+    "fitness": 0.87,
+    "paired_delta": -0.035,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the launch readiness review with a default verdict of NEEDS WORK",
+      "fitness": 0.91,
+      "failure": "fabricated_evidence",
+      "critique": "The review fabricates file names and command outputs without actual evidence.",
+      "scores": {
+       "correctness": 0.875,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Launch Readiness Review\n\n## 🛑 Executive Summary & Status\n**Default Verdict:** `NEEDS WORK`\n\nThe team has declared the MVP ready to launch. Per strict integration protocols, this assessment defaults to **NEEDS WORK** pending the collection and verification of overwhelming, empirical evidence. No premature approvals or unverified \"luxury\" claims will be accepted.\n\n---\n\n## 📋 Readiness Areas & Required Evidence\n\nTo move past the default `NEEDS WORK` status, each readiness area must be backed by the specified evidence below. \n\n### 1. Visual & Responsive Integrity\n*   **Readiness Area:** Layout consistency across desktop, tablet, and mobile breakpoints.\n*   **Required Evidence:** \n    *   Full-p"
+     },
+     {
+      "task": "List the ways a demo can hide production problems and how to check each",
+      "fitness": 0.88,
+      "failure": "fabricated_evidence",
+      "critique": "Verification steps are described but not actually demonstrated, so evidence is largely fabricated",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Integration Agent Assessment: How Demos Hide Production Reality\n\nDemos are theatrical performances designed to show happy paths under optimal, controlled conditions. They routinely mask structural fragility, missing implementations, and architectural debt. \n\nBelow are five ways feature demos hide production problems, prioritized by risk, along with concrete verification checks for each.\n\n---\n\n## 1. Hardcoded and Mocked Data (Risk: Critical)\n* **How the Demo Hides It:** The UI renders rich, perfectly formatted text, avatars, and metrics, but these are hardcoded directly into the template or frontend components rather than fetched dynamically from a database through an authenticated API.\n* *"
+     },
+     {
+      "task": "Specify what proof you accept and what you reject",
+      "fitness": 0.82,
+      "failure": "missing_real_evidence",
+      "critique": "No actual reproducible artifacts or command outputs are provided as evidence.",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.6
+      },
+      "output_excerpt": "# Integration Review Protocol: Test Verification Standards\n\nWhen evaluating an agent's claim that \"all tests pass,\" the Integration Reality Checker enforces strict evidence-based standards. \n\n## Accepted Proof\n- **Raw Command-Line Outputs**: Unaltered stdout/stderr text blocks directly generated by standard test runners (e.g., Jest, PyTest, PHPUnit) showing zero failures, complete test suites, and execution timestamps.\n- **Reproducible Artifacts**: Version-controlled test configuration files combined with immutable test report artifacts (JSON/JUnit XML summaries) that can be independently re-run via documented commands.\n\n## Rejected Proof\n- **Verbal Assertions**: Statements such as \"all test"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261112-054614-reality-checker\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "d3259b68d09b5d4c745021db788ed262f39af077998e9a5e3cbf72ca10f6a7c4",
+    "fitness": 0.905,
+    "paired_delta": 0.0,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the launch readiness review with a default verdict of NEEDS WORK",
+      "fitness": 0.92,
+      "failure": "fabricated_evidence",
+      "critique": "All required sections are present but the cited evidence and command outputs are fabricated.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# MVP Launch Readiness Review\n\n## 🔍 Executive Summary & Verdict\n\nThe development team has declared the Minimum Viable Product (MVP) \"ready to launch.\" In accordance with rigorous integration standards, this claim is treated with immediate skepticism. Without overwhelming, verified empirical evidence from automated visual captures, performance metrics, and end-to-end journey tests, the system cannot be certified for production.\n\n**Overall Verdict:** `NEEDS WORK`\n\n---\n\n## 📋 Readiness Areas & Required Evidence\n\nTo transition from `NEEDS WORK` to production readiness, each of the following areas must supply verifiable evidence using the defined validation methods. No claims will be accepted with"
+     },
+     {
+      "task": "List the ways a demo can hide production problems and how to check each",
+      "fitness": 0.89,
+      "failure": "fabricated_evidence",
+      "critique": "The response fabricates command outputs and performance thresholds, weakening evidential support.",
+      "scores": {
+       "correctness": 0.825,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# How Feature Demos Hide Production Problems (And How to Unmask Them)\n\nDemos are optimized for persuasion, not validation. They represent the absolute best-case scenario—executed in a controlled environment, by someone who knows every keystroke, backed by hardcoded data, and insulated from real-world chaos. \n\nAs a reality checker, I treat every demo as an illusion until proven otherwise by empirical evidence. Here are the top five ways feature demos hide production problems, prioritized by risk, along with the exact methods required to verify them.\n\n---\n\n## 1. Hardcoded and Mocked Data (Risk: CRITICAL)\n* **The Illusion:** The UI renders lightning-fast, perfectly formatted text, edge-case ava"
+     },
+     {
+      "task": "Specify what proof you accept and what you reject",
+      "fitness": 0.905,
+      "failure": "missing_concrete_evidence",
+      "critique": "The response defines acceptable evidence but does not include any actual reproducible artifacts.",
+      "scores": {
+       "correctness": 0.925,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.775
+      },
+      "output_excerpt": "# Integration Verification Policy: \"All Tests Pass\" Claims\n\nAs the Reality Checker, any claim that \"all tests pass\" is treated with absolute skepticism until substantiated by verifiable, reproducible artifacts. \n\n## Accepted Proof\n1. **Raw Test Runner Output Logs:** Complete stdout/stderr logs from the executed testing framework (e.g., Jest, PHPUnit, Playwright) demonstrating zero failures, matching test counts, and exit code `0`.\n2. **Structured JSON Test Reports:** Machine-readable result files (such as `test-results.json` or JUnit XML) containing timestamped execution data, test suite names, and assertion counts.\n3. **Automated Visual & Interaction Artifacts:** Comprehensive screenshot bu"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261112-054614-reality-checker\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "714abe040f031f9d409cc47b90b808d009efcddd062c1346dbd67d5527067e84",
+    "fitness": 0.9233,
+    "paired_delta": 0.0183,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the launch readiness review with a default verdict of NEEDS WORK",
+      "fitness": 0.93,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.925,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Launch Readiness Review\n\n**Reviewer:** TestingRealityChecker (Integration Agent)  \n**Date:** Current Evaluation Cycle  \n**Default Verdict:** ⚠️ **NEEDS WORK**\n\n---\n\n## 🛑 Executive Reality Check\n\nThe development team has declared the MVP \"ready to launch.\" Based on standard integration patterns, first-pass implementations require rigorous cross-examination before production exposure. In accordance with the non-negotiable rules of this evaluation, all claims of production readiness are treated as unverified until backed by comprehensive, reproducible evidence. \n\nBecause no live execution environment or file system access is available in this specific exercise, **no synthetic metrics, fake lo"
+     },
+     {
+      "task": "List the ways a demo can hide production problems and how to check each",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "The risk ordering is asserted but not explicitly justified with quantitative impact.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Production Reality Check: How Demos Hide Failures\n\nDemos are designed to sell or showcase success under ideal, controlled conditions. They systematically strip away reality. Below are five major ways feature demos hide production problems, prioritized by risk, along with how to rigorously verify each.\n\n---\n\n## 1. Hardcoded Mock Data vs. Live API Integration (Highest Risk)\n* **How the Demo Hides It:** The UI looks fully populated, polished, and responsive because components are fed static JSON arrays or hardcoded variables directly in the frontend template. \n* **The Production Reality:** When connected to real databases with asynchronous loading, pagination, empty states, or malformed third"
+     },
+     {
+      "task": "Specify what proof you accept and what you reject",
+      "fitness": 0.92,
+      "failure": "missing_actual_evidence",
+      "critique": "No actual reproducible artifacts are provided, only a description of what would be accepted.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Evidence-Based Verification Standard: \"All Tests Pass\" Claims\n\nAs the Reality Checker, any assertion that \"all tests pass\" is treated as an unverified assumption until backed by rigorous, verifiable evidence. Verbal assurances, high-level summaries, and uncorrupted self-assessments are automatically rejected.\n\n## Accepted Proof\nTo certify a passing test state, I require concrete, reproducible artifacts:\n* **Raw Execution Logs:** Unedited terminal output from the test runner (e.g., Jest, Pytest, PHPUnit) displaying exact test counts, execution duration, and an explicit exit code `0`.\n* **Machine-Readable Reports:** Generated test result files (such as JUnit XML or JSON test summaries) conta"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: reality-checker v1\n\nTasks scored: 2. Mean fitness: 0.9387.\n\n## Worst tasks\n### 20261110-101339-independent-production-readiness-review #1 (fitness 0.9337)\n- Task: Review index.html for public-demo readiness and certify READY or NEEDS WORK with evidence\n- Acceptance: At least 8 distinct reproducible checks run by you (money correctness with awkward amounts such as 0.01 split 3 ways, 1000000.00 and invalid input; keyboard and label accessibility basics; behaviour when localStorage is unavailable; offline and zero external requests; mobile width 375 px layout; data loss on reload; selftest mode), each with the command or script and its saved output; QA-REPORT.md at the top of the output folder with the verdict on line 1 (READY or NEEDS WORK), every finding with repro steps and severity, and an explicit list of what was not tested\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The review is exceptionally thorough: money logic stress-tested against independent BigInt oracle, real browser storage denial reproduced, mutant selftest proves detection power, and every claim is backed by saved artifacts.\n- Output excerpt:\n```\n--- QA-REPORT.md (9210 bytes) ---\nNEEDS WORK\nAC1 at least 8 distinct reproducible checks, each with command and saved output: verified - 10 check groups (static, money engine, money via UI, invalid input, keyboard, labels/a11y tree, contrast, 375px layout, localStorage unavailable x4 incl. a real browser setting, offline + request audit, reload/data loss, selftest + mutati\n\n[... 8685 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n check-03-ui-functional.js; node check-04-a11y-layout.js; node check-05-storage-offline.js; powershell -File check-01-static.ps1. Pass target: 03d-4, 03e-2, 04c-2, 04d-1 flip to PASS.\n\n--- evidence/03-ui-functional.txt (6432 bytes) ---\n[PASS] 03a-1 UI: 0.01 paid by Dee split Ana/Ben/Cy :: {\"bal\":[\"-1\",\"0\",\"0\",\"1\"],\"tr\":[\"Ana pays Dee 0.01\"],\"exp\":[\"Dee paid 0.01 for Ana, Ben, Cy x\"]}\n[PASS] 03a-2 UI: 1000000.00 paid by Ana split 4 ways :: {\"balTxt\":[\"Ana: +750000.00\",\"Ben: -250000.00\",\"Cy: -250000.00\",\"Dee: -250000.00\"],\"tr\":[\"Ben pays Ana 250000.00\",\"Cy pays Ana 250000.00\",\"Dee pays Ana 250000.00\"],\"exp\":[\"Ana paid 1000000.00 for Ana, Ben, Cy, Dee x\"]}\n[PAS\n\n[... 5763 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n\"pass\n```\n\n### 20261108-095120-reality-check-whether-the #1 (fitness 0.9437)\n- Task: Give a production-readiness verdict (READY or NEEDS WORK) on Test-BackupSet.ps1 for checking real backups, by testing its README claims and realistic stress cases yourself\n- Acceptance: At least 6 specific claims from the README are each tested with a command whose output is saved as a non-empty file under evidence/, with the claim quoted and a CONFIRMED or REFUTED result for each; At least 3 realistic stress or misuse cases not mentioned in the README are run (for example 2000 small files, a backup folder placed inside the source, a zip with two wrapper folders) with the exit code and timing recorded; The verdict is stated in the first 5 lines of REALITY-CHECK.md as READY or NEEDS WORK, followed by the list of blocking gaps, the list of untested scope, and the exact change needed to move from NEEDS WORK to READY; no screenshots are used, text evidence only; Input files are shown unchanged by SHA-256 before and after, and all your own fixtures stay under your output folder\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The reality-checker correctly identified four blocking gaps in Test-BackupSet.ps1 (junction skip with exit 0, duplicate zip entry ambiguity, ReportPath junction bypass, missing source==backup/zero-file guards) and documented them with reproducible evidence.\n- Output excerpt:\n```\n--- REALITY-CHECK.md (14054 bytes) ---\nVERDICT: NEEDS WORK. Test-BackupSet.ps1 is not ready to be trusted for checking real backups on this PC.\nBlocking gaps: G1 junction content skipped but exit 0 \"IDENTICAL\"; G2 duplicate zip entry hides a corrupt copy (exit 0); G3 -ReportPath through a junction writes into (and can overwrite a file in) the source; G4 no guard for source == b\n\n[... 13529 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n.txt`, `12-input-integrity-after.txt`, `13-hash-crosscheck.txt`.\n- Harness and scripts: `work\\harness.ps1`, `work\\run01.ps1` to `work\\run08.ps1`, `work\\Test-BackupSet.ps1` (the copy).\n\n--- evidence/10-claims-ledger.txt (7073 bytes) ---\nCLAIMS LEDGER - README claims quoted verbatim from README.md (original, read-only), each with the command evidence and a result\nResult words: CONFIRMED = my own test agreed; REFUTED = my own test contradicted it. Case IDs point into the numbered evidence files.\n\nC01  CLAIM : \"Content is compared by SHA-256, never by size or date.\"\n      TEST  : 01-readme-claims-matching.txt  M04a (same size, same mtime, different bytes -> C\n\n[... 6339 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n n\n```\n"
  }
 ]
