@@ -1,27 +1,27 @@
 {
- "generated_at": "2026-11-15T13:17:56Z",
+ "generated_at": "2026-11-15T19:26:09Z",
  "evolvra_version": "0.1.0",
  "agents": 10,
  "versions": 13,
  "missions": 28,
  "tasks": 54,
- "evolutions": 16,
+ "evolutions": 17,
  "promotions": 3,
  "providers": [
   {
    "provider": "gemini",
-   "requests": 477,
-   "tokens": 1630591
+   "requests": 500,
+   "tokens": 1703973
   },
   {
    "provider": "groq",
-   "requests": 473,
-   "tokens": 1355510
+   "requests": 488,
+   "tokens": 1385471
   },
   {
    "provider": "openrouter",
-   "requests": 172,
-   "tokens": 791381
+   "requests": 184,
+   "tokens": 822535
   }
  ]
 }

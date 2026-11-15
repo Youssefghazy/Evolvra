@@ -2764,5 +2764,202 @@
    }
   ],
   "diagnosis": "# Diagnosis: evidence-collector v2\n\nTasks scored: 26. Mean fitness: 0.9184.\n\n## Failure classes (ensemble majority, most frequent first)\n- `missing_evidence` x2\n- `missing_table` x1\n- `missing_required_evidence` x1\n- `missing_required_table` x1\n\n## Worst tasks\n### 20261103-104040-build-a-single-file #2 (fitness 0.715)\n- Task: Independently verify pricing-mock.html against task 1 acceptance criteria\n- Acceptance: Per-criterion PASS/FAIL table with quoted code or measured values as evidence; Runs its own checks (size, external-URL scan, card/bullet count, headless-browser width measurement at 375px and 1280px) and saves raw output\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_table`\n- Critique: The required PASS/FAIL table is missing, so the acceptance criteria are not fully satisfied.\n- Unmet criteria:\n  - Per-criterion PASS/FAIL table with quoted code or measured values as evidence: No table is provided; only raw JSON output [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n- Output excerpt:\n```\n--- cdp_layout_probe.py (8108 bytes) ---\n\"\"\"Criterion C (and runtime half of A) via headless Edge + Chrome DevTools Protocol.\n\nUses Emulation.setDeviceMetricsOverride to get a true 375px / 1280px layout viewport\n(no iframe, no window-size floor). Stdlib-only websocket client (no pip installs).\nAlso records every network request the page makes (Network.requestWillBeSent).\nUsage: p\n\n[... 7583 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n)\n        try: proc.wait(10)\n        except Exception: proc.kill()\n    json.dump(results, open(OUT, 'w', encoding='utf-8'), indent=2)\n    print(json.dumps(results, indent=2))\n\n\nmain()\n\n--- layout-output.txt (5699 bytes) ---\n﻿{\n  \"browser\": \"Edg/156.0.4314.58\",\n  \"protocol\": \"1.3\",\n  \"file_url\": \"file:///C:/Users/Training1/.evolvra/missions/20261103-104040-build-a-single-file/01-rapid-prototyper/pricing-mock.html\",\n  \"method\": \"CDP Emulation.setDeviceMetricsOverride on headless Edge (--headless=new); stdlib websocket\",\n  \"cases\": [\n    {\n      \"innerWidth\": 375,\n      \"innerHeight\": 812,\n      \"visualViewportWidth\": 360,\n      \"clientWidth\": 360,\n    \n\n[... 4811 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n   \"wi\n```\n\n### 20261103-092430-rank-a-12-item #2 (fitness 0.7363)\n- Task: Verify BACKLOG-RANKING.md against task 1 acceptance criteria\n- Acceptance: Per-criterion PASS/FAIL table with quoted evidence; Independently recomputes every item's score and the order, and saves the calculation\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_evidence` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: Missing required PASS/FAIL evidence table and no verifiable execution of the recomputation script.\n- Unmet criteria:\n  - Per-criterion PASS/FAIL table with quoted evidence: The document does not contain a PASS/FAIL table; only narrative statements are present. [unmet per groq/openai/gpt-oss-120b; 3 other judge(s) marked it met]\n  - Independently recomputes every item's score and the order, and saves the calculation: The script is claimed not to have been executed; no evidence of saved calculation files is provided. [unmet per groq/openai/gpt-oss-120b; 3 other judge(s) marked it met]\n- Output excerpt:\n```\n--- independent_recompute.py (10643 bytes) ---\n\"\"\"Independent recomputation of the builder's RICE ranking (EvidenceQA, 2026-11-03).\n\nDoes NOT import or reuse rice_score.py. Reads the builder's files read-only:\n  - BACKLOG-RANKING.md : sections 3 (descriptions), 4 (assumptions), 5 (scores table)\n  - backlog.csv        : inputs\n  - ranking_output.csv : saved output\nComputes scores with i\n\n[... 10118 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nn(results)} checks passed\")\n(OUT / \"independent_checks.txt\").write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")\nprint(\"\\n\".join(lines))\nsys.exit(0 if passed == len(results) else 1)\n\n--- controls_output.txt (4030 bytes) ---\n﻿=== 1. builder script --check on ORIGINAL folder (read-only mode) ===\n #  ID   Title                                 Reach   Imp  Conf  Eff      RICE\n 1  B06  Fix sync-conflict duplicate notes      9000     2  100%  1.5  12000.00\n 2  B02  Faster full-text search               30000     1   80%    2  12000.00\n 3  B08  Dark mode                             20000  0.25  100%  0.5  10000.00\n 4  B09  Guided onboarding checklist \n\n[... 3310 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nor\n\n```\n\n### 20261103-122908-write-a-backup-rotation #2 (fitness 0.8462)\n- Task: Independently verify Rotate-Backups.ps1, Test-Rotate.ps1 and README.md against task 1 acceptance criteria\n- Acceptance: Re-runs Test-Rotate.ps1 under powershell.exe 5.1 and saves the raw output with exit code; Runs at least 2 of its own edge-case checks (e.g. year boundary / ISO week 53, gaps in dates, read-only or locked file, fewer files than the keep counts) in its own temp folder and saves the raw output; Per-criterion PASS/FAIL table with quoted script/doc lines as evidence, saved to a file\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_required_evidence`\n- Critique: Missing required raw output files and the PASS/FAIL summary table, so the submission does not fully satisfy the acceptance criteria.\n- Unmet criteria:\n  - Re-runs Test-Rotate.ps1 under powershell.exe 5.1 and saves the raw output with exit code: Only a summary claim is shown; the raw output file and exit code are not provided. [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n  - Per-criterion PASS/FAIL table with quoted script/doc lines as evidence, saved to a file: No PASS/FAIL table is present in the evidence. [unmet per groq/openai/gpt-oss-120b; 1 other judge(s) marked it met]\n- Output excerpt:\n```\n--- Edge-Tests.ps1 (11235 bytes) ---\n# Independent edge-case checks for Rotate-Backups.ps1 (EvidenceQA, task 2).\n# Creates and deletes files ONLY under $env:TEMP\\eqa-rotate-<guid>. Never modifies the script under test.\nSet-StrictMode -Version 2.0\n$ErrorActionPreference = 'Stop'\n\n$rotate = 'C:\\Users\\Training1\\.evolvra\\missions\\20261103-122908-write-a-backup-rotation\\01-devops-\n\n[... 10710 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n\n    Check (-not (Test-Path -LiteralPath $root)) \"own temp root removed\"\n}\nWrite-Host \"`nRESULT: $script:pass passed, $script:fail failed\"\nif ($script:fail) { exit 1 } else { exit 0 }\n\n--- evidence/03-edge-tests-output.txt (13083 bytes) ---\nHost: C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe  PS 5.1.26100.9711\nTemp root: C:\\Users\\TRAINI~1\\AppData\\Local\\Temp\\eqa-rotate-47011e7e50ab41d4953d42ddc913a95b\n\n=== E1 Get-IsoWeekKey vs independent oracle (14976 days) ===\nPASS: ISO week key matches oracle for all 14976 days 2000..2040 (mismatches: 0)\nPASS: hand-checked: 2020-12-31 -> 2020-W53 (got 2020-W53)\nPASS: hand-checked: 2021-01-03 -> 2020-W53 (got 20\n\n[... 12429 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n\n```\n"
+ },
+ {
+  "id": 17,
+  "agent": "ux-researcher",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.02,
+  "created_at": "2026-11-15T19:26:09.182Z",
+  "parent_fitness": 0.9233,
+  "bank": [
+   {
+    "task": "Draft a 5-question interview guide for recent abandoners",
+    "source": "seed",
+    "parent_fitness": 0.9,
+    "parent_failure": "insufficient_evidence",
+    "parent_critique": "The agent claims verification of openness and coverage without providing verifiable evidence.",
+    "parent_output_excerpt": "# User Interview Guide: Checkout Abandonment Research\n\n## Recruiting Criteria\nTo ensure high-fidelity insights from recent abandoners without relying on biased assumptions, participants must meet the following screening criteria:\n* **Behavioral Trigger**: Added items to a shopping cart and initiated the checkout flow (reached at least the shipping or payment information step) within the last **48 hours**, but did not complete the transaction.\n* **Transaction Status**: Verified non-purchaser (order status: abandoned/incomplete in analytics).\n* **Demographics**: A healthy mix of first-time visitors and returning customers.\n* **Exclusion**: Employees of the company or immediate family members.\n"
+   },
+   {
+    "task": "Design a 20-minute unmoderated usability test for onboarding",
+    "source": "seed",
+    "parent_fitness": 0.95,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Unmoderated Usability Test Plan: Onboarding Flow Evaluation\n\n## Research Objectives\n**Primary Question**: Is the current product onboarding flow confusing to new users, leading to friction, drop-off, or misunderstandings of core value?\n**Business Impact**: Resolve team disagreement regarding onboarding UX by gathering empirical task-performance data from target users.\n**Methodology**: Unmoderated remote usability testing (via platforms like UserTesting, Lookback, or Maze) constrained to a 20-minute session limit.\n\n---\n\n## 👥 Sample Size Justification\nTo uncover critical usability issues efficiently in an unmoderated setting, we apply the Nielsen Norman Group guideline of **5 users per disti"
+   },
+   {
+    "task": "Propose a method to synthesize the tickets into themes",
+    "source": "seed",
+    "parent_fitness": 0.92,
+    "parent_failure": "insufficient_detail",
+    "parent_critique": "The plan mentions a codebook but does not show an example, limiting actionable detail",
+    "parent_output_excerpt": "# Support Ticket Synthesis Protocol: Search Feedback\n\n## 1. Coding Approach: Inductive Thematic Analysis\nTo synthesize 40 support tickets regarding search without introducing premature assumptions, we will use an inductive (bottom-up) qualitative coding approach. \n\n### Step-by-Step Process:\n1. **Data Preparation & Familiarization**: \n   - Export all 40 text-based support tickets (including subject lines, user messages, and agent notes) into a neutral spreadsheet.\n   - Read through a random subset of 10 tickets to build baseline familiarity with user language and phrasing without applying labels yet.\n2. **Open Coding**:\n   - Go through each of the 40 tickets line-by-line. \n   - Apply descript"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261115-191757-ux-researcher\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "ca1066953116f38e8fd776a7b5d938a7b437bb2b69b5ad0224db6595a91e7991",
+    "fitness": 0.9433,
+    "paired_delta": 0.02,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.94,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# User Research Interview Guide: Checkout Abandonment\n\n## Evidence Summary\n- **Data Sources**: E-commerce analytics triggers (cart abandonment event logs) paired with exit-intent intercept surveys.\n- **Sample Size**: Target 5–8 qualitative semi-structured interviews (sufficient for reaching thematic saturation in usability/behavioral pain points).\n- **Collection Period**: Planned 1-week recruitment window targeting users who abandoned within the last 48 hours.\n- **Confidence Level**: Qualitative research (generative/diagnostic); validated through triangulation with quantitative funnel drop-off metrics.\n\n---\n\n## Recruiting Criteria\nTo ensure we speak with the right participants, recruitment s"
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.94,
+      "failure": "none",
+      "critique": "The justification relies on generic standards without concrete data specific to the product.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Unmoderated Usability Test Plan: Onboarding Evaluation\n\n## Evidence Summary\n- **Data Sources**: Stakeholder feedback, product analytics drop-off funnel (historical product data), support ticket categorizations regarding login/setup.\n- **Sample Size**: $N = 15$ participants (5 per core user segment), justified by Nielsen Norman Group standards for uncovering ~85% of usability issues in qualitative testing.\n- **Collection Period**: Proposed 3-day remote testing window.\n- **Confidence Level**: Qualitative benchmark with directional statistical confidence ($\\pm$ standard unmoderated error thresholds).\n\n---\n\n## 1. Test Overview\n- **Objective**: Determine whether the current onboarding flow caus"
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.95,
+      "failure": "none",
+      "critique": "The plan could elaborate more on how deductive codes will be defined.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.95
+      },
+      "output_excerpt": "# Support Ticket Synthesis Protocol: Search Feedback\n\n## Evidence Summary\n- **Data Sources**: Customer support ticketing system exports (text fields: subject, description, resolution notes).\n- **Sample Size**: 40 support tickets related to search (to be pulled via keyword/tag filter: \"search\", \"find\", \"no results\").\n- **Collection Period**: To be defined by the analysis window (e.g., last 90 days).\n- **Confidence Level**: N/A (qualitative synthesis protocol; confidence will be evaluated post-coding via inter-rater agreement).\n\n---\n\n## 1. Coding Approach\n\nTo synthesize the 40 support tickets into meaningful themes, we will use a hybrid inductive-deductive **Thematic Analysis (Inductive Coding"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "gemini/gemini-3.5-flash-lite",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261115-191757-ux-researcher\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "d7696761d3038fcedb7e41aec2c41481df8484e136512ba12cf5784d460616a9",
+    "fitness": 0.9417,
+    "paired_delta": 0.0183,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.96,
+      "failure": "insufficient_evidence",
+      "critique": "The evidence statements are unverified and fabricated.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# User Research Interview Guide: Checkout Abandonment\n\n## 🎯 Recruiting Criteria\nTo ensure high-quality, relevant insights into checkout abandonment, participants must meet the following screener criteria:\n* **Behavioral Event**: Abandoned an online shopping cart (added item(s) to cart, progressed to the checkout screen, but left without completing the purchase) within the last **48 to 72 hours**.\n* **Intent**: Had a genuine intent to purchase (not merely browsing or using the cart as a wishlist).\n* **Demographics / Representation**: Mix of first-time visitors and returning customers, spanning mobile and desktop devices.\n* **Exclusions**: Employees of the company or immediate family members; "
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.92,
+      "failure": "unverified_claim",
+      "critique": "Sample size justification relies on an unverified formula assumption rather than concrete evidence.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# 20-Minute Unmoderated Usability Test Plan: Onboarding Flow\n\n## 1. Research Objectives & Overview\n**Objective**: Resolve team disagreements regarding onboarding confusion by measuring user navigation, comprehension, and friction points within the current flow.\n**Test Type**: Unmoderated remote usability test (via platforms like UserTesting, Maze, or Lookback).\n**Duration**: 15–20 minutes per participant.\n\n## 2. Sample Size Justification\n**Target Sample Size**: $N = 15$ participants (representative target users).\n**Justification**: For unmoderated usability testing focusing on qualitative insights and task-flow bottlenecks, a sample size of 15 users per distinct user segment typically uncove"
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.945,
+      "failure": "none",
+      "critique": "The plan lacks concrete justification for tool choice and sample size beyond stating 40 tickets is manageable.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.925,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Support Ticket Synthesis Method: Search Feedback Analysis\n\n## 1. Coding Approach\n\nTo synthesize 40 support tickets related to search, we will use an inductive **Thematic Analysis** (open and axial coding) approach. Because 40 is a manageable dataset for qualitative analysis, this will be done manually or via a collaborative text-tagging tool (e.g., Dovetail, Miro, or a structured spreadsheet).\n\n### Step-by-Step Coding Process:\n1. **Data Cleaning & Preparation:** Export all 40 tickets into a single spreadsheet. Strip out personally identifiable information (PII) and standardize text formatting.\n2. **Open Coding (First-Pass):** Read through each ticket line-by-line. Assign descriptive codes "
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "gemini/gemini-3.5-flash-lite",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261115-191757-ux-researcher\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "87e300196bbcfc88df7b56bee6e55cc88208baa29d348f810a6f9f81d7de4c2b",
+    "fitness": 0.9167,
+    "paired_delta": -0.0067,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Draft a 5-question interview guide for recent abandoners",
+      "fitness": 0.94,
+      "failure": "leading_question",
+      "critique": "Question 4 subtly nudges participants toward discussing price, which could be slightly leading.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Cart Abandonment User Interview Guide\n\n## 🎯 Recruiting Criteria\nTo ensure high-quality, relevant insights into the 70% checkout abandonment rate, participants must meet the following screening criteria:\n*   **Behavioral**: Added items to a cart and initiated the checkout process on our platform within the last **48 hours**, but did not complete the transaction.\n*   **Intent**: Had a genuine intent to purchase (spent at least 3 minutes browsing and reached the shipping, billing, or payment step).\n*   **Diversity**: A balanced mix of new visitors and returning customers across mobile and desktop devices.\n*   **Exclusion**: Exclude professional testers, employees, or individuals who abandoned"
+     },
+     {
+      "task": "Design a 20-minute unmoderated usability test for onboarding",
+      "fitness": 0.89,
+      "failure": "none",
+      "critique": "None",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.75
+      },
+      "output_excerpt": "# Unmoderated Usability Test Plan: Onboarding Evaluation\n\n## 🎯 Research Overview\n**Objective**: Resolve internal team disagreement regarding onboarding friction by measuring how successfully new users complete the initial setup flow without assistance.\n**Test Type**: Unmoderated usability test (remote via testing platform e.g., UserTesting or Lookback).\n**Duration**: 20 minutes per participant.\n\n---\n\n## 👥 Participant Criteria & Sample Size Justification (Acceptance Criterion 3)\n\n### Target Audience\n- **Demographics**: New or prospective users matching our primary buyer persona (e.g., small business owners, project managers).\n- **Screening Criteria**: Must have zero prior experience with our "
+     },
+     {
+      "task": "Propose a method to synthesize the tickets into themes",
+      "fitness": 0.92,
+      "failure": "unverified_claims",
+      "critique": "Verification conditions are asserted but no actual evidence is provided",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Support Ticket Synthesis Plan: Search Feature\n\n## 1. Coding Approach\nTo synthesize the qualitative data from the support tickets, we will employ a hybrid thematic analysis approach combining inductive (data-driven) and deductive (framework-driven) coding. \n\n**Process Steps:**\n1. **Data Preparation & Cleaning:** Export all ticket text (subject lines, body descriptions, agent notes) into a uniform text format, anonymizing any Personally Identifiable Information (PII).\n2. **First-Cycle (Open) Coding:** Review a subset of the text line-by-line to assign descriptive codes to user behaviors, frustrations, and explicit feature requests (e.g., `zero-results-page`, `slow-loading`, `missing-filters`"
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: ux-researcher v1\n\nTasks scored: 2. Mean fitness: 0.955.\n\n## Worst tasks\n### 20261103-104658-write-a-user-interview #1 (fitness 0.9525)\n- Task: Write INTERVIEW-GUIDE.md: a 45-minute interview guide with recruiting screener on why students abandon study-planner apps\n- Acceptance: Exactly 5 main interview questions, all open-ended (none can be answered yes/no; none starts with Do, Does, Did, Is, Are, Was, Were, Would, Will, Can, Could, Have or Has), each with 1-2 follow-up probes; Recruiting screener with at least one measurable inclusion criterion (e.g. a count of uses and a time window), at least 2 exclusion criteria, and a target sample size with a one-line justification; Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: All acceptance criteria are satisfied; the guide is thorough and well‑structured.\n- Output excerpt:\n```\n--- INTERVIEW-GUIDE.md (14768 bytes) ---\n# Interview Guide: Why University Students Abandon Study-Planner Apps\n\n**Status:** Research plan only. No interviews have been run and no participant data exists yet. This document contains no findings, quotes or statistics about students.\n**Session length:** 45 minutes (42 minutes scheduled, 3 minutes of slack)\n**Format:** One-to-one, semi-structured, remote video call or in person, audio-recorded with consent\n**Prepared:** 2026-11-03\n\n---\n\n## 1. Research objectives\n\n**Primary research question:** What happens in the first two weeks of using a study-planner app that leads university students to stop using it?\n\n**Supporting questions**\n\n- What need or trigger made the student start using the app, and what did they expect from it?\n- What did their actual day-to-day use look like in the first days?\n- What events, frictions or changes in context came just before use dropped off?\n- What, if anything, replaced the app afterwards?\n- What ha\n\n[... 13309 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\ns plan (for after fieldwork)\n\n- Transcribe and pseudonymise all sessions.\n- Code transcripts inductively (thematic analysis); two researchers code the first 3 transcripts independently and agree a shared codebook before coding the rest.\n- Build a timeline per participant (trigger, f\n```\n\n### 20261110-083646-create-a-usability-test #1 (fitness 0.9575)\n- Task: Write the usability-test kit (moderator script, SEQ + SUS questionnaire, findings template) and score_sus.py\n- Acceptance: Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording; Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation; score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.\n- Output excerpt:\n```\n--- 03_findings_template.md (4511 bytes) ---\n# Findings Template: Search-and-Tag Usability Test\n\nStudy: `{APP}` search-and-tag flow   Participants: 5   Test dates: ______   Analysts: ______ and ______\n\n## 1. Severity scale (use this scale for every finding)\n\nSeverity is about the effect on the user's task, not about how hard the fix is. Two people rate each finding\nindependently, the\n\n[... 3986 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nlly representative.\n- Anything not tested (for example, screen reader use, very large note collections, other platforms): ______\n- Test environment differences from production: ______\n\n--- evidence/edge_cases.txt (2482 bytes) ---\n﻿\n> python score_sus.py evidence\\sample_sus_with_errors.csv\nParticipant       SUS  Notes\n-----------------------------------------------------\nP1               85.0  \nP2                n/a  INVALID (line 3): q10 = 6 is outside 1-5\nP3               50.0  FLAG: identical answers to all 10 items (possible straight-lining)\n-----------------------------------------------------\nValid participants: 2   Invalid rows (excluded): 1\nM\n\n[... 1757 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\npla\n```\n"
  }
 ]
