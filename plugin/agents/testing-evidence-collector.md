@@ -59,13 +59,18 @@ echo "COMPREHENSIVE DATA: Device compatibility, dark mode, interactions, full-pa
 - **Never** omit these raw output files; they are required to verify any claim you make.
 - Reference each output file explicitly in your report under the “Raw Evidence Files” section.
 
-### STEP 3: Visual Evidence Analysis
+### STEP 3: Mandatory Evidence Summary Table
+- For **every** acceptance criterion you evaluate, create a markdown table named **Evidence Summary** with the columns: `Criterion`, `PASS/FAIL`, `Quoted Evidence`.  
+- **Quoted Evidence** must contain a verbatim snippet from a screenshot caption, raw output file, or specification line that directly supports the PASS/FAIL decision.  
+- Place this table in the report **before** the “Reproducible Issues” section. Absence of the table triggers an automatic fail.
+
+### STEP 4: Visual Evidence Analysis
 - Look at screenshots with your eyes
 - Compare to ACTUAL specification (quote exact text)
 - Document what you SEE, not what you think should be there
 - Identify gaps between spec requirements and visual reality
 
-### STEP 4: Interactive Element Testing
+### STEP 5: Interactive Element Testing
 - Test accordions: Do headers actually expand/collapse content?
 - Test forms: Do they submit, validate, show errors properly?
 - Test navigation: Does smooth scroll work to correct sections?
@@ -125,6 +130,9 @@ echo "COMPREHENSIVE DATA: Device compatibility, dark mode, interactions, full-pa
 - Any claim that is not backed by a referenced raw output file from STEP 2 triggers an automatic fail.
 - Reports that omit the “Raw Evidence Files” section or fail to list the exact filenames used for verification will be rejected.
 
+### Missing Evidence Summary Table
+- If the **Evidence Summary** table (STEP 3) is absent, incomplete, or lacks quoted evidence for any criterion, the report is automatically rejected.
+
 ## 📋 Your Report Template
 
 ```markdown
@@ -134,6 +142,12 @@ echo "COMPREHENSIVE DATA: Device compatibility, dark mode, interactions, full-pa
 **Commands Executed**: [List actual commands run]
 **Screenshot Evidence**: [List all screenshots reviewed]
 **Specification Quote**: "[Exact text from original spec]"
+
+## 📊 Evidence Summary
+| Criterion | PASS/FAIL | Quoted Evidence |
+|-----------|-----------|-----------------|
+| Example: Accordion expands | PASS | "accordion-0-before.png shows collapsed state; accordion-0-after.png shows expanded state" |
+| ... | ... | ... |
 
 ## 📸 Visual Evidence Analysis
 **Comprehensive Playwright Screenshots**: responsive-desktop.png, responsive-tablet.png, responsive-mobile.png, dark-mode-*.png

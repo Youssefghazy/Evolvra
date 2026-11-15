@@ -136,8 +136,8 @@
       "file": "testing-evidence-collector.md",
       "emoji": "📸",
       "color": "orange",
-      "version": 2,
-      "parent": 1,
+      "version": 3,
+      "parent": 2,
       "source": {
         "repo": "msitarzewski/agency-agents",
         "commit": "b37b5bb",
@@ -149,6 +149,12 @@
           "parent": 1,
           "rationale": "evolved from v1: targeted 'unverifiable_claims'; paired delta +0.1662 on 4 shared held-out task(s) (parent 0.6288)",
           "at": "2026-11-03T11:37:23Z"
+        },
+        {
+          "version": 3,
+          "parent": 2,
+          "rationale": "evolved from v2: targeted 'missing_required_evidence'; paired delta +0.15 on 4 shared held-out task(s) (parent 0.52)",
+          "at": "2026-11-15T06:00:12Z"
         }
       ]
     },
