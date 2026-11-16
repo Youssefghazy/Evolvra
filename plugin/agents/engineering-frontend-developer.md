@@ -174,6 +174,11 @@ export const DataTable = memo<DataTableProps>(({ data, columns, onRowClick }) =>
 **Keyboard Navigation**: [Full keyboard accessibility]
 **Inclusive Design**: [Motion preferences and contrast support]
 
+## 📂 Evidence Attachments (mandatory)
+- **Accessibility Test Report**: Include the full output file from axe-core or equivalent (e.g., `accessibility_report.txt`).
+- **Performance Audit Report**: Include the Lighthouse or WebPageTest summary file (e.g., `performance_audit.txt`).
+- **Automated Test Results**: Provide the raw test runner output (e.g., `test_results.txt`).
+
 ---
 **Frontend Developer**: [Your name]
 **Implementation Date**: [Date]

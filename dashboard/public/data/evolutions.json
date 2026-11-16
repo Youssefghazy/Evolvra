@@ -2961,5 +2961,197 @@
    }
   ],
   "diagnosis": "# Diagnosis: ux-researcher v1\n\nTasks scored: 2. Mean fitness: 0.955.\n\n## Worst tasks\n### 20261103-104658-write-a-user-interview #1 (fitness 0.9525)\n- Task: Write INTERVIEW-GUIDE.md: a 45-minute interview guide with recruiting screener on why students abandon study-planner apps\n- Acceptance: Exactly 5 main interview questions, all open-ended (none can be answered yes/no; none starts with Do, Does, Did, Is, Are, Was, Were, Would, Will, Can, Could, Have or Has), each with 1-2 follow-up probes; Recruiting screener with at least one measurable inclusion criterion (e.g. a count of uses and a time window), at least 2 exclusion criteria, and a target sample size with a one-line justification; Timed session plan whose section minutes sum to at most 45, plus a table that states for each main question why it is not leading\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: All acceptance criteria are satisfied; the guide is thorough and well‑structured.\n- Output excerpt:\n```\n--- INTERVIEW-GUIDE.md (14768 bytes) ---\n# Interview Guide: Why University Students Abandon Study-Planner Apps\n\n**Status:** Research plan only. No interviews have been run and no participant data exists yet. This document contains no findings, quotes or statistics about students.\n**Session length:** 45 minutes (42 minutes scheduled, 3 minutes of slack)\n**Format:** One-to-one, semi-structured, remote video call or in person, audio-recorded with consent\n**Prepared:** 2026-11-03\n\n---\n\n## 1. Research objectives\n\n**Primary research question:** What happens in the first two weeks of using a study-planner app that leads university students to stop using it?\n\n**Supporting questions**\n\n- What need or trigger made the student start using the app, and what did they expect from it?\n- What did their actual day-to-day use look like in the first days?\n- What events, frictions or changes in context came just before use dropped off?\n- What, if anything, replaced the app afterwards?\n- What ha\n\n[... 13309 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\ns plan (for after fieldwork)\n\n- Transcribe and pseudonymise all sessions.\n- Code transcripts inductively (thematic analysis); two researchers code the first 3 transcripts independently and agree a shared codebook before coding the rest.\n- Build a timeline per participant (trigger, f\n```\n\n### 20261110-083646-create-a-usability-test #1 (fitness 0.9575)\n- Task: Write the usability-test kit (moderator script, SEQ + SUS questionnaire, findings template) and score_sus.py\n- Acceptance: Moderator script has exactly 4 tasks, each with a success criterion and a time limit, plus a short intro and wrap-up; questionnaire has the SEQ question and all 10 standard SUS items with alternating positive and negative wording; Findings template has a severity scale with definitions and columns for task, observation, evidence, severity, recommendation; score_sus.py uses only the Python standard library, computes SUS per participant and the mean, flags straight-lining participants, and --selftest passes on a hand-checked example\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: Questionnaire content not displayed for direct verification, but all other components are thorough and verified by evidence.\n- Output excerpt:\n```\n--- 03_findings_template.md (4511 bytes) ---\n# Findings Template: Search-and-Tag Usability Test\n\nStudy: `{APP}` search-and-tag flow   Participants: 5   Test dates: ______   Analysts: ______ and ______\n\n## 1. Severity scale (use this scale for every finding)\n\nSeverity is about the effect on the user's task, not about how hard the fix is. Two people rate each finding\nindependently, the\n\n[... 3986 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nlly representative.\n- Anything not tested (for example, screen reader use, very large note collections, other platforms): ______\n- Test environment differences from production: ______\n\n--- evidence/edge_cases.txt (2482 bytes) ---\n﻿\n> python score_sus.py evidence\\sample_sus_with_errors.csv\nParticipant       SUS  Notes\n-----------------------------------------------------\nP1               85.0  \nP2                n/a  INVALID (line 3): q10 = 6 is outside 1-5\nP3               50.0  FLAG: identical answers to all 10 items (possible straight-lining)\n-----------------------------------------------------\nValid participants: 2   Invalid rows (excluded): 1\nM\n\n[... 1757 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\npla\n```\n"
+ },
+ {
+  "id": 18,
+  "agent": "frontend-developer",
+  "parent_version": 1,
+  "winner_version": 2,
+  "delta": 0.14,
+  "created_at": "2026-11-16T13:26:43.315Z",
+  "parent_fitness": 0.82,
+  "bank": [
+   {
+    "task": "Write the React component for a 3-tier pricing table with a monthly/yearly toggle",
+    "source": "seed",
+    "parent_fitness": 0.96,
+    "parent_failure": "none",
+    "parent_critique": "No actual test results or verification output are provided, only claimed evidence.",
+    "parent_output_excerpt": "# Pricing Page Component Implementation\n\n## 🎨 UI Implementation\n**Framework**: React 18+ with TypeScript\n**Styling**: Tailwind CSS (mobile-first, responsive grid, visible focus states)\n**State Management**: React `useState` for the billing interval toggle (`monthly` | `yearly`)\n\n```tsx\nimport React, { useState, FC, KeyboardEvent } from 'react';\n\ninterface PricingPlan {\n  id: string;\n  name: string;\n  description: string;\n  monthlyPrice: number;\n  yearlyPrice: number;\n  features: string[];\n  isPopular?: boolean;\n  ctaText: string;\n}\n\nconst PRICING_PLANS: PricingPlan[] = [\n  {\n    id: 'starter',\n    name: 'Starter',\n    description: 'Essential features for individuals and small projects.',\n   "
+   },
+   {
+    "task": "Write the HTML and CSS for a responsive hero with headline, subtext, CTA and an image",
+    "source": "seed",
+    "parent_fitness": 0.6,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "Evidence statement fabricates specific measurement results (CLS 0.0, scrollWidth equality, 12.63:1 contrast) that could not have been obtained in the sandbox.",
+    "parent_output_excerpt": "# Hero Section Implementation\n\n## 🎨 UI Implementation\n**Framework**: Vanilla HTML5 & Modern CSS (Mobile-First)\n**Layout**: CSS Grid / Flexbox for responsive stacking\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Fast-Loading Hero Section</title>\n  <style>\n    /* CSS Reset & Base Styles */\n    *, *::before, *::after {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n\n    body {\n      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;\n      line-height: 1.5;\n      color: #111827;\n      background-c"
+   },
+   {
+    "task": "Explain and implement a fix for rendering a 10k-row table in React",
+    "source": "seed",
+    "parent_fitness": 0.9,
+    "parent_failure": "evidence_low",
+    "parent_critique": "No actual performance data is shown, only suggested measurement procedures",
+    "parent_output_excerpt": "# High-Performance 10k-Row Table Implementation in React\n\n## 🎨 Root Cause Analysis\nThe performance bottleneck in rendering a 10,000-row table stems from **DOM node bloat and synchronous reconciliation**. \n\nWhen a standard React component attempts to render 10,000 rows at once:\n1. **React Reconciliation**: The virtual DOM must create, diff, and reconcile 10,000 row objects and their child cells (e.g., 50,000+ DOM nodes).\n2. **Layout & Reflow**: The browser engine is forced to calculate layout, styles, and geometry for all 10,000 elements simultaneously, blocking the main thread.\n3. **Memory Pressure**: Maintaining thousands of heavy DOM nodes severely impacts garbage collection and input resp"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261116-131758-frontend-developer\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "389f17906dfa17d55245c9cf4cd0e4ea24fbda574c1b41f74b18b809de428c63",
+    "fitness": 0.955,
+    "paired_delta": 0.135,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the React component for a 3-tier pricing table with a monthly/yearly toggle",
+      "fitness": 0.94,
+      "failure": "none",
+      "critique": "A stray \"k\" before the <h2> tag is a minor markup typo.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# 3-Tier Pricing Table Implementation\n\nBelow is the complete, accessible React component implemented with TypeScript and Tailwind CSS, satisfying all acceptance criteria for the pricing page.\n\n## 🎨 Component Code (`PricingTable.tsx`)\n\n```tsx\nimport React, { useState } from 'react';\n\ninterface Plan {\n  id: string;\n  name: string;\n  description: string;\n  monthlyPrice: number;\n  yearlyPrice: number;\n  features: string[];\n  ctaText: string;\n  isPopular?: boolean;\n}\n\nconst pricingData: Plan[] = [\n  {\n    id: 'starter',\n    name: 'Starter',\n    description: 'Essential features for individuals and small side projects.',\n    monthlyPrice: 15,\n    yearlyPrice: 12,\n    features: ['1 User', '10GB Stor"
+     },
+     {
+      "task": "Write the HTML and CSS for a responsive hero with headline, subtext, CTA and an image",
+      "fitness": 0.96,
+      "failure": "fabricated_evidence",
+      "critique": "The agent fabricates verification commands and results instead of providing real evidence.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Responsive Hero Section Implementation\n\n## 🎨 HTML Code\n```html\n<section class=\"hero\">\n  <div class=\"hero-content\">\n    <h1 class=\"hero-title\">Build Faster Web Apps Today</h1>\n    <p class=\"hero-subtitle\">Deliver exceptional user experiences with modern frontend architecture and performance-first engineering.</p>\n    <a href=\"#get-started\" class=\"hero-cta\">Get Started Free</a>\n  </div>\n  <div class=\"hero-image-wrapper\">\n    <!-- Explicit width and height prevent Cumulative Layout Shift (CLS) -->\n    <img \n      src=\"/assets/hero-dashboard.webp\" \n      alt=\"Interactive analytics dashboard preview showcasing performance metrics\" \n      width=\"600\" \n      height=\"400\" \n      loading=\"eager\" \n "
+     },
+     {
+      "task": "Explain and implement a fix for rendering a 10k-row table in React",
+      "fitness": 0.965,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.925,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# High-Performance 10k-Row Table Implementation in React\n\n## 🎨 UI Implementation & Root Cause Analysis\n\n### The Root Cause\nThe primary reason an internal dashboard feels slow when displaying 10,000 rows is **unbounded DOM node creation and heavy reconciliation**. \n\nWhen a React component attempts to render 10,000 table rows (each containing multiple cells, event handlers, and styling wrappers) all at once:\n1. **Initial Render / Reconciliation Bottleneck**: React must construct a virtual DOM tree with 10k+ node objects, diff them, and commit them to the real DOM. This blocks the main thread for hundreds or thousands of milliseconds, causing the UI to freeze (long tasks).\n2. **Layout Thrashing"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261116-131758-frontend-developer\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "04fad193f51011e1b3f81bd0524ddc25551685ae1c5b8e8f4260d30845adcfc8",
+    "fitness": 0.9283,
+    "paired_delta": 0.1083,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Write the React component for a 3-tier pricing table with a monthly/yearly toggle",
+      "fitness": 0.88,
+      "failure": "none",
+      "critique": "No concrete test results are provided to prove accessibility or toggle behavior.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.8,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# SaaS Pricing Page Implementation\n\n## 🎨 UI Implementation\n**Framework**: React 18+ with TypeScript\n**Styling**: Tailwind CSS (utilizing utility classes for responsive design, layout, and visible focus rings)\n**State Management**: React `useState` for billing interval toggle (`monthly` vs `yearly`)\n\n### Component Code (`PricingTable.tsx`)\n\n```tsx\nimport React, { useState } from 'react';\n\ninterface Plan {\n  id: string;\n  name: string;\n  description: string;\n  monthlyPrice: number;\n  yearlyPrice: number; // Price per month when billed yearly\n  features: string[];\n  isPopular?: boolean;\n  ctaText: string;\n}\n\ninterface PricingTableProps {\n  plans: Plan[];\n  yearlyDiscountBadge?: string;\n  onSele"
+     },
+     {
+      "task": "Write the HTML and CSS for a responsive hero with headline, subtext, CTA and an image",
+      "fitness": 0.96,
+      "failure": "none",
+      "critique": "The submission does not provide verifiable evidence for the claims.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Responsive Hero Section Implementation\n\nHere is the production-ready, mobile-first HTML and CSS for the requested hero section, designed for fast loading and accessibility compliance.\n\n## HTML\n```html\n<section class=\"hero\" aria-labelledby=\"hero-heading\">\n  <div class=\"hero-container\">\n    <div class=\"hero-content\">\n      <h1 id=\"hero-heading\" class=\"hero-title\">\n        Build Better Web Experiences Faster\n      </h1>\n      <p class=\"hero-subtext\">\n        Deliver lightning-fast, accessible, and responsive user interfaces with our modern component toolkit.\n      </p>\n      <div class=\"hero-actions\">\n        <a href=\"#get-started\" class=\"cta-button\">Get Started Free</a>\n      </div>\n    </di"
+     },
+     {
+      "task": "Explain and implement a fix for rendering a 10k-row table in React",
+      "fitness": 0.945,
+      "failure": "none",
+      "critique": "The solution assumes the library is available but does not mention installation or version details.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.925,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Performance Optimization: Rendering a 10,000-Row Table in React\n\n## 🎨 UI Implementation & Root Cause Analysis\n\n### Root Cause: DOM Node Bloat and Main-Thread Blocking\nWhen an internal dashboard attempts to render 10,000 rows at once in a standard HTML `<table>`, React creates and commits 10,000+ DOM nodes simultaneously. \n* **The Problem**: Browsers must calculate styles, layout (reflow), and paint for every single DOM element. Rendering thousands of nodes blocks the main JavaScript thread, causing sluggish initial page loads, frozen UI interactions, and dropped frames (jank) during scrolling.\n* **The Fix**: **Virtualization** (windowing). Instead of rendering all 10,000 rows, virtualizati"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261116-131758-frontend-developer\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "f883135f6411e3322f90f19a2b7d87bcaed98a99f32c56bcaaf5aa768643dae0",
+    "fitness": 0.92,
+    "paired_delta": 0.14,
+    "shared_tasks": 2,
+    "per_task": [
+     {
+      "task": "Write the React component for a 3-tier pricing table with a monthly/yearly toggle",
+      "fitness": 0.89,
+      "failure": "none",
+      "critique": "The agent only describes how they would test the component; no actual verification evidence is shown.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.85,
+       "evidence": 0.7
+      },
+      "output_excerpt": "# SaaS Pricing Page Implementation\n\n## 🎨 UI Implementation\n**Framework**: React 18+ with TypeScript\n**Styling**: Tailwind CSS (mobile-first, responsive grid, accessible focus states)\n**State Management**: React `useState` for billing frequency toggle\n\n```tsx\nimport React, { useState } from 'react';\n\ninterface Plan {\n  id: string;\n  name: string;\n  description: string;\n  monthlyPrice: number;\n  yearlyPrice: number; // e.g., per month billed annually, or total\n  currency: string;\n  features: string[];\n  isPopular?: boolean;\n  ctaText: string;\n  ctaHref: string;\n}\n\ninterface PricingTableProps {\n  plans: Plan[];\n}\n\nexport const PricingTable: React.FC<PricingTableProps> = ({ plans }) => {\n  const"
+     },
+     {
+      "task": "Write the HTML and CSS for a responsive hero with headline, subtext, CTA and an image",
+      "fitness": 0.95,
+      "failure": "insufficient_evidence",
+      "critique": "The submission does not provide any actual measurements or tool output to verify the claims.",
+      "scores": {
+       "correctness": 0.975,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Hero Section Implementation\n\n## 🎨 UI Implementation\n**Framework**: Vanilla HTML5 & CSS3 (Mobile-First)\n**Styling**: Modern CSS with Flexbox/Grid, custom properties, and fluid typography.\n\n### HTML\n```html\n<section class=\"hero\" aria-label=\"Hero Section\">\n  <div class=\"hero__container\">\n    <div class=\"hero__content\">\n      <h1 class=\"hero__headline\">Build Better Web Apps, Faster</h1>\n      <p class=\"hero__subtext\">Deliver lightning-fast, accessible, and responsive user interfaces with our modern frontend toolkit designed for scale.</p>\n      <a href=\"#get-started\" class=\"hero__cta\">Get Started Free</a>\n    </div>\n    <div class=\"hero__media\">\n      <!-- Explicit width and height prevent lay"
+     },
+     {
+      "task": "Explain and implement a fix for rendering a 10k-row table in React",
+      "fitness": null,
+      "failure": "actor_error",
+      "critique": "actor error: HTTP 503 from provider: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "scores": {},
+      "output_excerpt": ""
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: frontend-developer v1\n\nTasks scored: 2. Mean fitness: 0.9601.\n\n## Worst tasks\n### 20261103-091344-build-a-small-accessible #1 (fitness 0.9363)\n- Task: Build star-rating.html: a 1-5 star rating input in plain HTML/CSS/JS (no frameworks, no CDN)\n- Acceptance: Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label; Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1); Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form; Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated; An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `unverified_evidence` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: The deliverable meets the functional and accessibility requirements, but the claimed automated test results are not independently verifiable.\n- Unmet criteria:\n  - An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside: The report claims the checks passed but the actual output cannot be verified from the provided files [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n- Output excerpt:\n```\n--- star-rating.html (9583 bytes) ---\n<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Star Rating Input</title>\n<style>\n  /*\n    Colour tokens. Contrast ratios (WCAG 2.1 relative luminance), all measured\n    against --bg #ffffff and re-computed by checks/check_star_rating.py:\n      --tex\n\n[... 9058 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n).get('rating');\n    result.textContent = value ? 'Submitted rating: ' + value + ' of ' + max + ' stars' : 'Submitted with no rating';\n  });\n\n  sync();\n})();\n</script>\n</body>\n</html>\n\n--- checks/runtime_check_output.txt (3711 bytes) ---\n# Command: TOOLS_DIR=<scratchpad>/a11y-tools node checks/runtime_check.js star-rating.html\n# Run at: 2026-11-03T12:19:18+03:00  Node: v24.21.0\n== Part A: jsdom 30.1.3 + axe-core 4.14.0 ==\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\naxe: 0 violations, 28 rules passed, 3 incomplete\n  incomplete color-contrast: Elements must meet minimum color contrast ratio thresholds (n\n\n[... 3054 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n 5\n```\n\n### 20261110-051125-build-a-single-file #1 (fitness 0.9838)\n- Task: Build faq.html: single-file accessible FAQ accordion with filter box\n- Acceptance: File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images; Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers; With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `incorrect_initial_aria_state` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.\n- Output excerpt:\n```\n--- faq.html (4998 bytes) ---\n<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"color-scheme\" content=\"light dark\">\n<title>Notes FAQ</title>\n<style>\n:root{--bg:#fff;--fg:#1c1c1e;--mut:#5b5b66;--bd:#d0d0d8;--ac:#0b5cd5;--card:#f6f6f9}\n@media (prefers-color-scheme:dark){:root{--b\n\n[... 4473 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nse(),n=0;\nbs.forEach(function(b){var q=b.parentNode.parentNode,\nm=!s||q.textContent.toLowerCase().indexOf(s)>-1;\nq.hidden=!m;if(m)n++});\nnr.hidden=n>0})})();\n</script>\n</body>\n</html>\n\n--- evidence/edge_dump.txt (6647 bytes) ---\n<!DOCTYPE html>\n<html lang=\"en\" class=\"js\"><head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"color-scheme\" content=\"light dark\">\n<title>Notes FAQ</title>\n<style>\n:root{--bg:#fff;--fg:#1c1c1e;--mut:#5b5b66;--bd:#d0d0d8;--ac:#0b5cd5;--card:#f6f6f9}\n@media (prefers-color-scheme:dark){:root{--bg:#121214;--fg:#ececf0;--mut:#a0a0ac;--bd:#3a3a44;--ac:#7db2ff;--card:#1c1c21}}\n*{box-s\n\n[... 5871 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nispatchE\n```\n"
  }
 ]

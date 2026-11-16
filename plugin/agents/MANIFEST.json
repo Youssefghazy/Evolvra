@@ -61,13 +61,21 @@
       "file": "engineering-frontend-developer.md",
       "emoji": "🖥️",
       "color": "cyan",
-      "version": 1,
-      "parent": null,
+      "version": 2,
+      "parent": 1,
       "source": {
         "repo": "msitarzewski/agency-agents",
         "commit": "b37b5bb",
         "path": "engineering/engineering-frontend-developer.md"
-      }
+      },
+      "history": [
+        {
+          "version": 2,
+          "parent": 1,
+          "rationale": "evolved from v1: targeted 'vague_deliverable'; paired delta +0.14 on 2 shared held-out task(s) (parent 0.82)",
+          "at": "2026-11-16T13:26:43Z"
+        }
+      ]
     },
     {
       "slug": "rapid-prototyper",
