@@ -3153,5 +3153,202 @@
    }
   ],
   "diagnosis": "# Diagnosis: frontend-developer v1\n\nTasks scored: 2. Mean fitness: 0.9601.\n\n## Worst tasks\n### 20261103-091344-build-a-small-accessible #1 (fitness 0.9363)\n- Task: Build star-rating.html: a 1-5 star rating input in plain HTML/CSS/JS (no frameworks, no CDN)\n- Acceptance: Uses a native radio group (or role=radiogroup with role=radio) with an accessible group label; Fully keyboard operable: Tab into the group, arrow keys change the value, focus is visible (outline contrast >= 3:1); Current value is announced to screen readers (e.g. '3 of 5 stars') and the value is exposed to a surrounding form; Text and star colours meet WCAG 2.1 AA contrast (>= 4.5:1 text, >= 3:1 non-text), with the ratios stated; An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `unverified_evidence` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: The deliverable meets the functional and accessibility requirements, but the claimed automated test results are not independently verifiable.\n- Unmet criteria:\n  - An automated check (e.g. jsdom/axe-core or a stdlib Python HTML parse) is run and its output saved alongside: The report claims the checks passed but the actual output cannot be verified from the provided files [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n- Output excerpt:\n```\n--- star-rating.html (9583 bytes) ---\n<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Star Rating Input</title>\n<style>\n  /*\n    Colour tokens. Contrast ratios (WCAG 2.1 relative luminance), all measured\n    against --bg #ffffff and re-computed by checks/check_star_rating.py:\n      --tex\n\n[... 9058 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n).get('rating');\n    result.textContent = value ? 'Submitted rating: ' + value + ' of ' + max + ' stars' : 'Submitted with no rating';\n  });\n\n  sync();\n})();\n</script>\n</body>\n</html>\n\n--- checks/runtime_check_output.txt (3711 bytes) ---\n# Command: TOOLS_DIR=<scratchpad>/a11y-tools node checks/runtime_check.js star-rating.html\n# Run at: 2026-11-03T12:19:18+03:00  Node: v24.21.0\n== Part A: jsdom 30.1.3 + axe-core 4.14.0 ==\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\naxe: 0 violations, 28 rules passed, 3 incomplete\n  incomplete color-contrast: Elements must meet minimum color contrast ratio thresholds (n\n\n[... 3054 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n 5\n```\n\n### 20261110-051125-build-a-single-file #1 (fitness 0.9838)\n- Task: Build faq.html: single-file accessible FAQ accordion with filter box\n- Acceptance: File is under 8192 bytes and contains no http:// or https:// URLs, no external scripts, styles, fonts or images; Exactly 6 questions; each header is a button with aria-expanded and aria-controls; opening one closes the others; Enter and Space work, and arrow keys move focus between headers; With JavaScript disabled all 6 answers are still readable; a prefers-color-scheme: dark rule exists; the filter box hides non-matching questions and shows a no-results message\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `incorrect_initial_aria_state` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: All buttons start with aria-expanded=\"true\" in the static markup, which is misleading before JavaScript runs.\n- Output excerpt:\n```\n--- faq.html (4998 bytes) ---\n<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"color-scheme\" content=\"light dark\">\n<title>Notes FAQ</title>\n<style>\n:root{--bg:#fff;--fg:#1c1c1e;--mut:#5b5b66;--bd:#d0d0d8;--ac:#0b5cd5;--card:#f6f6f9}\n@media (prefers-color-scheme:dark){:root{--b\n\n[... 4473 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nse(),n=0;\nbs.forEach(function(b){var q=b.parentNode.parentNode,\nm=!s||q.textContent.toLowerCase().indexOf(s)>-1;\nq.hidden=!m;if(m)n++});\nnr.hidden=n>0})})();\n</script>\n</body>\n</html>\n\n--- evidence/edge_dump.txt (6647 bytes) ---\n<!DOCTYPE html>\n<html lang=\"en\" class=\"js\"><head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"color-scheme\" content=\"light dark\">\n<title>Notes FAQ</title>\n<style>\n:root{--bg:#fff;--fg:#1c1c1e;--mut:#5b5b66;--bd:#d0d0d8;--ac:#0b5cd5;--card:#f6f6f9}\n@media (prefers-color-scheme:dark){:root{--bg:#121214;--fg:#ececf0;--mut:#a0a0ac;--bd:#3a3a44;--ac:#7db2ff;--card:#1c1c21}}\n*{box-s\n\n[... 5871 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nispatchE\n```\n"
+ },
+ {
+  "id": 19,
+  "agent": "sprint-prioritizer",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": 0.01,
+  "created_at": "2026-11-17T07:27:22.435Z",
+  "parent_fitness": 0.91,
+  "bank": [
+   {
+    "task": "Prioritize these: SSO, dark mode, export CSV, fix login bug, onboarding tour, API rate limits, mobile nav, analytics, i18n, search filters, billing retry, docs",
+    "source": "seed",
+    "parent_fitness": 0.92,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "## Prioritization Framework: Qualitative Value vs. Effort Matrix\n\nTo avoid arbitrary numeric estimation while maintaining rigorous prioritization, we evaluate the 12 backlog items using a **Qualitative Value vs. Effort Matrix**. Items are assessed across four dimensions: **Business Value** (revenue, security, retention), **Urgency** (bugs, stability risks), **User Impact** (breadth of user base affected), and **Implementation Effort** (complexity/time). \n\nItems are ranked by prioritizing high-urgency fixes, revenue-critical functions, and high-value strategic enablers that fit within a standard 5-item sprint capacity.\n\n---\n\n### Ranked Backlog & Sprint Selection\n\n1. **Fix login bug** (Sprint "
+   },
+   {
+    "task": "Write the message that pushes back and proposes a plan",
+    "source": "seed",
+    "parent_fitness": 0.93,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Sprint Scope Adjustment Proposal\n\n**To:** [Stakeholder Name(s)]  \n**From:** [Your Name / Product Manager]  \n**Subject:** Sprint Scope Review: Balancing Requests and Team Capacity  \n\nHi Team,\n\nI’ve reviewed the latest requests for the upcoming sprint. I completely understand the urgency and business value behind wanting all of these items delivered as soon as possible. \n\nHowever, looking at our team's available capacity and our commitment to sustainable velocity and quality, we cannot fit the entire requested scope into this sprint without severe risk of burnout, technical debt, or missed delivery dates.\n\nTo move forward productively, we need to make an intentional trade-off. Here is the co"
+   },
+   {
+    "task": "Diagnose three likely causes and a fix for each",
+    "source": "seed",
+    "parent_fitness": 0.88,
+    "parent_failure": "fabricated_evidence",
+    "parent_critique": "The agent fabricates verification evidence instead of honestly stating what would be measured.",
+    "parent_output_excerpt": "# Sprint Goal Slippage: Diagnosis and Action Plan\n\nWhen sprint goals consistently slip, it indicates a systemic breakdown in planning, estimation, execution, or scope control. Below are three specific root causes, actionable fixes that can be implemented within a single sprint, and the verification methods to confirm improvement.\n\n---\n\n## 1. Diagnosis: Unmitigated Cross-Team Dependencies Discovered Mid-Sprint\n\n### Cause\nStories are planned under the assumption that internal APIs, design assets, or data migrations owned by *other* teams will be ready when needed. When those upstream dependencies slip, the dependent stories stall mid-sprint, forcing the team to scramble or miss the goal.\n\n### "
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261117-071842-sprint-prioritizer\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "d23372c966201085b59d12241955d59980c494357619c0457cb540c27df3bf24",
+    "fitness": 0.92,
+    "paired_delta": 0.01,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Prioritize these: SSO, dark mode, export CSV, fix login bug, onboarding tour, API rate limits, mobile nav, analytics, i18n, search filters, billing retry, docs",
+      "fitness": 0.88,
+      "failure": "fabricated_evidence",
+      "critique": "The report fabricates a verification script and its output, reducing trust in the evidence.",
+      "scores": {
+       "correctness": 0.85,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.8
+      },
+      "output_excerpt": "# Sprint Prioritization Report\n\n## 1. Prioritization Methodology (RICE Framework)\nTo determine the optimal sprint backlog of 5 items from the 12 candidates, we apply the **RICE** prioritization framework:\n- **Reach (R)**: Estimated number of users/accounts impacted per month.\n- **Impact (I)**: Effect on user success or business value (Scale: 0.5 = Minimal, 1 = Low, 2 = Medium, 3 = High, 3+ = Critical/Blocker).\n- **Confidence (C)**: Certainty of estimates (Scale: 50% = Low, 80% = Medium, 100% = High).\n- **Effort (E)**: Person-weeks required to deliver.\n\n$$\\text{RICE Score} = \\frac{\\text{Reach} \\times \\text{Impact} \\times \\text{Confidence}}{\\text{Effort}}$$\n\n---\n\n## 2. Backlog Ranking Table\n\n|"
+     },
+     {
+      "task": "Write the message that pushes back and proposes a plan",
+      "fitness": 0.96,
+      "failure": "fabricated_measurement",
+      "critique": "The message includes an unverified placeholder percentage claim, which is fabricated evidence.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Sprint Scope Management & Proposal\n\n**To:** Stakeholder Team  \n**From:** Product Management / Sprint Prioritizer  \n**Subject:** Sprint Scope Alignment: Balancing All Requests with Team Capacity  \n\n---\n\n### Message to Stakeholders\n\nHi Team,\n\nI completely understand the urgency and value behind wanting to include all requested items in the upcoming sprint. Every feature on your list targets critical user needs and business objectives, and it's clear why we want them out as quickly as possible.\n\nHowever, our current team capacity—calculated from our historical rolling average velocity—cannot sustain the total scope requested without exceeding safe workload limits and risking technical debt or"
+     },
+     {
+      "task": "Diagnose three likely causes and a fix for each",
+      "fitness": 0.92,
+      "failure": "fabricated_evidence",
+      "critique": "The verification evidence is fabricated rather than demonstrably obtained.",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Sprint Slippage Diagnostic & Remediation Plan\n\nWhen a sprint goal consistently slips, it indicates a structural breakdown in flow, estimation, or risk management. Below are three specific root causes, their one-sprint actionable fixes, and the validation metrics to confirm improvement.\n\n---\n\n## 1. Unidentified Cross-Team Schema Dependencies\n* **Diagnosis**: Stories enter sprint planning with hidden technical dependencies on backend or data services owned by other teams. These dependencies are typically discovered mid-sprint during integration testing, resulting in blocked tasks that stall the critical path.\n* **Actionable Fix (Within 1 Sprint)**: Implement a mandatory \"Dependency Mapping &"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261117-071842-sprint-prioritizer\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "257f733e271756ac0f4ef5964aff17e0bae5bb157d59709c2760a88cb31b444b",
+    "fitness": 0.8633,
+    "paired_delta": -0.0467,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Prioritize these: SSO, dark mode, export CSV, fix login bug, onboarding tour, API rate limits, mobile nav, analytics, i18n, search filters, billing retry, docs",
+      "fitness": 0.765,
+      "failure": "fabricated_evidence",
+      "critique": "The RICE scores are fabricated without any verifiable data",
+      "scores": {
+       "correctness": 0.675,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.575
+      },
+      "output_excerpt": "## Prioritization Framework: Adapted RICE Model\n\nTo rank the 12 backlog items objectively without inventing telemetry data, we use a qualitative **RICE Scoring Model** where factors are evaluated relative to core business objectives (revenue protection, user retention, security, and activation). \n\n- **Reach (R)**: Estimated % of active users or target accounts impacted per month (Low = <10%, Med = 10-50%, High = >50%).\n- **Impact (I)**: Effect on key business metrics (Revenue, Churn, Activation) (Low = 0.5, Med = 1.0, High = 2.0, Critical = 3.0).\n- **Confidence (C)**: Certainty of estimates based on existing customer feedback or data (Low = 50%, Med = 80%, High = 100%).\n- **Effort (E)**: Eng"
+     },
+     {
+      "task": "Write the message that pushes back and proposes a plan",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "The response is solid but uses placeholder feature names, which reduces concrete clarity.",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 0.95,
+       "quality": 0.9,
+       "evidence": 0.85
+      },
+      "output_excerpt": "# Sprint Prioritization Update & Trade-Off Proposal\n\nHi [Stakeholder Name],\n\nI’ve reviewed your request to pull the entire backlog list into the upcoming sprint. I completely recognize that all of these items are high-value and important for our upcoming product milestones. \n\nHowever, looking at our available team capacity and ensuring we maintain our standard of quality without risking burnout or technical debt spillover, committing to 100% of the requested scope exceeds our realistic throughput for this cycle. \n\nTo deliver maximum value without breaking our delivery commitments, we need to make a deliberate trade-off. Here is how we can proceed:\n\n*   **Option A (Prioritize Core Scope):** W"
+     },
+     {
+      "task": "Diagnose three likely causes and a fix for each",
+      "fitness": 0.905,
+      "failure": "evidence_fabrication",
+      "critique": "The deliverable fabricates verification evidence and metric data.",
+      "scores": {
+       "correctness": 0.875,
+       "completeness": 1.0,
+       "quality": 0.875,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Sprint Goal Slippage: Diagnosis and Remediation Plan\n\nWhen sprint goals consistently slip, it points to systemic friction between planning, execution, and external variables. Below are three specific root causes, an actionable fix for each that can be implemented within a single sprint, and the metric used to confirm improvement.\n\n---\n\n## Cause 1: Mid-Sprint Scope Creep Due to Inadequate Backlog Refinement\n**Diagnosis:** Stories enter sprint planning with unaddressed technical unknowns or vague acceptance criteria. Developers uncover architectural blockers or missing requirements mid-sprint, forcing unplanned scope expansion or carry-overs to resolve technical debt and missing edge cases.\n"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261117-071842-sprint-prioritizer\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "b4f62fb5ce53ee143bb81bc56d15f61b8542e632b39b9f52610949b2610b6d78",
+    "fitness": 0.795,
+    "paired_delta": -0.115,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Prioritize these: SSO, dark mode, export CSV, fix login bug, onboarding tour, API rate limits, mobile nav, analytics, i18n, search filters, billing retry, docs",
+      "fitness": 0.56,
+      "failure": "missing_required_output",
+      "critique": "The response fails to deliver the required ranking, justifications, and deferments.",
+      "scores": {
+       "correctness": 0.6,
+       "completeness": 0.5,
+       "quality": 0.5,
+       "evidence": 0.6
+      },
+      "output_excerpt": "## Method Declaration\nWe use the **RICE Prioritization Framework** to evaluate all backlog items objectively.\n- **Formula**: $\\text{Score} = \\frac{\\text{Reach} \\times \\text{Impact} \\times \\text{Confidence}}{\\text{Effort}}$\n- **Reach**: Estimated number of users impacted per month (absolute count).\n- **Impact**: Contribution to user value and business goals (Scale: 0.25 = Minimal, 0.5 = Low, 1.0 = Medium, 2.0 = High, 3.0 = Massive).\n- **Confidence**: Certainty of estimates (Scale: 0.5 = Low, 0.8 = Medium, 1.0 = High).\n- **Effort**: Implementation time required in person-weeks (Scale: 1 to 5).\n- **Tie-Breaking Rule**: If scores are equal, items are ordered alphabetically by name.\n\n---\n\n## Assu"
+     },
+     {
+      "task": "Write the message that pushes back and proposes a plan",
+      "fitness": 0.945,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.95,
+       "completeness": 1.0,
+       "quality": 0.875,
+       "evidence": 0.95
+      },
+      "output_excerpt": "# Sprint Capacity & Scope Alignment: Managing [Sprint Name] Deliverables\n\n**To:** [Stakeholder Name]  \n**From:** [Your Name / Product Manager]  \n**Subject:** Sprint Scope Review & Trade-off Proposal for [Sprint Name]\n\nHi [Stakeholder Name],\n\nI’ve reviewed your request to include all the newly proposed features ([List key items]) in the upcoming sprint. I completely understand why these items are critical for your roadmap and why you'd want them delivered as soon as possible. \n\nHowever, looking at our team's sustained historical velocity and the actual effort required for these items, packing everything into this single sprint exceeds our team's safe carrying capacity by a significant margin."
+     },
+     {
+      "task": "Diagnose three likely causes and a fix for each",
+      "fitness": 0.88,
+      "failure": "fabricated_evidence",
+      "critique": "The evidence claims verification that could not have been performed, making the proof unreliable",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Diagnosis: Sprint Goal Slippage\n\nWhen sprint goals consistently slip, symptoms often mask deeper systemic breakdowns in estimation, dependency management, or scope control. Below are three specific, non-generic causes for sprint goal slippage, along with concrete, single-sprint fixes and their corresponding confirmation metrics.\n\n---\n\n## 1. Unmanaged Upstream API Dependencies\n* **Diagnosis:** The team commits to user stories that rely on data contracts, endpoints, or services owned by external teams (e.g., Core Platform or Data Engineering). These dependencies are identified during planning, but no hard integration deadline or SLA is established. As a result, development stalls mid-sprint "
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: sprint-prioritizer v1\n\nTasks scored: 3. Mean fitness: 0.9638.\n\n## Worst tasks\n### 20261103-092430-rank-a-12-item #1 (fitness 0.946)\n- Task: Write BACKLOG-RANKING.md: define a 12-item backlog for a small SaaS note-taking app and rank it with one stated method (e.g. RICE or WSJF)\n- Acceptance: Exactly 12 backlog items, each with a one-line description; The method is named and its formula and scales are defined before the ranking; Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule); Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table; The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The deliverable is thorough, but the claim that the script has not been run introduces a minor uncertainty about the exactness of the computed scores.\n- Output excerpt:\n```\n--- BACKLOG-RANKING.md (11955 bytes) ---\n# Backlog Ranking: \"Quillnote\" (made-up small SaaS note-taking app)\n\nDate: 2026-11-03\nMethod: **RICE** (Reach, Impact, Confidence, Effort)\nFiles in this folder:\n\n| File | What it is |\n|---|---|\n| `BACKLOG-RANKING.md` | This document (method, backlog, assumptions, ranking) |\n| `backlog.csv` | The input scores for all 12 items (single source\n\n[... 11430 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nn rice_score.py --check`\n  is the step that confirms the script and the saved output agree. Expected result:\n  the 12-row table above, one `TIE: B06 and B02 ...` line, and `CHECK OK`.\n\n--- ranking_output.csv (761 bytes) ---\nrank,id,title,reach,impact,confidence_pct,effort_pm,rice_score,cumulative_effort_pm\n1,B06,Fix sync-conflict duplicate notes,9000,2,100,1.5,12000.00,1.5\n2,B02,Faster full-text search,30000,1,80,2,12000.00,3.5\n3,B08,Dark mode,20000,0.25,100,0.5,10000.00,4\n4,B09,Guided onboarding checklist,7500,1,80,1,6000.00,5\n5,B10,Two-factor authentication,4000,2,80,1.5,4266.67,6.5\n6,B04,Markdown import and export,6000,0.5,100,1,3000.00,7.5\n7,B03\n\n[... 94 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n0,16.5\n9\n```\n\n### 20261105-080841-rank-10-bugs-of #1 (fitness 0.953)\n- Task: Write BUG-RICE.md: rank 10 bugs of a note-taking app by RICE score\n- Acceptance: lists exactly 10 distinct bugs, each with a one-line description; states the RICE formula (Reach x Impact x Confidence / Effort) and the unit and scale for each factor; a table gives R, I, C, E and the computed score for every bug, and every score equals the formula applied to its inputs (rounded to 1 decimal); bugs are ordered by score, highest first, and ties are broken by a stated rule; all inputs are labelled as assumptions\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: None\n- Output excerpt:\n```\n--- BUG-RICE.md (6243 bytes) ---\n# BUG-RICE: Ranking 10 Bugs of a Note-Taking App by RICE Score\n\n> **All inputs in this document are assumptions.** The note-taking app, its bugs, its user base,\n> and every Reach, Impact, Confidence and Effort value below are hypothetical and invented for\n> this exercise. None of them are measured data. Treat every number as a planning assumption\n> that needs validating against real analytics, support tickets and engineering estimates.\n\n## 1. The RICE formula\n\n**RICE score = (Reach x Impact x Confidence) / Effort**\n\n| Factor | Meaning | Unit | Scale used here |\n|---|---|---|---|\n| **R** Reach | How many users hit the bug | thousands of active users affected per quarter (assumed app size: 50,000 monthly active users) | 0 to 50 (any positive number) |\n| **I** Impact | How badly the bug hurts an affected user | multiplier, no unit | 3 = massive (data loss / locked out), 2 = high, 1 = medium, 0.5 = low, 0.25 = minimal (cosmetic) |\n| **C** Conf\n\n[... 4775 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nnt regardless of score.\n  This document reports the pure RICE ranking; applying an override is a separate decision.\n- **Low-confidence items need validation first.** BUG-05 (C = 50%) could move a lot once real\n  session-timeout data is checked. A small spike to measure its true reach is\n```\n\n### 20261110-092831-plan-a-6-week #1 (fitness 0.9925)\n- Task: Write sprint-plan.md and sprint-plan.csv: RICE-ranked 6-week sprint plan for 9 note-taking app candidates within 60 usable person-days\n- Acceptance: RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table; The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md; No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen); Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed; sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: none\n- Output excerpt:\n```\n--- sprint-plan.md (3730 bytes) ---\n# 6-Week Sprint Plan: Note-Taking App\n\n## Capacity\n3 people x 25 working days = 75 person-days. Minus a 20% buffer (15 days) = **60 usable person-days**.\n\n## RICE formula\nRICE = (Reach x Impact x Confidence) / Effort\n\n- Reach: users per quarter\n- Impact: 0.25 to 3\n- Confidence: percentage, used as a decimal (80% = 0.8)\n- Effort: person-days\n\n## Score table (ranked by RICE)\n\n| Rank | Feature | Reach | Impact | Confidence | Effort (days) | Reach x Impact x Conf | RICE | Chosen |\n|---|---|---|---|---|---|---|---|---|\n| 1 | Tag autocomplete | 6000 | 1 | 90% | 6 | 5400 | 900.00 | Yes |\n| 2 | Markdown export | 2500 | 1 | 100% | 5 | 2500 | 500.00 | Yes |\n| 3 | Sync conflict fixes | 3500 | 2 | 80% | 12 | 5600 | 466.67 | Yes |\n| 4 | Dark mode | 7000 | 0.5 | 100% | 8 | 3500 | 437.50 | Yes |\n| 5 | Search filters | 5000 | 1 | 80% | 10 | 4000 | 400.00 | Yes |\n| 6 | Offline mode | 4000 | 2 | 80% | 30 | 6400 | 213.33 | No |\n| 7 | Web clipper | 2000 | 2\n\n[... 2266 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nt certain chosen item) pushes work past the usable capacity. Mitigation: schedule Web clipper last so it can be cut or reduced without affecting the other five features.\n3. **Estimate and confidence error in inputs.** Reach, impact and confidence are estimates, and Offline mode (RICE 2\n```\n"
  }
 ]
