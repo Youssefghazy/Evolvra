@@ -3350,5 +3350,202 @@
    }
   ],
   "diagnosis": "# Diagnosis: sprint-prioritizer v1\n\nTasks scored: 3. Mean fitness: 0.9638.\n\n## Worst tasks\n### 20261103-092430-rank-a-12-item #1 (fitness 0.946)\n- Task: Write BACKLOG-RANKING.md: define a 12-item backlog for a small SaaS note-taking app and rank it with one stated method (e.g. RICE or WSJF)\n- Acceptance: Exactly 12 backlog items, each with a one-line description; The method is named and its formula and scales are defined before the ranking; Every item has every input score and the computed score shown; the final order follows the computed scores (ties broken by a stated rule); Assumptions behind the inputs (reach, effort, etc.) are stated per item or as a table; The computation is reproducible: a script or CSV recomputes the scores and its output is saved alongside\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: The deliverable is thorough, but the claim that the script has not been run introduces a minor uncertainty about the exactness of the computed scores.\n- Output excerpt:\n```\n--- BACKLOG-RANKING.md (11955 bytes) ---\n# Backlog Ranking: \"Quillnote\" (made-up small SaaS note-taking app)\n\nDate: 2026-11-03\nMethod: **RICE** (Reach, Impact, Confidence, Effort)\nFiles in this folder:\n\n| File | What it is |\n|---|---|\n| `BACKLOG-RANKING.md` | This document (method, backlog, assumptions, ranking) |\n| `backlog.csv` | The input scores for all 12 items (single source\n\n[... 11430 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nn rice_score.py --check`\n  is the step that confirms the script and the saved output agree. Expected result:\n  the 12-row table above, one `TIE: B06 and B02 ...` line, and `CHECK OK`.\n\n--- ranking_output.csv (761 bytes) ---\nrank,id,title,reach,impact,confidence_pct,effort_pm,rice_score,cumulative_effort_pm\n1,B06,Fix sync-conflict duplicate notes,9000,2,100,1.5,12000.00,1.5\n2,B02,Faster full-text search,30000,1,80,2,12000.00,3.5\n3,B08,Dark mode,20000,0.25,100,0.5,10000.00,4\n4,B09,Guided onboarding checklist,7500,1,80,1,6000.00,5\n5,B10,Two-factor authentication,4000,2,80,1.5,4266.67,6.5\n6,B04,Markdown import and export,6000,0.5,100,1,3000.00,7.5\n7,B03\n\n[... 94 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n0,16.5\n9\n```\n\n### 20261105-080841-rank-10-bugs-of #1 (fitness 0.953)\n- Task: Write BUG-RICE.md: rank 10 bugs of a note-taking app by RICE score\n- Acceptance: lists exactly 10 distinct bugs, each with a one-line description; states the RICE formula (Reach x Impact x Confidence / Effort) and the unit and scale for each factor; a table gives R, I, C, E and the computed score for every bug, and every score equals the formula applied to its inputs (rounded to 1 decimal); bugs are ordered by score, highest first, and ties are broken by a stated rule; all inputs are labelled as assumptions\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: None\n- Output excerpt:\n```\n--- BUG-RICE.md (6243 bytes) ---\n# BUG-RICE: Ranking 10 Bugs of a Note-Taking App by RICE Score\n\n> **All inputs in this document are assumptions.** The note-taking app, its bugs, its user base,\n> and every Reach, Impact, Confidence and Effort value below are hypothetical and invented for\n> this exercise. None of them are measured data. Treat every number as a planning assumption\n> that needs validating against real analytics, support tickets and engineering estimates.\n\n## 1. The RICE formula\n\n**RICE score = (Reach x Impact x Confidence) / Effort**\n\n| Factor | Meaning | Unit | Scale used here |\n|---|---|---|---|\n| **R** Reach | How many users hit the bug | thousands of active users affected per quarter (assumed app size: 50,000 monthly active users) | 0 to 50 (any positive number) |\n| **I** Impact | How badly the bug hurts an affected user | multiplier, no unit | 3 = massive (data loss / locked out), 2 = high, 1 = medium, 0.5 = low, 0.25 = minimal (cosmetic) |\n| **C** Conf\n\n[... 4775 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nnt regardless of score.\n  This document reports the pure RICE ranking; applying an override is a separate decision.\n- **Low-confidence items need validation first.** BUG-05 (C = 50%) could move a lot once real\n  session-timeout data is checked. A small spike to measure its true reach is\n```\n\n### 20261110-092831-plan-a-6-week #1 (fitness 0.9925)\n- Task: Write sprint-plan.md and sprint-plan.csv: RICE-ranked 6-week sprint plan for 9 note-taking app candidates within 60 usable person-days\n- Acceptance: RICE = reach x impact x confidence / effort is shown as a formula and computed for all 9 candidates, with the input values shown in the score table; The chosen set has total effort <= 60 person-days, and the total is stated in sprint-plan.md; No chosen feature is missing its dependency (Shared notebooks only if Sync conflict fixes is also chosen); Every unchosen feature appears in a not-now list with a one-line reason, and the top 3 risks are listed; sprint-plan.csv exists and its scores and chosen/not-chosen status match the markdown table\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: none\n- Output excerpt:\n```\n--- sprint-plan.md (3730 bytes) ---\n# 6-Week Sprint Plan: Note-Taking App\n\n## Capacity\n3 people x 25 working days = 75 person-days. Minus a 20% buffer (15 days) = **60 usable person-days**.\n\n## RICE formula\nRICE = (Reach x Impact x Confidence) / Effort\n\n- Reach: users per quarter\n- Impact: 0.25 to 3\n- Confidence: percentage, used as a decimal (80% = 0.8)\n- Effort: person-days\n\n## Score table (ranked by RICE)\n\n| Rank | Feature | Reach | Impact | Confidence | Effort (days) | Reach x Impact x Conf | RICE | Chosen |\n|---|---|---|---|---|---|---|---|---|\n| 1 | Tag autocomplete | 6000 | 1 | 90% | 6 | 5400 | 900.00 | Yes |\n| 2 | Markdown export | 2500 | 1 | 100% | 5 | 2500 | 500.00 | Yes |\n| 3 | Sync conflict fixes | 3500 | 2 | 80% | 12 | 5600 | 466.67 | Yes |\n| 4 | Dark mode | 7000 | 0.5 | 100% | 8 | 3500 | 437.50 | Yes |\n| 5 | Search filters | 5000 | 1 | 80% | 10 | 4000 | 400.00 | Yes |\n| 6 | Offline mode | 4000 | 2 | 80% | 30 | 6400 | 213.33 | No |\n| 7 | Web clipper | 2000 | 2\n\n[... 2266 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nt certain chosen item) pushes work past the usable capacity. Mitigation: schedule Web clipper last so it can be cut or reduced without affecting the other five features.\n3. **Estimate and confidence error in inputs.** Reach, impact and confidence are estimates, and Offline mode (RICE 2\n```\n"
+ },
+ {
+  "id": 20,
+  "agent": "rapid-prototyper",
+  "parent_version": 1,
+  "winner_version": null,
+  "delta": -0.0067,
+  "created_at": "2026-11-18T01:26:54.001Z",
+  "parent_fitness": 0.8367,
+  "bank": [
+   {
+    "task": "Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence",
+    "source": "20261110-094717-prototype-a-single-file",
+    "parent_fitness": 0.61,
+    "parent_failure": "missing_core_logic",
+    "parent_critique": "The deliverable lacks the required integer‑cent calculations, settle‑up logic, self‑test, and robust localStorage handling.",
+    "parent_output_excerpt": "Here is the complete, single-file HTML expense splitter meeting all constraints, including integer cent arithmetic, zero external dependencies, robust `localStorage` handling with a `try/catch` fallback, and an automated `?selftest` mode.\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Expense Splitter - 4 Friends</title>\n<style>\n  body { font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif; max-width: 650px; margin: 30px auto; padding: 0 15px; color: #222; line-height: 1.4; }\n  h1, h2 { border-bottom: 2px solid #eaeaea; padding-bottom: 6px; }\n  .card { background: #fcfcfc; border: 1px solid #e0e0e0; padding: 15px; margin-bottom: 15px;"
+   },
+   {
+    "task": "Write a Python script that prints the top 5 most frequent headings across all .md files",
+    "source": "seed",
+    "parent_fitness": 0.96,
+    "parent_failure": "none",
+    "parent_critique": "none",
+    "parent_output_excerpt": "# Markdown Notes Heading Analyzer (CLI)\n\nHere is a complete, standard-library-only Python script designed for the hackathon mission. It scans a target folder for `.md` files, extracts all markdown headings (lines starting with one or more `#`), counts their frequencies, and prints the top 5 most frequent headings.\n\n## Python Script (`top_headings.py`)\n\n```python\n#!/usr/bin/env python3\n\"\"\"\nCLI tool to find the top 5 most frequent headings across all .md files in a folder.\nStandard library only.\n\"\"\"\n\nimport os\nimport re\nimport sys\nfrom collections import Counter\n\ndef extract_headings_from_file(file_path):\n    headings = []\n    # Regex for markdown headings: start of line, 1-6 hashes, optional "
+   },
+   {
+    "task": "Produce a one-file landing page with headline, three benefits, email capture (no backend)",
+    "source": "seed",
+    "parent_fitness": 0.94,
+    "parent_failure": "accessibility_issues",
+    "parent_critique": "Missing ARIA labels and other accessibility attributes for the form elements",
+    "parent_output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>SignalPulse - Instant User Feedback Analysis</title>\n    <script src=\"https://cdn.tailwindcss.com\"></script>\n</head>\n<body class=\"bg-slate-950 text-slate-100 font-sans antialiased\">\n    <div class=\"min-h-screen flex flex-col justify-between\">\n        <!-- Hero Section -->\n        <header class=\"max-w-4xl mx-auto px-6 pt-20 pb-12 text-center\">\n            <span class=\"inline-block bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-3 py-1 rounded-full mb-6 border border-emerald-500/20\">\n                ⚡ Built for Founders Who"
+   }
+  ],
+  "candidates": [
+   {
+    "index": 1,
+    "target": "weak_evidence",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261118-011818-rapid-prototyper\\candidate-1-weak-evidence.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "9cac477e05f37a580f092f29062911c84567adc8619874636a918456ab1c85d1",
+    "fitness": 0.83,
+    "paired_delta": -0.0067,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence",
+      "fitness": 0.78,
+      "failure": "incomplete_implementation",
+      "critique": "The script was cut off abruptly at the end, leaving the selftest implementation incomplete.",
+      "scores": {
+       "correctness": 0.8,
+       "completeness": 0.8,
+       "quality": 0.8,
+       "evidence": 0.7
+      },
+      "output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Expense Splitter</title>\n<style>\n  body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; color: #333; }\n  h1, h2 { font-size: 1.2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }\n  fieldset { margin-bottom: 10px; padding: 8px; }\n  label { display: block; margin: 4px 0; }\n  input, select, button { padding: 4px; margin: 2px 0; }\n  table { width: 100%; border-collapse: collapse; margin-top: 8px; }\n  th, td { border: 1px solid #ddd; padding: 4px; text-align: left; font-size: 0.9rem; }\n  .pass { color: green; font-weight: bold; }\n  .fail { color: red; font-weight: bold; }\n  pre {"
+     },
+     {
+      "task": "Write a Python script that prints the top 5 most frequent headings across all .md files",
+      "fitness": 0.74,
+      "failure": "fabricated_evidence",
+      "critique": "Agent fabricated verification claims (command outputs, exit codes) that could not have been observed in the sandbox",
+      "scores": {
+       "correctness": 0.75,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.3
+      },
+      "output_excerpt": "# Markdown Heading Summarizer CLI\n\nHere is a complete, standard-library-only Python script for your hackathon project. It scans a target folder (recursively) for `.md` files, extracts all markdown headings (lines starting with 1 to 6 `#` characters), normalizes them, and prints the top 5 most frequent headings.\n\n## Python Script (`summarize_headings.py`)\n\n```python\nfrom collections import Counter\nfrom pathlib import Path\nimport re\nimport sys\n\n\ndef summarize_headings(folder_path: str):\n    \"\"\"Scans all .md files in the given folder and prints the top 5\n\n    most frequent markdown headings.\n    \"\"\"\n    path = Path(folder_path)\n\n    # Handle non-existent or non-directory paths gracefully\n    if"
+     },
+     {
+      "task": "Produce a one-file landing page with headline, three benefits, email capture (no backend)",
+      "fitness": 0.97,
+      "failure": "none",
+      "critique": "HTML appears truncated in the displayed output but agent asserts completeness; all acceptance criteria are satisfied in the visible portion.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.95
+      },
+      "output_excerpt": "Here is the complete, single-file landing page built for rapid validation. \n\n### Deliverable: `index.html`\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>LaunchFast - Ship Your MVP in 72 Hours</title>\n    <!-- Tailwind CSS Play CDN: https://tailwindcss.com/docs/installation/play-cdn -->\n    <script src=\"https://cdn.tailwindcss.com\"></script>\n</head>\n<body class=\"bg-slate-50 text-slate-900 font-sans\">\n    <div class=\"max-w-4xl mx-auto px-4 py-16 sm:py-24\">\n        <!-- Hero Section -->\n        <header class=\"text-center mb-16\">\n            <span class=\"bg-indigo-100 text-indigo-7"
+     }
+    ]
+   },
+   {
+    "index": 2,
+    "target": "missing_acceptance_criteria_check",
+    "author": "groq/openai/gpt-oss-120b",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261118-011818-rapid-prototyper\\candidate-2-missing-acceptance-criteria-check.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "2d324bb8f4b7d95b000ff2860b4b081503b1559891877d88c46193a633d5d914",
+    "fitness": 0.8083,
+    "paired_delta": -0.0283,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence",
+      "fitness": 0.6,
+      "failure": "missing_selftest",
+      "critique": "The deliverable lacks the required self‑test implementation and cannot guarantee the transfer limit.",
+      "scores": {
+       "correctness": 0.6,
+       "completeness": 0.6,
+       "quality": 0.7,
+       "evidence": 0.5
+      },
+      "output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Expense Splitter</title>\n<style>\n  body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; color: #333; }\n  h1, h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; }\n  fieldset { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 4px; }\n  label { display: block; margin-top: 8px; }\n  input, select { width: 100%; padding: 6px; box-sizing: border-box; margin-top: 2px; }\n  .checkbox-group label { display: inline-block; margin-right: 15px; margin-top: 0; }\n  button { background: #007BFF; color: white; border: none; padding: 10px 15px; cursor: pointer; border-rad"
+     },
+     {
+      "task": "Write a Python script that prints the top 5 most frequent headings across all .md files",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "none",
+      "scores": {
+       "correctness": 0.9,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.9
+      },
+      "output_excerpt": "# Markdown Notes Heading Summarizer\n\nHere is a complete Python script using only the standard library that searches a folder (recursively) for `.md` files, extracts all markdown headings, and prints the top 5 most frequent headings.\n\n```python\n#!/usr/bin/env python3\n\"\"\"\nmarkdown_summarizer.py\nA CLI tool to find the top 5 most frequent headings across all .md files in a folder.\n\"\"\"\n\nfrom collections import Counter\nfrom pathlib import Path\nimport sys\nimport re\n\ndef extract_headings_from_file(file_path: Path) -> list[str]:\n    \"\"\"Extracts markdown headings from a single file.\"\"\"\n    headings = []\n    # Matches lines starting with 1 to 6 hash symbols followed by whitespace\n    heading_pattern = "
+     },
+     {
+      "task": "Produce a one-file landing page with headline, three benefits, email capture (no backend)",
+      "fitness": 0.905,
+      "failure": "evidence_quality",
+      "critique": "The agent claims verification was performed, but no actual testing evidence is provided.",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.625
+      },
+      "output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>VelocityShip - Launch Your MVP in Days, Not Months</title>\n    <style>\n        :root {\n            --primary: #10b981;\n            --primary-dark: #059669;\n            --bg: #0f172a;\n            --text: #f8fafc;\n            --text-muted: #94a3b8;\n            --card-bg: #1e293b;\n        }\n        * {\n            box-sizing: border-box;\n            margin: 0;\n            padding: 0;\n            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n        }\n        body {\n            background-colo"
+     }
+    ]
+   },
+   {
+    "index": 3,
+    "target": "vague_deliverable",
+    "author": "gemini/gemini-3.5-flash-lite",
+    "path": "C:\\Users\\Training1\\.evolvra\\evolutions\\20261118-011818-rapid-prototyper\\candidate-3-vague-deliverable.md",
+    "lint_ok": true,
+    "problems": [],
+    "sha": "86343360bd50f080d9a1a1dccf6e79a2bff85dad04324c3de56a91fc4f0a9d56",
+    "fitness": 0.6883,
+    "paired_delta": -0.1483,
+    "shared_tasks": 3,
+    "per_task": [
+     {
+      "task": "Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence",
+      "fitness": 0.24,
+      "failure": "truncated_deliverable",
+      "critique": "Deliverable is truncated mid-implementation; only C1 is verifiable from what is shown.",
+      "scores": {
+       "correctness": 0.2,
+       "completeness": 0.2,
+       "quality": 0.4,
+       "evidence": 0.2
+      },
+      "output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>4-Friend Expense Splitter</title>\n<style>\n  body { font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif; max-width: 650px; margin: 30px auto; padding: 0 15px; color: #222; background: #fdfdfd; }\n  h1, h2 { border-bottom: 2px solid #eee; padding-bottom: 6px; }\n  .box { background: #fff; border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }\n  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }\n  th, td { border: 1px solid #e1e1e1; padding: 8px; text-align: left; }\n  th { background: #f7f7f7; }"
+     },
+     {
+      "task": "Write a Python script that prints the top 5 most frequent headings across all .md files",
+      "fitness": 0.92,
+      "failure": "none",
+      "critique": "Heading level (# vs ##) is ignored when counting frequency, so different-level headings with identical text are merged; this may or may not be intended.",
+      "scores": {
+       "correctness": 0.925,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.85
+      },
+      "output_excerpt": "# Markdown Notes Headings Frequency CLI\n\nA rapid Python script built with the standard library to analyze and output the top 5 most frequent markdown headings across a folder of notes.\n\n## ⚙️ Python Script (`summarize_headings.py`)\n\n```python\n#!/usr/bin/env python3\n\"\"\"\nCLI tool to summarize the top 5 most frequent markdown headings in a given folder.\nUses standard library only.\n\"\"\"\n\nimport os\nimport sys\nfrom collections import Counter\nimport re\n\ndef find_markdown_headings(folder_path):\n    heading_pattern = re.compile(r'^(#{1,6})\\s+(.+)$')\n    heading_counts = Counter()\n\n    if not os.path.exists(folder_path) or not os.path.isdir(folder_path):\n        return heading_counts\n\n    for root, _, "
+     },
+     {
+      "task": "Produce a one-file landing page with headline, three benefits, email capture (no backend)",
+      "fitness": 0.905,
+      "failure": "fabricated_evidence",
+      "critique": "The agent fabricates verification steps instead of honestly stating they were not run",
+      "scores": {
+       "correctness": 1.0,
+       "completeness": 1.0,
+       "quality": 0.9,
+       "evidence": 0.625
+      },
+      "output_excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>VelocityStack - Rapid MVP Builder</title>\n    <script src=\"https://cdn.tailwindcss.com\"></script>\n</head>\n<body class=\"bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between\">\n\n    <!-- Header / Nav -->\n    <header class=\"max-w-6xl mx-auto w-full p-6 flex justify-between items-center\">\n        <div class=\"text-xl font-bold tracking-tight text-emerald-400\">VelocityStack</div>\n        <a href=\"#waitlist\" class=\"text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-medium "
+     }
+    ]
+   }
+  ],
+  "diagnosis": "# Diagnosis: rapid-prototyper v1\n\nTasks scored: 3. Mean fitness: 0.9642.\n\n## Worst tasks\n### 20261105-073059-build-a-single-file #1 (fitness 0.94)\n- Task: Build pricing.html: a single-file pricing mock with three plan cards and one keyboard-reachable toggle\n- Acceptance: exactly one file, pricing.html, smaller than 6144 bytes on disk; zero external requests: no http(s):// or protocol-relative URLs in src/href/url()/@import, no external fonts, scripts or images; exactly three plan cards in the markup; exactly one toggle (e.g. monthly/yearly) that is a native focusable control or has tabindex=0, operable with Space/Enter, and changes the displayed prices; passes an HTML validator with zero errors\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `missing_validator_verification` (contested: raised only by groq/openai/gpt-oss-120b; the other judges found every criterion met. Check it against the output before acting on it.)\n- Critique: Validator result is unverified, but all other criteria are satisfied.\n- Unmet criteria:\n  - passes an HTML validator with zero errors: Validator not run; cannot verify [unmet per groq/openai/gpt-oss-120b; 2 other judge(s) marked it met]\n- Output excerpt:\n```\n--- pricing.html (4038 bytes) ---\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Pricing</title>\n<style>\n:root{--bg:#f6f7fb;--card:#fff;--ink:#1c2233;--mute:#5a6275;--line:#dde1ea;--acc:#3b5bdb;--acc-ink:#fff}\n@media (prefers-color-scheme:dark){:root{--bg:#12151d;--card:#1b2030;--ink:#e8ebf3;--mute:#a3abbd;--line:#2c3346;--acc:#7c94ff;--acc-ink:#0d1020}}\n*{box-sizing:border-box}\nbody{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif}\nmain{max-width:980px;margin:0 auto;padding:48px 16px}\nh1{margin:0 0 8px;font-size:2rem;text-align:center}\n.sub{margin:0 0 24px;color:var(--mute);text-align:center}\n.bill{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:32px}\n.bill span{color:var(--mute)}\n#toggle{position:relative;width:52px;height:30px;border:0;border-radius:15px;background:var(--line);cursor:p\n\n[... 2572 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\nl>\n<button class=\"cta\" type=\"button\">Contact sales</button>\n</section>\n</div>\n</main>\n<script>\nvar t=document.getElementById(\"toggle\");\nt.addEventListener(\"click\",function(){\nvar y=t.getAttribute(\"aria-pressed\")!==\"true\";\nt.setAttribute(\"aria-pressed\",String(y));\ndocument.querySelectorA\n```\n\n### 20261110-094717-prototype-a-single-file #1 (fitness 0.975)\n- Task: Single-file HTML expense splitter for 4 friends with ?selftest mode, integer cents, localStorage persistence\n- Acceptance: One HTML file under 12288 bytes containing no http(s) URLs or external resources (zero external requests, works offline); All money is computed in integer cents; uneven-split rounding never loses or creates a cent, so net balances always sum to exactly 0; Settle-up transfers clear every balance using no more than 3 transfers for 4 friends; ?selftest shows exactly 3 PASS lines (even split, uneven shares, one person owes nothing); State is restored after reload, and the page still works when localStorage throws (try/catch)\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: Implementation is correct and complete; agent's claimed test results (headless Edge, node fuzz) are not independently verifiable from the provided artifacts.\n- Output excerpt:\n```\n--- index.html (7185 bytes) ---\n<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Split4 expense splitter</title>\n<style>\n:root{color-scheme:light dark;--b:#8884;--g:#1a7f37;--r:#c62828}\nbody{font:16px system-ui,sans-serif;max-width:520px;margin:0 auto;padding:12px 16px 40px}\nh1{font-size:1.4rem}h2{font-size:1.05rem;margin:0 0 8px}\nsection{border:1px solid var(--b);border-radius:8px;padding:12px;margin:12px 0}\ninput,select,button{font:inherit;padding:6px 8px;margin:2px 0;border:1px solid var(--b);border-radius:6px;background:Canvas;color:CanvasText}\nbutton{cursor:pointer}\n#names input{width:46%}\nlabel{display:inline-block;margin-right:10px}\nfieldset{border:1px solid var(--b);border-radius:6px;margin:6px 0}\nul,ol{padding-left:20px;margin:4px 0}\nli{margin:3px 0}\n.pos{color:var(--g)}.neg{color:var(--r)}\n#err{color:var(--r)}\n.res{font-family:monospace;padding:2px 0}\n.PASS{color:var(--g)}.FAI\n\n[... 5717 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n=3&&cleared(t,x)&&x.every(function(y){return t[y.f]&&t[y.t]});\nif(good){r='PASS';n++}w=' (net '+t.map(fm).join(' / ')+'; '+x.length+' transfers)'}catch(e){w=' ('+e+')'}\nh+='<div class=\"res '+r+'\" data-scenario=\"'+c[0]+'\">'+r+': '+c[0]+w+'</div>'});\n$('selftest').innerHTML=h+'<div class=\n```\n\n### 20261103-104040-build-a-single-file #1 (fitness 0.9775)\n- Task: Build pricing-mock.html: a single self-contained HTML pricing page with three plan cards\n- Acceptance: Single file pricing-mock.html under 30 KB with all CSS/JS inline and zero external requests (no http/https URLs in src, href or url()); Exactly 3 plan cards, each with plan name, monthly price, at least 3 feature bullets and one CTA button; the middle card is labelled 'Most popular'; At a 375px-wide viewport the page has no horizontal overflow (document.documentElement.scrollWidth <= 375) and the cards stack in one column; at 1280px they sit in one row\n- Verdict: PASS after 1 attempt(s)\n- Failure class: `none`\n- Critique: none\n- Output excerpt:\n```\n--- pricing-mock.html (6893 bytes) ---\n<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>StudyPath Pricing</title>\n<style>\n  :root {\n    --bg: #f6f7fb;\n    --surface: #ffffff;\n    --text: #1c2233;\n    --muted: #5b6478;\n    --border: #e1e4ee;\n    --accent: #3a5bd9;\n    --accent-ink: #ffffff;\n    --accent-soft: #e8edff;\n    --check: #1f9d6b;\n  }\n  @media (prefers-color-scheme: dark) {\n    :root {\n      --bg: #10131c;\n      --surface: #191d2a;\n      --text: #eef0f6;\n      --muted: #a3abc0;\n      --border: #2b3144;\n      --accent: #7d95ff;\n      --accent-ink: #0e1220;\n      --accent-soft: #232b4a;\n      --check: #4cd39a;\n    }\n  }\n  *, *::before, *::after { box-sizing: border-box; }\n  html { -webkit-text-size-adjust: 100%; }\n  body {\n    margin: 0;\n    background: var(--bg);\n    color: var(--text);\n    font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif;\n    line-height: 1\n\n[... 5432 characters omitted from the middle of this file to fit the prompt. They exist but are not shown: do not report this part as missing; if a criterion depends on it, say it could not be verified from the excerpt ...]\n\n document.getElementById('toast');\n    var timer;\n    document.querySelectorAll('.cta').forEach(function (btn) {\n      btn.addEventListener('click', function () {\n        var plan = btn.closest('.card').querySelector('.plan-name').textContent;\n        toast.textContent = 'Mock only: y\n```\n"
  }
 ]
